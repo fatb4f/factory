@@ -18,6 +18,9 @@ Bounded input snapshots:
 Factory issue tracking and scheduled upstream-monitor output belong in this
 repository after migration handoff.
 
+`contracts/upstream-monitor/` owns the scheduled review surface for future
+factory follow-up.
+
 ## Validation
 
 ```bash
