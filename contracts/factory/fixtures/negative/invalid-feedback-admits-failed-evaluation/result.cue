@@ -1,6 +1,6 @@
 package invalidfeedbackadmitsfailedevaluation
 
-import object "github.com/fatb4f/contract.reflective-transition-factory/contracts/factory/object"
+import object "github.com/fatb4f/factory/contracts/factory/object"
 
 failedCandidate: object.#Candidate & {
 	id:      "candidate/failed-evaluation"

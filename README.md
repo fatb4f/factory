@@ -17,3 +17,9 @@ Bounded input snapshots:
 
 Factory issue tracking and scheduled upstream-monitor output belong in this
 repository after migration handoff.
+
+## Validation
+
+```bash
+just check
+```

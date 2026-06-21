@@ -1,4 +1,4 @@
-module: "github.com/fatb4f/contract.reflective-transition-factory/contracts/factory"
+module: "github.com/fatb4f/factory/contracts/factory"
 language: {
 	version: "v0.16.0"
 }

@@ -1,6 +1,6 @@
 package invalidcandidatewithoutnegativefixture
 
-import object "github.com/fatb4f/contract.reflective-transition-factory/contracts/factory/object"
+import object "github.com/fatb4f/factory/contracts/factory/object"
 
 candidate: object.#Candidate & {
 	id:      "candidate/missing-negative-fixture"

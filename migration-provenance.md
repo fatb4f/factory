@@ -16,3 +16,5 @@ Transition states covered by this repository:
 
 The seeded path shape intentionally preserves `contracts/factory/**`; no
 flattening is admitted by this migration.
+
+Current module authority: `github.com/fatb4f/factory/contracts/factory`

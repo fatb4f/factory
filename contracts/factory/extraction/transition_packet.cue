@@ -1,6 +1,6 @@
 package extraction
 
-import transition "github.com/fatb4f/contract.reflective-transition-factory/contracts/factory/transition"
+import transition "github.com/fatb4f/factory/contracts/factory/transition"
 
 extractionTransitionPacket: transition.#TransitionPacket & {
 	schema: "factory.transition-packet.v1"

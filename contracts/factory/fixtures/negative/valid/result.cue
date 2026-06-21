@@ -1,6 +1,6 @@
 package valid
 
-import object "github.com/fatb4f/contract.reflective-transition-factory/contracts/factory/object"
+import object "github.com/fatb4f/factory/contracts/factory/object"
 
 negativeFixture: object.#NegativeFixture & {
 	id:      "fixture/raw-authority-blocked"

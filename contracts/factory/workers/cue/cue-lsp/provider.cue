@@ -1,6 +1,6 @@
 package cuelsp
 
-import cueworker "github.com/fatb4f/contract.reflective-transition-factory/contracts/factory/workers/cue:cueworker"
+import cueworker "github.com/fatb4f/factory/contracts/factory/workers/cue:cueworker"
 
 apertureReference: cueworker.#CueWorkerAperture & {
 	worker: {

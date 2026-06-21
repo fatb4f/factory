@@ -1,6 +1,6 @@
 package assertions
 
-import factory "github.com/fatb4f/contract.reflective-transition-factory/contracts/factory"
+import factory "github.com/fatb4f/factory/contracts/factory"
 
 #AllowedRootSurfaces: [
 	".github",

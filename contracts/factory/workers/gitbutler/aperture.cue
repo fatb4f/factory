@@ -1,6 +1,6 @@
 package gitbutlerworker
 
-import workers "github.com/fatb4f/contract.reflective-transition-factory/contracts/factory/workers"
+import workers "github.com/fatb4f/factory/contracts/factory/workers"
 
 #GitButlerWorkerAperture: workers.#WorkerAperture & {
 	worker: {
