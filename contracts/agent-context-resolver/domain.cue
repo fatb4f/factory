@@ -1,16 +1,7 @@
 package agentcontextresolver
 
 import (
-	sectionadapters "github.com/fatb4f/contract.cuemod/contracts/agent-context-resolver/adapters:adapters"
-	sectionassertions "github.com/fatb4f/contract.cuemod/contracts/agent-context-resolver/assertions:assertions"
-	sectionchecks "github.com/fatb4f/contract.cuemod/contracts/agent-context-resolver/checks:checks"
-	sectionfixtures "github.com/fatb4f/contract.cuemod/contracts/agent-context-resolver/fixtures:fixtures"
-	sectiongenerated "github.com/fatb4f/contract.cuemod/contracts/agent-context-resolver/generated:generated"
 	graph "github.com/fatb4f/contract.cuemod/contracts/agent-context-resolver/internal/graph:graph"
-	sectionhooks "github.com/fatb4f/contract.cuemod/contracts/agent-context-resolver/hooks:hooks"
-	sectionprojections "github.com/fatb4f/contract.cuemod/contracts/agent-context-resolver/projections:projections"
-	sectionseed "github.com/fatb4f/contract.cuemod/contracts/agent-context-resolver/seed:seed"
-	sectionworkers "github.com/fatb4f/contract.cuemod/contracts/agent-context-resolver/workers:workers"
 )
 
 resolverModuleBoundary: {
@@ -21,16 +12,22 @@ resolverModuleBoundary: {
 }
 
 resolverSectionPackages: {
-	assertions:  sectionassertions.section
-	checks:      sectionchecks.section
-	adapters:    sectionadapters.section
-	workers:     sectionworkers.section
-	hooks:       sectionhooks.section
-	fixtures:    sectionfixtures.section
-	projections: sectionprojections.section
-	generated:   sectiongenerated.section
-	seed:        sectionseed.section
+	assertions:  #Section & {id: "agent-context-resolver.assertions", kind: "assertions", path: "assertions"}
+	checks:      #Section & {id: "agent-context-resolver.checks", kind: "checks", path: "checks"}
+	adapters:    #Section & {id: "agent-context-resolver.adapters", kind: "adapters", path: "adapters"}
+	workers:     #Section & {id: "agent-context-resolver.workers", kind: "workers", path: "workers"}
+	hooks:       #Section & {id: "agent-context-resolver.hooks", kind: "hooks", path: "hooks"}
+	fixtures:    #Section & {id: "agent-context-resolver.fixtures", kind: "fixtures", path: "fixtures"}
+	projections: #Section & {id: "agent-context-resolver.projections", kind: "projections", path: "projections"}
+	generated:   #Section & {id: "agent-context-resolver.generated", kind: "generated", path: "generated"}
+	seed:        #Section & {id: "agent-context-resolver.seeds", kind: "seeds", path: "seed"}
 }
+
+#Section: close({
+	id:   graph.#ID
+	kind: graph.#ContractSectionKind
+	path: graph.#RelPath
+})
 
 agentContextResolver: graph.#ContractDomain & {
 	id: "agent-context-resolver"

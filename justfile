@@ -11,10 +11,13 @@ check:
   cd contracts/factory && ! cue vet ./fixtures/negative/invalid-feedback-admits-failed-evaluation
   cd contracts/factory && ! cue vet ./fixtures/negative/invalid-transition-without-admitted-feedback
   cd contracts/factory && ! cue vet ./fixtures/negative/invalid-materialization-before-admitted-transition
-  .codex/skills/resolve-agent-context/scripts/resolve-agent-context --prompt "Update the resolver hook without allowing MCP tool output to become context." | jq -e '.schema == "agent.route-controller-packet.v1" and (.selectedFragments | index("agent-context-resolver.authority"))' >/dev/null
+  checks/agent-context-hook
   test ! -e fixtures
   test ! -e generated
   test ! -e providers
   test ! -e projections
   test ! -e adapters
   test ! -e test
+
+hook-smoke:
+  checks/agent-context-hook

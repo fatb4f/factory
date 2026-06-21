@@ -1,0 +1,56 @@
+#!/bin/sh
+set -eu
+
+repo_root=$(CDPATH= cd -- "$(dirname "$0")/.." && pwd -P)
+cd "$repo_root"
+
+prompt=$(cat <<'PROMPT'
+# feat(codex): add agent-context-resolver hook aperture
+
+## Objective
+
+factory repo without resolver-backed Codex hooks
+  -> repo-local Codex hook aperture
+  -> bounded agent-context-resolver prompt/context packet
+  -> implementation issue workflow can run without raw GitHub/repo discovery
+
+## Authority boundary
+
+agent-context-resolver
+  -> dependency / aperture / prompt-context provider
+  -> not factory authority
+
+Codex hook
+  -> runtime adapter
+  -> not semantic authority
+
+factory contracts
+  -> remain under contracts/factory/**
+PROMPT
+)
+
+packet=$(.codex/skills/resolve-agent-context/scripts/resolve-agent-context --prompt "$prompt")
+
+printf '%s\n' "$packet" | jq -e '
+	.schema == "agent.route-controller-packet.v1"
+	and (.selectedFragments | length > 0)
+	and ((.selectedFragments - .availableFragmentIDs) | length == 0)
+	and (.controller.authority == "resolver_projection")
+	and (.controller.propagation.denyFullTranscript == true)
+	and (.controller.propagation.denyRawRegistryDump == true)
+	and (.controller.propagation.denyUnselectedFragments == true)
+	and (.controller.expectedMerge.routeResultsAreAuthority == false)
+	and (.controller.runtime.execution.allowed == false)
+	and (.controller.runtime.deny.rawTranscriptForwarding == true)
+	and (.controller.runtime.deny.rawRegistryDump == true)
+	and (.resolver.command == ".codex/skills/resolve-agent-context/scripts/resolve-agent-context")
+	and (.resolver.skill == ".codex/skills/resolve-agent-context/SKILL.md")
+	and (.generatedFrom.turnStart == "contracts/agent-context-resolver/generated/turn_start_fragments.json")
+	and (has("fullRegistry") | not)
+	and (has("contextBodies") | not)
+	and (has("fullTranscript") | not)
+	and ((tostring | length) < 50000)
+' >/dev/null
+
+test -f .codex/hooks.json
+jq -e '.hooks.UserPromptSubmit[0].hooks[0].command == ".codex/skills/resolve-agent-context/scripts/agent-context-resolver-hook"' .codex/hooks.json >/dev/null

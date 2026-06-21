@@ -16,9 +16,11 @@ the reflective transition factory.
 | source path | current role | classification | target path | action | blocking dependency | notes |
 | --- | --- | --- | --- | --- | --- | --- |
 | `.github/` | GitHub issue and repository metadata. | keep-active | `.github/` | Retain as repository shell metadata. | None. | Non-authority support surface. |
+| `.codex/` | Repo-local Codex hook and skill projection. | keep-active | `.codex/` | Retain as runtime adapter ingress. | Must remain generated/projection support, not factory semantic authority. | Consumes supplied issue packets and emits bounded prompt context. |
 | `README.md` | Repository overview. | keep-active | `README.md` | Retain as root shell documentation. | Must describe factory authority and quarantine boundary. | Current README documents `migration/legacy/` as non-authority evidence. |
 | `go.mod` | Go tooling module metadata. | keep-active | `go.mod` | Retain as tooling-only module. | Must not become semantic contract authority. | There is no root `cue.mod`. |
 | `justfile` | Developer validation commands. | keep-active | `justfile` | Retain and keep checks aimed at factory pruning surface. | Checks must exclude quarantined legacy paths as green-path inputs. | `just check` rejects old top-level authority roots. |
+| `checks/` | Repo-local smoke checks. | keep-active | `checks/` | Retain for local validation commands. | Checks must not depend on deleted top-level `test/` or external source repo paths. | `checks/agent-context-hook` validates bounded Codex hook output. |
 | `cmd/` | Active Go command entrypoints for contract tooling. | keep-active | `cmd/` | Retain while commands serve factory workflows. | Commands must not reintroduce root semantic authority. | `contractctl` and `contract-mcp` are tooling adapters only. |
 | `internal/` | Active Go implementation support. | keep-active | `internal/` | Retain while backing active command adapters. | Must remain tooling implementation, not contract authority. | Supports current Go tooling. |
 | `contracts/` | Contract container for factory authority and active inputs. | keep-active | `contracts/` | Retain as the only active contract container. | Non-factory roots must stay explicitly classified by this map. | Active authority is `contracts/factory/`; runtime and resolver roots remain bounded inputs. |
