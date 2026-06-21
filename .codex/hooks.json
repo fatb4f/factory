@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".codex/skills/resolve-agent-context/scripts/agent-context-resolver-hook",
+            "timeout": 10,
+            "statusMessage": "Routing repository contract context"
+          }
+        ]
+      }
+    ]
+  }
+}

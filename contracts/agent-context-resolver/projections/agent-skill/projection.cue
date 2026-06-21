@@ -50,7 +50,7 @@ skillContent: """
 
 	The `UserPromptSubmit` hook provides a bounded route controller packet, not task authority.
 
-	1. Run `contracts/agent-context-resolver/projections/codex/skills/resolve-agent-context/scripts/resolve-agent-context --prompt "<prompt>"`.
+	1. Run `.codex/skills/resolve-agent-context/scripts/resolve-agent-context --prompt "<prompt>"`.
 	2. Treat `selectedFragments` as a subset of `availableFragmentIDs`.
 	3. Treat `controller.routes` as a subset of `controller.availableRouteIDs`.
 	4. Resolve selected fragment metadata through `contracts/agent-context-resolver/generated/fragment_inventory.json`.
@@ -64,20 +64,23 @@ agentContextResolverHook: """
 	set -eu
 
 	script_dir=$(CDPATH= cd -- "$(dirname "$0")" && pwd -P)
-	if [ -n "${CONTRACT_CUEMOD_ROOT:-}" ]; then
+	if [ -n "${CONTRACT_FACTORY_ROOT:-}" ]; then
+		repo_root=$CONTRACT_FACTORY_ROOT
+	elif [ -n "${CONTRACT_CUEMOD_ROOT:-}" ]; then
 		repo_root=$CONTRACT_CUEMOD_ROOT
 	else
 		repo_root=$script_dir
-		while [ "$repo_root" != "/" ] && [ ! -d "$repo_root/cue.mod" ]; do
+		while [ "$repo_root" != "/" ] && [ ! -d "$repo_root/.git" ] && [ ! -d "$repo_root/cue.mod" ]; do
 			repo_root=$(CDPATH= cd -- "$repo_root/.." && pwd -P)
 		done
 	fi
-	[ -d "$repo_root/cue.mod" ] || exit 2
-	if [ -d "$repo_root/generated" ] && grep -q '/contracts/agent-context-resolver"' "$repo_root/cue.mod/module.cue"; then
+	[ -d "$repo_root" ] || exit 2
+	if [ -d "$repo_root/generated" ] && [ -f "$repo_root/cue.mod/module.cue" ] && grep -q '/contracts/agent-context-resolver"' "$repo_root/cue.mod/module.cue"; then
 		generated_dir="$repo_root/generated"
 	else
 		generated_dir="$repo_root/contracts/agent-context-resolver/generated"
 	fi
+	[ -d "$generated_dir" ] || exit 2
 	input_json=$(mktemp "${TMPDIR:-/tmp}/agent-context-resolver.XXXXXX.json")
 	trap 'rm -f "$input_json"' EXIT HUP INT TERM
 	cat >"$input_json"
