@@ -1,0 +1,125 @@
+{
+  "generatedFrom": "registry.index.json",
+  "fragments": [
+    {
+      "id": "agent-context-resolver.authority",
+      "sourceContract": "agent-context-resolver",
+      "sourcePath": "contracts/agent-context-resolver/resolver.cue",
+      "role": "authority",
+      "surface": "turn_start",
+      "summary": "Authoritative resolver lifecycle and context selection boundary.",
+      "authorityRoot": "contracts/agent-context-resolver",
+      "contractPath": "contracts/agent-context-resolver/resolver.cue"
+    },
+    {
+      "id": "agent-runtime.authority",
+      "sourceContract": "agent-runtime",
+      "sourcePath": "contracts/agent-runtime/registry.cue",
+      "role": "authority",
+      "surface": "turn_start",
+      "summary": "Registered worker, route invocation, budget, lifecycle, adapter, and structured-result boundary.",
+      "authorityRoot": "contracts/agent-runtime",
+      "contractPath": "contracts/agent-runtime/registry.cue"
+    },
+    {
+      "id": "agent-skill.projection",
+      "sourceContract": "agent-skill",
+      "sourcePath": "contracts/agent-skill/skill.cue",
+      "role": "constraint",
+      "surface": "turn_start",
+      "summary": "Generated agent skill, hook, and script projection constraints.",
+      "authorityRoot": "contracts/agent-skill",
+      "contractPath": "contracts/agent-skill/skill.cue"
+    },
+    {
+      "id": "mcp.evidence-plane",
+      "sourceContract": "mcp",
+      "sourcePath": "contracts/protocols/mcp/mcp.cue",
+      "role": "constraint",
+      "surface": "turn_start",
+      "summary": "MCP provider, result, and evidence-plane constraints.",
+      "authorityRoot": "contracts/protocols/mcp",
+      "contractPath": "contracts/protocols/mcp/mcp.cue"
+    },
+    {
+      "id": "repo.contract-seed",
+      "sourceContract": "repo",
+      "sourcePath": "contracts/repo/contract_seed.cue",
+      "role": "authority",
+      "surface": "turn_start",
+      "summary": "Temporary shared contract atom seed for later vb-contract rebasing.",
+      "authorityRoot": "contracts/repo",
+      "contractPath": "contracts/repo/lifecycle.cue"
+    },
+    {
+      "id": "repo.lifecycle",
+      "sourceContract": "repo",
+      "sourcePath": "contracts/repo/lifecycle.cue",
+      "role": "constraint",
+      "surface": "turn_start",
+      "summary": "Repository source, generated, fixture, and lifecycle boundaries.",
+      "authorityRoot": "contracts/repo",
+      "contractPath": "contracts/repo/lifecycle.cue"
+    },
+    {
+      "id": "resolver.context-packet",
+      "sourceContract": "resolver",
+      "sourcePath": "contracts/context/packet/resolver.cue",
+      "role": "workflow",
+      "surface": "turn_start",
+      "summary": "Context packet selection and dependency projection workflow.",
+      "authorityRoot": "contracts/context/packet",
+      "contractPath": "contracts/context/packet/resolver.cue"
+    },
+    {
+      "id": "vb-contract.authority",
+      "sourceContract": "vb-contract",
+      "sourcePath": "contracts/repo/contract.cue",
+      "role": "authority",
+      "surface": "turn_start",
+      "summary": "Temporary virtual-branch contract root and registry contribution.",
+      "authorityRoot": "contracts/repo",
+      "contractPath": "contracts/repo/contract.cue"
+    },
+    {
+      "id": "vb-contract.component-seed",
+      "sourceContract": "vb-contract",
+      "sourcePath": "contracts/repo/component_seed.cue",
+      "role": "constraint",
+      "surface": "turn_start",
+      "summary": "Shared reusable component ownership, dependency, glue, and gate schema.",
+      "authorityRoot": "contracts/repo",
+      "contractPath": "contracts/repo/contract.cue"
+    },
+    {
+      "id": "vb-contract.contract-seed",
+      "sourceContract": "vb-contract",
+      "sourcePath": "contracts/repo/contract_seed.cue",
+      "role": "constraint",
+      "surface": "turn_start",
+      "summary": "Temporary contract, template, instance, and projection bootstrap seed.",
+      "authorityRoot": "contracts/repo",
+      "contractPath": "contracts/repo/contract.cue"
+    },
+    {
+      "id": "vb-contract.virtual-branch",
+      "sourceContract": "vb-contract",
+      "sourcePath": "contracts/repo/virtual_branch.cue",
+      "role": "constraint",
+      "surface": "turn_start",
+      "summary": "Shared reusable virtual-branch schema with separate temporary bootstrap instances.",
+      "authorityRoot": "contracts/repo",
+      "contractPath": "contracts/repo/contract.cue"
+    },
+    {
+      "id": "vcs.patch-stack",
+      "sourceContract": "vcs",
+      "sourcePath": "contracts/vcs/patch_stack_skill.cue",
+      "role": "workflow",
+      "surface": "turn_start",
+      "summary": "Patch stack ownership, ordering, and validation workflow.",
+      "authorityRoot": "contracts/vcs",
+      "contractPath": "contracts/vcs/patch_stack_skill.cue"
+    }
+  ]
+}
