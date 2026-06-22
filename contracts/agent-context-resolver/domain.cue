@@ -279,7 +279,7 @@ agentContextResolver: graph.#ContractDomain & {
 			kind:   "hook"
 			parent: "agent-context-resolver.hooks"
 			rootPath: ["agent-context-resolver.root", "agent-context-resolver.hooks", "agent-context-resolver.leaf.agent-context-hook"]
-			path:        "checks/agent-context-hook"
+			path:        "generated/checks/agent-context-hook"
 			description: "Hook regression script that validates projected resolver packet evidence."
 		}
 	}
@@ -788,7 +788,7 @@ agentContextResolver: graph.#ContractDomain & {
 					"fixtures/agent-context-resolver",
 					"fixtures/workspace-lifecycle",
 					"seed",
-					"checks/agent-context-hook",
+					"generated/checks/agent-context-hook",
 				]
 				deniedPaths: [
 					"contracts/repo",

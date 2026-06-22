@@ -1,0 +1,13 @@
+{
+  "schema": "factory.validation-fixture.v1",
+  "id": "factory.validation.fixture.agent-context-hook-prompt",
+  "assertionID": "factory.validation.agent-context-hook",
+  "prompt": "# feat(codex): add agent-context-resolver hook aperture\n\n## Objective\n\nfactory repo without resolver-backed Codex hooks\n  -> repo-local Codex hook aperture\n  -> bounded agent-context-resolver prompt/context packet\n  -> implementation issue workflow can run without raw GitHub/repo discovery\n\n## Authority boundary\n\nagent-context-resolver\n  -> dependency / aperture / prompt-context provider\n  -> not factory authority\n\nCodex hook\n  -> runtime adapter\n  -> not semantic authority\n\nfactory contracts\n  -> remain under contracts/factory/**\n",
+  "provenance": {
+    "origin": "reflection",
+    "reflector": "factory.validation-reflector.v1",
+    "sourceDigest": "sha256:68399ca8b4fad7297d905e9e05ca5aa232dc92527948627e6f8e03636d86dc1d",
+    "inventoryDigest": "sha256:02685744eae9a84d114c2cf4744464ce423447f79fb583121eb92a99ad1b11b0",
+    "materializedAt": "run:b6087d3676e98a34"
+  }
+}

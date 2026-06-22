@@ -391,7 +391,7 @@
             "id": "agent-context-resolver.leaf.agent-context-hook",
             "kind": "hook",
             "parent": "agent-context-resolver.hooks",
-            "path": "checks/agent-context-hook",
+            "path": "generated/checks/agent-context-hook",
             "rootPath": [
                 "agent-context-resolver.root",
                 "agent-context-resolver.hooks",
@@ -1312,7 +1312,7 @@
                     "fixtures/agent-context-resolver",
                     "fixtures/workspace-lifecycle",
                     "seed",
-                    "checks/agent-context-hook"
+                    "generated/checks/agent-context-hook"
                 ],
                 "deniedPaths": [
                     "contracts/repo",

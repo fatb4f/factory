@@ -1,0 +1,22 @@
+{
+  "schema": "factory.assertion-results.v1",
+  "provenance": {
+    "origin": "reflection",
+    "reflector": "factory.validation-reflector.v1",
+    "sourceDigest": "sha256:68399ca8b4fad7297d905e9e05ca5aa232dc92527948627e6f8e03636d86dc1d",
+    "inventoryDigest": "sha256:02685744eae9a84d114c2cf4744464ce423447f79fb583121eb92a99ad1b11b0",
+    "materializedAt": "run:b6087d3676e98a34"
+  },
+  "results": [
+    {
+      "id": "factory.validation.result.agent-context-hook",
+      "assertionID": "factory.validation.agent-context-hook",
+      "status": "pass",
+      "evidence": [
+        "generated/evidence/materialization-report.json",
+        "generated/evidence/agent-context-hook.packet.json",
+        "generated/checks/agent-context-hook"
+      ]
+    }
+  ]
+}

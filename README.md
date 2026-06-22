@@ -33,6 +33,17 @@ The resolver hook is an adapter/runtime ingress only. It references
 does not make `contracts/agent-context-resolver/**` factory authority. Factory
 contract authority remains under `contracts/factory/**`.
 
+Hook smoke validation is rooted in `contracts/factory/reflection.cue`, which
+materializes admitted assertion instances under
+`contracts/factory/assertions/generated/**`, fixture projections under
+`generated/fixtures/**`, executable projections under `generated/checks/**`, and
+evidence under `generated/evidence/**`.
+
+`contracts/factory/control.cue` models the validation/materialization control
+loop as contract authority. `contracts/factory/introspection.cue` owns
+adapter-visible exposure. Loop-stage exports are bounded, non-authoritative
+evidence under `generated/evidence/control-loop/**`.
+
 Issue packet workflow:
 
 ```bash
@@ -45,6 +56,8 @@ must not perform raw GitHub or repository firehose acquisition by default.
 ## Validation
 
 ```bash
+just generate-validation
+just export-validation-loop
 just check
 ```
 

@@ -4,7 +4,9 @@ import factory "github.com/fatb4f/factory/contracts/factory"
 
 #AllowedRootSurfaces: [
 	".github",
+	".codex",
 	"contracts",
+	"generated",
 	"migration",
 	"cmd",
 	"internal",
@@ -14,8 +16,8 @@ import factory "github.com/fatb4f/factory/contracts/factory"
 ]
 
 #ForbiddenIndependentRoots: [
+	"checks",
 	"fixtures",
-	"generated",
 	"providers",
 	"projections",
 	"adapters",
@@ -24,7 +26,7 @@ import factory "github.com/fatb4f/factory/contracts/factory"
 
 factoryPruningGate: {
 	surface: factory.surface
-	invariant: "top-level fixtures and generated outputs are factory fixtures, factory projections, or migration evidence"
+	invariant: "top-level checks are forbidden; generated executable checks must be assertion-backed projections"
 	allowedRootSurfaces: #AllowedRootSurfaces
 	forbiddenIndependentRoots: #ForbiddenIndependentRoots
 }

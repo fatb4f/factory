@@ -1,0 +1,52 @@
+{
+    "schema": "factory.control-loop-stage-export.v1",
+    "loopID": "factory.validation.control-loop",
+    "stage": "sensor",
+    "authority": false,
+    "bounded": true,
+    "sourceStage": {
+        "id": "factory.validation.loop.sensor",
+        "kind": "coverage-gap-reproducibility-runtime-validation",
+        "schema": "factory.loop-stage.sensor.v1",
+        "sourceAuthority": false,
+        "producedBy": "generated/checks/agent-context-hook",
+        "consumes": [
+            "contracts/factory/assertions/generated/agent_context_hook.cue",
+            "generated/fixtures/agent-context-hook-prompt.json",
+            "generated/evidence/materialization-report.json"
+        ],
+        "produces": [
+            "generated/evidence/agent-context-hook.packet.json",
+            "generated/evidence/assertion-results.json"
+        ]
+    },
+    "exportSurface": {
+        "authority": false,
+        "bounded": true,
+        "generatedFrom": "contracts/factory/control.cue",
+        "path": "generated/evidence/control-loop/sensor.json",
+        "provenance": {
+            "origin": "reflection",
+            "reflector": "factory.validation-reflector.v1",
+            "sourceDigest": "sha256:68399ca8b4fad7297d905e9e05ca5aa232dc92527948627e6f8e03636d86dc1d",
+            "inventoryDigest": "sha256:02685744eae9a84d114c2cf4744464ce423447f79fb583121eb92a99ad1b11b0",
+            "materializedAt": "run:b6087d3676e98a34"
+        },
+        "redacted": false,
+        "schema": "factory.control-loop-stage-export.v1",
+        "stage": "sensor"
+    },
+    "provenance": {
+        "origin": "reflection",
+        "reflector": "factory.validation-reflector.v1",
+        "sourceDigest": "sha256:68399ca8b4fad7297d905e9e05ca5aa232dc92527948627e6f8e03636d86dc1d",
+        "inventoryDigest": "sha256:02685744eae9a84d114c2cf4744464ce423447f79fb583121eb92a99ad1b11b0",
+        "materializedAt": "run:b6087d3676e98a34"
+    },
+    "payload": {
+        "runtimeEvidence": [
+            "generated/evidence/agent-context-hook.packet.json",
+            "generated/evidence/assertion-results.json"
+        ]
+    }
+}

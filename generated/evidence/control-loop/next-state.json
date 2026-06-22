@@ -1,0 +1,69 @@
+{
+    "schema": "factory.control-loop-stage-export.v1",
+    "loopID": "factory.validation.control-loop",
+    "stage": "next-state",
+    "authority": false,
+    "bounded": true,
+    "sourceStage": {
+        "id": "factory.validation.loop.next-state",
+        "kind": "admitted-assertion-generated-projections-exported-evidence",
+        "schema": "factory.loop-stage.next-state.v1",
+        "sourceAuthority": false,
+        "producedBy": "contracts/factory/reflection/scripts/generate-validation",
+        "consumes": [
+            "generated/evidence/materialization-report.json",
+            "generated/evidence/agent-context-hook.packet.json",
+            "generated/evidence/assertion-results.json"
+        ],
+        "produces": [
+            "contracts/factory/assertions/generated/agent_context_hook.cue",
+            "generated/checks/agent-context-hook",
+            "generated/fixtures/agent-context-hook-prompt.json",
+            "generated/evidence/materialization-report.json",
+            "generated/evidence/agent-context-hook.packet.json",
+            "generated/evidence/assertion-results.json"
+        ]
+    },
+    "exportSurface": {
+        "authority": false,
+        "bounded": true,
+        "generatedFrom": "contracts/factory/control.cue",
+        "path": "generated/evidence/control-loop/next-state.json",
+        "provenance": {
+            "origin": "reflection",
+            "reflector": "factory.validation-reflector.v1",
+            "sourceDigest": "sha256:68399ca8b4fad7297d905e9e05ca5aa232dc92527948627e6f8e03636d86dc1d",
+            "inventoryDigest": "sha256:02685744eae9a84d114c2cf4744464ce423447f79fb583121eb92a99ad1b11b0",
+            "materializedAt": "run:b6087d3676e98a34"
+        },
+        "redacted": false,
+        "schema": "factory.control-loop-stage-export.v1",
+        "stage": "next-state"
+    },
+    "provenance": {
+        "origin": "reflection",
+        "reflector": "factory.validation-reflector.v1",
+        "sourceDigest": "sha256:68399ca8b4fad7297d905e9e05ca5aa232dc92527948627e6f8e03636d86dc1d",
+        "inventoryDigest": "sha256:02685744eae9a84d114c2cf4744464ce423447f79fb583121eb92a99ad1b11b0",
+        "materializedAt": "run:b6087d3676e98a34"
+    },
+    "payload": {
+        "admittedAssertions": [
+            "contracts/factory/assertions/generated/agent_context_hook.cue"
+        ],
+        "generatedChecks": [
+            "generated/checks/agent-context-hook"
+        ],
+        "generatedFixtures": [
+            "generated/fixtures/agent-context-hook-prompt.json"
+        ],
+        "exportedEvidence": [
+            "generated/evidence/materialization-report.json",
+            "generated/evidence/control-loop/error-signal.json",
+            "generated/evidence/control-loop/control-action.json",
+            "generated/evidence/control-loop/next-state.json",
+            "generated/evidence/agent-context-hook.packet.json",
+            "generated/evidence/assertion-results.json"
+        ]
+    }
+}
