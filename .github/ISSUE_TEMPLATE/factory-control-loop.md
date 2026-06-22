@@ -102,8 +102,15 @@ package issue
     noSDKLocalAuthority: true
     noAdapterOnlySemanticContract: true
     noShellOnlySemanticPath: true
-    noGeneratedArtifactWithoutProvenance: true
+    noGeneratedArtifactWithoutReflectionOrIntrospectionProvenance: true
     adaptersOnlyDeclaredBehavior: true
+    adapterAllowedActions: [
+      "expose",
+      "execute",
+      "observe",
+      "materialize",
+    ]
+    adapterBehaviorSource: "root contract declarations only"
   }
 
   dag: {
@@ -162,6 +169,59 @@ package issue
       "generated artifact -> authority",
       "worker output -> transition without gate",
       "materialization -> admitted state without control action",
+    ]
+  }
+
+  acceptanceCriteria: {
+    rootQuestionAnsweredBeforeImplementation: true
+    canonicalDAGInstantiated: true
+    existingRootPlumbingUsedBeforeNewSurface: true
+    contractExtensionUnderFactoryRoot: true
+    assertionsGeneratedOrRootedInReflectionInventory: true
+    fixturesGeneratedAndNonAuthoritative: true
+    evalsGeneratedByRootContract: true
+    evidenceGeneratedBoundedNonAuthoritativeAndProvenanceStamped: true
+    adapterBehaviorDeclaredByIntrospection: true
+    noInferredInterfaceAuthorityOrShellSemanticPath: true
+    materializationsAdmittedByDeclaredControlActionOrGate: true
+    validationUsesRootContractGeneratedTests: true
+  }
+
+  validation: {
+    commandSource: "root contract generated tests"
+    generatedBy: [
+      "contracts/factory/reflection.cue",
+      "contracts/factory/control.cue",
+      "contracts/factory/introspection.cue",
+    ]
+    commands: {
+      generateValidation: {
+        command: "just generate-validation"
+        role: "materialize root-contract-generated assertions, fixtures, evals, and evidence"
+        authority: false
+      }
+      exportValidationLoop: {
+        command: "just export-validation-loop"
+        role: "export bounded control-loop evidence from root contract views"
+        authority: false
+      }
+      generatedChecks: {
+        command: "generated/checks/<root-declared-check>"
+        role: "execute generated eval/check surfaces declared by root contract"
+        authority: false
+      }
+      aggregate: {
+        command: "just check"
+        role: "aggregate root-contract-generated tests and gates"
+        authority: false
+      }
+    }
+    forbiddenValidation: [
+      "manual shell-only semantic validation",
+      "SDK-local test authority",
+      "handler-local semantic validation",
+      "MCP-local semantic validation",
+      "generated check not declared by reflection or introspection",
     ]
   }
 }
@@ -249,10 +309,10 @@ Forbidden:
 
 ```text
 Required gates:
-  - cue eval:
-  - cue vet:
-  - generated eval/check:
-  - just target:
+  - root-generated eval/check:
+  - root-generated evidence:
+  - control-loop gate:
+  - aggregate generated-test target:
 
 Control action:
   action: admit | reject | defer | materialize | block
@@ -270,23 +330,15 @@ Drift checks:
 
 # Acceptance criteria
 
-- [ ] Root contract question is answered before implementation details.
-- [ ] Implementation plan instantiates the canonical `#FactoryControlLoopIssue` DAG.
-- [ ] The plan uses existing root plumbing before proposing any new surface.
-- [ ] Contract extension is expressed under `contracts/factory/**`.
-- [ ] Assertions are generated or explicitly rooted in the reflected contract inventory.
-- [ ] Fixtures are generated and non-authoritative.
-- [ ] Evals/checks are generated or declared by the root contract and gate-bound.
-- [ ] Evidence is generated, bounded, non-authoritative, and provenance-stamped.
-- [ ] Adapter-visible behavior is declared through `contracts/factory/introspection.cue`.
-- [ ] No inferred interface, adapter-local authority, SDK-local authority, or shell-only semantic path is introduced.
-- [ ] Materializations are admitted by a declared control action or gate.
-- [ ] `just check` passes.
+- [ ] Acceptance criteria are satisfied by the canonical `#FactoryControlLoopIssue.acceptanceCriteria` CUE block.
+- [ ] Validation uses root-contract-generated tests declared by `#FactoryControlLoopIssue.validation`.
+- [ ] No validation command is treated as semantic authority unless it is generated or declared by the root contract.
 
 # Validation commands
 
 ```bash
 just generate-validation
 just export-validation-loop
+generated/checks/<root-declared-check>
 just check
 ```
