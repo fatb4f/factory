@@ -1,114 +1,201 @@
 ---
 name: Factory control-loop implementation
-about: Plan factory work through existing root contract plumbing, generated evidence, and gates.
+about: Plan factory work through root contract plumbing, generated surfaces, evidence, and gates.
 title: "feat(factory): "
 labels: factory, contract
 ---
 
-# Root contract question
+# Root factory control-loop issue
 
-All implementation planning starts here:
+Every implementation packet starts from the root-control question and must stay inside the root contract plumbing.
 
 ```text
 N0.root-question:
   How can the root contract express, materialize and gate this?
 ```
 
-Answer:
+If the answer cannot be expressed through existing root plumbing, do not invent a new interface. Extend the root contract, then regenerate the derived surfaces.
 
-- 
+# Canonical CUE issue model
 
-# Existing root plumbing
+```cue
+package issue
 
-The root contract is expected to already dispose of the plumbing required to:
+#FactoryControlLoopIssue: {
+  contract: {
+    rootAuthority: {
+      path: "contracts/factory/**"
+      owns: [
+        "admitted factory state",
+        "contract extension",
+        "generated assertions",
+        "generated fixtures",
+        "generated evals",
+        "generated evidence",
+        "materialization gates",
+      ]
+    }
+    reflection: {
+      path: "contracts/factory/reflection.cue"
+      role: "discovers/refines the reflection inventory and materialization plan"
+    }
+    control: {
+      path: "contracts/factory/control.cue"
+      role: "models the validation/materialization control loop"
+    }
+    introspection: {
+      path: "contracts/factory/introspection.cue"
+      role: "exposes bounded adapter-visible views, commands, materializations, and evidence packets"
+    }
+    generated: {
+      path: "generated/**"
+      authority: false
+      role: "materialized projection/evidence only"
+    }
+    apertures: {
+      sdk: {
+        authority: false
+        role: "adapter aperture only"
+      }
+      handler: {
+        authority: false
+        role: "executor for introspection-declared commands only"
+      }
+      mcp: {
+        authority: false
+        role: "projection aperture only"
+      }
+    }
+  }
 
-```text
-contracts/factory/reflection.cue
-  -> extend the contract
-  -> generate assertions
-  -> generate fixtures
-  -> generate evals
-  -> generate evidence
+  rootQuestion: {
+    id: "N0.root-question"
+    text: "How can the root contract express, materialize and gate this?"
+  }
 
-contracts/factory/control.cue
-  -> input
-  -> transform
-  -> output
-  -> sensor
-  -> error-signal
-  -> control-action
-  -> next-state
+  plumbing: {
+    available: [
+      "extend the contract",
+      "generate assertions",
+      "generate fixtures",
+      "generate evals",
+      "generate evidence",
+      "feed gate/control action",
+      "produce next state",
+    ]
+    route: [
+      "root contract extension",
+      "reflection inventory",
+      "materialization plan",
+      "generated assertion surface",
+      "generated fixture surface",
+      "generated eval/check surface",
+      "generated evidence surface",
+      "gate/control action",
+      "next state",
+    ]
+  }
 
-contracts/factory/introspection.cue
-  -> bounded adapter-visible views
-  -> AdapterCommand
-  -> EvidencePacket
-  -> Materialization
+  constraints: {
+    noNewInferredInterfaces: true
+    noNewInferredAuthority: true
+    noSDKLocalAuthority: true
+    noAdapterOnlySemanticContract: true
+    noShellOnlySemanticPath: true
+    noGeneratedArtifactWithoutProvenance: true
+    adaptersOnlyDeclaredBehavior: true
+  }
+
+  dag: {
+    nodes: {
+      N0: {
+        id: "N0.root-question"
+        question: rootQuestion.text
+      }
+      N1: {
+        id: "N1.contract-extension"
+        question: "Which root CUE value/schema must be extended?"
+      }
+      N2: {
+        id: "N2.generated-assertions"
+        question: "Which assertion surfaces are generated from the extension?"
+      }
+      N3: {
+        id: "N3.generated-fixtures"
+        question: "Which fixtures are generated from the extension?"
+      }
+      N4: {
+        id: "N4.generated-evals"
+        question: "Which eval/check surfaces are generated from the extension?"
+      }
+      N5: {
+        id: "N5.generated-evidence"
+        question: "Which evidence packets/materializations are generated?"
+      }
+      N6: {
+        id: "N6.gate"
+        question: "Which control-loop gate admits/rejects/revises the transition?"
+      }
+      N7: {
+        id: "N7.next-state"
+        question: "What admitted next state is observable?"
+      }
+    }
+
+    allowedEdges: [
+      "N0 -> N1",
+      "N1 -> N2",
+      "N1 -> N3",
+      "N1 -> N4",
+      "N2 -> N5",
+      "N3 -> N5",
+      "N4 -> N5",
+      "N5 -> N6",
+      "N6 -> N7",
+    ]
+
+    forbiddenEdges: [
+      "SDK -> authority",
+      "handler -> authority",
+      "MCP -> authority",
+      "shell script -> semantic authority",
+      "generated artifact -> authority",
+      "worker output -> transition without gate",
+      "materialization -> admitted state without control action",
+    ]
+  }
+}
 ```
 
-This issue must not introduce inferred interfaces, inferred authority, shell-only behavior, or SDK-local authority. If required plumbing appears missing, the task is to express the missing extension through the root contract first, then regenerate derived surfaces.
+# Issue-specific DAG instantiation
 
-# DAG implementation model
+```cue
+package issue
 
-Implementation plans must be reasoned as a DAG. Start from `N0.root-question` and route through existing root plumbing.
-
-```text
-Nodes:
-  N0.root-question:
-    How can the root contract express, materialize and gate this?
-
-  N1.contract-extension:
-    Existing root contract extension point that admits the work.
-    Authority remains under contracts/factory/**.
-
-  N2.generated-assertions:
-    Assertion surfaces generated from the reflected contract inventory.
-    No hand-authored assertion instance may become authority.
-
-  N3.generated-fixtures:
-    Fixture projections generated from the root contract materialization plan.
-    Fixtures are non-authoritative.
-
-  N4.generated-evals:
-    Eval or validation projections generated from root contract authority.
-    Eval commands must be declared, reproducible, and gate-bound.
-
-  N5.generated-evidence:
-    Evidence packets, assertion results, or loop-stage exports.
-    Evidence is bounded and non-authoritative.
-
-  N6.gate:
-    Declared assertion, drift check, control action, or validation gate.
-
-  N7.next-state:
-    Admitted state after the control loop closes.
-
-Edges:
-  N0.root-question -> N1.contract-extension
-  N1.contract-extension -> N2.generated-assertions
-  N1.contract-extension -> N3.generated-fixtures
-  N1.contract-extension -> N4.generated-evals
-  N2.generated-assertions -> N6.gate
-  N3.generated-fixtures -> N4.generated-evals
-  N4.generated-evals -> N5.generated-evidence
-  N5.generated-evidence -> N6.gate
-  N6.gate -> N7.next-state
-
-Parallel edges:
-  - 
+issue: #FactoryControlLoopIssue & {
+  dag: nodes: {
+    N1: answer: ""
+    N2: answer: ""
+    N3: answer: ""
+    N4: answer: ""
+    N5: answer: ""
+    N6: answer: ""
+    N7: answer: ""
+  }
+}
 ```
 
 # Contract authority surfaces
 
 ```text
+Root extension point:
+  - existing CUE value/path:
+  - required extension:
+
 Authority surfaces:
   - contracts/factory/reflection.cue:
   - contracts/factory/control.cue:
   - contracts/factory/introspection.cue:
-
-Root extension point:
-  - existing value/path:
-  - required extension:
 
 Non-authority inputs:
   - 
@@ -127,7 +214,7 @@ Generated fixtures:
     generatedFrom:
     admittedBy:
 
-Generated evals:
+Generated evals/checks:
   - path or command:
     generatedFrom:
     declaredBy:
@@ -184,7 +271,7 @@ Drift checks:
 # Acceptance criteria
 
 - [ ] Root contract question is answered before implementation details.
-- [ ] Implementation plan is represented as a DAG with named nodes and edges.
+- [ ] Implementation plan instantiates the canonical `#FactoryControlLoopIssue` DAG.
 - [ ] The plan uses existing root plumbing before proposing any new surface.
 - [ ] Contract extension is expressed under `contracts/factory/**`.
 - [ ] Assertions are generated or explicitly rooted in the reflected contract inventory.
