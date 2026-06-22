@@ -1,11 +1,13 @@
 ---
 name: Factory control-loop implementation
-about: Plan factory work from root contract authority through materialization, evidence, and gates.
+about: Plan factory work through existing root contract plumbing, generated evidence, and gates.
 title: "feat(factory): "
 labels: factory, contract
 ---
 
 # Root contract question
+
+All implementation planning starts here:
 
 ```text
 N0.root-question:
@@ -16,16 +18,26 @@ Answer:
 
 - 
 
-# Required control-loop frame
+# Existing root plumbing
 
-Reference the active CUE control loop:
+The root contract is expected to already dispose of the plumbing required to:
 
 ```text
 contracts/factory/reflection.cue
-  -> reflection inventory and materialization plan
+  -> extend the contract
+  -> generate assertions
+  -> generate fixtures
+  -> generate evals
+  -> generate evidence
 
 contracts/factory/control.cue
-  -> input -> transform -> output -> sensor -> error-signal -> control-action -> next-state
+  -> input
+  -> transform
+  -> output
+  -> sensor
+  -> error-signal
+  -> control-action
+  -> next-state
 
 contracts/factory/introspection.cue
   -> bounded adapter-visible views
@@ -34,40 +46,53 @@ contracts/factory/introspection.cue
   -> Materialization
 ```
 
+This issue must not introduce inferred interfaces, inferred authority, shell-only behavior, or SDK-local authority. If required plumbing appears missing, the task is to express the missing extension through the root contract first, then regenerate derived surfaces.
+
 # DAG implementation model
 
-Implementation plans must be reasoned as a DAG. Start from `N0.root-question`.
+Implementation plans must be reasoned as a DAG. Start from `N0.root-question` and route through existing root plumbing.
 
 ```text
 Nodes:
   N0.root-question:
-    asks how the root contract can express, materialize and gate this
+    How can the root contract express, materialize and gate this?
 
-  N1.contract-expression:
-    CUE authority surface that expresses the admissible object, state, or transition
+  N1.contract-extension:
+    Existing root contract extension point that admits the work.
+    Authority remains under contracts/factory/**.
 
-  N2.materialization-plan:
-    materialization path derived from CUE authority
+  N2.generated-assertions:
+    Assertion surfaces generated from the reflected contract inventory.
+    No hand-authored assertion instance may become authority.
 
-  N3.adapter-aperture:
-    bounded adapter command or runtime ingress declared by introspection
+  N3.generated-fixtures:
+    Fixture projections generated from the root contract materialization plan.
+    Fixtures are non-authoritative.
 
-  N4.evidence-sensor:
-    generated evidence, fixture, packet, assertion result, or loop-stage export
+  N4.generated-evals:
+    Eval or validation projections generated from root contract authority.
+    Eval commands must be declared, reproducible, and gate-bound.
 
-  N5.gate:
-    assertion, drift check, validation command, or control-action decision
+  N5.generated-evidence:
+    Evidence packets, assertion results, or loop-stage exports.
+    Evidence is bounded and non-authoritative.
 
-  N6.next-state:
-    admitted contract state after validation and materialization
+  N6.gate:
+    Declared assertion, drift check, control action, or validation gate.
+
+  N7.next-state:
+    Admitted state after the control loop closes.
 
 Edges:
-  N0.root-question -> N1.contract-expression
-  N1.contract-expression -> N2.materialization-plan
-  N2.materialization-plan -> N3.adapter-aperture
-  N3.adapter-aperture -> N4.evidence-sensor
-  N4.evidence-sensor -> N5.gate
-  N5.gate -> N6.next-state
+  N0.root-question -> N1.contract-extension
+  N1.contract-extension -> N2.generated-assertions
+  N1.contract-extension -> N3.generated-fixtures
+  N1.contract-extension -> N4.generated-evals
+  N2.generated-assertions -> N6.gate
+  N3.generated-fixtures -> N4.generated-evals
+  N4.generated-evals -> N5.generated-evidence
+  N5.generated-evidence -> N6.gate
+  N6.gate -> N7.next-state
 
 Parallel edges:
   - 
@@ -81,32 +106,56 @@ Authority surfaces:
   - contracts/factory/control.cue:
   - contracts/factory/introspection.cue:
 
-New or changed CUE values:
-  - 
+Root extension point:
+  - existing value/path:
+  - required extension:
 
 Non-authority inputs:
   - 
 ```
 
-# Materialization and evidence
+# Generated surfaces
 
 ```text
-Materializations:
+Generated assertions:
   - path:
-    kind:
     generatedFrom:
     admittedBy:
-    writtenBy:
 
-Evidence packets or loop exports:
+Generated fixtures:
+  - path:
+    generatedFrom:
+    admittedBy:
+
+Generated evals:
+  - path or command:
+    generatedFrom:
+    declaredBy:
+    admittedBy:
+
+Generated evidence:
   - path:
     schema:
     source view:
     bounded: true
     authority: false
+```
 
-Runtime sensors:
-  - 
+# Adapter and runtime aperture
+
+```text
+Adapter command or runtime ingress:
+  - name:
+    declared in: contracts/factory/introspection.cue
+    action: export-view | materialize | check-drift | run-check
+    outputs:
+    materializes:
+
+Forbidden:
+  - new SDK-local authority
+  - new adapter-only interface not declared by introspection
+  - raw runtime mutation path
+  - generated output without reflected provenance
 ```
 
 # Gates and control actions
@@ -115,7 +164,7 @@ Runtime sensors:
 Required gates:
   - cue eval:
   - cue vet:
-  - generated check:
+  - generated eval/check:
   - just target:
 
 Control action:
@@ -126,20 +175,25 @@ Control action:
 
 Drift checks:
   - generated evidence declared
-  - generated checks declared
+  - generated checks/evals declared
   - adapter commands declared
   - no shell-only generated paths
+  - no inferred interface or authority path
 ```
 
 # Acceptance criteria
 
 - [ ] Root contract question is answered before implementation details.
 - [ ] Implementation plan is represented as a DAG with named nodes and edges.
-- [ ] New semantics are expressed under `contracts/factory/**`.
+- [ ] The plan uses existing root plumbing before proposing any new surface.
+- [ ] Contract extension is expressed under `contracts/factory/**`.
+- [ ] Assertions are generated or explicitly rooted in the reflected contract inventory.
+- [ ] Fixtures are generated and non-authoritative.
+- [ ] Evals/checks are generated or declared by the root contract and gate-bound.
+- [ ] Evidence is generated, bounded, non-authoritative, and provenance-stamped.
 - [ ] Adapter-visible behavior is declared through `contracts/factory/introspection.cue`.
-- [ ] Generated outputs are non-authoritative and have reflected provenance.
+- [ ] No inferred interface, adapter-local authority, SDK-local authority, or shell-only semantic path is introduced.
 - [ ] Materializations are admitted by a declared control action or gate.
-- [ ] Evidence lands under `generated/evidence/**` or another declared bounded evidence path.
 - [ ] `just check` passes.
 
 # Validation commands
