@@ -1,6 +1,6 @@
 package factory
 
-_negativeBottomChecks: {
+#NegativeBottomChecks: {
 	vocabularyWithoutGateProof:
 		negativeFixtures.vocabularyWithoutGateProof.input & #RootPromotionCandidate
 
@@ -32,4 +32,20 @@ _negativeBottomChecks: {
 		emptyEvalCommand:
 			hookTemplateNegativeFixtures.emptyEvalCommand.input & #EvalObligation
 	}
+
+	hookRunner: {
+		generatedProjectionAuthority:
+			hookRunnerNegativeFixtures.generatedProjectionAuthority.input & #GeneratedHookProjection
+
+		shellSemanticAuthority:
+			hookRunnerNegativeFixtures.shellSemanticAuthority.input & #EvalRunnerPlan
+
+		emptyRunnerCommand:
+			hookRunnerNegativeFixtures.emptyRunnerCommand.input & #RunnerCommand
+
+		undeclaredRunnerCommand:
+			hookRunnerNegativeFixtures.undeclaredRunnerCommand.input & #EvalRunnerPlan
+	}
 }
+
+_negativeBottomChecks: #NegativeBottomChecks
