@@ -1,11 +1,12 @@
 package impl
 
 #CompletionReportSpec: close({
-	primitives: [...string & !=""] | *[]
-	surfaces: [...string & !=""] | *[]
-	fixtures: [...string & !=""] | *[]
-	checks: [...string & !=""] | *[]
-	commands: [...string & !=""] | *[]
+	primitives: [...string & !=""] & [_, ...]
+	surfaces: [...string & !=""] & [_, ...]
+	fixtures: [...string & !=""] & [_, ...]
+	checks: [...string & !=""] & [_, ...]
+	commands: [...string & !=""] & [_, ...]
+	evidence: [...string & !=""] & [_, ...]
 })
 
 #CompletionReportContract: close({
@@ -17,6 +18,7 @@ package impl
 		fixtures: [...string & !=""]
 		checks: [...string & !=""]
 		commands: [...string & !=""]
+		evidence: [...string & !=""]
 	})
 })
 
@@ -33,6 +35,7 @@ package impl
 			"fixtures implemented",
 			"bottom checks implemented",
 			"commands run",
+			"evidence",
 			"final result",
 		]
 
@@ -42,6 +45,7 @@ package impl
 			fixtures: in.fixtures
 			checks: in.checks
 			commands: in.commands
+			evidence: in.evidence
 		}
 	}
 }

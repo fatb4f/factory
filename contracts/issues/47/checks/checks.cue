@@ -1,21 +1,31 @@
 package issue47checks
 
 import impl "github.com/fatb4f/contract.cuemod/contracts/meta/impl"
-import issue47 "github.com/fatb4f/contract.cuemod/contracts/issues/47"
+import issue47 "github.com/fatb4f/contract.cuemod/contracts/issues/47:issue47"
 
-_fallbackAuthority: impl.#MakeBottomCheck & {
+_fallbackAuthority: impl.#MakeBottomCheckProof & {
 	in: {
 		name: "fallbackAuthority"
-		input: issue47.negativeFixtures.fallbackAuthority.input
-		target: issue47.#Issue47Manifest
+		input: {
+			value: issue47.negativeFixtures.fallbackAuthority.input
+		}
+		target: {
+			name: "#Issue47Manifest"
+			contract: issue47.#Issue47Manifest
+		}
 	}
 }
 
-_wrongSequenceOrder: impl.#MakeBottomCheck & {
+_wrongSequenceOrder: impl.#MakeBottomCheckProof & {
 	in: {
 		name: "wrongSequenceOrder"
-		input: issue47.negativeFixtures.wrongSequenceOrder.input
-		target: issue47.#Issue47Manifest
+		input: {
+			value: issue47.negativeFixtures.wrongSequenceOrder.input
+		}
+		target: {
+			name: "#Issue47Manifest"
+			contract: issue47.#Issue47Manifest
+		}
 	}
 }
 

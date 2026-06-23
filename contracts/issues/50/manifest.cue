@@ -64,7 +64,8 @@ _predicates: impl.#MakePredicateSet & {
 	in: {
 		name: "#RustRuntimeSchemaSyncPredicates"
 		role: "derive schema sync rejection predicates from observed fields"
-		inputSurface: _observedSurface.out.name
+		observedSurface: _observedSurface.out.name
+		admissibleSurface: _admissibleSurface.out.name
 		derivedPredicates: ["generatedSchemaAsAuthority", "wrongSequenceOrder"]
 		operatorSupplied: false
 	}
@@ -78,6 +79,7 @@ _promotionCandidate: impl.#MakePromotionCandidate & {
 		admissibleSurface: _admissibleSurface.out.name
 		predicateSet: _predicates.out.name
 		controlPredicates: _predicates.out.derivedPredicates
+		admissibilityEvidence: ["observed surface", "admissible surface", "derived predicates"]
 		closed: true
 	}
 }
@@ -158,6 +160,7 @@ _validation: impl.#MakeValidationPlan & {
 		publicExpr: "publicContract"
 		bottomChecks: ["generatedSchemaAsAuthority", "wrongSequenceOrder"]
 		checkFile: "./contracts/issues/50/checks"
+		checkSurface: "_negativeBottomChecks"
 		forbiddenPattern: _issueForbiddenPattern
 	}
 }
@@ -184,5 +187,6 @@ _completion: impl.#MakeCompletionReport & {
 		fixtures: [negativeFixtures.generatedSchemaAsAuthority.id, negativeFixtures.wrongSequenceOrder.id]
 		checks: _validation.in.bottomChecks
 		commands: _validation.out.commands
+		evidence: ["constructor outputs", "bottom check failures", "forbidden-pattern scan"]
 	}
 }

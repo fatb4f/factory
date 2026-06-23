@@ -53,8 +53,13 @@ constructorLibraryBaseline: close({
 			file: "contracts/meta/impl/fixture.cue"
 		},
 		{
-			name: "#BottomCheckSpec"
-			constructor: "#MakeBottomCheck"
+			name: "#BottomCheckPlanSpec"
+			constructor: "#MakeBottomCheckPlan"
+			file: "contracts/meta/impl/bottom.cue"
+		},
+		{
+			name: "#BottomCheckProofSpec"
+			constructor: "#MakeBottomCheckProof"
 			file: "contracts/meta/impl/bottom.cue"
 		},
 		{
@@ -90,13 +95,16 @@ constructorManifestBaseline: close({
 		"#MakePromotionCandidate",
 		"#MakeSurfaceSet",
 		"#MakeNegativeFixture",
-		"#MakeBottomCheck",
+		"#MakeBottomCheckPlan",
+		"#MakeBottomCheckProof",
 		"#MakeValidationPlan",
 		"#MakeCompletionReport",
 	]
 	requirements: [
 		"import repo-local constructors from contracts/meta/impl",
 		"carry constructor calls only",
+		"carry bottom-check plans in manifest packages",
+		"construct executable bottom proofs only in check packages",
 		"keep target expansion, transport, and runtime execution outside constructor authority",
 	]
 })
@@ -112,6 +120,7 @@ constructorValidationPlanBaseline: (_baselineValidation & {
 			"inlineConstructorDefinitionAccepted",
 		]
 		checkFile: "./contracts/meta/impl/checks"
+		checkSurface: "_negativeBottomChecks"
 		forbiddenPattern: _defaultForbiddenPattern
 	}
 }).out
@@ -138,6 +147,7 @@ constructorCompletionReportBaseline: (_baselineCompletion & {
 		]
 		checks: constructorValidationPlanBaseline.commands
 		commands: constructorValidationPlanBaseline.commands
+		evidence: ["constructor catalog", "negative checks", "forbidden-pattern scan"]
 	}
 }).out
 

@@ -38,9 +38,10 @@ _constructorWorkflow: [
 	{order: 5, id: "#MakePromotionCandidate", constructor: impl.#MakePromotionCandidate, instantiateAt: "_promotion"},
 	{order: 6, id: "#MakeSurfaceSet", constructor: impl.#MakeSurfaceSet, instantiateAt: "_surfaces"},
 	{order: 7, id: "#MakeNegativeFixture", constructor: impl.#MakeNegativeFixture, instantiateAt: "_negativeFixtures"},
-	{order: 8, id: "#MakeBottomCheck", constructor: impl.#MakeBottomCheck, instantiateAt: "_bottomCheckConstructors"},
-	{order: 9, id: "#MakeValidationPlan", constructor: impl.#MakeValidationPlan, instantiateAt: "_validation"},
-	{order: 10, id: "#MakeCompletionReport", constructor: impl.#MakeCompletionReport, instantiateAt: "_completion"},
+	{order: 8, id: "#MakeBottomCheckPlan", constructor: impl.#MakeBottomCheckPlan, instantiateAt: "_bottomCheckPlans"},
+	{order: 9, id: "#MakeBottomCheckProof", constructor: impl.#MakeBottomCheckProof, instantiateAt: "checks/_negativeBottomChecks"},
+	{order: 10, id: "#MakeValidationPlan", constructor: impl.#MakeValidationPlan, instantiateAt: "_validation"},
+	{order: 11, id: "#MakeCompletionReport", constructor: impl.#MakeCompletionReport, instantiateAt: "_completion"},
 ]
 
 _primitives: [
@@ -83,7 +84,8 @@ _predicates: impl.#MakePredicateSet & {
 	in: {
 		name: "#IssueManifestPredicates"
 		role: "derive manifest rejection predicates from observed fields"
-		inputSurface: "#ObservedIssueManifest"
+		observedSurface: "#ObservedIssueManifest"
+		admissibleSurface: _admissible.out.name
 		derivedPredicates: ["hasConstructorBodies", "hasStringifiedCueChecks"]
 		operatorSupplied: false
 	}
@@ -97,6 +99,7 @@ _promotion: impl.#MakePromotionCandidate & {
 		admissibleSurface: "#IssueManifestCandidate"
 		predicateSet: "#IssueManifestPredicates"
 		controlPredicates: ["hasConstructorBodies", "hasStringifiedCueChecks"]
+		admissibilityEvidence: ["observed surface", "admissible surface", "derived predicates"]
 		closed: true
 	}
 }
@@ -135,6 +138,7 @@ _validation: impl.#MakeValidationPlan & {
 		publicExpr: "normalizedIssueManifest"
 		bottomChecks: ["constructorBodies"]
 		checkFile: _issue.target.checkFile
+		checkSurface: "_negativeBottomChecks"
 		forbiddenPattern: _issueForbiddenPattern
 	}
 }
@@ -155,6 +159,7 @@ _completion: impl.#MakeCompletionReport & {
 		fixtures: [negativeFixtureSet.constructorBodies.id]
 		checks: _validation.in.bottomChecks
 		commands: _validation.out.commands
+		evidence: ["constructor outputs", "bottom check failures", "forbidden-pattern scan"]
 	}
 }
 

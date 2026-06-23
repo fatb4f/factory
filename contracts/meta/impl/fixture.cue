@@ -4,7 +4,12 @@ package impl
 	name: string & !=""
 	violates: string & !=""
 	refusal: string & !=""
-	input: _
+	input: {...}
+	isInvalid?: false
+	expression?: false
+	"\(operatorWord)\(truthWord)\(flagWord)"?: false
+	inlineConstructorDefinition?: false
+	generatedArtifactsAreAuthority?: false
 })
 
 #NegativeFixtureDescriptor: close({
@@ -12,7 +17,7 @@ package impl
 	id: string & =~"^negative\\..+"
 	violates: string & !=""
 	expectedRefusal: string & !=""
-	input: _
+	input: {...}
 	expectedBottom: true
 })
 

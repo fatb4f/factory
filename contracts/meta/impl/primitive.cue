@@ -3,9 +3,14 @@ package impl
 #PrimitiveSpec: close({
 	name: string & !=""
 	role: string & !=""
-	requiredFields: [...string & !=""] | *[]
+	requiredFields: [...string & !=""] & [_, ...]
 	constraints: [...string & !=""] | *[]
 	closed: bool | *true
+	observedPhase?: false
+	admissiblePhase?: false
+	loweredObject?: false
+	proofObject?: false
+	materializedSurface?: false
 })
 
 #PrimitiveDescriptor: close({

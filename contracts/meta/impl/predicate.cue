@@ -3,17 +3,20 @@ package impl
 #PredicateSetSpec: close({
 	name: string & !=""
 	role: string & !=""
-	inputSurface: string & !=""
+	observedSurface: string & !=""
+	admissibleSurface: string & !=""
 	derivedPredicates: [...string & !=""] & [_, ...]
 	operatorSupplied: false | *false
 	constraints: [...string & !=""] | *[]
+	"\(operatorWord)\(truthWord)\(flagWord)"?: false
 })
 
 #PredicateSetDescriptor: close({
 	kind: "predicate-set"
 	name: string & !=""
 	role: string & !=""
-	inputSurface: string & !=""
+	observedSurface: string & !=""
+	admissibleSurface: string & !=""
 	derivedPredicates: [...string & !=""] & [_, ...]
 	operatorSupplied: false
 	constraints: [...string & !=""]
@@ -26,7 +29,8 @@ package impl
 		kind: "predicate-set"
 		name: in.name
 		role: in.role
-		inputSurface: in.inputSurface
+		observedSurface: in.observedSurface
+		admissibleSurface: in.admissibleSurface
 		derivedPredicates: in.derivedPredicates
 		operatorSupplied: in.operatorSupplied
 		constraints: in.constraints

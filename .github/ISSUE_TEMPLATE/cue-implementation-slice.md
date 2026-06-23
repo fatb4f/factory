@@ -35,6 +35,8 @@ Manifests must contain constructor calls only.
 Do not embed constructor bodies in issue text.
 Do not invent alternate shapes.
 Do not encode CUE checks as string metadata.
+Manifests may carry bottom-check plans only; executable bottom-check proofs live in check packages.
+Issue-local check adapters bind concrete proof targets internally.
 
 ```cue
 import impl "github.com/fatb4f/contract.cuemod/contracts/meta/impl"
@@ -47,9 +49,10 @@ _constructorWorkflow: [
 	{order: 5, id: "#MakePromotionCandidate", constructor: impl.#MakePromotionCandidate, instantiateAt: "_promotion"},
 	{order: 6, id: "#MakeSurfaceSet", constructor: impl.#MakeSurfaceSet, instantiateAt: "_surfaces"},
 	{order: 7, id: "#MakeNegativeFixture", constructor: impl.#MakeNegativeFixture, instantiateAt: "_negativeFixtures"},
-	{order: 8, id: "#MakeBottomCheck", constructor: impl.#MakeBottomCheck, instantiateAt: "_negativeBottomChecks"},
-	{order: 9, id: "#MakeValidationPlan", constructor: impl.#MakeValidationPlan, instantiateAt: "_validation"},
-	{order: 10, id: "#MakeCompletionReport", constructor: impl.#MakeCompletionReport, instantiateAt: "_completion"},
+	{order: 8, id: "#MakeBottomCheckPlan", constructor: impl.#MakeBottomCheckPlan, instantiateAt: "_bottomCheckPlans"},
+	{order: 9, id: "#MakeBottomCheckProof", constructor: impl.#MakeBottomCheckProof, instantiateAt: "checks/_negativeBottomChecks"},
+	{order: 10, id: "#MakeValidationPlan", constructor: impl.#MakeValidationPlan, instantiateAt: "_validation"},
+	{order: 11, id: "#MakeCompletionReport", constructor: impl.#MakeCompletionReport, instantiateAt: "_completion"},
 ]
 ```
 
@@ -88,10 +91,30 @@ _surfaces: impl.#MakeSurfaceSet & {
 
 Negative checks must be loaded from an explicit check surface and must fail by structural conflict or bottom.
 They must not pass because a selector is absent or because the check file was not loaded.
+Do not put executable proof objects in main manifests.
 
 ```cue
-_negativeBottomChecks: {
-	<name>: negativeFixtures.<name>.input & #<Candidate>
+#MakeIssueBottomCheckProof: {
+	in: {
+		name: string & !=""
+		fixture: {input: {...}}
+	}
+
+	_name: in.name
+	_fixtureInput: in.fixture.input
+
+	_constructor: impl.#MakeBottomCheckProof & {
+		in: {
+			name: _name
+			input: {value: _fixtureInput}
+			target: {
+				name: "#<Candidate>"
+				contract: #<Candidate>
+			}
+		}
+	}
+
+	out: _constructor.out
 }
 ```
 
@@ -103,6 +126,7 @@ cue export ./<contract-path> -e normalizedIssueManifest
 cue export ./<contract-path> -e issueValidationPlan
 cue export ./<contract-path> -e issueCompletionReportContract
 ! cue export ./<check-surface-path> -e '_negativeBottomChecks.<name>'
+! rg '[t]arget:\s*_|[i]nput:\s*_|[e]xpression:|[i]sInvalid: true|[o]peratorTruthFlag|[i]nline constructor|[g]enerated.*authority' ./<contract-path>
 ```
 
 ## Completion Report
@@ -114,6 +138,7 @@ Summary:
   - template changes:
   - public eval surfaces:
   - negative checks:
+  - evidence:
   - forbidden attractors avoided:
 
 Validation:

@@ -47,5 +47,6 @@ codexManifestSliceCompletionContract: (impl.#MakeCompletionReport & {
 		fixtures: ["negative.materializerScopeCreep"]
 		checks: ["materializerScopeCreep"]
 		commands: codexManifestSliceWorkflow.validation
+		evidence: ["workflow export", "completion contract export", "validation command list"]
 	}
 }).out

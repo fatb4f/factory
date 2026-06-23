@@ -48,7 +48,7 @@ _primitives: [
 		in: {
 			name: "#SurfaceSetSpec"
 			role: "closed input contract for declared CUE surface inventories"
-			requiredFields: []
+			requiredFields: ["admissible", "observed", "candidates", "fixtures", "checks", "publicExports"]
 			constraints: [
 				"all surface lists default to empty lists",
 				"surface names remain concrete strings",
@@ -70,9 +70,9 @@ _primitives: [
 	},
 	impl.#MakePrimitive & {
 		in: {
-			name: "#BottomCheckSpec"
-			role: "real CUE intersection check constructor input"
-			requiredFields: ["name", "input", "target"]
+			name: "#BottomCheckPlanSpec"
+			role: "manifest plan for real CUE intersection checks in check packages"
+			requiredFields: ["name", "fixture", "checkSurface", "checkFile"]
 			constraints: [
 				"checks intersect input and target directly",
 				"checks do not encode CUE expressions as strings",
@@ -172,6 +172,8 @@ _validation: impl.#MakeValidationPlan & {
 			"stringifiedCueExpression",
 			"goWrapperRequiredNow",
 		]
+		checkFile: "./contracts/issues/52/bottom_checks_test.cue"
+		checkSurface: "_negativeBottomChecks"
 		forbiddenPattern: "bottomCheckSurface|expression:|isInvalid: true"
 	}
 }
@@ -187,5 +189,6 @@ _completion: impl.#MakeCompletionReport & {
 		]
 		checks: _validation.in.bottomChecks
 		commands: _validation.out.commands
+		evidence: ["constructor exports", "bottom check failures", "forbidden-pattern scan"]
 	}
 }

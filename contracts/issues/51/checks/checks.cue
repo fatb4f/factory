@@ -1,21 +1,31 @@
 package issue51checks
 
 import impl "github.com/fatb4f/contract.cuemod/contracts/meta/impl"
-import issue51 "github.com/fatb4f/contract.cuemod/contracts/issues/51"
+import issue51 "github.com/fatb4f/contract.cuemod/contracts/issues/51:issue51"
 
-_projectMutationAuthority: impl.#MakeBottomCheck & {
+_projectMutationAuthority: impl.#MakeBottomCheckProof & {
 	in: {
 		name: "projectMutationAuthority"
-		input: issue51.negativeFixtures.projectMutationAuthority.input
-		target: issue51.#Issue51Manifest
+		input: {
+			value: issue51.negativeFixtures.projectMutationAuthority.input
+		}
+		target: {
+			name: "#Issue51Manifest"
+			contract: issue51.#Issue51Manifest
+		}
 	}
 }
 
-_wrongSequenceOrder: impl.#MakeBottomCheck & {
+_wrongSequenceOrder: impl.#MakeBottomCheckProof & {
 	in: {
 		name: "wrongSequenceOrder"
-		input: issue51.negativeFixtures.wrongSequenceOrder.input
-		target: issue51.#Issue51Manifest
+		input: {
+			value: issue51.negativeFixtures.wrongSequenceOrder.input
+		}
+		target: {
+			name: "#Issue51Manifest"
+			contract: issue51.#Issue51Manifest
+		}
 	}
 }
 

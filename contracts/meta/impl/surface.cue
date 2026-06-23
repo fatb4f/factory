@@ -6,6 +6,7 @@ package impl
 	factFields: [...string & !=""] & [_, ...]
 	mayRepresentInvalid: true | *true
 	constraints: [...string & !=""] | *[]
+	generatedArtifactsAreAuthority?: false
 })
 
 #ObservedSurfaceDescriptor: close({
@@ -38,6 +39,8 @@ package impl
 	rejectedFields: [...string & !=""] | *[]
 	closed: true | *true
 	constraints: [...string & !=""] | *[]
+	generatedArtifactsAreAuthority?: false
+	stringifiedCueExpression?: false
 })
 
 #AdmissibleSurfaceDescriptor: close({
@@ -67,12 +70,13 @@ package impl
 }
 
 #SurfaceSetSpec: close({
-	admissible: [...string & !=""] | *[]
-	observed: [...string & !=""] | *[]
-	candidates: [...string & !=""] | *[]
-	fixtures: [...string & !=""] | *[]
-	checks: [...string & !=""] | *[]
-	publicExports: [...string & !=""] | *[]
+	admissible: [...string & !=""] & [_, ...]
+	observed: [...string & !=""] & [_, ...]
+	candidates: [...string & !=""] & [_, ...]
+	fixtures: [...string & !=""] & [_, ...]
+	checks: [...string & !=""] & [_, ...]
+	publicExports: [...string & !=""] & [_, ...]
+	manifestExecutableProofObject?: false
 })
 
 #SurfaceSetDescriptor: close({

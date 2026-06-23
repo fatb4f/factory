@@ -7,6 +7,7 @@ package impl
 	admissibleSurface: string & !=""
 	predicateSet: string & !=""
 	controlPredicates: [...string & !=""] & [_, ...]
+	admissibilityEvidence: [...string & !=""] & [_, ...]
 	closed: true | *true
 	constraints: [...string & !=""] | *[]
 })
@@ -19,6 +20,7 @@ package impl
 	admissibleSurface: string & !=""
 	predicateSet: string & !=""
 	controlPredicates: [...string & !=""] & [_, ...]
+	admissibilityEvidence: [...string & !=""] & [_, ...]
 	closed: true
 	constraints: [...string & !=""]
 })
@@ -34,6 +36,7 @@ package impl
 		admissibleSurface: in.admissibleSurface
 		predicateSet: in.predicateSet
 		controlPredicates: in.controlPredicates
+		admissibilityEvidence: in.admissibilityEvidence
 		closed: in.closed
 		constraints: in.constraints
 	}

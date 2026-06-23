@@ -64,7 +64,8 @@ _predicates: impl.#MakePredicateSet & {
 	in: {
 		name: "#CodexPrimitiveConstructorKitPredicates"
 		role: "derive constructor kit rejection predicates from observed fields"
-		inputSurface: _observedSurface.out.name
+		observedSurface: _observedSurface.out.name
+		admissibleSurface: _admissibleSurface.out.name
 		derivedPredicates: ["inlineConstructorDefinitions", "wrongSequenceOrder"]
 		operatorSupplied: false
 	}
@@ -78,6 +79,7 @@ _promotionCandidate: impl.#MakePromotionCandidate & {
 		admissibleSurface: _admissibleSurface.out.name
 		predicateSet: _predicates.out.name
 		controlPredicates: _predicates.out.derivedPredicates
+		admissibilityEvidence: ["observed surface", "admissible surface", "derived predicates"]
 		closed: true
 	}
 }
@@ -154,6 +156,7 @@ _validation: impl.#MakeValidationPlan & {
 		publicExpr: "publicContract"
 		bottomChecks: ["inlineConstructorDefinitions", "wrongSequenceOrder"]
 		checkFile: "./contracts/issues/46/checks"
+		checkSurface: "_negativeBottomChecks"
 		forbiddenPattern: _issueForbiddenPattern
 	}
 }
@@ -180,5 +183,6 @@ _completion: impl.#MakeCompletionReport & {
 		fixtures: [negativeFixtures.inlineConstructorDefinitions.id, negativeFixtures.wrongSequenceOrder.id]
 		checks: _validation.in.bottomChecks
 		commands: _validation.out.commands
+		evidence: ["constructor outputs", "bottom check failures", "forbidden-pattern scan"]
 	}
 }

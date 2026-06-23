@@ -8,7 +8,8 @@ package impl
 	"#MakePromotionCandidate" |
 	"#MakeSurfaceSet" |
 	"#MakeNegativeFixture" |
-	"#MakeBottomCheck" |
+	"#MakeBottomCheckPlan" |
+	"#MakeBottomCheckProof" |
 	"#MakeValidationPlan" |
 	"#MakeCompletionReport"
 
@@ -67,9 +68,14 @@ constructorCatalog: #ConstructorCatalog & {
 			purpose: "Make rejection cases first-class fixtures."
 		},
 		{
-			id: "#MakeBottomCheck"
+			id: "#MakeBottomCheckPlan"
 			file: "contracts/meta/impl/bottom.cue"
-			purpose: "Generate real CUE intersections for negative checks."
+			purpose: "Declare intended negative checks in manifests without executable proof targets."
+		},
+		{
+			id: "#MakeBottomCheckProof"
+			file: "contracts/meta/impl/bottom.cue"
+			purpose: "Generate executable CUE intersections from check packages with adapter-bound targets."
 		},
 		{
 			id: "#MakeValidationPlan"
@@ -87,6 +93,7 @@ constructorCatalog: #ConstructorCatalog & {
 		"Issue manifests carry constructor calls, not constructor bodies.",
 		"CUE expressions remain CUE values, not stringified expression metadata.",
 		"Negative checks are generated as intersections, not invalidity flags.",
+		"Manifest packages carry bottom-check plans; check packages carry executable proof objects.",
 		"Go wrappers are deferred to transport and materialization."
 	]
 }
