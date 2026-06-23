@@ -90,11 +90,36 @@ Bottom checks:
     negativeFixtures.<name>.input & #RootPromotionCandidate
 ```
 
+## Negative-check placement
+
+```text
+Normal package surface:
+  - cue vet clean
+  - declares observed/admissible/candidate types
+  - declares valid exports and fixtures
+  - does not contain realized package-scope bottoms
+
+Test/check surface:
+  - contains _negativeBottomChecks
+  - contains strict intersections
+  - may bottom when a specific negative expression is exported
+```
+
+A negative check is valid only if the selected expression exists and fails by conflict/bottom.
+It is not valid if it fails by undefined field, missing selector, or absent check surface.
+
+Do not hide negative checks behind defaults or disjunctions such as:
+
+```cue
+_negativeBottomChecks: *{} | #NegativeBottomChecks
+```
+
 ## Files
 
 ```text
 Add / update:
   - <path>.cue
+  - <check-path>.cue or <path>_test.cue
 
 Package:
   package <package>
@@ -116,7 +141,10 @@ cue vet ./<contract-path>
 cue export ./<contract-path> -e <validObservedBaseline>
 cue export ./<contract-path> -e <admissibleCandidateBaseline>
 cue export ./<contract-path> -e <promotionReport>
-! cue export ./<contract-path> -e '_negativeBottomChecks.<name>'
+
+# Negative checks must load the check/test surface and fail by bottom, not undefined field.
+! cue export ./<contract-path> ./<check-path>.cue -e '_negativeBottomChecks.<name>'
+
 ! rg 'truthFlag|operatorSupplied|expectedBottom|bottomCheckSurface|expression:' ./<contract-path>
 ```
 
@@ -126,6 +154,8 @@ cue export ./<contract-path> -e <promotionReport>
 operator-supplied truth flags
 predicates stored as review metadata
 expectedBottom without real intersection
+undefined-field negative checks
+missing _negativeBottomChecks selector
 stringified CUE expressions
 bottomCheckSurface.expression
 adapter output as policy authority
@@ -141,7 +171,9 @@ placeholder evidence accepted as admissible
 - [ ] `#PatchPredicates` are derived, not supplied.
 - [ ] `#RootPromotionCandidate` is the closed promotion gate.
 - [ ] Negative fixtures are typed observed objects.
-- [ ] `_negativeBottomChecks` are real intersections and bottom.
+- [ ] `_negativeBottomChecks` are real intersections in a loaded check/test surface.
+- [ ] Negative exports fail by conflict/bottom, not undefined field.
+- [ ] Normal package `cue vet` remains clean.
 - [ ] Public eval exports validate.
 - [ ] Forbidden-attractor search passes.
 
@@ -151,8 +183,10 @@ placeholder evidence accepted as admissible
 Summary:
 Validation:
 Negative bottoms:
+  - command:
+  - failure mode: conflict/bottom | undefined-field | other
 Forbidden attractors:
 Exceptions:
 ```
 
-Stop once the declared slice validates and the negative intersections bottom.
+Stop once the declared slice validates and each loaded negative intersection bottoms.
