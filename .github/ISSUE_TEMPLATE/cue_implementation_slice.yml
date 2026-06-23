@@ -1,0 +1,431 @@
+name: CUE Implementation Slice
+description: Implement a bounded CUE contract slice with explicit authority, eval surfaces, fixtures, and validation.
+title: "cue: implement <slice>"
+labels: [cue, contract, implementation]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Purpose
+
+        This issue defines a **bounded CUE implementation slice**.
+
+        The goal is not to add vocabulary only. The patch must introduce a usable contract surface:
+
+        ```text
+        authority primitives
+          -> admissible shapes
+          -> concrete instances / fixtures
+          -> exported eval surfaces
+          -> validation commands
+        ```
+
+        Keep the slice small. Do not expand into unrelated adapters, generators, materializers, or architecture redesign.
+
+  - type: input
+    id: contract_path
+    attributes:
+      label: Contract path
+      description: Path to the CUE package or module area being implemented.
+      placeholder: "contracts/<domain>/<slice>"
+    validations: {required: true}
+
+  - type: input
+    id: cue_package
+    attributes:
+      label: CUE package name
+      description: Single package name for all files in this slice.
+      placeholder: "<package>"
+    validations: {required: true}
+
+  - type: input
+    id: slice_name
+    attributes:
+      label: Slice name
+      description: Short name for the implementation slice.
+      placeholder: "agent-context-resolver / vcs-patch-stack / repo-workflow / code-intel"
+    validations: {required: true}
+
+  - type: textarea
+    id: problem_statement
+    attributes:
+      label: Problem / missing contract
+      description: State what is currently missing and why this slice is needed.
+      value: |
+        Current state:
+
+        ```text
+        <what exists now>
+        ```
+
+        Missing contract surface:
+
+        ```text
+        <what must become explicit in CUE>
+        ```
+
+        This slice should implement:
+
+        ```text
+        <small bounded capability>
+        ```
+
+        This slice must not implement:
+
+        ```text
+        <adjacent or downstream capabilities>
+        ```
+    validations: {required: true}
+
+  - type: textarea
+    id: authority_boundary
+    attributes:
+      label: Authority boundary
+      description: Define what CUE owns and what remains outside this slice.
+      value: |
+        CUE authority:
+
+        ```text
+        <schemas / admissible states / invariants / fixtures / eval surfaces>
+        ```
+
+        Not CUE authority in this slice:
+
+        ```text
+        <runtime execution / VCS mutation / shell materialization / external adapter behavior>
+        ```
+
+        Adapter or projection boundaries, if any:
+
+        ```text
+        <adapter may observe or project, but must not become topology or policy authority>
+        ```
+    validations: {required: true}
+
+  - type: textarea
+    id: primitive_model
+    attributes:
+      label: Primitive model
+      description: Define the first-class objects this slice must introduce.
+      value: |
+        Required primitives:
+
+        ```text
+        #<PrimitiveA>
+          -> <role>
+          -> <required fields>
+          -> <constraints>
+
+        #<PrimitiveB>
+          -> <role>
+          -> <required fields>
+          -> <constraints>
+
+        #<CandidateOrInstance>
+          -> admissible instance shape
+          -> closed where appropriate
+          -> derives or constrains values instead of trusting diagnostic flags
+        ```
+
+        Primitive rules:
+
+        ```text
+        - prefer structural constraints over boolean review flags
+        - derive values algebraically when the value is determined by policy
+        - keep observed/fact types broader than admissible/candidate types when invalid observations must be represented
+        - use close(...) on candidate/admissible surfaces when extra fields must be rejected
+        ```
+    validations: {required: true}
+
+  - type: textarea
+    id: file_plan
+    attributes:
+      label: File plan
+      description: List files to create or update. Keep all new files in one package unless explicitly justified.
+      value: |
+        Expected files:
+
+        ```text
+        <contract-path>/root.cue
+          -> core primitives and candidate/admissible surfaces
+
+        <contract-path>/fixtures.cue
+          -> valid baseline instances and negative fixtures if needed
+
+        <contract-path>/checks_test.cue
+          -> eval/check surfaces
+
+        <contract-path>/<public>.cue
+          -> public issue/slice exports, if needed
+        ```
+
+        Package rule:
+
+        ```cue
+        package <package>
+        ```
+
+        Do not create side packages unless this issue explicitly authorizes them.
+    validations: {required: true}
+
+  - type: textarea
+    id: public_surfaces
+    attributes:
+      label: Public eval surfaces
+      description: Define expressions that must export successfully.
+      value: |
+        This slice must expose these positive eval surfaces:
+
+        ```cue
+        <validBaselineExpr>
+        <publicSliceExpr>
+        <gateOrReportExpr>
+        ```
+
+        Required positive validation:
+
+        ```bash
+        cue vet ./<contract-path>
+        cue export ./<contract-path> -e <validBaselineExpr>
+        cue export ./<contract-path> -e <publicSliceExpr>
+        ```
+
+        If the slice has no public issue/gate expression, define one small exported object that summarizes the implemented contract surface.
+    validations: {required: true}
+
+  - type: textarea
+    id: fixtures
+    attributes:
+      label: Fixtures
+      description: Define valid and invalid examples. Negative fixtures are optional only if the slice has no refusal invariant.
+      value: |
+        Required valid fixture:
+
+        ```cue
+        baseline<Thing>: #<CandidateOrInstance> & {
+          // concrete valid minimal instance
+        }
+        ```
+
+        If the slice introduces a refusal rule, add typed negative fixtures:
+
+        ```cue
+        #NegativeFixture: close({
+          id:              string
+          violates:        string
+          expectedRefusal: string
+          input:           #<ObservedOrBroadType>
+          expectedBottom:  true
+        })
+
+        negativeFixtures: {
+          <fixtureName>: #NegativeFixture & {
+            id:              "negative.<fixtureName>"
+            violates:        "predicates.<predicateName>"
+            expectedRefusal: "<why this shape must be refused>"
+            expectedBottom:  true
+
+            input: {
+              // actual invalid object shape
+            }
+          }
+        }
+        ```
+
+        Invalidity must be structural. Do not encode invalidity only as `isInvalid: true`, `<predicateName>: true`, or `expectedBottom: true`.
+    validations: {required: true}
+
+  - type: textarea
+    id: predicates_and_checks
+    attributes:
+      label: Predicates and checks
+      description: Define derived predicates and real check surfaces.
+      value: |
+        If this slice has derived refusal logic, use this shape:
+
+        ```cue
+        #Predicates: close({
+          input: #<ObservedOrBroadType>
+
+          <predicateName>: <derived expression over input>
+        })
+
+        #<Candidate>: _candidate=close(#<ObservedOrBroadType> & {
+          predicates: #Predicates & {
+            input: _candidate
+          }
+
+          if predicates.<predicateName> {
+            _<predicateName>: _|_
+          }
+        })
+        ```
+
+        Required negative check surface when negative fixtures exist:
+
+        ```cue
+        _negativeBottomChecks: {
+          <fixtureName>:
+            negativeFixtures.<fixtureName>.input & #<Candidate>
+        }
+        ```
+
+        This must be a real CUE intersection, not a string field.
+
+        Forbidden:
+
+        ```cue
+        bottomCheckSurface: {
+          expression: "negativeFixtures.<fixtureName>.input & #<Candidate>"
+          expectedBottom: true
+        }
+        ```
+    validations: {required: true}
+
+  - type: textarea
+    id: generated_outputs
+    attributes:
+      label: Generated outputs / projections
+      description: Use only if this slice intentionally updates generated artifacts or projections.
+      value: |
+        Generated or projected artifacts:
+
+        ```text
+        <path>
+          -> generated from <source authority>
+          -> validation command: <command>
+        ```
+
+        Rules:
+
+        ```text
+        - generated files must be downstream of CUE authority
+        - projections must not become mutation targets
+        - adapters may consume contract output but must not define policy authority
+        - do not add shell/materializer behavior unless explicitly in scope
+        ```
+    validations: {required: false}
+
+  - type: textarea
+    id: forbidden_attractors
+    attributes:
+      label: Forbidden attractors
+      description: Patterns that indicate review metadata, decorative schema, or unbounded architecture.
+      value: |
+        Do not introduce:
+
+        ```text
+        review-only metadata as proof
+        diagnostic boolean fields used as authority
+        expectedBottom without real intersections
+        stringified CUE expressions
+        bottomCheckSurface.expression
+        fake/default provenance
+        manually supplied derived values accepted as valid
+        placeholder evidence accepted as admissible evidence
+        side-package schema sprawl
+        broad state-machine expansion outside this slice
+        adapter/materializer behavior outside this slice
+        generated artifacts that are not downstream of CUE authority
+        inline duplicated predicate logic instead of a predicate control surface
+        ```
+
+        Repo-specific forbidden names:
+
+        ```text
+        <forbiddenNameA>
+        <forbiddenNameB>
+        <forbiddenNameC>
+        ```
+    validations: {required: true}
+
+  - type: textarea
+    id: acceptance_commands
+    attributes:
+      label: Acceptance commands
+      description: Commands required before the issue can close.
+      value: |
+        Required positive checks:
+
+        ```bash
+        cue vet ./<contract-path>
+        cue export ./<contract-path> -e <validBaselineExpr>
+        cue export ./<contract-path> -e <publicSliceExpr>
+        ```
+
+        Required negative checks, if negative fixtures exist:
+
+        ```bash
+        ! cue export ./<contract-path> -e '_negativeBottomChecks.<fixtureName>'
+        ```
+
+        Required search checks:
+
+        ```bash
+        ! rg '<forbiddenNameA>|<forbiddenNameB>|bottomCheckSurface|expression:' ./<contract-path>
+        ```
+
+        Optional generated/projection checks:
+
+        ```bash
+        <repo-specific command>
+        ```
+    validations: {required: true}
+
+  - type: textarea
+    id: non_goals
+    attributes:
+      label: Non-goals
+      description: Explicitly constrain scope.
+      value: |
+        This issue must not expand into:
+
+        ```text
+        architecture redesign
+        unrelated package reorganization
+        downstream runtime adapter implementation
+        VCS mutation/materialization
+        broad promotion state machine
+        command inventory generation unless explicitly listed
+        unrelated schema cleanup
+        documentation-only review artifact
+        ```
+
+        Stop once the declared CUE contract slice exports and validates.
+    validations: {required: true}
+
+  - type: textarea
+    id: completion_report
+    attributes:
+      label: Required completion report
+      description: Implementer must paste this in the PR or issue comment.
+      value: |
+        Summary:
+
+        ```text
+        - added/updated primitives:
+        - added/updated admissible/candidate surfaces:
+        - added/updated fixtures:
+        - added/updated predicates/checks:
+        - added/updated public eval surfaces:
+        - generated/projection updates, if any:
+        - removed or avoided forbidden attractors:
+        ```
+
+        Validation:
+
+        ```text
+        - cue vet ./<contract-path>:
+        - cue export ./<contract-path> -e <validBaselineExpr>:
+        - cue export ./<contract-path> -e <publicSliceExpr>:
+        - negative bottom checks, if any:
+        - forbidden attractor search:
+        - generated/projection checks, if any:
+        ```
+
+        Compatibility exceptions:
+
+        ```text
+        <If a compatibility binding remains, explain why it is not authority, evidence, default data, or mutation behavior.>
+        ```
+    validations: {required: true}
