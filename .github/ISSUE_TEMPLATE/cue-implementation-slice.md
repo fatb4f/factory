@@ -25,6 +25,24 @@ Do not implement:
   -
 ```
 
+## Constructor manifest
+
+```text
+Use repo-local constructor definitions from:
+  contracts/meta/impl
+
+Provide compact constructor calls only.
+Do not inline constructor definitions.
+Do not invent alternate constructor shapes.
+Do not encode CUE expressions as strings.
+
+Preferred manifest path:
+  contracts/issues/<issue-number>/manifest.cue
+
+Preferred normalized export path:
+  contracts/issues/<issue-number>/normalized.cue
+```
+
 ## Authority boundary
 
 ```text
@@ -145,7 +163,7 @@ cue export ./<contract-path> -e <promotionReport>
 # Negative checks must load the check/test surface and fail by bottom, not undefined field.
 ! cue export ./<contract-path> ./<check-path>.cue -e '_negativeBottomChecks.<name>'
 
-! rg 'truthFlag|operatorSupplied|expectedBottom|bottomCheckSurface|expression:' ./<contract-path>
+! rg 'truthFlag|operatorSupplied|bottomCheckSurface|expression:|isInvalid: true' ./<contract-path>
 ```
 
 ## Forbidden attractors
@@ -170,6 +188,8 @@ placeholder evidence accepted as admissible
 - [ ] `#Admissible<T>` rejects invalid values structurally.
 - [ ] `#PatchPredicates` are derived, not supplied.
 - [ ] `#RootPromotionCandidate` is the closed promotion gate.
+- [ ] Constructor manifests use repo-local constructors from `contracts/meta/impl`.
+- [ ] Issue bodies carry constructor calls or manifest paths, not constructor bodies.
 - [ ] Negative fixtures are typed observed objects.
 - [ ] `_negativeBottomChecks` are real intersections in a loaded check/test surface.
 - [ ] Negative exports fail by conflict/bottom, not undefined field.
