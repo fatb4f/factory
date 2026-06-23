@@ -1,29 +1,30 @@
 package issue59checks
 
 import impl "github.com/fatb4f/contract.cuemod/contracts/meta/impl"
+
 import issue59 "github.com/fatb4f/contract.cuemod/contracts/issues/59:issue59"
 
 #Issue59InvocationCandidate: close({
 	constructor: string & !=""
-	phase: "admissible"
+	phase:       "admissible"
 	evidence: [...string & !=""] & [_, ...]
-	targetTopAccepted?: false
-	inputTopAccepted?: false
-	emptySurfaceInventoryAccepted?: false
-	missingPhaseReferenceAccepted?: false
-	promotionWithoutPredicatesAccepted?: false
+	targetTopAccepted?:                             false
+	inputTopAccepted?:                              false
+	emptySurfaceInventoryAccepted?:                 false
+	missingPhaseReferenceAccepted?:                 false
+	promotionWithoutPredicatesAccepted?:            false
 	promotionWithoutAdmissibilityEvidenceAccepted?: false
-	predicateWithoutObservedSurfaceAccepted?: false
-	predicateWithoutAdmissibleSurfaceAccepted?: false
-	validationWithoutCheckFileAccepted?: false
-	validationWithoutCheckSurfaceAccepted?: false
-	completionWithoutCommandsAccepted?: false
-	completionWithoutEvidenceAccepted?: false
-	stringifiedCueExpressionAccepted?: false
-	invalidityFlagAccepted?: false
-	inlineConstructorDefinitionAccepted?: false
-	generatedAuthorityAccepted?: false
-	manifestExecutableProofObjectAccepted?: false
+	predicateWithoutObservedSurfaceAccepted?:       false
+	predicateWithoutAdmissibleSurfaceAccepted?:     false
+	validationWithoutCheckFileAccepted?:            false
+	validationWithoutCheckSurfaceAccepted?:         false
+	completionWithoutCommandsAccepted?:             false
+	completionWithoutEvidenceAccepted?:             false
+	stringifiedCueExpressionAccepted?:              false
+	invalidityFlagAccepted?:                        false
+	inlineConstructorDefinitionAccepted?:           false
+	generatedAuthorityAccepted?:                    false
+	manifestExecutableProofObjectAccepted?:         false
 })
 
 #MakeIssue59BottomCheckProof: {
@@ -34,18 +35,22 @@ import issue59 "github.com/fatb4f/contract.cuemod/contracts/issues/59:issue59"
 		}
 	}
 
-	_name: in.name
+	_name:         in.name
 	_fixtureInput: in.fixture.input
 
 	_constructor: impl.#MakeBottomCheckProof & {
 		in: {
 			name: _name
 			input: {
-				value: _fixtureInput
+				evidence: "negative fixture input"
+				value:    _fixtureInput
 			}
 			target: {
 				name: "#Issue59InvocationCandidate"
-				contract: #Issue59InvocationCandidate
+				contract: {
+					evidence: "issue-local proof target"
+					value:    #Issue59InvocationCandidate
+				}
 			}
 		}
 	}

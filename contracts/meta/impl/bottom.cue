@@ -1,37 +1,41 @@
 package impl
 
 #BottomCheckPlanSpec: close({
-	name: string & !=""
-	fixture: string & !=""
-	checkSurface: string & !=""
-	checkFile: string & !=""
+	name:                 string & !=""
+	fixture:              string & !=""
+	checkSurface:         string & !=""
+	checkFile:            string & !=""
 	targetBoundByAdapter: true | *true
 })
 
 #BottomCheckPlan: close({
-	kind: "bottom-check-plan"
-	name: string & !=""
-	fixture: string & !=""
-	checkSurface: string & !=""
-	checkFile: string & !=""
+	kind:                 "bottom-check-plan"
+	name:                 string & !=""
+	fixture:              string & !=""
+	checkSurface:         string & !=""
+	checkFile:            string & !=""
 	targetBoundByAdapter: true
 })
 
 #ProofInput: close({
-	value: _
+	evidence: string & !=""
+	value: {...}
 })
 
 #ProofTargetRef: close({
 	name: string & !=""
-	contract: _
+	contract: close({
+		evidence: string & !=""
+		value: {...}
+	})
 })
 
 #BottomCheckProofSpec: close({
-	name: string & !=""
-	input: #ProofInput
-	target: #ProofTargetRef
-	expression?: false
-	isInvalid?: false
+	name:                                      string & !=""
+	input:                                     #ProofInput
+	target:                                    #ProofTargetRef
+	expression?:                               false
+	isInvalid?:                                false
 	"\(operatorWord)\(truthWord)\(flagWord)"?: false
 })
 
@@ -39,11 +43,11 @@ package impl
 	in: #BottomCheckPlanSpec
 
 	out: #BottomCheckPlan & {
-		kind: "bottom-check-plan"
-		name: in.name
-		fixture: in.fixture
-		checkSurface: in.checkSurface
-		checkFile: in.checkFile
+		kind:                 "bottom-check-plan"
+		name:                 in.name
+		fixture:              in.fixture
+		checkSurface:         in.checkSurface
+		checkFile:            in.checkFile
 		targetBoundByAdapter: in.targetBoundByAdapter
 	}
 }
@@ -52,7 +56,16 @@ package impl
 	in: #BottomCheckProofSpec
 
 	out: {
-		"\(in.name)": in.input.value & in.target.contract
+		"\(in.name)": close({
+			kind:           "bottom-check-proof"
+			name:           in.name
+			inputEvidence:  in.input.evidence
+			targetName:     in.target.name
+			targetEvidence: in.target.contract.evidence
+			input:          in.input.value
+			target:         in.target.contract.value
+			proof:          in.input.value & in.target.contract.value
+		})
 	}
 }
 

@@ -106,10 +106,16 @@ Do not put executable proof objects in main manifests.
 	_constructor: impl.#MakeBottomCheckProof & {
 		in: {
 			name: _name
-			input: {value: _fixtureInput}
+			input: {
+				evidence: "negative fixture input"
+				value: _fixtureInput
+			}
 			target: {
 				name: "#<Candidate>"
-				contract: #<Candidate>
+				contract: {
+					evidence: "issue-local proof target"
+					value: #<Candidate>
+				}
 			}
 		}
 	}
