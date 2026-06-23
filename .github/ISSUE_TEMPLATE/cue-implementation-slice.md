@@ -22,8 +22,8 @@ _issue: {
 	}
 
 	goal: {
-		implement: [...string & !=""] & [_, ...]
-		doNotImplement: [...string & !=""] | *[
+		implement: ["<required implementation outcome>"]
+		doNotImplement: [
 			"Go wrapper",
 			"MCP exposure",
 			"GitHub mutation controller",
@@ -32,9 +32,9 @@ _issue: {
 	}
 
 	target: {
-		contractPath: string & !="" // example: "contracts/<name>"
-		package:      string & !=""
-		checkFile:    string | *""  // example: "./checks_test.cue" when needed
+		contractPath: "contracts/<slice>"
+		package:      "<package>"
+		checkFile:    "" // example: "./checks_test.cue" when needed
 	}
 }
 
@@ -161,11 +161,11 @@ _constructorWorkflow: [
 _primitives: [
 	impl.#MakePrimitive & {
 		in: {
-			name: "#<PrimitiveName>"
-			role: "<bounded role>"
-			requiredFields: ["<field>"]
+			name: "#ExamplePrimitive"
+			role: "bounded role to implement"
+			requiredFields: ["id"]
 			constraints: [
-				"<primitive invariant>",
+				"replace this with the primitive invariant",
 			]
 			closed: true
 		}
@@ -174,9 +174,9 @@ _primitives: [
 
 _surfaces: impl.#MakeSurfaceSet & {
 	in: {
-		admissible: ["#<AdmissibleSurface>"]
-		observed: ["#<ObservedSurface>"]
-		candidates: ["#<CandidateSurface>"]
+		admissible: ["#ExampleAdmissible"]
+		observed: ["#ObservedExample"]
+		candidates: ["#ExampleCandidate"]
 		fixtures: ["validBaseline", "negativeFixtures"]
 		checks: ["_negativeBottomChecks"]
 		publicExports: ["publicContract"]
@@ -184,11 +184,11 @@ _surfaces: impl.#MakeSurfaceSet & {
 }
 
 _negativeFixtures: {
-	<fixtureName>: impl.#MakeNegativeFixture & {
+	exampleInvalid: impl.#MakeNegativeFixture & {
 		in: {
-			name: "<fixtureName>"
-			violates: "<authority or structural boundary>"
-			refusal: "<expected refusal reason>"
+			name: "exampleInvalid"
+			violates: "replace with the violated authority or structural boundary"
+			refusal: "replace with the expected refusal reason"
 			input: {
 				// invalid observed input goes here
 			}
@@ -196,29 +196,27 @@ _negativeFixtures: {
 	}
 }
 
+#TargetSurface: _
+
 _bottomCheckConstructors: {
-	<fixtureName>: impl.#MakeBottomCheck & {
+	exampleInvalid: impl.#MakeBottomCheck & {
 		in: {
-			name: "<fixtureName>"
-			input: _negativeFixtures.<fixtureName>.out.input
-			target: #<AdmissibleOrCandidateSurface>
+			name: "exampleInvalid"
+			input: _negativeFixtures.exampleInvalid.out.input
+			target: #TargetSurface
 		}
 	}
 }
 
 // Place this in the check/test surface when the normal package must remain cue-vet clean.
-_negativeBottomChecks: {
-	for k, v in _bottomCheckConstructors {
-		"\(k)": v.out[k]
-	}
-}
+_negativeBottomChecks: _bottomCheckConstructors.exampleInvalid.out
 
 _validation: impl.#MakeValidationPlan & {
 	in: {
 		path: _issue.target.contractPath
 		validBaselineExpr: "validBaseline"
 		publicExpr: "publicContract"
-		bottomChecks: ["<fixtureName>"]
+		bottomChecks: ["exampleInvalid"]
 		checkFile: _issue.target.checkFile
 		forbiddenPattern: "truthFlag|operatorSupplied|bottomCheckSurface|expression:|isInvalid: true"
 	}
@@ -227,7 +225,12 @@ _validation: impl.#MakeValidationPlan & {
 _completion: impl.#MakeCompletionReport & {
 	in: {
 		primitives: [for p in _primitives {p.out.name}]
-		surfaces: _surfaces.out.admissible + _surfaces.out.observed + _surfaces.out.candidates + _surfaces.out.publicExports
+		surfaces: [
+			"#ExampleAdmissible",
+			"#ObservedExample",
+			"#ExampleCandidate",
+			"publicContract",
+		]
 		fixtures: [for _, f in _negativeFixtures {f.out.id}]
 		checks: _validation.in.bottomChecks
 		commands: _validation.out.commands
@@ -237,7 +240,16 @@ _completion: impl.#MakeCompletionReport & {
 normalizedIssueManifest: {
 	issue: _issue
 	authority: _constructorAuthority
-	workflow: _constructorWorkflow
+	workflow: [
+		for w in _constructorWorkflow {
+			order: w.order
+			id: w.id
+			instantiateAt: w.instantiateAt
+			requirements: w.requirements
+			invariants: w.invariants
+			constraints: w.constraints
+		}
+	]
 	primitives: [for p in _primitives {p.out}]
 	surfaces: _surfaces.out
 	negativeFixtures: {for k, f in _negativeFixtures {"\(k)": f.out}}
