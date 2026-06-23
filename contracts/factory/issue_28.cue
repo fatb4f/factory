@@ -85,7 +85,7 @@ rootPromotionGate: #RootPromotionGate & {
 		rootNegativeFixtures.vocabularyWithoutGateProof,
 		rootNegativeFixtures.sidePackageSchemaSprawl,
 		rootNegativeFixtures.prematureClosureClaim,
-		rootNegativeFixtures.placeholderEvidenceOrProvenance,
+		rootNegativeFixtures.syntheticEvidenceOrProvenance,
 		rootNegativeFixtures.fakeProvenance,
 		rootNegativeFixtures.nonDerivedPath,
 	]

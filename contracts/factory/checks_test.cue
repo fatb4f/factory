@@ -10,12 +10,26 @@ _negativeBottomChecks: {
 	prematureClosureClaim:
 		negativeFixtures.prematureClosureClaim.input & #RootPromotionCandidate
 
-	placeholderEvidenceOrProvenance:
-		negativeFixtures.placeholderEvidenceOrProvenance.input & #RootPromotionCandidate
+	syntheticEvidenceOrProvenance:
+		negativeFixtures.syntheticEvidenceOrProvenance.input & #RootPromotionCandidate
 
 	fakeProvenance:
 		negativeFixtures.fakeProvenance.input & #RootPromotionCandidate
 
 	nonDerivedPath:
 		negativeFixtures.nonDerivedPath.input & #RootPromotionCandidate
+
+	hookTemplate: {
+		generatedAuthority:
+			hookTemplateNegativeFixtures.generatedAuthority.input & #ImplementationSliceIssue
+
+		stringifiedBottomCheck:
+			hookTemplateNegativeFixtures.stringifiedBottomCheck.input & #EvalPlan
+
+		shellSemanticAuthority:
+			hookTemplateNegativeFixtures.shellSemanticAuthority.input & #EvalPlan
+
+		emptyEvalCommand:
+			hookTemplateNegativeFixtures.emptyEvalCommand.input & #EvalObligation
+	}
 }

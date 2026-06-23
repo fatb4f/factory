@@ -61,7 +61,6 @@ negativeFixtures: {
 		id:              "negative.vocabulary-without-gate-proof"
 		violates:        "predicates.vocabularyWithoutGateProof"
 		expectedRefusal: "vocabulary alone is insufficient; gate checks, typed negative fixtures, refusal evals, and invariant coverage are required"
-		expectedBottom:  true
 
 		input: {
 			id: "bad.vocabulary-without-gate-proof"
@@ -90,7 +89,6 @@ negativeFixtures: {
 		id:              "negative.side-package-schema-sprawl"
 		violates:        "predicates.sidePackageSchemaSprawl"
 		expectedRefusal: "root contract must be discoverable as one package factory before side packages are admissible"
-		expectedBottom:  true
 
 		input: {
 			id: "bad.side-package-schema-sprawl"
@@ -122,7 +120,6 @@ negativeFixtures: {
 		id:              "negative.premature-closure-claim"
 		violates:        "predicates.prematureClosureClaim"
 		expectedRefusal: "candidate cannot claim admission, promotion, pass, or closure before empirical proof"
-		expectedBottom:  true
 
 		input: {
 			id: "bad.premature-closure-claim"
@@ -151,14 +148,13 @@ negativeFixtures: {
 		}
 	}
 
-	placeholderEvidenceOrProvenance: #NegativeFixture & {
-		id:              "negative.placeholder-evidence-or-provenance"
-		violates:        "predicates.placeholderEvidenceOrProvenance"
-		expectedRefusal: "placeholder evidence, placeholder provenance, adapter-declared HEAD, and fake digest defaults are inadmissible"
-		expectedBottom:  true
+	syntheticEvidenceOrProvenance: #NegativeFixture & {
+		id:              "negative.synthetic-evidence-or-provenance"
+		violates:        "predicates.syntheticEvidenceOrProvenance"
+		expectedRefusal: "synthetic evidence, synthetic provenance, adapter-declared HEAD, and fake digest defaults are inadmissible"
 
 		input: {
-			id: "bad.placeholder-evidence-or-provenance"
+			id: "bad.synthetic-evidence-or-provenance"
 
 			files:      baselineObservedPatch.files
 			paths:      baselineObservedPatch.paths
@@ -182,7 +178,6 @@ negativeFixtures: {
 		id:              "negative.fake-provenance"
 		violates:        "predicates.fakeProvenance"
 		expectedRefusal: "fake zero provenance values are inadmissible; provenance must be explicit real evidence or absent"
-		expectedBottom:  true
 
 		input: {
 			id: "bad.fake-provenance"
@@ -207,7 +202,6 @@ negativeFixtures: {
 		id:              "negative.non-derived-path"
 		violates:        "predicates.nonDerivedPath"
 		expectedRefusal: "artifact paths must be derived from root policy, not supplied directly or accepted by regex"
-		expectedBottom:  true
 
 		input: {
 			id: "bad.non-derived-path"

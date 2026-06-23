@@ -145,7 +145,7 @@ package factory
 		input.closureClaim.declaresClosurePassed ||
 		input.empiricalGate.closureProven
 
-	placeholderEvidence:
+	syntheticEvidence:
 		len([for e in input.evidence.vcs if (e.before.head == "declared-by-adapter" || e.after.head == "declared-by-adapter" || e.result == "applied") {e}]) > 0
 
 	fakeProvenance:
@@ -156,8 +156,8 @@ package factory
 			(k == "materializedAt" &&
 			v == "run:0000000000000000")) {v}]) > 0
 
-	placeholderEvidenceOrProvenance:
-		placeholderEvidence || fakeProvenance
+	syntheticEvidenceOrProvenance:
+		syntheticEvidence || fakeProvenance
 
 	nonDerivedPath:
 		len([for _, p in input.paths if (p.value != "\(p.owner.path)/\(p.pathPolicy.segments[p.kind])/\(p.name)") {p}]) > 0
@@ -219,8 +219,8 @@ package factory
 		_prematureClosureClaim: _|_
 	}
 
-	if predicates.placeholderEvidenceOrProvenance {
-		_placeholderEvidenceOrProvenance: _|_
+	if predicates.syntheticEvidenceOrProvenance {
+		_syntheticEvidenceOrProvenance: _|_
 	}
 
 	if predicates.nonDerivedPath {
@@ -235,7 +235,6 @@ package factory
 	violates:        string
 	expectedRefusal: string
 	input:           #ObservedPatch
-	expectedBottom:  true
 })
 
 #GateCheck: close({
