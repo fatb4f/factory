@@ -6,7 +6,7 @@ package impl
 	publicExpr: string & !=""
 	bottomChecks: [...string & !=""] | *[]
 	checkFile: string | *""
-	forbiddenPattern: string | *"bottomCheckSurface|expression:|isInvalid: true"
+	forbiddenPattern: string | *_defaultForbiddenPattern
 })
 
 #ValidationPlan: close({
@@ -28,7 +28,7 @@ package impl
 					"! cue export ./\(in.path) -e '_negativeBottomChecks.\(c)'"
 				}
 				if in.checkFile != "" {
-					"! cue export ./\(in.path) \(in.checkFile) -e '_negativeBottomChecks.\(c)'"
+					"! cue export \(in.checkFile) -e '_negativeBottomChecks.\(c)'"
 				}
 			},
 			"! rg '\(in.forbiddenPattern)' ./\(in.path)",

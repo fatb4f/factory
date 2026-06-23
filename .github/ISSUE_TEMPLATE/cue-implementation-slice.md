@@ -1,11 +1,11 @@
 ---
-name: CUE functional slice
-about: Implement a bounded CUE slice with real observed/admissible/bottom-check gates.
+name: CUE constructor manifest slice
+about: Implement a bounded CUE slice from compact repo-local constructor manifests.
 title: "cue: "
 labels: cue, contract, implementation
 ---
 
-# CUE functional slice
+# CUE Constructor Manifest Slice
 
 ## Tracking
 
@@ -13,6 +13,7 @@ labels: cue, contract, implementation
 Parent:
 Depends on:
 Blocks:
+Manifest path:
 ```
 
 ## Goal
@@ -25,188 +26,101 @@ Do not implement:
   -
 ```
 
-## Constructor manifest
+## Constructor Authority
 
-```text
-Use repo-local constructor definitions from:
-  contracts/meta/impl
+Use repo-local constructor definitions from `contracts/meta/impl`.
 
-Provide compact constructor calls only.
-Do not inline constructor definitions.
-Do not invent alternate constructor shapes.
-Do not encode CUE expressions as strings.
-
-Preferred manifest path:
-  contracts/issues/<issue-number>/manifest.cue
-
-Preferred normalized export path:
-  contracts/issues/<issue-number>/normalized.cue
-```
-
-## Authority boundary
-
-```text
-CUE owns:
-  - admissibility
-  - structural predicates
-  - bottom checks
-
-Observed / adapter / generated data:
-  - evidence only
-  - may be invalid
-  - never policy authority
-```
-
-## Required shape
-
-```text
-#Observed<T>
-  -> broad fact substrate
-  -> can represent valid and invalid observed states
-
-#Admissible<T>
-  -> narrow admissible structure
-  -> rejects invalid values structurally
-
-#PatchPredicates
-  -> derived from observed structure
-  -> no operator-supplied truth flags
-
-#RootPromotionCandidate
-  -> closed admissibility surface
-  -> wires predicates as control
-
-#NegativeFixture
-  -> typed invalid observed object
-
-_negativeBottomChecks
-  -> real CUE intersections
-  -> expected to bottom
-```
-
-## Slice objects
-
-```text
-Observed type:
-  #Observed<...>:
-
-Admissible type:
-  #Admissible<...>:
-
-Predicates:
-  #PatchPredicates:
-
-Promotion candidate:
-  #RootPromotionCandidate:
-
-Negative fixtures:
-  #NegativeFixture:
-  negativeFixtures.<name>:
-
-Bottom checks:
-  _negativeBottomChecks.<name>:
-    negativeFixtures.<name>.input & #RootPromotionCandidate
-```
-
-## Negative-check placement
-
-```text
-Normal package surface:
-  - cue vet clean
-  - declares observed/admissible/candidate types
-  - declares valid exports and fixtures
-  - does not contain realized package-scope bottoms
-
-Test/check surface:
-  - contains _negativeBottomChecks
-  - contains strict intersections
-  - may bottom when a specific negative expression is exported
-```
-
-A negative check is valid only if the selected expression exists and fails by conflict/bottom.
-It is not valid if it fails by undefined field, missing selector, or absent check surface.
-
-Do not hide negative checks behind defaults or disjunctions such as:
+Issue bodies should carry a compact manifest or a path to `contracts/issues/<issue-number>/manifest.cue`.
+Manifests must contain constructor calls only.
+Do not embed constructor bodies in issue text.
+Do not invent alternate shapes.
+Do not encode CUE checks as string metadata.
 
 ```cue
-_negativeBottomChecks: *{} | #NegativeBottomChecks
+import impl "github.com/fatb4f/contract.cuemod/contracts/meta/impl"
+
+_constructorWorkflow: [
+	{order: 1, id: "#MakePrimitive", constructor: impl.#MakePrimitive, instantiateAt: "_primitives"},
+	{order: 2, id: "#MakeObservedSurface", constructor: impl.#MakeObservedSurface, instantiateAt: "_observed"},
+	{order: 3, id: "#MakeAdmissibleSurface", constructor: impl.#MakeAdmissibleSurface, instantiateAt: "_admissible"},
+	{order: 4, id: "#MakePredicateSet", constructor: impl.#MakePredicateSet, instantiateAt: "_predicates"},
+	{order: 5, id: "#MakePromotionCandidate", constructor: impl.#MakePromotionCandidate, instantiateAt: "_promotion"},
+	{order: 6, id: "#MakeSurfaceSet", constructor: impl.#MakeSurfaceSet, instantiateAt: "_surfaces"},
+	{order: 7, id: "#MakeNegativeFixture", constructor: impl.#MakeNegativeFixture, instantiateAt: "_negativeFixtures"},
+	{order: 8, id: "#MakeBottomCheck", constructor: impl.#MakeBottomCheck, instantiateAt: "_negativeBottomChecks"},
+	{order: 9, id: "#MakeValidationPlan", constructor: impl.#MakeValidationPlan, instantiateAt: "_validation"},
+	{order: 10, id: "#MakeCompletionReport", constructor: impl.#MakeCompletionReport, instantiateAt: "_completion"},
+]
 ```
 
-## Files
+## Manifest Shape
 
-```text
-Add / update:
-  - <path>.cue
-  - <check-path>.cue or <path>_test.cue
+```cue
+package issue
 
-Package:
-  package <package>
+import impl "github.com/fatb4f/contract.cuemod/contracts/meta/impl"
+
+_primitives: [
+	impl.#MakePrimitive & {
+		in: {
+			name: "#<Primitive>"
+			role: "<role>"
+			requiredFields: ["<field>"]
+			constraints: ["<constraint>"]
+			closed: true
+		}
+	},
+]
+
+_surfaces: impl.#MakeSurfaceSet & {
+	in: {
+		admissible: ["#<Admissible>"]
+		observed: ["#<Observed>"]
+		candidates: ["#<Candidate>"]
+		fixtures: ["negativeFixtures"]
+		checks: ["_negativeBottomChecks"]
+		publicExports: ["normalizedIssueManifest", "issueValidationPlan", "issueCompletionReportContract"]
+	}
+}
 ```
 
-## Public eval surfaces
+## Negative Checks
 
-```text
-Required exports:
-  - <validObservedBaseline>
-  - <admissibleCandidateBaseline>
-  - <promotionReport>
+Negative checks must be loaded from an explicit check surface and must fail by structural conflict or bottom.
+They must not pass because a selector is absent or because the check file was not loaded.
+
+```cue
+_negativeBottomChecks: {
+	<name>: negativeFixtures.<name>.input & #<Candidate>
+}
 ```
 
 ## Validation
 
 ```bash
 cue vet ./<contract-path>
-cue export ./<contract-path> -e <validObservedBaseline>
-cue export ./<contract-path> -e <admissibleCandidateBaseline>
-cue export ./<contract-path> -e <promotionReport>
-
-# Negative checks must load the check/test surface and fail by bottom, not undefined field.
-! cue export ./<contract-path> ./<check-path>.cue -e '_negativeBottomChecks.<name>'
-
-! rg 'truthFlag|operatorSupplied|bottomCheckSurface|expression:|isInvalid: true' ./<contract-path>
+cue export ./<contract-path> -e normalizedIssueManifest
+cue export ./<contract-path> -e issueValidationPlan
+cue export ./<contract-path> -e issueCompletionReportContract
+! cue export ./<check-surface-path> -e '_negativeBottomChecks.<name>'
 ```
 
-## Forbidden attractors
-
-```text
-operator-supplied truth flags
-predicates stored as review metadata
-expectedBottom without real intersection
-undefined-field negative checks
-missing _negativeBottomChecks selector
-stringified CUE expressions
-bottomCheckSurface.expression
-adapter output as policy authority
-generated artifact as authority
-shell-only semantic validation
-placeholder evidence accepted as admissible
-```
-
-## Acceptance
-
-- [ ] `#Observed<T>` admits valid and invalid observations.
-- [ ] `#Admissible<T>` rejects invalid values structurally.
-- [ ] `#PatchPredicates` are derived, not supplied.
-- [ ] `#RootPromotionCandidate` is the closed promotion gate.
-- [ ] Constructor manifests use repo-local constructors from `contracts/meta/impl`.
-- [ ] Issue bodies carry constructor calls or manifest paths, not constructor bodies.
-- [ ] Negative fixtures are typed observed objects.
-- [ ] `_negativeBottomChecks` are real intersections in a loaded check/test surface.
-- [ ] Negative exports fail by conflict/bottom, not undefined field.
-- [ ] Normal package `cue vet` remains clean.
-- [ ] Public eval exports validate.
-- [ ] Forbidden-attractor search passes.
-
-## Completion report
+## Completion Report
 
 ```text
 Summary:
+  - constructor files:
+  - manifest workflow:
+  - template changes:
+  - public eval surfaces:
+  - negative checks:
+  - forbidden attractors avoided:
+
 Validation:
-Negative bottoms:
-  - command:
-  - failure mode: conflict/bottom | undefined-field | other
-Forbidden attractors:
-Exceptions:
+  - cue vet:
+  - constructor exports:
+  - negative bottom checks:
+  - forbidden-attractor search:
 ```
 
-Stop once the declared slice validates and each loaded negative intersection bottoms.
+Stop once the declared CUE surfaces export and the loaded negative checks bottom.

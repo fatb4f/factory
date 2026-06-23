@@ -2,6 +2,10 @@ package impl
 
 #ConstructorID:
 	"#MakePrimitive" |
+	"#MakeObservedSurface" |
+	"#MakeAdmissibleSurface" |
+	"#MakePredicateSet" |
+	"#MakePromotionCandidate" |
 	"#MakeSurfaceSet" |
 	"#MakeNegativeFixture" |
 	"#MakeBottomCheck" |
@@ -31,6 +35,26 @@ constructorCatalog: #ConstructorCatalog & {
 			id: "#MakePrimitive"
 			file: "contracts/meta/impl/primitive.cue"
 			purpose: "Compress repeated primitive descriptions into a known metadata shape."
+		},
+		{
+			id: "#MakeObservedSurface"
+			file: "contracts/meta/impl/surface.cue"
+			purpose: "Describe broad observed fact substrates that can carry valid and invalid states."
+		},
+		{
+			id: "#MakeAdmissibleSurface"
+			file: "contracts/meta/impl/surface.cue"
+			purpose: "Describe narrow admissible surfaces that reject invalid structure."
+		},
+		{
+			id: "#MakePredicateSet"
+			file: "contracts/meta/impl/predicate.cue"
+			purpose: "Describe predicates derived from observed structure."
+		},
+		{
+			id: "#MakePromotionCandidate"
+			file: "contracts/meta/impl/promotion.cue"
+			purpose: "Describe closed promotion candidates wired to predicate control."
 		},
 		{
 			id: "#MakeSurfaceSet"

@@ -1,5 +1,71 @@
 package impl
 
+#ObservedSurfaceSpec: close({
+	name: string & !=""
+	role: string & !=""
+	factFields: [...string & !=""] & [_, ...]
+	mayRepresentInvalid: true | *true
+	constraints: [...string & !=""] | *[]
+})
+
+#ObservedSurfaceDescriptor: close({
+	kind: "observed-surface"
+	name: string & !=""
+	role: string & !=""
+	factFields: [...string & !=""] & [_, ...]
+	mayRepresentInvalid: true
+	constraints: [...string & !=""]
+})
+
+#MakeObservedSurface: {
+	in: #ObservedSurfaceSpec
+
+	out: #ObservedSurfaceDescriptor & {
+		kind: "observed-surface"
+		name: in.name
+		role: in.role
+		factFields: in.factFields
+		mayRepresentInvalid: in.mayRepresentInvalid
+		constraints: in.constraints
+	}
+}
+
+#AdmissibleSurfaceSpec: close({
+	name: string & !=""
+	role: string & !=""
+	observedSurface: string & !=""
+	requiredFields: [...string & !=""] & [_, ...]
+	rejectedFields: [...string & !=""] | *[]
+	closed: true | *true
+	constraints: [...string & !=""] | *[]
+})
+
+#AdmissibleSurfaceDescriptor: close({
+	kind: "admissible-surface"
+	name: string & !=""
+	role: string & !=""
+	observedSurface: string & !=""
+	requiredFields: [...string & !=""] & [_, ...]
+	rejectedFields: [...string & !=""]
+	closed: true
+	constraints: [...string & !=""]
+})
+
+#MakeAdmissibleSurface: {
+	in: #AdmissibleSurfaceSpec
+
+	out: #AdmissibleSurfaceDescriptor & {
+		kind: "admissible-surface"
+		name: in.name
+		role: in.role
+		observedSurface: in.observedSurface
+		requiredFields: in.requiredFields
+		rejectedFields: in.rejectedFields
+		closed: in.closed
+		constraints: in.constraints
+	}
+}
+
 #SurfaceSetSpec: close({
 	admissible: [...string & !=""] | *[]
 	observed: [...string & !=""] | *[]
