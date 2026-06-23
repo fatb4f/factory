@@ -5,6 +5,7 @@ package agentcontextresolver
 	sourceEvalID: string & !=""
 	command:      [string & !="", ...string & !=""]
 	expect:       "pass" | "fail"
+	reasonClass?: "structural_bottom" | "missing_selector" | "load_error" | "syntax_error" | "tool_failure"
 })
 
 #EvalRunnerPlan: close({

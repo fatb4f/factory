@@ -1,0 +1,531 @@
+{
+    "loadedIssue": {
+        "kind": "cueImplementationSlice",
+        "contract": {
+            "path": "contracts/agent-context-resolver",
+            "package": "resolver",
+            "slice": "implementation-slice-issue-materializer",
+            "authority": {
+                "owns": [
+                    "parsed implementation-slice issue shape",
+                    "issue materialization candidate/admissible surface",
+                    "issue-specific eval obligation projection",
+                    "issue-specific eval-plan projection",
+                    "issue-specific runner-plan projection",
+                    "runner result classification shape",
+                    "negative fixtures and bottom-check surfaces proving parser/materializer failure modes",
+                    "forbidden-attractor checks for static eval plans, stringified checks, and any-nonzero failure semantics"
+                ],
+                "doesNotOwn": [
+                    "GitHub API behavior",
+                    "Codex/Claude reasoning",
+                    "shell process execution",
+                    "VCS mutation",
+                    "CI orchestration",
+                    "downstream effect application"
+                ]
+            },
+            "boundaries": {
+                "adapters": {
+                    "authority": false,
+                    "role": "observe/project/execute declared behavior only"
+                },
+                "generated": {
+                    "authority": false,
+                    "role": "downstream projection or materialized evidence only"
+                },
+                "runtime": {
+                    "authority": false,
+                    "role": "external substrate, not contract truth"
+                }
+            }
+        },
+        "surfaces": {
+            "admissible": [
+                "#IssueMaterializationCandidate",
+                "#ImplementationSliceMaterialization"
+            ],
+            "observed": [
+                "#RawImplementationSliceIssue"
+            ],
+            "candidates": [
+                "implementationSliceMaterializationReport"
+            ],
+            "fixtures": [
+                "negativeFixtures.routeOnlyPacket",
+                "negativeFixtures.missingContractPath",
+                "negativeFixtures.staticEvalPlan",
+                "negativeFixtures.missingNegativeCheckExpression",
+                "negativeFixtures.anyNonzeroAsPass"
+            ],
+            "checks": [
+                "_negativeBottomChecks.routeOnlyPacket",
+                "_negativeBottomChecks.missingContractPath",
+                "_negativeBottomChecks.staticEvalPlan",
+                "_negativeBottomChecks.missingNegativeCheckExpression",
+                "_negativeBottomChecks.anyNonzeroAsPass"
+            ],
+            "publicExports": [
+                "implementationSliceIssueBaseline",
+                "implementationSliceMaterializationReport",
+                "implementationSliceEvalPlan",
+                "implementationSliceRunnerPlan",
+                "implementationSliceFeedbackShape"
+            ]
+        },
+        "constraints": {
+            "noVocabularyOnlyPatch": true,
+            "noDiagnosticBooleanAuthority": true,
+            "noReviewMetadataAsProof": true,
+            "noStringifiedEvalExpressions": true,
+            "noGeneratedArtifactAsAuthority": true,
+            "noAdapterLocalPolicyAuthority": true,
+            "noShellOnlySemanticValidation": true,
+            "noSidePackageSprawl": true
+        },
+        "acceptanceCriteria": {
+            "rootQuestionAnsweredBeforeImplementation": true,
+            "authorityBoundaryDeclared": true,
+            "primitiveModelDeclared": true,
+            "admissibleSurfaceDeclared": true,
+            "validFixtureExports": true,
+            "publicEvalSurfaceExports": true,
+            "negativeFixturesBottomIfPresent": true,
+            "forbiddenAttractorSearchPasses": true,
+            "validationCommandsReported": true
+        }
+    },
+    "materialization": {
+        "issueRef": "issue-44",
+        "parsedRef": "generated/agent-context-resolver/issues/44/parsed.issue.json",
+        "loadedRef": "generated/agent-context-resolver/issues/44/loaded.issue.json",
+        "sourceTemplateRef": ".github/ISSUE_TEMPLATE/cue-implementation-slice.md",
+        "evalObligationsRef": "generated/agent-context-resolver/issues/44/eval-obligations.json",
+        "parsedIssue": {
+            "number": 44,
+            "title": "cue: implement agent-context-resolver implementation-slice issue materializer",
+            "sourceTemplateRef": ".github/ISSUE_TEMPLATE/cue-implementation-slice.md",
+            "contract": {
+                "path": "contracts/agent-context-resolver",
+                "package": "resolver",
+                "slice": "implementation-slice-issue-materializer",
+                "authority": {
+                    "owns": [
+                        "parsed implementation-slice issue shape",
+                        "issue materialization candidate/admissible surface",
+                        "issue-specific eval obligation projection",
+                        "issue-specific eval-plan projection",
+                        "issue-specific runner-plan projection",
+                        "runner result classification shape",
+                        "negative fixtures and bottom-check surfaces proving parser/materializer failure modes",
+                        "forbidden-attractor checks for static eval plans, stringified checks, and any-nonzero failure semantics"
+                    ],
+                    "doesNotOwn": [
+                        "GitHub API behavior",
+                        "Codex/Claude reasoning",
+                        "shell process execution",
+                        "VCS mutation",
+                        "CI orchestration",
+                        "downstream effect application"
+                    ]
+                }
+            },
+            "primitives": [
+                "#RawImplementationSliceIssue",
+                "#ParsedImplementationSliceIssue",
+                "#ImplementationSliceMaterialization",
+                "#ImplementationSliceEvalObligations",
+                "#ImplementationSliceEvalPlan",
+                "#ImplementationSliceRunnerPlan",
+                "#ClassifiedRunnerResult",
+                "#IssueMaterializationCandidate"
+            ],
+            "surfaces": {
+                "admissible": [
+                    "#IssueMaterializationCandidate",
+                    "#ImplementationSliceMaterialization"
+                ],
+                "observed": [
+                    "#RawImplementationSliceIssue"
+                ],
+                "candidates": [
+                    "implementationSliceMaterializationReport"
+                ],
+                "fixtures": [
+                    "negativeFixtures.routeOnlyPacket",
+                    "negativeFixtures.missingContractPath",
+                    "negativeFixtures.staticEvalPlan",
+                    "negativeFixtures.missingNegativeCheckExpression",
+                    "negativeFixtures.anyNonzeroAsPass"
+                ],
+                "checks": [
+                    "_negativeBottomChecks.routeOnlyPacket",
+                    "_negativeBottomChecks.missingContractPath",
+                    "_negativeBottomChecks.staticEvalPlan",
+                    "_negativeBottomChecks.missingNegativeCheckExpression",
+                    "_negativeBottomChecks.anyNonzeroAsPass"
+                ],
+                "publicExports": [
+                    "implementationSliceIssueBaseline",
+                    "implementationSliceMaterializationReport",
+                    "implementationSliceEvalPlan",
+                    "implementationSliceRunnerPlan",
+                    "implementationSliceFeedbackShape"
+                ]
+            },
+            "filePlan": [
+                {
+                    "path": "contracts/agent-context-resolver/implementation_slice_materializer.cue",
+                    "purpose": "raw/parsed/materialized issue primitives and admissible surfaces"
+                },
+                {
+                    "path": "contracts/agent-context-resolver/implementation_slice_eval_projection.cue",
+                    "purpose": "issue-specific eval obligation, eval-plan, and runner-plan projections"
+                },
+                {
+                    "path": "contracts/agent-context-resolver/implementation_slice_runner_result.cue",
+                    "purpose": "classified runner result and wrong-failure rejection surface"
+                },
+                {
+                    "path": "contracts/agent-context-resolver/fixtures.cue",
+                    "purpose": "valid baseline parsed issue and negative fixtures"
+                },
+                {
+                    "path": "contracts/agent-context-resolver/checks.cue",
+                    "purpose": "loadable negative bottom-check surfaces for normal cue export"
+                },
+                {
+                    "path": "contracts/agent-context-resolver/checks_test.cue",
+                    "purpose": "test-only wrappers if needed, but not the only location of exported negative checks"
+                },
+                {
+                    "path": "tools/agent-context-resolver/parse-implementation-slice-issue",
+                    "purpose": "minimal markdown-to-json observation adapter"
+                },
+                {
+                    "path": "tools/agent-context-resolver/materialize-implementation-slice",
+                    "purpose": "minimal CUE load/export adapter for parsed issue data"
+                },
+                {
+                    "path": "tools/hooks/run-eval-plan.sh",
+                    "purpose": "classify expected structural bottom separately from missing reference/load/syntax/tool errors"
+                },
+                {
+                    "path": "generated/agent-context-resolver/issues/.gitkeep",
+                    "purpose": "stable generated issue artifact root if repo tracks the directory"
+                }
+            ],
+            "evalSurfaces": [
+                "implementationSliceIssueBaseline",
+                "implementationSliceMaterializationReport",
+                "implementationSliceEvalPlan",
+                "implementationSliceRunnerPlan",
+                "implementationSliceFeedbackShape"
+            ],
+            "fixtures": [
+                "negativeFixtures.routeOnlyPacket",
+                "negativeFixtures.missingContractPath",
+                "negativeFixtures.staticEvalPlan",
+                "negativeFixtures.missingNegativeCheckExpression",
+                "negativeFixtures.anyNonzeroAsPass"
+            ],
+            "checks": [
+                "_negativeBottomChecks.routeOnlyPacket",
+                "_negativeBottomChecks.missingContractPath",
+                "_negativeBottomChecks.staticEvalPlan",
+                "_negativeBottomChecks.missingNegativeCheckExpression",
+                "_negativeBottomChecks.anyNonzeroAsPass"
+            ],
+            "validation": {
+                "positive": [
+                    {
+                        "id": "vet",
+                        "argv": [
+                            "cue",
+                            "vet",
+                            "./contracts/agent-context-resolver"
+                        ]
+                    },
+                    {
+                        "id": "baseline",
+                        "argv": [
+                            "cue",
+                            "export",
+                            "./contracts/agent-context-resolver",
+                            "-e",
+                            "implementationSliceIssueBaseline"
+                        ]
+                    },
+                    {
+                        "id": "plan",
+                        "argv": [
+                            "cue",
+                            "export",
+                            "./contracts/agent-context-resolver",
+                            "-e",
+                            "implementationSliceEvalPlan"
+                        ]
+                    }
+                ],
+                "negative": [
+                    {
+                        "id": "negative.routeOnlyPacket",
+                        "argv": [
+                            "cue",
+                            "export",
+                            "./contracts/agent-context-resolver",
+                            "-e",
+                            "_negativeBottomChecks.routeOnlyPacket"
+                        ],
+                        "expect": "fail",
+                        "reasonClass": "structural_bottom"
+                    }
+                ]
+            },
+            "gates": [
+                "admit loaded implementation-slice issue materializer"
+            ]
+        },
+        "loadedIssue": {
+            "kind": "cueImplementationSlice",
+            "contract": {
+                "path": "contracts/agent-context-resolver",
+                "package": "resolver",
+                "slice": "implementation-slice-issue-materializer",
+                "authority": {
+                    "owns": [
+                        "parsed implementation-slice issue shape",
+                        "issue materialization candidate/admissible surface",
+                        "issue-specific eval obligation projection",
+                        "issue-specific eval-plan projection",
+                        "issue-specific runner-plan projection",
+                        "runner result classification shape",
+                        "negative fixtures and bottom-check surfaces proving parser/materializer failure modes",
+                        "forbidden-attractor checks for static eval plans, stringified checks, and any-nonzero failure semantics"
+                    ],
+                    "doesNotOwn": [
+                        "GitHub API behavior",
+                        "Codex/Claude reasoning",
+                        "shell process execution",
+                        "VCS mutation",
+                        "CI orchestration",
+                        "downstream effect application"
+                    ]
+                },
+                "boundaries": {
+                    "adapters": {
+                        "authority": false,
+                        "role": "observe/project/execute declared behavior only"
+                    },
+                    "generated": {
+                        "authority": false,
+                        "role": "downstream projection or materialized evidence only"
+                    },
+                    "runtime": {
+                        "authority": false,
+                        "role": "external substrate, not contract truth"
+                    }
+                }
+            },
+            "surfaces": {
+                "admissible": [
+                    "#IssueMaterializationCandidate",
+                    "#ImplementationSliceMaterialization"
+                ],
+                "observed": [
+                    "#RawImplementationSliceIssue"
+                ],
+                "candidates": [
+                    "implementationSliceMaterializationReport"
+                ],
+                "fixtures": [
+                    "negativeFixtures.routeOnlyPacket",
+                    "negativeFixtures.missingContractPath",
+                    "negativeFixtures.staticEvalPlan",
+                    "negativeFixtures.missingNegativeCheckExpression",
+                    "negativeFixtures.anyNonzeroAsPass"
+                ],
+                "checks": [
+                    "_negativeBottomChecks.routeOnlyPacket",
+                    "_negativeBottomChecks.missingContractPath",
+                    "_negativeBottomChecks.staticEvalPlan",
+                    "_negativeBottomChecks.missingNegativeCheckExpression",
+                    "_negativeBottomChecks.anyNonzeroAsPass"
+                ],
+                "publicExports": [
+                    "implementationSliceIssueBaseline",
+                    "implementationSliceMaterializationReport",
+                    "implementationSliceEvalPlan",
+                    "implementationSliceRunnerPlan",
+                    "implementationSliceFeedbackShape"
+                ]
+            },
+            "constraints": {
+                "noVocabularyOnlyPatch": true,
+                "noDiagnosticBooleanAuthority": true,
+                "noReviewMetadataAsProof": true,
+                "noStringifiedEvalExpressions": true,
+                "noGeneratedArtifactAsAuthority": true,
+                "noAdapterLocalPolicyAuthority": true,
+                "noShellOnlySemanticValidation": true,
+                "noSidePackageSprawl": true
+            },
+            "acceptanceCriteria": {
+                "rootQuestionAnsweredBeforeImplementation": true,
+                "authorityBoundaryDeclared": true,
+                "primitiveModelDeclared": true,
+                "admissibleSurfaceDeclared": true,
+                "validFixtureExports": true,
+                "publicEvalSurfaceExports": true,
+                "negativeFixturesBottomIfPresent": true,
+                "forbiddenAttractorSearchPasses": true,
+                "validationCommandsReported": true
+            }
+        },
+        "authority": {
+            "cue": true,
+            "parser": false,
+            "runner": false,
+            "generated": false
+        }
+    },
+    "positive": [
+        {
+            "id": "vet",
+            "argv": [
+                "cue",
+                "vet",
+                "./contracts/agent-context-resolver"
+            ]
+        },
+        {
+            "id": "export.implementationSliceIssueBaseline",
+            "argv": [
+                "cue",
+                "export",
+                "./contracts/agent-context-resolver",
+                "-e",
+                "implementationSliceIssueBaseline"
+            ]
+        },
+        {
+            "id": "export.implementationSliceMaterializationReport",
+            "argv": [
+                "cue",
+                "export",
+                "./contracts/agent-context-resolver",
+                "-e",
+                "implementationSliceMaterializationReport"
+            ]
+        },
+        {
+            "id": "export.implementationSliceEvalPlan",
+            "argv": [
+                "cue",
+                "export",
+                "./contracts/agent-context-resolver",
+                "-e",
+                "implementationSliceEvalPlan"
+            ]
+        },
+        {
+            "id": "export.implementationSliceRunnerPlan",
+            "argv": [
+                "cue",
+                "export",
+                "./contracts/agent-context-resolver",
+                "-e",
+                "implementationSliceRunnerPlan"
+            ]
+        },
+        {
+            "id": "export.implementationSliceFeedbackShape",
+            "argv": [
+                "cue",
+                "export",
+                "./contracts/agent-context-resolver",
+                "-e",
+                "implementationSliceFeedbackShape"
+            ]
+        }
+    ],
+    "negative": [
+        {
+            "id": "bottom._negativeBottomChecks.routeOnlyPacket",
+            "selector": "_negativeBottomChecks.routeOnlyPacket",
+            "argv": [
+                "cue",
+                "export",
+                "./contracts/agent-context-resolver",
+                "-e",
+                "_negativeBottomChecks.routeOnlyPacket"
+            ],
+            "reasonClass": "structural_bottom"
+        },
+        {
+            "id": "bottom._negativeBottomChecks.missingContractPath",
+            "selector": "_negativeBottomChecks.missingContractPath",
+            "argv": [
+                "cue",
+                "export",
+                "./contracts/agent-context-resolver",
+                "-e",
+                "_negativeBottomChecks.missingContractPath"
+            ],
+            "reasonClass": "structural_bottom"
+        },
+        {
+            "id": "bottom._negativeBottomChecks.staticEvalPlan",
+            "selector": "_negativeBottomChecks.staticEvalPlan",
+            "argv": [
+                "cue",
+                "export",
+                "./contracts/agent-context-resolver",
+                "-e",
+                "_negativeBottomChecks.staticEvalPlan"
+            ],
+            "reasonClass": "structural_bottom"
+        },
+        {
+            "id": "bottom._negativeBottomChecks.missingNegativeCheckExpression",
+            "selector": "_negativeBottomChecks.missingNegativeCheckExpression",
+            "argv": [
+                "cue",
+                "export",
+                "./contracts/agent-context-resolver",
+                "-e",
+                "_negativeBottomChecks.missingNegativeCheckExpression"
+            ],
+            "reasonClass": "structural_bottom"
+        },
+        {
+            "id": "bottom._negativeBottomChecks.anyNonzeroAsPass",
+            "selector": "_negativeBottomChecks.anyNonzeroAsPass",
+            "argv": [
+                "cue",
+                "export",
+                "./contracts/agent-context-resolver",
+                "-e",
+                "_negativeBottomChecks.anyNonzeroAsPass"
+            ],
+            "reasonClass": "structural_bottom"
+        }
+    ],
+    "forbiddenAttractors": [
+        {
+            "id": "forbidden-attractor-search",
+            "argv": [
+                "true"
+            ],
+            "expect": "fail",
+            "reasonClass": "structural_bottom"
+        }
+    ],
+    "generated": [
+        "generated/agent-context-resolver/issues/44/parsed.issue.json",
+        "generated/agent-context-resolver/issues/44/loaded.issue.json",
+        "generated/agent-context-resolver/issues/44/eval-plan.json",
+        "generated/agent-context-resolver/issues/44/runner-plan.json",
+        "generated/agent-context-resolver/issues/44/feedback.json"
+    ]
+}

@@ -1,0 +1,137 @@
+{
+    "schema": "agent-context-resolver.implementation-slice-eval-plan.v1",
+    "issueID": "issue-44",
+    "sourceIssueRef": "generated/agent-context-resolver/issues/44/parsed.issue.json",
+    "loadedIssueRef": "generated/agent-context-resolver/issues/44/loaded.issue.json",
+    "commands": [
+        {
+            "id": "vet",
+            "argv": [
+                "cue",
+                "vet",
+                "./contracts/agent-context-resolver"
+            ],
+            "expect": "pass"
+        },
+        {
+            "id": "export.implementationSliceIssueBaseline",
+            "argv": [
+                "cue",
+                "export",
+                "./contracts/agent-context-resolver",
+                "-e",
+                "implementationSliceIssueBaseline"
+            ],
+            "expect": "pass"
+        },
+        {
+            "id": "export.implementationSliceMaterializationReport",
+            "argv": [
+                "cue",
+                "export",
+                "./contracts/agent-context-resolver",
+                "-e",
+                "implementationSliceMaterializationReport"
+            ],
+            "expect": "pass"
+        },
+        {
+            "id": "export.implementationSliceEvalPlan",
+            "argv": [
+                "cue",
+                "export",
+                "./contracts/agent-context-resolver",
+                "-e",
+                "implementationSliceEvalPlan"
+            ],
+            "expect": "pass"
+        },
+        {
+            "id": "export.implementationSliceRunnerPlan",
+            "argv": [
+                "cue",
+                "export",
+                "./contracts/agent-context-resolver",
+                "-e",
+                "implementationSliceRunnerPlan"
+            ],
+            "expect": "pass"
+        },
+        {
+            "id": "export.implementationSliceFeedbackShape",
+            "argv": [
+                "cue",
+                "export",
+                "./contracts/agent-context-resolver",
+                "-e",
+                "implementationSliceFeedbackShape"
+            ],
+            "expect": "pass"
+        },
+        {
+            "id": "bottom._negativeBottomChecks.routeOnlyPacket",
+            "argv": [
+                "cue",
+                "export",
+                "./contracts/agent-context-resolver",
+                "-e",
+                "_negativeBottomChecks.routeOnlyPacket"
+            ],
+            "expect": "fail",
+            "reasonClass": "structural_bottom",
+            "selector": "_negativeBottomChecks.routeOnlyPacket"
+        },
+        {
+            "id": "bottom._negativeBottomChecks.missingContractPath",
+            "argv": [
+                "cue",
+                "export",
+                "./contracts/agent-context-resolver",
+                "-e",
+                "_negativeBottomChecks.missingContractPath"
+            ],
+            "expect": "fail",
+            "reasonClass": "structural_bottom",
+            "selector": "_negativeBottomChecks.missingContractPath"
+        },
+        {
+            "id": "bottom._negativeBottomChecks.staticEvalPlan",
+            "argv": [
+                "cue",
+                "export",
+                "./contracts/agent-context-resolver",
+                "-e",
+                "_negativeBottomChecks.staticEvalPlan"
+            ],
+            "expect": "fail",
+            "reasonClass": "structural_bottom",
+            "selector": "_negativeBottomChecks.staticEvalPlan"
+        },
+        {
+            "id": "bottom._negativeBottomChecks.missingNegativeCheckExpression",
+            "argv": [
+                "cue",
+                "export",
+                "./contracts/agent-context-resolver",
+                "-e",
+                "_negativeBottomChecks.missingNegativeCheckExpression"
+            ],
+            "expect": "fail",
+            "reasonClass": "structural_bottom",
+            "selector": "_negativeBottomChecks.missingNegativeCheckExpression"
+        },
+        {
+            "id": "bottom._negativeBottomChecks.anyNonzeroAsPass",
+            "argv": [
+                "cue",
+                "export",
+                "./contracts/agent-context-resolver",
+                "-e",
+                "_negativeBottomChecks.anyNonzeroAsPass"
+            ],
+            "expect": "fail",
+            "reasonClass": "structural_bottom",
+            "selector": "_negativeBottomChecks.anyNonzeroAsPass"
+        }
+    ]
+}

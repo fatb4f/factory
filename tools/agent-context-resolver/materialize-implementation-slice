@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ "$#" -ne 1 ]; then
+	printf 'usage: %s parsed.issue.json\n' "$0" >&2
+	exit 2
+fi
+
+parsed_file="$1"
+if [ ! -r "$parsed_file" ]; then
+	printf 'materialize-implementation-slice: cannot read %s\n' "$parsed_file" >&2
+	exit 2
+fi
+
+if ! command -v jq >/dev/null 2>&1; then
+	printf 'materialize-implementation-slice: jq is required\n' >&2
+	exit 2
+fi
+
+issue_number="$(jq -r '.externalParsedImplementationSliceIssue.number // empty' "$parsed_file")"
+if [ -z "$issue_number" ]; then
+	printf 'materialize-implementation-slice: parsed issue number is required\n' >&2
+	exit 2
+fi
+
+out_dir="generated/agent-context-resolver/issues/$issue_number"
+mkdir -p "$out_dir"
+
+cue vet ./contracts/agent-context-resolver "$parsed_file"
+
+cue export ./contracts/agent-context-resolver "$parsed_file" \
+	-e '(#IssueMaterializationFromParsed & {parsed: externalParsedImplementationSliceIssue}).materialization' \
+	> "$out_dir/loaded.issue.json"
+
+cue export ./contracts/agent-context-resolver "$parsed_file" \
+	-e '(#ImplementationSlicePlanProjection & {materialization: (#IssueMaterializationFromParsed & {parsed: externalParsedImplementationSliceIssue}).materialization}).obligations' \
+	> "$out_dir/eval-obligations.json"
+
+cue export ./contracts/agent-context-resolver "$parsed_file" \
+	-e '(#ImplementationSlicePlanProjection & {materialization: (#IssueMaterializationFromParsed & {parsed: externalParsedImplementationSliceIssue}).materialization}).evalPlan' \
+	> "$out_dir/eval-plan.json"
+
+cue export ./contracts/agent-context-resolver "$parsed_file" \
+	-e '(#ImplementationSlicePlanProjection & {materialization: (#IssueMaterializationFromParsed & {parsed: externalParsedImplementationSliceIssue}).materialization}).runnerPlan' \
+	> "$out_dir/runner-plan.json"
+
+if [ "$(realpath "$parsed_file")" != "$(realpath "$out_dir/parsed.issue.json" 2>/dev/null || printf '%s' "$out_dir/parsed.issue.json")" ]; then
+	cp "$parsed_file" "$out_dir/parsed.issue.json"
+fi
