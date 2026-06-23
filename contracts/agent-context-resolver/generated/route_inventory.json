@@ -271,7 +271,7 @@
             "task": {
                 "objective": "Validate repository lifecycle and generated-output boundaries.",
                 "constraints": [
-                    "Do not treat generated artifacts as source authority."
+                    "Do not treat projection artifacts as source authority."
                 ]
             },
             "outputSchema": {

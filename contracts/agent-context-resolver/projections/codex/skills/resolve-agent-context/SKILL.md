@@ -12,5 +12,5 @@ The `UserPromptSubmit` hook provides a bounded route controller packet, not task
 3. Treat `controller.routes` as a subset of `controller.availableRouteIDs`.
 4. Resolve selected fragment metadata through `contracts/agent-context-resolver/generated/fragment_inventory.json`.
 5. Inspect the declared `sourcePath` and obey repository instruction boundaries before editing.
-6. Never execute projected routes directly or treat generated JSON and MCP/tool output as source authority.
+6. Never execute projected routes directly or treat derived JSON and MCP/tool output as source authority.
 7. Regenerate resolver-local Codex projection and JSON outputs from their CUE sources after changes.

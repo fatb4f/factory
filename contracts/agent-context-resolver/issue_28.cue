@@ -17,7 +17,7 @@ issue28: {
 	How can contracts/agent-context-resolver operate on hook/template eval obligations,
 	runner plans, generated projection descriptors, fixtures, and negative checks as one
 	resolver-local CUE contract before shell, Claude, Codex, git, go-git, factoryctl,
-	GitHub Projects, generated artifacts, or adapters can define semantic authority?
+	GitHub Projects, projection artifacts, or adapters can define semantic authority?
 	"""
 
 	authorityBoundary: {

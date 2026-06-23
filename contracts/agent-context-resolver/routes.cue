@@ -182,7 +182,7 @@ routeInventory: #RouteInventory & {
 			inputFragments: ["repo.lifecycle"]
 			task: {
 				objective: "Validate repository lifecycle and generated-output boundaries."
-				constraints: ["Do not treat generated artifacts as source authority."]
+				constraints: ["Do not treat projection artifacts as source authority."]
 			}
 			outputSchema: {schema: "agent.route-result.validation.v1"}
 			gates: ["registry-authority", "route-local-propagation", "structured-result"]

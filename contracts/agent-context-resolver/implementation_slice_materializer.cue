@@ -127,7 +127,9 @@ package agentcontextresolver
 	}
 
 	predicates: #IssueMaterializationPredicates & {
-		input: _
+		input: {
+			issueRef: _candidate.issueRef | *"issue-44"
+		}
 	}
 }) & {
 	if !_candidate.predicates.requiresParsedIssue {

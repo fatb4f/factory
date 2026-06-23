@@ -64,7 +64,7 @@ baselineResolverHookTemplateIssue: #ImplementationSliceIssue & {
 			name: "ImplementationSliceIssue"
 			role: "typed issue-template implementation intent"
 			requiredFields: ["contract.path", "contract.package", "contract.slice", "contract.authority.owns", "contract.authority.doesNotOwn", "surfaces.publicExports", "surfaces.checks"]
-			constraints: ["represents issue-template intent", "generated runtime and adapters remain authority false"]
+			constraints: ["represents issue-template intent", "projected runtime and adapters remain authority false"]
 		},
 		{
 			name: "IssueEvalObligations"
@@ -93,8 +93,8 @@ baselineResolverHookTemplateIssue: #ImplementationSliceIssue & {
 		{
 			name: "GeneratedHookProjection"
 			role: "downstream generated projection descriptor"
-			requiredFields: ["id", "target", "generatedFrom", "authority", "runnerPlan", "adapter"]
-			constraints: ["authority is false", "generatedFrom references resolver-local plans", "adapter authority is false"]
+			requiredFields: ["id", "target", "authority", "runnerPlan", "adapter", "generatedFrom"]
+			constraints: ["authority is false", "source plan references resolver-local plans", "adapter authority is false"]
 		},
 		{
 			name: "HookTemplateGate"
@@ -170,7 +170,7 @@ baselineResolverHookTemplateIssue: #ImplementationSliceIssue & {
 			N4: {
 				id:       "N4.fixtures"
 				question: "Which valid and invalid concrete examples exercise the contract?"
-				answer:   "Resolver-local baseline fixtures plus structural negatives for generated authority, shell authority, empty commands, undeclared commands, and stringified check attempts."
+				answer:   "Resolver-local baseline fixtures plus structural negatives for projection authority, shell authority, empty commands, undeclared commands, and stringified check attempts."
 			}
 			N5: {
 				id:       "N5.eval-surfaces"
@@ -203,7 +203,7 @@ baselineResolverHookTemplateIssue: #ImplementationSliceIssue & {
 			"diagnostic boolean -> authority",
 			"review metadata -> proof",
 			"stringified check text -> check",
-			"generated artifact -> authority",
+			"projection artifact -> authority",
 			"adapter output -> policy authority",
 			"shell command -> semantic authority",
 		]
@@ -253,7 +253,7 @@ hookTemplateNegativeFixtures: {
 	generatedProjectionAuthority: {
 		input: {
 			schema:        "agent-context-resolver.generated-hook-projection.v1"
-			id:            "bad.generated-projection-authority"
+			id:            "bad.projection-artifact-authority"
 			target:        "tools/hooks/run-eval-plan.sh"
 			generatedFrom: "resolverHookEvalRunnerPlan"
 			authority:     true
