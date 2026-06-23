@@ -1,212 +1,259 @@
 ---
-name: CUE functional slice
-about: Implement a bounded CUE slice with real observed/admissible/bottom-check gates.
+name: CUE constructor manifest slice
+about: Implement a bounded CUE slice from repo-local constructor calls.
 title: "cue: "
 labels: cue, contract, implementation
 ---
 
-# CUE functional slice
-
-## Tracking
-
-```text
-Parent:
-Depends on:
-Blocks:
-```
-
-## Goal
-
-```text
-Implement:
-  -
-
-Do not implement:
-  -
-```
-
-## Constructor manifest
-
-```text
-Use repo-local constructor definitions from:
-  contracts/meta/impl
-
-Provide compact constructor calls only.
-Do not inline constructor definitions.
-Do not invent alternate constructor shapes.
-Do not encode CUE expressions as strings.
-
-Preferred manifest path:
-  contracts/issues/<issue-number>/manifest.cue
-
-Preferred normalized export path:
-  contracts/issues/<issue-number>/normalized.cue
-```
-
-## Authority boundary
-
-```text
-CUE owns:
-  - admissibility
-  - structural predicates
-  - bottom checks
-
-Observed / adapter / generated data:
-  - evidence only
-  - may be invalid
-  - never policy authority
-```
-
-## Required shape
-
-```text
-#Observed<T>
-  -> broad fact substrate
-  -> can represent valid and invalid observed states
-
-#Admissible<T>
-  -> narrow admissible structure
-  -> rejects invalid values structurally
-
-#PatchPredicates
-  -> derived from observed structure
-  -> no operator-supplied truth flags
-
-#RootPromotionCandidate
-  -> closed admissibility surface
-  -> wires predicates as control
-
-#NegativeFixture
-  -> typed invalid observed object
-
-_negativeBottomChecks
-  -> real CUE intersections
-  -> expected to bottom
-```
-
-## Slice objects
-
-```text
-Observed type:
-  #Observed<...>:
-
-Admissible type:
-  #Admissible<...>:
-
-Predicates:
-  #PatchPredicates:
-
-Promotion candidate:
-  #RootPromotionCandidate:
-
-Negative fixtures:
-  #NegativeFixture:
-  negativeFixtures.<name>:
-
-Bottom checks:
-  _negativeBottomChecks.<name>:
-    negativeFixtures.<name>.input & #RootPromotionCandidate
-```
-
-## Negative-check placement
-
-```text
-Normal package surface:
-  - cue vet clean
-  - declares observed/admissible/candidate types
-  - declares valid exports and fixtures
-  - does not contain realized package-scope bottoms
-
-Test/check surface:
-  - contains _negativeBottomChecks
-  - contains strict intersections
-  - may bottom when a specific negative expression is exported
-```
-
-A negative check is valid only if the selected expression exists and fails by conflict/bottom.
-It is not valid if it fails by undefined field, missing selector, or absent check surface.
-
-Do not hide negative checks behind defaults or disjunctions such as:
-
 ```cue
-_negativeBottomChecks: *{} | #NegativeBottomChecks
+import impl "github.com/fatb4f/contract.cuemod/contracts/meta/impl"
+
+// Fill this manifest with compact constructor calls only.
+// Do not inline constructor definitions.
+// Do not invent alternate constructor shapes.
+// Do not encode CUE expressions as strings.
+// Keep negative checks as real intersections in a loaded check/test surface.
+
+_issue: {
+	tracking: {
+		parent?:    int | string
+		dependsOn?: [...int | string]
+		blocks?:    [...int | string]
+	}
+
+	goal: {
+		implement: ["<required implementation outcome>"]
+		doNotImplement: [
+			"Go wrapper",
+			"MCP exposure",
+			"GitHub mutation controller",
+			"shell-only semantic validation",
+		]
+	}
+
+	target: {
+		contractPath: "contracts/<slice>"
+		package:      "<package>"
+		checkFile:    "" // example: "./checks_test.cue" when needed
+	}
+}
+
+_constructorAuthority: impl.constructorCatalog & {
+	package: "impl"
+	root:    "contracts/meta/impl"
+	invariants: [
+		"Constructor definitions live in the repo-local impl package.",
+		"Issue manifests carry constructor calls, not constructor bodies.",
+		"CUE expressions remain CUE values, not stringified expression metadata.",
+		"Negative checks are generated as intersections, not invalidity flags.",
+		"Go wrappers are deferred to transport and materialization.",
+	]
+}
+
+_constructorWorkflow: [
+	{
+		order: 1
+		id: "#MakePrimitive"
+		constructor: impl.#MakePrimitive
+		instantiateAt: "_primitives"
+		requirements: [
+			"Declare each primitive that Codex must materialize.",
+			"Give each primitive a role, required field list, and constraints.",
+		]
+		invariants: [
+			"Primitive descriptions are metadata contracts, not implementation bodies.",
+			"Closed primitives remain closed unless explicitly relaxed.",
+		]
+		constraints: [
+			"Do not duplicate primitive prose outside this constructor call.",
+		]
+	},
+	{
+		order: 2
+		id: "#MakeSurfaceSet"
+		constructor: impl.#MakeSurfaceSet
+		instantiateAt: "_surfaces"
+		requirements: [
+			"Declare admissible, observed, candidate, fixture, check, and public export surfaces.",
+			"Include every surface needed by validation and completion reporting.",
+		]
+		invariants: [
+			"Observed surfaces may contain invalid facts.",
+			"Admissible surfaces reject invalid values structurally.",
+			"Candidate surfaces are gates, not review notes.",
+		]
+		constraints: [
+			"Do not omit fixtures, checks, or public exports when the slice needs them.",
+		]
+	},
+	{
+		order: 3
+		id: "#MakeNegativeFixture"
+		constructor: impl.#MakeNegativeFixture
+		instantiateAt: "_negativeFixtures"
+		requirements: [
+			"Declare invalid observed inputs that must be rejected.",
+			"State the violated boundary and expected refusal.",
+		]
+		invariants: [
+			"Negative fixtures are first-class evidence for rejection.",
+			"expectedBottom means structural failure, not a truth flag.",
+		]
+		constraints: [
+			"Do not use isInvalid: true.",
+			"Do not replace structural conflict with metadata assertions.",
+		]
+	},
+	{
+		order: 4
+		id: "#MakeBottomCheck"
+		constructor: impl.#MakeBottomCheck
+		instantiateAt: "_bottomCheckConstructors and _negativeBottomChecks"
+		requirements: [
+			"Create a bottom-check constructor per negative fixture.",
+			"Expose _negativeBottomChecks in a loaded check/test surface.",
+		]
+		invariants: [
+			"Negative checks are real CUE intersections.",
+			"A valid negative check fails by conflict/bottom, not undefined selector.",
+		]
+		constraints: [
+			"Do not encode intersection expressions as strings.",
+			"Do not hide _negativeBottomChecks behind defaults or disjunctions.",
+		]
+	},
+	{
+		order: 5
+		id: "#MakeValidationPlan"
+		constructor: impl.#MakeValidationPlan
+		instantiateAt: "_validation"
+		requirements: [
+			"Generate cue vet, public export, negative bottom, and forbidden-pattern commands.",
+			"Use checkFile when negative checks live outside the normal package surface.",
+		]
+		invariants: [
+			"Normal package cue vet remains clean.",
+			"Negative exports must load the check/test surface explicitly when required.",
+		]
+		constraints: [
+			"Do not use shell-only validation as semantic authority.",
+		]
+	},
+	{
+		order: 6
+		id: "#MakeCompletionReport"
+		constructor: impl.#MakeCompletionReport
+		instantiateAt: "_completion"
+		requirements: [
+			"Constrain Codex final output into deterministic review evidence.",
+			"List files, primitives, surfaces, fixtures, checks, commands, and final result.",
+		]
+		invariants: [
+			"Completion report shape is part of the contract.",
+			"Commands run are review evidence, not authority by themselves.",
+		]
+		constraints: [
+			"Do not omit failed or skipped commands.",
+		]
+	},
+]
+
+_primitives: [
+	impl.#MakePrimitive & {
+		in: {
+			name: "#ExamplePrimitive"
+			role: "bounded role to implement"
+			requiredFields: ["id"]
+			constraints: [
+				"replace this with the primitive invariant",
+			]
+			closed: true
+		}
+	},
+]
+
+_surfaces: impl.#MakeSurfaceSet & {
+	in: {
+		admissible: ["#ExampleAdmissible"]
+		observed: ["#ObservedExample"]
+		candidates: ["#ExampleCandidate"]
+		fixtures: ["validBaseline", "negativeFixtures"]
+		checks: ["_negativeBottomChecks"]
+		publicExports: ["publicContract"]
+	}
+}
+
+_negativeFixtures: {
+	exampleInvalid: impl.#MakeNegativeFixture & {
+		in: {
+			name: "exampleInvalid"
+			violates: "replace with the violated authority or structural boundary"
+			refusal: "replace with the expected refusal reason"
+			input: {
+				// invalid observed input goes here
+			}
+		}
+	}
+}
+
+#TargetSurface: _
+
+_bottomCheckConstructors: {
+	exampleInvalid: impl.#MakeBottomCheck & {
+		in: {
+			name: "exampleInvalid"
+			input: _negativeFixtures.exampleInvalid.out.input
+			target: #TargetSurface
+		}
+	}
+}
+
+// Place this in the check/test surface when the normal package must remain cue-vet clean.
+_negativeBottomChecks: _bottomCheckConstructors.exampleInvalid.out
+
+_validation: impl.#MakeValidationPlan & {
+	in: {
+		path: _issue.target.contractPath
+		validBaselineExpr: "validBaseline"
+		publicExpr: "publicContract"
+		bottomChecks: ["exampleInvalid"]
+		checkFile: _issue.target.checkFile
+		forbiddenPattern: "truthFlag|operatorSupplied|bottomCheckSurface|expression:|isInvalid: true"
+	}
+}
+
+_completion: impl.#MakeCompletionReport & {
+	in: {
+		primitives: [for p in _primitives {p.out.name}]
+		surfaces: [
+			"#ExampleAdmissible",
+			"#ObservedExample",
+			"#ExampleCandidate",
+			"publicContract",
+		]
+		fixtures: [for _, f in _negativeFixtures {f.out.id}]
+		checks: _validation.in.bottomChecks
+		commands: _validation.out.commands
+	}
+}
+
+normalizedIssueManifest: {
+	issue: _issue
+	authority: _constructorAuthority
+	workflow: [
+		for w in _constructorWorkflow {
+			order: w.order
+			id: w.id
+			instantiateAt: w.instantiateAt
+			requirements: w.requirements
+			invariants: w.invariants
+			constraints: w.constraints
+		}
+	]
+	primitives: [for p in _primitives {p.out}]
+	surfaces: _surfaces.out
+	negativeFixtures: {for k, f in _negativeFixtures {"\(k)": f.out}}
+	validationPlan: _validation.out
+	completionReportContract: _completion.out
+}
 ```
-
-## Files
-
-```text
-Add / update:
-  - <path>.cue
-  - <check-path>.cue or <path>_test.cue
-
-Package:
-  package <package>
-```
-
-## Public eval surfaces
-
-```text
-Required exports:
-  - <validObservedBaseline>
-  - <admissibleCandidateBaseline>
-  - <promotionReport>
-```
-
-## Validation
-
-```bash
-cue vet ./<contract-path>
-cue export ./<contract-path> -e <validObservedBaseline>
-cue export ./<contract-path> -e <admissibleCandidateBaseline>
-cue export ./<contract-path> -e <promotionReport>
-
-# Negative checks must load the check/test surface and fail by bottom, not undefined field.
-! cue export ./<contract-path> ./<check-path>.cue -e '_negativeBottomChecks.<name>'
-
-! rg 'truthFlag|operatorSupplied|bottomCheckSurface|expression:|isInvalid: true' ./<contract-path>
-```
-
-## Forbidden attractors
-
-```text
-operator-supplied truth flags
-predicates stored as review metadata
-expectedBottom without real intersection
-undefined-field negative checks
-missing _negativeBottomChecks selector
-stringified CUE expressions
-bottomCheckSurface.expression
-adapter output as policy authority
-generated artifact as authority
-shell-only semantic validation
-placeholder evidence accepted as admissible
-```
-
-## Acceptance
-
-- [ ] `#Observed<T>` admits valid and invalid observations.
-- [ ] `#Admissible<T>` rejects invalid values structurally.
-- [ ] `#PatchPredicates` are derived, not supplied.
-- [ ] `#RootPromotionCandidate` is the closed promotion gate.
-- [ ] Constructor manifests use repo-local constructors from `contracts/meta/impl`.
-- [ ] Issue bodies carry constructor calls or manifest paths, not constructor bodies.
-- [ ] Negative fixtures are typed observed objects.
-- [ ] `_negativeBottomChecks` are real intersections in a loaded check/test surface.
-- [ ] Negative exports fail by conflict/bottom, not undefined field.
-- [ ] Normal package `cue vet` remains clean.
-- [ ] Public eval exports validate.
-- [ ] Forbidden-attractor search passes.
-
-## Completion report
-
-```text
-Summary:
-Validation:
-Negative bottoms:
-  - command:
-  - failure mode: conflict/bottom | undefined-field | other
-Forbidden attractors:
-Exceptions:
-```
-
-Stop once the declared slice validates and each loaded negative intersection bottoms.
