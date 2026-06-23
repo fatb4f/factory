@@ -38,7 +38,7 @@ else
 fi
 
 if ! jq -e '
-	.schema == "factory.eval-runner-plan.v1"
+	(.schema == "factory.eval-runner-plan.v1" or .schema == "agent-context-resolver.eval-runner-plan.v1")
 	and (.commands | type == "array" and length > 0)
 	and all(.commands[]; (.id | type == "string" and length > 0)
 		and (.command | type == "array" and length > 0)
