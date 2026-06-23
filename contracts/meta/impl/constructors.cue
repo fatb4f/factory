@@ -1,0 +1,68 @@
+package impl
+
+#ConstructorID:
+	"#MakePrimitive" |
+	"#MakeSurfaceSet" |
+	"#MakeNegativeFixture" |
+	"#MakeBottomCheck" |
+	"#MakeValidationPlan" |
+	"#MakeCompletionReport"
+
+#ConstructorCatalogEntry: close({
+	id: #ConstructorID
+	file: string & =~"^contracts/meta/impl/.+\\.cue$"
+	purpose: string & !=""
+})
+
+#ConstructorCatalog: close({
+	kind: "constructor-catalog"
+	package: "impl"
+	root: "contracts/meta/impl"
+	constructors: [...#ConstructorCatalogEntry] & [_, ...]
+	invariants: [...string & !=""] & [_, ...]
+})
+
+constructorCatalog: #ConstructorCatalog & {
+	kind: "constructor-catalog"
+	package: "impl"
+	root: "contracts/meta/impl"
+	constructors: [
+		{
+			id: "#MakePrimitive"
+			file: "contracts/meta/impl/primitive.cue"
+			purpose: "Compress repeated primitive descriptions into a known metadata shape."
+		},
+		{
+			id: "#MakeSurfaceSet"
+			file: "contracts/meta/impl/surface.cue"
+			purpose: "Declare expected admissible, observed, candidate, fixture, check, and export surfaces."
+		},
+		{
+			id: "#MakeNegativeFixture"
+			file: "contracts/meta/impl/fixture.cue"
+			purpose: "Make rejection cases first-class fixtures."
+		},
+		{
+			id: "#MakeBottomCheck"
+			file: "contracts/meta/impl/bottom.cue"
+			purpose: "Generate real CUE intersections for negative checks."
+		},
+		{
+			id: "#MakeValidationPlan"
+			file: "contracts/meta/impl/validation.cue"
+			purpose: "Generate deterministic validation command lists."
+		},
+		{
+			id: "#MakeCompletionReport"
+			file: "contracts/meta/impl/completion.cue"
+			purpose: "Constrain completion reports into deterministic review evidence."
+		},
+	]
+	invariants: [
+		"Constructor definitions live in the repo-local impl package.",
+		"Issue manifests carry constructor calls, not constructor bodies.",
+		"CUE expressions remain CUE values, not stringified expression metadata.",
+		"Negative checks are generated as intersections, not invalidity flags.",
+		"Go wrappers are deferred to transport and materialization."
+	]
+}
