@@ -13,6 +13,9 @@ _negativeBottomChecks: {
 	placeholderEvidenceOrProvenance:
 		negativeFixtures.placeholderEvidenceOrProvenance.input & #RootPromotionCandidate
 
+	fakeProvenance:
+		negativeFixtures.fakeProvenance.input & #RootPromotionCandidate
+
 	nonDerivedPath:
 		negativeFixtures.nonDerivedPath.input & #RootPromotionCandidate
 }

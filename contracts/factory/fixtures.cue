@@ -27,18 +27,18 @@ baselineObservedPatch: #ObservedPatch & {
 		singlePackage:           *true | bool
 	}
 
-	paths: (*{
+	paths: {
 		agentContextHookCheck: #DerivedPath & {
 			kind: "check"
 			name: "agent-context-hook"
 		}
-	} | {[string]: #DerivedPath})
+	}
 
-	evidence: (*{
+	evidence: {
 		vcs: []
-	} | {
-		vcs?: [...#ObservedVCSEvidence]
-	})
+	}
+
+	provenance: {}
 
 	closureClaim: {
 		decision:              "blocked"
@@ -66,9 +66,10 @@ negativeFixtures: {
 		input: {
 			id: "bad.vocabulary-without-gate-proof"
 
-			files:    baselineObservedPatch.files
-			paths:    baselineObservedPatch.paths
-			evidence: baselineObservedPatch.evidence
+			files:      baselineObservedPatch.files
+			paths:      baselineObservedPatch.paths
+			evidence:   baselineObservedPatch.evidence
+			provenance: baselineObservedPatch.provenance
 
 			closureClaim: baselineObservedPatch.closureClaim
 
@@ -94,8 +95,9 @@ negativeFixtures: {
 		input: {
 			id: "bad.side-package-schema-sprawl"
 
-			paths:    baselineObservedPatch.paths
-			evidence: baselineObservedPatch.evidence
+			paths:      baselineObservedPatch.paths
+			evidence:   baselineObservedPatch.evidence
+			provenance: baselineObservedPatch.provenance
 
 			closureClaim:  baselineObservedPatch.closureClaim
 			empiricalGate: baselineObservedPatch.empiricalGate
@@ -125,12 +127,18 @@ negativeFixtures: {
 		input: {
 			id: "bad.premature-closure-claim"
 
-			files:    baselineObservedPatch.files
-			paths:    baselineObservedPatch.paths
-			evidence: baselineObservedPatch.evidence
+			files:      baselineObservedPatch.files
+			paths:      baselineObservedPatch.paths
+			evidence:   baselineObservedPatch.evidence
+			provenance: baselineObservedPatch.provenance
 
-			rootModel:    baselineObservedPatch.rootModel
-			closureClaim: baselineObservedPatch.closureClaim
+			rootModel: baselineObservedPatch.rootModel
+
+			closureClaim: {
+				decision:              "promoted"
+				declaresPass:          true
+				declaresClosurePassed: true
+			}
 
 			empiricalGate: {
 				requiredChecksDeclared: true
@@ -152,8 +160,9 @@ negativeFixtures: {
 		input: {
 			id: "bad.placeholder-evidence-or-provenance"
 
-			files: baselineObservedPatch.files
-			paths: baselineObservedPatch.paths
+			files:      baselineObservedPatch.files
+			paths:      baselineObservedPatch.paths
+			provenance: baselineObservedPatch.provenance
 
 			rootModel:     baselineObservedPatch.rootModel
 			closureClaim:  baselineObservedPatch.closureClaim
@@ -169,6 +178,31 @@ negativeFixtures: {
 		}
 	}
 
+	fakeProvenance: #NegativeFixture & {
+		id:              "negative.fake-provenance"
+		violates:        "predicates.fakeProvenance"
+		expectedRefusal: "fake zero provenance values are inadmissible; provenance must be explicit real evidence or absent"
+		expectedBottom:  true
+
+		input: {
+			id: "bad.fake-provenance"
+
+			files:    baselineObservedPatch.files
+			paths:    baselineObservedPatch.paths
+			evidence: baselineObservedPatch.evidence
+
+			rootModel:     baselineObservedPatch.rootModel
+			closureClaim:  baselineObservedPatch.closureClaim
+			empiricalGate: baselineObservedPatch.empiricalGate
+
+			provenance: {
+				sourceDigest:    "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+				inventoryDigest: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+				materializedAt:  "run:0000000000000000"
+			}
+		}
+	}
+
 	nonDerivedPath: #NegativeFixture & {
 		id:              "negative.non-derived-path"
 		violates:        "predicates.nonDerivedPath"
@@ -178,8 +212,9 @@ negativeFixtures: {
 		input: {
 			id: "bad.non-derived-path"
 
-			files:    baselineObservedPatch.files
-			evidence: baselineObservedPatch.evidence
+			files:      baselineObservedPatch.files
+			evidence:   baselineObservedPatch.evidence
+			provenance: baselineObservedPatch.provenance
 
 			rootModel:     baselineObservedPatch.rootModel
 			closureClaim:  baselineObservedPatch.closureClaim

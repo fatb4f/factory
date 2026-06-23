@@ -2,14 +2,6 @@ package factory
 
 #Decision: "blocked" | "admissible" | "promoted"
 
-#Truth: true | false
-
-#Authority:
-	"root" |
-	"projection" |
-	"evidence" |
-	"substrate"
-
 #ObservedPatch: close({
 	id: string
 
@@ -21,18 +13,20 @@ package factory
 		singlePackage:           bool
 	}
 
-	paths?: [string]: #ObservedPath
+	paths: *{} | {[string]: #ObservedPath}
 
-	evidence?: {
+	evidence: *{
+		vcs: []
+	} | {
 		vcs?: [...#ObservedVCSEvidence]
 	}
 
-	provenance?: #Provenance
+	provenance: *{} | #ObservedProvenance
 
 	closureClaim: {
-		decision:              "blocked"
-		declaresPass:          false
-		declaresClosurePassed: false
+		decision:              #Decision
+		declaresPass:          bool
+		declaresClosurePassed: bool
 	}
 
 	empiricalGate: {
@@ -41,7 +35,7 @@ package factory
 		negativeFixturesTyped:  bool
 		refusalEvalsDeclared:   bool
 		everyInvariantCovered:  bool
-		closureProven:          false
+		closureProven:          bool
 	}
 
 	predicates?: #PatchPredicates
@@ -95,6 +89,12 @@ package factory
 	value: "\(owner.path)/\(pathPolicy.segments[kind])/\(name)"
 })
 
+#ObservedProvenance: close({
+	sourceDigest?:    string
+	inventoryDigest?: string
+	materializedAt?:  string
+})
+
 #Provenance: close({
 	sourceDigest?:    string & !="sha256:0000000000000000000000000000000000000000000000000000000000000000"
 	inventoryDigest?: string & !="sha256:0000000000000000000000000000000000000000000000000000000000000000"
@@ -145,8 +145,19 @@ package factory
 		input.closureClaim.declaresClosurePassed ||
 		input.empiricalGate.closureProven
 
-	placeholderEvidenceOrProvenance:
+	placeholderEvidence:
 		len([for e in input.evidence.vcs if (e.before.head == "declared-by-adapter" || e.after.head == "declared-by-adapter" || e.result == "applied") {e}]) > 0
+
+	fakeProvenance:
+		len([for k, v in input.provenance if ((k == "sourceDigest" &&
+			v == "sha256:0000000000000000000000000000000000000000000000000000000000000000") ||
+			(k == "inventoryDigest" &&
+			v == "sha256:0000000000000000000000000000000000000000000000000000000000000000") ||
+			(k == "materializedAt" &&
+			v == "run:0000000000000000")) {v}]) > 0
+
+	placeholderEvidenceOrProvenance:
+		placeholderEvidence || fakeProvenance
 
 	nonDerivedPath:
 		len([for _, p in input.paths if (p.value != "\(p.owner.path)/\(p.pathPolicy.segments[p.kind])/\(p.name)") {p}]) > 0
@@ -173,6 +184,8 @@ package factory
 		vcs: [...#VCSEvidence]
 	}
 
+	provenance: #Provenance
+
 	empiricalGate: {
 		requiredChecksDeclared: true
 		negativeFixturesTyped:  true
@@ -188,6 +201,7 @@ package factory
 			rootModel:     _candidate.rootModel
 			paths:         _candidate.paths
 			evidence:      _candidate.evidence
+			provenance:    _candidate.provenance
 			closureClaim:  _candidate.closureClaim
 			empiricalGate: _candidate.empiricalGate
 		}
@@ -220,7 +234,7 @@ package factory
 	id:              string
 	violates:        string
 	expectedRefusal: string
-	input:           _
+	input:           #ObservedPatch
 	expectedBottom:  true
 })
 

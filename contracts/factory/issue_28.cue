@@ -86,6 +86,7 @@ rootPromotionGate: #RootPromotionGate & {
 		rootNegativeFixtures.sidePackageSchemaSprawl,
 		rootNegativeFixtures.prematureClosureClaim,
 		rootNegativeFixtures.placeholderEvidenceOrProvenance,
+		rootNegativeFixtures.fakeProvenance,
 		rootNegativeFixtures.nonDerivedPath,
 	]
 	decision: "blocked"
