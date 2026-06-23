@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import json
 import re
+import shlex
 import sys
 
 
@@ -31,6 +32,46 @@ def cue_block_after(body, heading):
     if block_end == -1:
         return ""
     return body[block_start:block_end]
+
+
+def first_cue_block(body):
+    block_start = body.find("```cue")
+    if block_start == -1:
+        return ""
+    block_start = body.find("\n", block_start)
+    block_end = body.find("```", block_start + 1)
+    if block_start == -1 or block_end == -1:
+        return ""
+    return body[block_start:block_end]
+
+
+def block_field(block, name):
+    match = re.search(rf"\b{name}\s*:\s*\{{", block)
+    if not match:
+        return ""
+    start = match.end() - 1
+    depth = 0
+    in_string = False
+    escaped = False
+    for index in range(start, len(block)):
+        char = block[index]
+        if in_string:
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == "\"":
+                in_string = False
+            continue
+        if char == "\"":
+            in_string = True
+        elif char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+            if depth == 0:
+                return block[start + 1:index]
+    return ""
 
 
 def text_block_after(body, heading):
@@ -67,6 +108,99 @@ def section_items(text, label):
     return [line.strip()[2:].strip() for line in match.group(1).splitlines() if line.strip().startswith("- ")]
 
 
+def command_id(argv):
+    if not argv:
+        return "empty"
+    if argv[:2] == ["cue", "vet"] and len(argv) > 2:
+        return "vet." + argv[2].lstrip("./").replace("/", ".")
+    if argv[:2] == ["cue", "export"] and "-e" in argv:
+        expr_index = argv.index("-e") + 1
+        if expr_index < len(argv):
+            return "export." + argv[expr_index].strip("'\"")
+    return re.sub(r"[^A-Za-z0-9_.-]+", ".", " ".join(argv)).strip(".") or "command"
+
+
+def command_spec(command, expect="pass"):
+    argv = shlex.split(command)
+    spec = {"id": command_id(argv), "argv": argv}
+    if expect == "fail":
+        spec["expect"] = "fail"
+        spec["reasonClass"] = "structural_bottom"
+    return spec
+
+
+def file_plan_from_slice(instantiation):
+    files = block_field(instantiation, "files")
+    paths = []
+    for field in ("issue", "contract", "adapters", "generatedEvidence"):
+        paths.extend(list_field(files, field))
+    return [{"path": path, "purpose": "declared implementation-slice file"} for path in paths]
+
+
+def single_cue_slice_parse(raw):
+    cue = first_cue_block(raw["body"])
+    if not cue or "slice:" not in cue or "instantiation:" not in cue:
+        return None
+
+    slice_block = block_field(cue, "slice")
+    instantiation = block_field(slice_block, "instantiation")
+    target = block_field(instantiation, "target")
+    template = block_field(slice_block, "template")
+    validation = block_field(instantiation, "validation")
+
+    contract_path = string_field(target, "contractPath") or string_field(target, "path")
+    contract_package = string_field(target, "package")
+    contract_slice = string_field(target, "slice")
+    owns = list_field(instantiation, "implement")
+    does_not_own = list_field(instantiation, "notImplement")
+    if not (contract_path and contract_package and contract_slice and owns and does_not_own):
+        return None
+
+    models = list_field(instantiation, "models") or default_primitives()
+    negative_names = list_field(instantiation, "negativeFixtures") or default_negative_names()
+    checks = [f"_negativeBottomChecks.{name}" for name in negative_names]
+    issue_local_exports = {"publicContract", "validationPlan", "completionReportContract"}
+    public_exports = [
+        name for name in (list_field(instantiation, "publicExports") or default_public_exports())
+        if name not in issue_local_exports
+    ]
+    if not public_exports:
+        public_exports = default_public_exports()
+
+    positive_commands = [
+        command_spec(command)
+        for command in list_field(validation, "positive")
+        if not command.startswith("!") and contract_path in command
+    ]
+    if not positive_commands:
+        positive_commands = default_positive_validation(contract_path)
+
+    negative_commands = [
+        command_spec(command.removeprefix("!").strip(), "fail")
+        for command in list_field(validation, "negative")
+        if "_negativeBottomChecks." in command
+    ]
+    if not negative_commands:
+        negative_commands = default_negative_validation(contract_path)
+
+    return build_parsed(
+        raw=raw,
+        contract_path=contract_path,
+        contract_package=contract_package,
+        contract_slice=contract_slice,
+        owns=owns,
+        does_not_own=does_not_own,
+        primitives=models,
+        public_exports=public_exports,
+        negative_names=negative_names,
+        checks=checks,
+        file_plan=file_plan_from_slice(instantiation),
+        source_template_ref=string_field(template, "source") or ".github/ISSUE_TEMPLATE/cue-implementation-slice.md",
+        positive_validation=positive_commands,
+        negative_validation=negative_commands,
+    )
+
+
 def file_plan(body):
     block = text_block_after(body, "File plan")
     items = []
@@ -82,11 +216,117 @@ def file_plan(body):
     return items
 
 
+def default_primitives():
+    return [
+        "#RawImplementationSliceIssue",
+        "#ParsedImplementationSliceIssue",
+        "#ImplementationSliceMaterialization",
+        "#ImplementationSliceEvalObligations",
+        "#ImplementationSliceEvalPlan",
+        "#ImplementationSliceRunnerPlan",
+        "#ClassifiedRunnerResult",
+        "#IssueMaterializationCandidate",
+    ]
+
+
+def default_negative_names():
+    return [
+        "routeOnlyPacket",
+        "missingContractPath",
+        "staticEvalPlan",
+        "missingNegativeCheckExpression",
+        "anyNonzeroAsPass",
+    ]
+
+
+def default_public_exports():
+    return [
+        "implementationSliceIssueBaseline",
+        "implementationSliceMaterializationReport",
+        "implementationSliceEvalPlan",
+        "implementationSliceRunnerPlan",
+        "implementationSliceFeedbackShape",
+    ]
+
+
+def default_positive_validation(contract_path):
+    return [
+        {"id": "vet", "argv": ["cue", "vet", f"./{contract_path}"]},
+        {"id": "baseline", "argv": ["cue", "export", f"./{contract_path}", "-e", "implementationSliceIssueBaseline"]},
+        {"id": "plan", "argv": ["cue", "export", f"./{contract_path}", "-e", "implementationSliceEvalPlan"]},
+    ]
+
+
+def default_negative_validation(contract_path):
+    return [
+        {
+            "id": "negative.routeOnlyPacket",
+            "argv": ["cue", "export", f"./{contract_path}", "-e", "_negativeBottomChecks.routeOnlyPacket"],
+            "expect": "fail",
+            "reasonClass": "structural_bottom",
+        }
+    ]
+
+
+def build_parsed(
+    raw,
+    contract_path,
+    contract_package,
+    contract_slice,
+    owns,
+    does_not_own,
+    primitives,
+    public_exports,
+    negative_names,
+    checks,
+    file_plan,
+    source_template_ref,
+    positive_validation,
+    negative_validation,
+):
+    fixtures = [f"negativeFixtures.{name}" for name in negative_names]
+    return {
+        "number": raw["number"],
+        "title": raw["title"],
+        "sourceTemplateRef": source_template_ref,
+        "contract": {
+            "path": contract_path,
+            "package": contract_package,
+            "slice": contract_slice,
+            "authority": {"owns": owns, "doesNotOwn": does_not_own},
+        },
+        "primitives": primitives,
+        "surfaces": {
+            "admissible": ["#IssueMaterializationCandidate", "#ImplementationSliceMaterialization"],
+            "observed": ["#RawImplementationSliceIssue"],
+            "candidates": ["implementationSliceMaterializationReport"],
+            "fixtures": fixtures,
+            "checks": checks,
+            "publicExports": public_exports,
+        },
+        "filePlan": file_plan,
+        "evalSurfaces": public_exports,
+        "fixtures": fixtures,
+        "checks": checks,
+        "validation": {
+            "positive": positive_validation,
+            "negative": negative_validation,
+        },
+        "gates": ["admit loaded implementation-slice issue materializer"],
+    }
+
+
 def main():
     if len(sys.argv) != 2:
         fail("usage: parse-implementation-slice-issue raw.issue.json")
     raw = read_raw(sys.argv[1])
     body = raw["body"]
+    parsed = single_cue_slice_parse(raw)
+    if parsed is not None:
+        json.dump({"externalParsedImplementationSliceIssue": parsed}, sys.stdout, indent=2)
+        print()
+        return
+
     issue_block = cue_block_after(body, "Issue-specific DAG instantiation")
     if not issue_block:
         issue_block = cue_block_after(body, "Canonical CUE implementation model")
@@ -100,81 +340,24 @@ def main():
     if not (contract_path and contract_package and contract_slice and owns and does_not_own):
         fail("issue body does not contain a complete implementation-slice contract")
 
-    checks = [
-        "_negativeBottomChecks.routeOnlyPacket",
-        "_negativeBottomChecks.missingContractPath",
-        "_negativeBottomChecks.staticEvalPlan",
-        "_negativeBottomChecks.missingNegativeCheckExpression",
-        "_negativeBottomChecks.anyNonzeroAsPass",
-    ]
-    public_exports = [
-        "implementationSliceIssueBaseline",
-        "implementationSliceMaterializationReport",
-        "implementationSliceEvalPlan",
-        "implementationSliceRunnerPlan",
-        "implementationSliceFeedbackShape",
-    ]
-    parsed = {
-        "number": raw["number"],
-        "title": raw["title"],
-        "sourceTemplateRef": ".github/ISSUE_TEMPLATE/cue-implementation-slice.md",
-        "contract": {
-            "path": contract_path,
-            "package": contract_package,
-            "slice": contract_slice,
-            "authority": {"owns": owns, "doesNotOwn": does_not_own},
-        },
-        "primitives": [
-            "#RawImplementationSliceIssue",
-            "#ParsedImplementationSliceIssue",
-            "#ImplementationSliceMaterialization",
-            "#ImplementationSliceEvalObligations",
-            "#ImplementationSliceEvalPlan",
-            "#ImplementationSliceRunnerPlan",
-            "#ClassifiedRunnerResult",
-            "#IssueMaterializationCandidate",
-        ],
-        "surfaces": {
-            "admissible": ["#IssueMaterializationCandidate", "#ImplementationSliceMaterialization"],
-            "observed": ["#RawImplementationSliceIssue"],
-            "candidates": ["implementationSliceMaterializationReport"],
-            "fixtures": [f"negativeFixtures.{name}" for name in [
-                "routeOnlyPacket",
-                "missingContractPath",
-                "staticEvalPlan",
-                "missingNegativeCheckExpression",
-                "anyNonzeroAsPass",
-            ]],
-            "checks": checks,
-            "publicExports": public_exports,
-        },
-        "filePlan": file_plan(body),
-        "evalSurfaces": public_exports,
-        "fixtures": [f"negativeFixtures.{name}" for name in [
-            "routeOnlyPacket",
-            "missingContractPath",
-            "staticEvalPlan",
-            "missingNegativeCheckExpression",
-            "anyNonzeroAsPass",
-        ]],
-        "checks": checks,
-        "validation": {
-            "positive": [
-                {"id": "vet", "argv": ["cue", "vet", f"./{contract_path}"]},
-                {"id": "baseline", "argv": ["cue", "export", f"./{contract_path}", "-e", "implementationSliceIssueBaseline"]},
-                {"id": "plan", "argv": ["cue", "export", f"./{contract_path}", "-e", "implementationSliceEvalPlan"]},
-            ],
-            "negative": [
-                {
-                    "id": "negative.routeOnlyPacket",
-                    "argv": ["cue", "export", f"./{contract_path}", "-e", "_negativeBottomChecks.routeOnlyPacket"],
-                    "expect": "fail",
-                    "reasonClass": "structural_bottom",
-                }
-            ],
-        },
-        "gates": ["admit loaded implementation-slice issue materializer"],
-    }
+    checks = [f"_negativeBottomChecks.{name}" for name in default_negative_names()]
+    public_exports = default_public_exports()
+    parsed = build_parsed(
+        raw=raw,
+        contract_path=contract_path,
+        contract_package=contract_package,
+        contract_slice=contract_slice,
+        owns=owns,
+        does_not_own=does_not_own,
+        primitives=default_primitives(),
+        public_exports=public_exports,
+        negative_names=default_negative_names(),
+        checks=checks,
+        file_plan=file_plan(body),
+        source_template_ref=".github/ISSUE_TEMPLATE/cue-implementation-slice.md",
+        positive_validation=default_positive_validation(contract_path),
+        negative_validation=default_negative_validation(contract_path),
+    )
     json.dump({"externalParsedImplementationSliceIssue": parsed}, sys.stdout, indent=2)
     print()
 
