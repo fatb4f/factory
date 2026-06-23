@@ -3,7 +3,7 @@ set -u -o pipefail
 
 usage() {
 	printf 'usage: %s [eval-runner-plan.json]\n' "$0" >&2
-	printf '       cue export ./contracts/factory -e hookEvalRunnerPlan | %s\n' "$0" >&2
+	printf '       cue export ./contracts/agent-context-resolver -e resolverHookEvalRunnerPlan | %s\n' "$0" >&2
 }
 
 if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then
@@ -38,9 +38,12 @@ else
 fi
 
 if ! jq -e '
+	# The factory schema is accepted only as adapter compatibility for older exported
+	# plans; semantic authority lives in the CUE package that produced the plan.
 	(.schema == "factory.eval-runner-plan.v1" or .schema == "agent-context-resolver.eval-runner-plan.v1")
 	and (.commands | type == "array" and length > 0)
 	and all(.commands[]; (.id | type == "string" and length > 0)
+		and (.sourceEvalID | type == "string" and length > 0)
 		and (.command | type == "array" and length > 0)
 		and all(.command[]; type == "string" and length > 0)
 		and (.expect == "pass" or .expect == "fail"))
