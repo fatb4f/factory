@@ -5,6 +5,7 @@ package impl
 	validBaselineExpr: string & !=""
 	publicExpr: string & !=""
 	bottomChecks: [...string & !=""] | *[]
+	checkFile: string | *""
 	forbiddenPattern: string | *"bottomCheckSurface|expression:|isInvalid: true"
 })
 
@@ -23,7 +24,12 @@ package impl
 			"cue export ./\(in.path) -e \(in.validBaselineExpr)",
 			"cue export ./\(in.path) -e \(in.publicExpr)",
 			for c in in.bottomChecks {
-				"! cue export ./\(in.path) -e '_negativeBottomChecks.\(c)'"
+				if in.checkFile == "" {
+					"! cue export ./\(in.path) -e '_negativeBottomChecks.\(c)'"
+				}
+				if in.checkFile != "" {
+					"! cue export ./\(in.path) \(in.checkFile) -e '_negativeBottomChecks.\(c)'"
+				}
 			},
 			"! rg '\(in.forbiddenPattern)' ./\(in.path)",
 		]
