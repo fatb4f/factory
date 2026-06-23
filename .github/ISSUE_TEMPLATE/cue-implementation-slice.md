@@ -1,6 +1,6 @@
 ---
 name: CUE functional slice
-about: Implement a bounded eval-first CUE contract slice.
+about: Implement a bounded CUE slice with real observed/admissible/bottom-check gates.
 title: "cue: "
 labels: cue, contract, implementation
 ---
@@ -29,49 +29,72 @@ Do not implement:
 
 ```text
 CUE owns:
-  -
+  - admissibility
+  - structural predicates
+  - bottom checks
 
-Not CUE authority:
-  -
-
-Adapter / generated / runtime boundary:
-  -
+Observed / adapter / generated data:
+  - evidence only
+  - may be invalid
+  - never policy authority
 ```
 
-## Functional contract
+## Required shape
+
+```text
+#Observed<T>
+  -> broad fact substrate
+  -> can represent valid and invalid observed states
+
+#Admissible<T>
+  -> narrow admissible structure
+  -> rejects invalid values structurally
+
+#PatchPredicates
+  -> derived from observed structure
+  -> no operator-supplied truth flags
+
+#RootPromotionCandidate
+  -> closed admissibility surface
+  -> wires predicates as control
+
+#NegativeFixture
+  -> typed invalid observed object
+
+_negativeBottomChecks
+  -> real CUE intersections
+  -> expected to bottom
+```
+
+## Slice objects
 
 ```text
 Observed type:
-  #Observed<T>
-  role:
-  must allow invalid observed states:
+  #Observed<...>:
 
-Admissible / candidate type:
-  #Admissible<T> / #<Candidate>
-  role:
-  must reject:
+Admissible type:
+  #Admissible<...>:
 
 Predicates:
-  #<Predicates>
-  derived from structure, not operator flags:
+  #PatchPredicates:
 
-Fixtures:
-  valid:
-    -
-  negative:
-    -
+Promotion candidate:
+  #RootPromotionCandidate:
 
-Required bottom intersections:
-  _negativeBottomChecks.<fixture>:
-    negativeFixtures.<fixture>.input & #<Candidate>
+Negative fixtures:
+  #NegativeFixture:
+  negativeFixtures.<name>:
+
+Bottom checks:
+  _negativeBottomChecks.<name>:
+    negativeFixtures.<name>.input & #RootPromotionCandidate
 ```
 
 ## Files
 
 ```text
 Add / update:
-  - <contract-path>/<file>.cue
-      purpose:
+  - <path>.cue
 
 Package:
   package <package>
@@ -81,86 +104,55 @@ Package:
 
 ```text
 Required exports:
-  - <validBaselineExpr>
-  - <publicSliceExpr>
-  - <gateOrReportExpr>
+  - <validObservedBaseline>
+  - <admissibleCandidateBaseline>
+  - <promotionReport>
 ```
 
-## Validation commands
+## Validation
 
 ```bash
 cue vet ./<contract-path>
-cue export ./<contract-path> -e <validBaselineExpr>
-cue export ./<contract-path> -e <publicSliceExpr>
-
-# If negative fixtures exist:
-! cue export ./<contract-path> -e '_negativeBottomChecks.<fixtureName>'
-
-# Forbidden-attractor search:
-! rg '<forbiddenNameA>|<forbiddenNameB>|bottomCheckSurface|expression:' ./<contract-path>
+cue export ./<contract-path> -e <validObservedBaseline>
+cue export ./<contract-path> -e <admissibleCandidateBaseline>
+cue export ./<contract-path> -e <promotionReport>
+! cue export ./<contract-path> -e '_negativeBottomChecks.<name>'
+! rg 'truthFlag|operatorSupplied|expectedBottom|bottomCheckSurface|expression:' ./<contract-path>
 ```
 
 ## Forbidden attractors
 
-Do not introduce:
-
 ```text
-diagnostic boolean fields used as authority
-expectedBottom without real intersections
+operator-supplied truth flags
+predicates stored as review metadata
+expectedBottom without real intersection
 stringified CUE expressions
 bottomCheckSurface.expression
-review-only metadata as proof
-fake/default provenance
-placeholder evidence accepted as admissible evidence
 adapter output as policy authority
 generated artifact as authority
 shell-only semantic validation
-side-package schema sprawl
+placeholder evidence accepted as admissible
 ```
 
-Repo-specific forbidden names:
+## Acceptance
 
-```text
--
--
--
-```
-
-## Acceptance criteria
-
-- [ ] Scope is bounded.
-- [ ] Authority boundary is explicit.
-- [ ] Observed type can represent invalid observations.
-- [ ] Candidate/admissible type rejects invalid observations structurally.
-- [ ] Predicates are derived from structure, not supplied as truth flags.
-- [ ] Valid baseline exports.
-- [ ] Public slice/gate/report exports.
-- [ ] Negative fixtures bottom through real CUE intersections, if present.
+- [ ] `#Observed<T>` admits valid and invalid observations.
+- [ ] `#Admissible<T>` rejects invalid values structurally.
+- [ ] `#PatchPredicates` are derived, not supplied.
+- [ ] `#RootPromotionCandidate` is the closed promotion gate.
+- [ ] Negative fixtures are typed observed objects.
+- [ ] `_negativeBottomChecks` are real intersections and bottom.
+- [ ] Public eval exports validate.
 - [ ] Forbidden-attractor search passes.
-- [ ] Completion report includes validation results.
 
 ## Completion report
 
 ```text
 Summary:
-  - primitives:
-  - admissible/candidate surfaces:
-  - fixtures:
-  - predicates/checks:
-  - public eval surfaces:
-  - generated/projection updates:
-  - forbidden attractors avoided:
-
 Validation:
-  - cue vet:
-  - valid baseline export:
-  - public slice export:
-  - negative bottom checks:
-  - forbidden attractor search:
-  - generated/projection checks:
-
-Compatibility exceptions:
-  -
+Negative bottoms:
+Forbidden attractors:
+Exceptions:
 ```
 
-Stop once the declared CUE contract slice exports and validates.
+Stop once the declared slice validates and the negative intersections bottom.
