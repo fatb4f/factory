@@ -8,40 +8,47 @@
   "adapter": "github_app",
   "publication": {
     "report_path": "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md",
-    "issue_targets": {}
+    "issue_targets": {},
+    "report_commit": "edbbed15db628437759d852e063dae40809d9319"
   },
-  "upstream_evidence": {
+  "channels": {
+    "main": {
+      "repo": "openai/codex",
+      "ref": "main",
+      "status": "resolved",
+      "workspace_version": "0.0.0"
+    },
+    "latest-alpha-cli": {
+      "repo": "openai/codex",
+      "ref": "latest-alpha-cli",
+      "status": "resolved",
+      "workspace_version": "0.143.0-alpha.26",
+      "relation_to_main": "distinct-channel"
+    }
+  },
+  "upstream_items": {
     "critical": [
-      {
-        "ids": ["30292", "30293", "30294", "30295", "30296"],
-        "repo": "openai/codex",
-        "classes": ["mcp", "security", "storage", "adapter"],
-        "impact": "blocking-gate"
-      },
-      {
-        "ids": ["30282", "30283", "30188"],
-        "repo": "openai/codex",
-        "classes": ["protocol", "storage", "rollout-trace", "ui", "multi-agent"],
-        "impact": "blocking-gate"
-      }
+      {"ids": ["30292", "30293", "30294", "30295", "30296"], "channel": "main", "impact": "blocking-gate"},
+      {"ids": ["30282", "30283", "30188"], "channel": "main", "impact": "blocking-gate"}
     ],
     "high": [
-      {"id": "30311", "repo": "openai/codex", "classes": ["protocol", "storage", "context-window", "rollout-trace"], "impact": "contract-update"},
-      {"id": "30302", "repo": "openai/codex", "classes": ["protocol", "adapter", "mcp", "ui"], "impact": "contract-update"},
-      {"id": "30273", "repo": "openai/codex", "classes": ["adapter", "security", "protocol", "ui"], "impact": "contract-update"},
-      {"id": "29905", "repo": "openai/codex", "classes": ["mcp", "config", "adapter", "policy"], "impact": "contract-update"}
+      {"id": "30223", "channel": "main", "impact": "contract-update"},
+      {"id": "30369", "channel": "main", "impact": "contract-update"},
+      {"id": "30341", "channel": "main", "impact": "contract-update"},
+      {"id": "30302", "channel": "main", "impact": "contract-update"},
+      {"id": "30311", "channel": "main", "impact": "contract-update"},
+      {"id": "latest-alpha-cli", "channel": "latest-alpha-cli", "impact": "note"}
     ],
     "notes": [
-      {"id": "30257", "repo": "openai/codex", "classes": ["mcp", "security", "ui", "adapter"], "impact": "note"},
-      {"ids": ["30000", "30148"], "repo": "openai/codex", "classes": ["mcp", "adapter", "context-window", "config"], "impact": "note"}
-    ],
-    "unresolved": [
-      {"id": "alpha-latest", "status": "unresolved", "reason": "No visible alpha branch/ref delta established through GitHub branch search."}
+      {"id": "27999", "channel": "main", "impact": "note"},
+      {"ids": ["27249", "27968"], "channel": "main", "impact": "note"},
+      {"ids": ["27815", "27824", "27836"], "channel": "main", "impact": "note"}
     ]
   },
   "validation_notes": {
     "cue_executed": false,
     "reason": "GitHub App adapter exposes content read/write operations, not a repo shell.",
+    "issue_updates": "none; publication plan issueTargets is empty",
     "caveat": "contract-surface AGENTS initial-gate text still conflicts with the newer admitted publication task prompt."
   }
 }
