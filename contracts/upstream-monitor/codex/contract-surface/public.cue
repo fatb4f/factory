@@ -13,7 +13,22 @@ upstreamCodexImpactReportTemplate: #ImpactReport & {
 
 upstreamCodexPublicationPlan: #PublicationPlan & {
 	report: {
-		path: "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md"
+		run: {
+			pathPattern: "contracts/upstream-monitor/codex/contract-surface/reports/runs/<run_id>.codex-impact.md"
+			pathRegex:   "^contracts/upstream-monitor/codex/contract-surface/reports/runs/[0-9]{8}T[0-9]{6}Z\\\\.codex-impact\\\\.md$"
+		}
+		latest: {
+			path: "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md"
+		}
+	}
+	evidence: {
+		run: {
+			pathPattern: "contracts/upstream-monitor/codex/contract-surface/evidence/runs/<run_id>.codex-impact.report.json"
+			pathRegex:   "^contracts/upstream-monitor/codex/contract-surface/evidence/runs/[0-9]{8}T[0-9]{6}Z\\\\.codex-impact\\\\.report\\\\.json$"
+		}
+		latest: {
+			path: "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json"
+		}
 	}
 	issueTargets: {}
 }
