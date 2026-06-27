@@ -1,0 +1,47 @@
+{
+  "apiVersion": "factory.upstream-monitor.codex/v0",
+  "kind": "CodexImpactReportEvidence",
+  "loop": "codex-contract-surface",
+  "signal_id": "loop_bootstrap_request",
+  "target_repo": "fatb4f/factory",
+  "entrypoint": "contracts/upstream-monitor/codex/contract-surface/AGENTS.md",
+  "adapter": "github_app",
+  "publication": {
+    "report_path": "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md",
+    "issue_targets": {}
+  },
+  "upstream_evidence": {
+    "critical": [
+      {
+        "ids": ["30292", "30293", "30294", "30295", "30296"],
+        "repo": "openai/codex",
+        "classes": ["mcp", "security", "storage", "adapter"],
+        "impact": "blocking-gate"
+      },
+      {
+        "ids": ["30282", "30283", "30188"],
+        "repo": "openai/codex",
+        "classes": ["protocol", "storage", "rollout-trace", "ui", "multi-agent"],
+        "impact": "blocking-gate"
+      }
+    ],
+    "high": [
+      {"id": "30311", "repo": "openai/codex", "classes": ["protocol", "storage", "context-window", "rollout-trace"], "impact": "contract-update"},
+      {"id": "30302", "repo": "openai/codex", "classes": ["protocol", "adapter", "mcp", "ui"], "impact": "contract-update"},
+      {"id": "30273", "repo": "openai/codex", "classes": ["adapter", "security", "protocol", "ui"], "impact": "contract-update"},
+      {"id": "29905", "repo": "openai/codex", "classes": ["mcp", "config", "adapter", "policy"], "impact": "contract-update"}
+    ],
+    "notes": [
+      {"id": "30257", "repo": "openai/codex", "classes": ["mcp", "security", "ui", "adapter"], "impact": "note"},
+      {"ids": ["30000", "30148"], "repo": "openai/codex", "classes": ["mcp", "adapter", "context-window", "config"], "impact": "note"}
+    ],
+    "unresolved": [
+      {"id": "alpha-latest", "status": "unresolved", "reason": "No visible alpha branch/ref delta established through GitHub branch search."}
+    ]
+  },
+  "validation_notes": {
+    "cue_executed": false,
+    "reason": "GitHub App adapter exposes content read/write operations, not a repo shell.",
+    "caveat": "contract-surface AGENTS initial-gate text still conflicts with the newer admitted publication task prompt."
+  }
+}
