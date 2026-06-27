@@ -9,18 +9,41 @@ target_repo: fatb4f/factory
 entrypoint: contracts/upstream-monitor/codex/contract-surface/AGENTS.md
 adapter: github_app
 run_result: terminal_success_with_validation_caveats
+channels: main, latest-alpha-cli
 ```
+
+## Channel resolution
+
+### main
+
+```text
+status: resolved
+repo: openai/codex
+ref: main
+workspace_version: 0.0.0
+```
+
+### latest-alpha-cli
+
+```text
+status: resolved
+repo: openai/codex
+ref: latest-alpha-cli
+workspace_version: 0.143.0-alpha.26
+channel_relation: distinct-from-main
+```
+
+`latest-alpha-cli` is resolved evidence for this run and must remain separate from `main` in report and evidence artifacts.
 
 ## Critical
 
 ### openai/codex#30292-#30296 — MCP lifecycle coordination stack
 
 ```text
-classes: mcp, security, storage, adapter
+channel: main
+classes: mcp, storage, adapter
 impact: blocking-gate
 ```
-
-Local reason: the upstream stack changes MCP lifecycle coordination and recovery ownership. Local adapter contracts should gate MCP store coordination, recovery, and diagnostic surfaces before treating the new behavior as admitted.
 
 Suggested local targets:
 
@@ -33,11 +56,10 @@ contracts/factory/adapters/mcp/tool_namespace.cue
 ### openai/codex#30282 / #30283 / #30188 — canonical TurnItem rollout lifecycle stack
 
 ```text
+channel: main
 classes: protocol, storage, rollout-trace, ui, multi-agent
 impact: blocking-gate
 ```
-
-Local reason: canonical TurnItem lifecycle is now the live projection surface for command execution, dynamic tool calls, collab agent tool calls, and sub-agent activity. Local rollout/thread contracts should treat legacy event fanout as compatibility where canonical items are present.
 
 Suggested local targets:
 
@@ -50,72 +72,85 @@ contracts/agent-context-resolver/projection.cue
 
 ## High
 
-### openai/codex#30311 — normalized prompt output IDs
+### openai/codex#30223 — plugin guidance reacts to environment readiness
 
 ```text
-classes: protocol, storage, context-window, rollout-trace
+channel: main
+classes: mcp, adapter, context-window, policy
 impact: contract-update
 ```
 
-Local reason: local response-item and context-window contracts should require IDs for normalized rendered response items.
+### openai/codex#30369 — durable external Matrix thread goals
+
+```text
+channel: main
+classes: protocol, storage, multi-agent, rollout-trace
+impact: contract-update
+```
+
+### openai/codex#30341 — preserve late steer after turn finalization
+
+```text
+channel: main
+classes: protocol, rollout-trace, ui
+impact: contract-update
+```
 
 ### openai/codex#30302 — custom tool-call namespaces
 
 ```text
+channel: main
 classes: protocol, adapter, mcp, ui
 impact: contract-update
 ```
 
-Local reason: local tool-call contracts should represent namespace as a preserved dispatch identity component.
-
-### openai/codex#30273 — pushed exec-server process events
+### openai/codex#30311 — normalized prompt output IDs
 
 ```text
-classes: adapter, security, protocol, ui
+channel: main
+classes: protocol, storage, context-window, rollout-trace
 impact: contract-update
 ```
 
-Local reason: local exec-server contracts should model pushed terminal events and compatibility fallback behavior.
-
-### openai/codex#29905 — partial MCP server definitions across config layers
+### latest-alpha-cli — CLI alpha version channel
 
 ```text
-classes: mcp, config, adapter, policy
-impact: contract-update
+channel: latest-alpha-cli
+classes: release-channel, config
+impact: note
 ```
-
-Local reason: config-layer validation contracts should distinguish layer-local partial validity from composed effective-config completeness.
 
 ## Notes
 
-### openai/codex#30257 — nested MCP startup error classification
+### openai/codex#27999 — image generation error history
 
 ```text
-classes: mcp, security, ui, adapter
+channel: main
+classes: protocol, storage, ui
 impact: note
 ```
 
-Useful for notification fixtures, but not a new authority shape.
-
-### openai/codex#30000 / #30148 — Codex Apps and MCP runtime reuse
+### openai/codex#27249 / #27968 — session segmentation and rollout reference histories
 
 ```text
-classes: mcp, adapter, context-window, config
+channel: main
+classes: storage, rollout-trace, protocol
 impact: note
 ```
 
-Relevant architectural evidence, not admitted as a local contract change in this run.
+### openai/codex#27815 / #27824 / #27836 — pending environment lifecycle
+
+```text
+channel: main
+classes: adapter, context-window, protocol
+impact: note
+```
 
 ## No local action
 
-### alpha-latest
+No local action for `latest-alpha-cli` beyond channel/version evidence.
 
-```text
-status: unresolved
-impact: no-local-action
-```
-
-No visible alpha branch/ref delta was established through GitHub branch search. Treat alpha-latest as unresolved evidence only.
+No issue updates were performed because `upstreamCodexPublicationPlan.issueTargets` is currently `{}`.
 
 ## Suggested local targets
 
@@ -146,7 +181,6 @@ Static contract reads performed through the GitHub App:
 contracts/upstream-monitor/AGENTS.md
 contracts/upstream-monitor/codex/AGENTS.md
 contracts/upstream-monitor/codex/contract-surface/AGENTS.md
-contracts/upstream-monitor/codex/contract-surface/report.cue
 contracts/upstream-monitor/codex/contract-surface/publication.cue
 contracts/upstream-monitor/codex/contract-surface/public.cue
 ```
@@ -158,7 +192,7 @@ report path: contracts/upstream-monitor/codex/contract-surface/reports/latest.co
 issueTargets: {}
 ```
 
-Caveat: the loop entrypoint still contains an older initial-gate warning forbidding upstream inspection/report creation before transition closure proof. The scheduled task prompt and publication surface explicitly requested this report run, so this run proceeded under the newer admitted publication control input and records the AGENTS mismatch as a contract-alignment caveat.
+Caveat: the loop entrypoint still contains older initial-gate text forbidding upstream inspection/report creation before transition closure proof. This run proceeded under the newer scheduled task prompt and publication surface that explicitly requested this admitted report execution.
 
 CUE commands were not executed in-repo by this run because the GitHub App adapter exposes repository content read/write operations, not a repo shell.
 
@@ -176,6 +210,6 @@ cue export ./contracts/upstream-monitor/codex/contract-surface -e upstreamCodexS
 
 ```text
 action: publish-contract-local-report
-reason: upstream evidence was reduced through the fixed report template and admitted repo-local publication path
+reason: upstream evidence from main and latest-alpha-cli was reduced through the fixed report template and admitted repo-local publication path
 next_state: align contract-surface AGENTS initial-gate text with the admitted Z4 report publication slice
 ```
