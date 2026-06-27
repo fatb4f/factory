@@ -7,7 +7,7 @@ package dotfilespluginbundle
 
 #Gate: close({
 	id:       #NonEmptyString
-	kind:     "cue-vet" | "cue-export" | "negative-bottom" | "forbidden-search"
+	kind:     "cue-vet" | "cue-export" | "negative-bottom" | "forbidden-search" | "plugin-manifest" | "marketplace" | "archive"
 	target:   #NonEmptyString
 	required: true
 })
@@ -24,6 +24,12 @@ dotfilesTargetInventory: [
 	".codex/plugins/agent-context-resolver/generated/fragment_inventory.json",
 	".codex/plugins/agent-context-resolver/generated/provider_inventory.json",
 	".codex/plugins/agent-context-resolver/generated/dotfiles.schema-map.json",
+	".agents/plugins/marketplace.json",
+	"plugins/agent-context-resolver/.codex-plugin/plugin.json",
+	"plugins/agent-context-resolver/skills/agent-context-resolver/SKILL.md",
+	"plugins/agent-context-resolver/skills/agent-context-resolver/references/implementation-contract.md",
+	"plugins/agent-context-resolver/skills/agent-context-resolver/references/validation.md",
+	"plugins/agent-context-resolver/skills/agent-context-resolver/scripts/validate_contract_surface.py",
 ]
 
 generatedFileInventory: [
@@ -51,6 +57,13 @@ projectionComponents: [
 	{
 		id:        "dotfiles-generated-plugin-files"
 		path:      ".codex/plugins/agent-context-resolver/generated"
+		role:      "generated-output"
+		generated: true
+		authority: false
+	},
+	{
+		id:        "repo-local-marketplace-plugin-root"
+		path:      "plugins/agent-context-resolver"
 		role:      "generated-output"
 		generated: true
 		authority: false
@@ -93,6 +106,24 @@ projectionGates: [
 		id:       "dotfiles-plugin-negative-bottom"
 		kind:     "negative-bottom"
 		target:   "_negativeBottomChecks"
+		required: true
+	},
+	{
+		id:       "resolver-plugin-manifest"
+		kind:     "plugin-manifest"
+		target:   resolverPluginManifestPath
+		required: true
+	},
+	{
+		id:       "resolver-repo-marketplace"
+		kind:     "marketplace"
+		target:   resolverMarketplacePath
+		required: true
+	},
+	{
+		id:       "resolver-plugin-archive-gate"
+		kind:     "archive"
+		target:   "resolverBundleArchiveGate"
 		required: true
 	},
 ]
