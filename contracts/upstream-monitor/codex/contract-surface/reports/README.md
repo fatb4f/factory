@@ -11,4 +11,13 @@ upstreamCodexImpactReportTemplate
 upstreamCodexPublicationPlan
 ```
 
+Admitted report layout:
+
+```text
+reports/runs/<run_id>.codex-impact.md   durable per-run report record
+reports/latest.codex-impact.md          overwriteable latest-run projection
+```
+
+`run_id` uses UTC execution time in `YYYYMMDDTHHMMSSZ` form.
+
 Do not write reports outside this directory unless a future CUE contract admits another output root.
