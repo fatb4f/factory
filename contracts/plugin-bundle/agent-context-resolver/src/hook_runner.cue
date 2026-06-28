@@ -3,7 +3,7 @@ package agentcontextresolver
 #RunnerCommand: close({
 	id:           string & !=""
 	sourceEvalID: string & !=""
-	command:      [string & !="", ...string & !=""]
+	command: [string & !="", ...string & !=""]
 	expect:       "pass" | "fail"
 	reasonClass?: "structural_bottom" | "missing_selector" | "load_error" | "syntax_error" | "tool_failure"
 })

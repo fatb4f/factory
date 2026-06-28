@@ -10,19 +10,19 @@ issue28: {
 		applied:                true
 		priorDraftLocation:     "contracts/factory/**"
 		correctedAuthorityRoot: "contracts/agent-context-resolver/**"
-		reason: "Issue #28 was drafted with the wrong contract location. The implementation authority root is resolver-local."
+		reason:                 "Issue #28 was drafted with the wrong contract location. The implementation authority root is resolver-local."
 	}
 
 	rootQuestion: """
-	How can contracts/agent-context-resolver operate on hook/template eval obligations,
-	runner plans, generated projection descriptors, fixtures, and negative checks as one
-	resolver-local CUE contract before shell, Claude, Codex, git, go-git, factoryctl,
-	GitHub Projects, projection artifacts, or adapters can define semantic authority?
-	"""
+		How can contracts/agent-context-resolver operate on hook/template eval obligations,
+		runner plans, generated projection descriptors, fixtures, and negative checks as one
+		resolver-local CUE contract before shell, Claude, Codex, git, go-git, factoryctl,
+		GitHub Projects, projection artifacts, or adapters can define semantic authority?
+		"""
 
 	authorityBoundary: {
 		cueRootContract: {
-			root:     "contracts/agent-context-resolver"
+			root: "contracts/agent-context-resolver"
 			surfaces: ["contracts/agent-context-resolver/**"]
 
 			soleAuthorityFor: [
@@ -62,8 +62,8 @@ issue28: {
 
 	scopeLock: {
 		activeImplementation: ["contracts/agent-context-resolver/**"]
-		staleDraftLocation:   "contracts/factory/**"
-		rule: "Do not evaluate #28 closure against contracts/factory/**; evaluate resolver-local surfaces instead."
+		staleDraftLocation: "contracts/factory/**"
+		rule:               "Do not evaluate #28 closure against contracts/factory/**; evaluate resolver-local surfaces instead."
 	}
 
 	implementedChildren: [
@@ -88,7 +88,7 @@ issue28: {
 	]
 
 	closure: {
-		state: "reassess"
+		state:  "reassess"
 		reason: "Location correction has been applied. Parent closure now depends on resolver-local gate/evidence evaluation, not factory-local issue text."
 		nextRequiredChecks: [
 			"cue vet ./contracts/agent-context-resolver",

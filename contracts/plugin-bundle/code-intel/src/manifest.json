@@ -13,7 +13,8 @@
   },
   "contracts": [
     "contracts/code-intel/lua-first-workflow.cue",
-    "contracts/code-intel/checks.cue"
+    "contracts/code-intel/checks.cue",
+    "contracts/code-intel/recommendations.cue"
   ],
   "providers": [
     "mcp-tool-registry",

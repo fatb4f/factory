@@ -1,8 +1,8 @@
 package agentcontextresolver
 
 baselineImplementationSliceIssue: #ParsedImplementationSliceIssue & {
-	number: 44
-	title:  "cue: implement agent-context-resolver implementation-slice issue materializer"
+	number:            44
+	title:             "cue: implement agent-context-resolver implementation-slice issue materializer"
 	sourceTemplateRef: ".github/ISSUE_TEMPLATE/cue-implementation-slice.md"
 	contract: {
 		path:    "contracts/agent-context-resolver"
@@ -74,8 +74,8 @@ baselineImplementationSliceIssue: #ParsedImplementationSliceIssue & {
 		{path: "tools/hooks/run-eval-plan.sh", purpose: "classified expected structural bottom runner"},
 	]
 	evalSurfaces: surfaces.publicExports
-	fixtures: surfaces.fixtures
-	checks: surfaces.checks
+	fixtures:     surfaces.fixtures
+	checks:       surfaces.checks
 	validation: {
 		positive: [
 			{id: "vet", argv: ["cue", "vet", "./contracts/agent-context-resolver"]},
@@ -84,8 +84,8 @@ baselineImplementationSliceIssue: #ParsedImplementationSliceIssue & {
 		]
 		negative: [
 			{
-				id:          "negative.routeOnlyPacket"
-				argv:        ["cue", "export", "./contracts/agent-context-resolver", "-e", "_negativeBottomChecks.routeOnlyPacket"]
+				id: "negative.routeOnlyPacket"
+				argv: ["cue", "export", "./contracts/agent-context-resolver", "-e", "_negativeBottomChecks.routeOnlyPacket"]
 				expect:      "fail"
 				reasonClass: "structural_bottom"
 			},
@@ -100,12 +100,12 @@ negativeFixtures: {
 		input: {
 			issueRef: "issue-44"
 			predicates: {
-				requiresParsedIssue: false
-				requiresLoadedIssue: false
+				requiresParsedIssue:            false
+				requiresLoadedIssue:            false
 				evalPlanDerivedFromLoadedIssue: false
-				runnerPlanDerivedFromEvalPlan: false
-				expectedFailureClassified: false
-				negativeSelectorsResolve: false
+				runnerPlanDerivedFromEvalPlan:  false
+				expectedFailureClassified:      false
+				negativeSelectorsResolve:       false
 			}
 		}
 	}
@@ -115,9 +115,9 @@ negativeFixtures: {
 			issueRef: "issue-44"
 			parsedIssue: {
 				contract: {
-					path: ""
+					path:    ""
 					package: "resolver"
-					slice: "implementation-slice-issue-materializer"
+					slice:   "implementation-slice-issue-materializer"
 					authority: {
 						owns: ["parsed implementation-slice issue shape"]
 						doesNotOwn: ["GitHub API behavior"]
@@ -144,75 +144,75 @@ negativeFixtures: {
 			}
 			loadedIssue: implementationSliceLoadedIssue
 			predicates: {
-				requiresParsedIssue: true
-				requiresLoadedIssue: true
+				requiresParsedIssue:            true
+				requiresLoadedIssue:            true
 				evalPlanDerivedFromLoadedIssue: true
-				runnerPlanDerivedFromEvalPlan: true
-				expectedFailureClassified: true
-				negativeSelectorsResolve: true
+				runnerPlanDerivedFromEvalPlan:  true
+				expectedFailureClassified:      true
+				negativeSelectorsResolve:       true
 			}
 		}
 	}
 	staticEvalPlan: {
 		violates: "predicates.evalPlanMustDeriveFromLoadedIssue"
 		input: {
-			issueRef: "issue-44"
+			issueRef:    "issue-44"
 			parsedIssue: baselineImplementationSliceIssue
 			loadedIssue: implementationSliceLoadedIssue
 			evalPlan: {
-				issueID: "issue-44"
+				issueID:        "issue-44"
 				sourceIssueRef: "static-fixture"
 			}
 			predicates: {
-				requiresParsedIssue: true
-				requiresLoadedIssue: true
+				requiresParsedIssue:            true
+				requiresLoadedIssue:            true
 				evalPlanDerivedFromLoadedIssue: false
-				runnerPlanDerivedFromEvalPlan: true
-				expectedFailureClassified: true
-				negativeSelectorsResolve: true
+				runnerPlanDerivedFromEvalPlan:  true
+				expectedFailureClassified:      true
+				negativeSelectorsResolve:       true
 			}
 		}
 	}
 	missingNegativeCheckExpression: {
 		violates: "predicates.negativeSelectorMustResolve"
 		input: {
-			issueRef: "issue-44"
+			issueRef:    "issue-44"
 			parsedIssue: baselineImplementationSliceIssue
 			loadedIssue: implementationSliceLoadedIssue
-			evalPlan: implementationSliceEvalPlan
-			runnerPlan: implementationSliceRunnerPlan
+			evalPlan:    implementationSliceEvalPlan
+			runnerPlan:  implementationSliceRunnerPlan
 			predicates: {
-				requiresParsedIssue: true
-				requiresLoadedIssue: true
+				requiresParsedIssue:            true
+				requiresLoadedIssue:            true
 				evalPlanDerivedFromLoadedIssue: true
-				runnerPlanDerivedFromEvalPlan: true
-				expectedFailureClassified: true
-				negativeSelectorsResolve: false
+				runnerPlanDerivedFromEvalPlan:  true
+				expectedFailureClassified:      true
+				negativeSelectorsResolve:       false
 			}
 		}
 	}
 	anyNonzeroAsPass: {
 		violates: "predicates.expectedFailureRequiresReasonClass"
 		input: {
-			issueRef: "issue-44"
+			issueRef:    "issue-44"
 			parsedIssue: baselineImplementationSliceIssue
 			loadedIssue: implementationSliceLoadedIssue
-			evalPlan: implementationSliceEvalPlan
+			evalPlan:    implementationSliceEvalPlan
 			runnerPlan: {
 				commands: [{
-					id: "bad.fail"
+					id:           "bad.fail"
 					sourceEvalID: "bad.fail"
 					command: ["false"]
 					expect: "fail"
 				}]
 			}
 			predicates: {
-				requiresParsedIssue: true
-				requiresLoadedIssue: true
+				requiresParsedIssue:            true
+				requiresLoadedIssue:            true
 				evalPlanDerivedFromLoadedIssue: true
-				runnerPlanDerivedFromEvalPlan: true
-				expectedFailureClassified: false
-				negativeSelectorsResolve: true
+				runnerPlanDerivedFromEvalPlan:  true
+				expectedFailureClassified:      false
+				negativeSelectorsResolve:       true
 			}
 		}
 	}

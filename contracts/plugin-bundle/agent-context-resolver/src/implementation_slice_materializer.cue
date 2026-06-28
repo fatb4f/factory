@@ -9,8 +9,8 @@ package agentcontextresolver
 })
 
 #ParsedImplementationSliceIssue: close({
-	number?: int & >0
-	title?:  string & !=""
+	number?:            int & >0
+	title?:             string & !=""
 	sourceTemplateRef?: string & !=""
 
 	contract: {
@@ -19,18 +19,18 @@ package agentcontextresolver
 		slice:   string & !=""
 
 		authority: {
-			owns:       [string & !="", ...string & !=""]
+			owns: [string & !="", ...string & !=""]
 			doesNotOwn: [string & !="", ...string & !=""]
 		}
 	}
 
 	primitives: [...string & !=""]
 	surfaces: {
-		admissible:   [...string & !=""]
-		observed:     [...string & !=""]
-		candidates:   [...string & !=""]
-		fixtures:     [...string & !=""]
-		checks:       [string & !="", ...string & !=""]
+		admissible: [...string & !=""]
+		observed: [...string & !=""]
+		candidates: [...string & !=""]
+		fixtures: [...string & !=""]
+		checks: [string & !="", ...string & !=""]
 		publicExports: [string & !="", ...string & !=""]
 	}
 	filePlan: [...{
@@ -51,17 +51,17 @@ package agentcontextresolver
 })
 
 #ImplementationSliceValidationCommand: close({
-	id:   string & !=""
+	id: string & !=""
 	argv: [string & !="", ...string & !=""]
-	expect?: "pass" | "fail"
+	expect?:      "pass" | "fail"
 	reasonClass?: "structural_bottom" | "missing_selector" | "load_error" | "syntax_error" | "tool_failure"
 })
 
 #ImplementationSliceMaterialization: close({
-	issueRef:          string & !=""
-	parsedRef:         string & !=""
-	loadedRef:         string & !=""
-	sourceTemplateRef: string & !=""
+	issueRef:           string & !=""
+	parsedRef:          string & !=""
+	loadedRef:          string & !=""
+	sourceTemplateRef:  string & !=""
 	evalObligationsRef: string & !=""
 
 	parsedIssue: #ParsedImplementationSliceIssue
@@ -76,9 +76,9 @@ package agentcontextresolver
 })
 
 #RawOrParsedIssueMaterialization: {
-	issueRef?: string
-	parsedRef?: string
-	loadedRef?: string
+	issueRef?:           string
+	parsedRef?:          string
+	loadedRef?:          string
 	evalObligationsRef?: string
 	parsedIssue?: {
 		...
@@ -100,18 +100,18 @@ package agentcontextresolver
 #IssueMaterializationPredicates: close({
 	input: #RawOrParsedIssueMaterialization
 
-	requiresParsedIssue: bool
-	requiresLoadedIssue: bool
+	requiresParsedIssue:            bool
+	requiresLoadedIssue:            bool
 	evalPlanDerivedFromLoadedIssue: bool
-	runnerPlanDerivedFromEvalPlan: bool
-	expectedFailureClassified: bool
-	negativeSelectorsResolve: bool
+	runnerPlanDerivedFromEvalPlan:  bool
+	expectedFailureClassified:      bool
+	negativeSelectorsResolve:       bool
 })
 
 #IssueMaterializationCandidate: _candidate=(close({
-	issueRef?: string
-	parsedRef?: string
-	loadedRef?: string
+	issueRef?:           string
+	parsedRef?:          string
+	loadedRef?:          string
 	evalObligationsRef?: string
 	parsedIssue?: {
 		...
@@ -217,12 +217,12 @@ externalParsedImplementationSliceIssue?: #ParsedImplementationSliceIssue
 	let _loaded = loaded
 
 	materialization: #ImplementationSliceMaterialization & {
-		issueRef:          "issue-\(_parsed.number | 44)"
-		parsedRef:         "generated/agent-context-resolver/issues/\(_parsed.number | 44)/parsed.issue.json"
-		loadedRef:         "generated/agent-context-resolver/issues/\(_parsed.number | 44)/loaded.issue.json"
-		sourceTemplateRef: _parsed.sourceTemplateRef | ".github/ISSUE_TEMPLATE/cue-implementation-slice.md"
+		issueRef:           "issue-\(_parsed.number | 44)"
+		parsedRef:          "generated/agent-context-resolver/issues/\(_parsed.number | 44)/parsed.issue.json"
+		loadedRef:          "generated/agent-context-resolver/issues/\(_parsed.number | 44)/loaded.issue.json"
+		sourceTemplateRef:  _parsed.sourceTemplateRef | ".github/ISSUE_TEMPLATE/cue-implementation-slice.md"
 		evalObligationsRef: "generated/agent-context-resolver/issues/\(_parsed.number | 44)/eval-obligations.json"
-		parsedIssue:       _parsed
-		loadedIssue:       _loaded
+		parsedIssue:        _parsed
+		loadedIssue:        _loaded
 	}
 })

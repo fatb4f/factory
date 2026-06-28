@@ -9,7 +9,7 @@ package agentcontextresolver
 		slice:   string & !=""
 
 		authority: {
-			owns:       [...string & !=""]
+			owns: [...string & !=""]
 			doesNotOwn: [...string & !=""]
 		}
 
@@ -35,19 +35,19 @@ package agentcontextresolver
 	}
 
 	primitives?: [...{
-		name:           string & !=""
-		role:           string & !=""
+		name: string & !=""
+		role: string & !=""
 		requiredFields: [...string & !=""]
-		constraints:    [...string & !=""]
+		constraints: [...string & !=""]
 	}]
 
 	surfaces: {
-		admissible?:    [...string & !=""]
-		observed?:      [...string & !=""]
-		candidates?:    [...string & !=""]
-		fixtures?:      [...string & !=""]
-		checks:         [...string & !=""]
-		publicExports:  [...string & !=""]
+		admissible?: [...string & !=""]
+		observed?: [...string & !=""]
+		candidates?: [...string & !=""]
+		fixtures?: [...string & !=""]
+		checks: [...string & !=""]
+		publicExports: [...string & !=""]
 	}
 
 	constraints?: {

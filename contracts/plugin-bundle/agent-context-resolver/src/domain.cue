@@ -12,15 +12,15 @@ resolverModuleBoundary: {
 }
 
 resolverSectionPackages: {
-	assertions:  #Section & {id: "agent-context-resolver.assertions", kind: "assertions", path: "assertions"}
-	checks:      #Section & {id: "agent-context-resolver.checks", kind: "checks", path: "checks"}
-	adapters:    #Section & {id: "agent-context-resolver.adapters", kind: "adapters", path: "adapters"}
-	workers:     #Section & {id: "agent-context-resolver.workers", kind: "workers", path: "workers"}
-	hooks:       #Section & {id: "agent-context-resolver.hooks", kind: "hooks", path: "hooks"}
-	fixtures:    #Section & {id: "agent-context-resolver.fixtures", kind: "fixtures", path: "fixtures"}
+	assertions: #Section & {id: "agent-context-resolver.assertions", kind: "assertions", path: "assertions"}
+	checks: #Section & {id: "agent-context-resolver.checks", kind: "checks", path: "checks"}
+	adapters: #Section & {id: "agent-context-resolver.adapters", kind: "adapters", path: "adapters"}
+	workers: #Section & {id: "agent-context-resolver.workers", kind: "workers", path: "workers"}
+	hooks: #Section & {id: "agent-context-resolver.hooks", kind: "hooks", path: "hooks"}
+	fixtures: #Section & {id: "agent-context-resolver.fixtures", kind: "fixtures", path: "fixtures"}
 	projections: #Section & {id: "agent-context-resolver.projections", kind: "projections", path: "projections"}
-	generated:   #Section & {id: "agent-context-resolver.generated", kind: "generated", path: "generated"}
-	seed:        #Section & {id: "agent-context-resolver.seeds", kind: "seeds", path: "seed"}
+	generated: #Section & {id: "agent-context-resolver.generated", kind: "generated", path: "generated"}
+	seed: #Section & {id: "agent-context-resolver.seeds", kind: "seeds", path: "seed"}
 }
 
 #Section: close({

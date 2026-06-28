@@ -292,8 +292,8 @@ hookTemplateNegativeFixtures: {
 		input: {
 			id:           "bad.empty-runner-command"
 			sourceEvalID: "bad.empty-runner-command"
-			command:      []
-			expect:       "pass"
+			command: []
+			expect: "pass"
 		}
 	}
 
@@ -304,17 +304,17 @@ hookTemplateNegativeFixtures: {
 				schema: "agent-context-resolver.eval-plan.v1"
 				event:  baselineResolverHookEvent
 				evals: [{
-					id:      "declared.cue-vet"
-					kind:    "cueVet"
+					id:   "declared.cue-vet"
+					kind: "cueVet"
 					command: ["cue", "vet", "./contracts/agent-context-resolver"]
-					expect:  "pass"
+					expect: "pass"
 				}]
 			}
 			commands: [{
 				id:           "undeclared.runner-command"
 				sourceEvalID: "undeclared.runner-command"
-				command:      ["cue", "export", "./contracts/agent-context-resolver", "-e", "resolverHookTemplateGate"]
-				expect:       "pass"
+				command: ["cue", "export", "./contracts/agent-context-resolver", "-e", "resolverHookTemplateGate"]
+				expect: "pass"
 			}]
 			authority: {
 				cue:     true
@@ -327,9 +327,9 @@ hookTemplateNegativeFixtures: {
 
 	stringifiedBottomCheck: {
 		input: {
-			schema: "agent-context-resolver.eval-plan.v1"
-			event:  baselineResolverHookEvent
-			evals:  baselineResolverHookEvalPlan.evals
+			schema:    "agent-context-resolver.eval-plan.v1"
+			event:     baselineResolverHookEvent
+			evals:     baselineResolverHookEvalPlan.evals
 			checkText: "hookTemplateNegativeFixtures.emptyRunnerCommand.input and RunnerCommand"
 		}
 	}

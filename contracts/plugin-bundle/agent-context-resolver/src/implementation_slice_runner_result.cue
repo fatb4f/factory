@@ -2,12 +2,12 @@ package agentcontextresolver
 
 #ClassifiedRunnerResult: close({
 	commandID: string & !=""
-	status: "pass" | "fail"
-	expected: "pass" | "fail"
+	status:    "pass" | "fail"
+	expected:  "pass" | "fail"
 	actual: {
 		exitCode: int
-		stderr?: string
-		stdout?: string
+		stderr?:  string
+		stdout?:  string
 	}
 	reasonClass: "none" | "structural_bottom" | "missing_selector" | "load_error" | "syntax_error" | "tool_failure" | "expectation_mismatch"
 
@@ -19,7 +19,7 @@ package agentcontextresolver
 })
 
 implementationSliceFeedbackShape: {
-	schema: "agent-context-resolver.implementation-slice-feedback.v1"
+	schema:  "agent-context-resolver.implementation-slice-feedback.v1"
 	issueID: "issue-44"
 	results: []
 }

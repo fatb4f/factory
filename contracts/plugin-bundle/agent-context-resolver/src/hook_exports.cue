@@ -17,7 +17,7 @@ resolverHookGeneratedProjection: #GeneratedHookProjection & {
 		role:      "execute declared behavior only"
 		authority: false
 	}
-	mode: "0755"
+	mode:    "0755"
 	content: "adapter file is tools/hooks/run-eval-plan.sh; this descriptor is authority false"
 }
 
@@ -32,7 +32,7 @@ resolverHookTemplateGate: #HookTemplateGate & {
 		generated: false
 		runtime:   false
 	}
-	publicExports: resolverHookTemplateIssue.surfaces.publicExports
+	publicExports:    resolverHookTemplateIssue.surfaces.publicExports
 	negativeCheckIDs: resolverHookTemplateIssue.surfaces.checks
 	evidence: [
 		"cue vet ./contracts/agent-context-resolver",

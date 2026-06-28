@@ -13,7 +13,7 @@ package agentcontextresolver
 		runtime:   false
 	}
 
-	publicExports:    [...string & !=""]
+	publicExports: [...string & !=""]
 	negativeCheckIDs: [...string & !=""]
 
 	evidence: [...string & !=""]

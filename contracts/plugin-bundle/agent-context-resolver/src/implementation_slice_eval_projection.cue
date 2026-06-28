@@ -1,17 +1,17 @@
 package agentcontextresolver
 
 #ImplementationSliceEvalObligations: close({
-	loadedIssue: #ImplementationSliceIssue
+	loadedIssue:     #ImplementationSliceIssue
 	materialization: #ImplementationSliceMaterialization
 
 	positive: [
 		{
-			id:   "vet"
+			id: "vet"
 			argv: ["cue", "vet", "./\(loadedIssue.contract.path)"]
 		},
 		for e in loadedIssue.surfaces.publicExports {
 			{
-				id:   "export.\(e)"
+				id: "export.\(e)"
 				argv: ["cue", "export", "./\(loadedIssue.contract.path)", "-e", e]
 			}
 		},
@@ -20,18 +20,18 @@ package agentcontextresolver
 	negative: [
 		for c in loadedIssue.surfaces.checks {
 			{
-				id:          "bottom.\(c)"
-				selector:    c
-				argv:        ["cue", "export", "./\(loadedIssue.contract.path)", "-e", c]
+				id:       "bottom.\(c)"
+				selector: c
+				argv: ["cue", "export", "./\(loadedIssue.contract.path)", "-e", c]
 				reasonClass: "structural_bottom"
 			}
 		},
 	]
 
 	forbiddenAttractors: [{
-		id:   "forbidden-attractor-search"
+		id: "forbidden-attractor-search"
 		argv: ["true"]
-		expect: "fail"
+		expect:      "fail"
 		reasonClass: "structural_bottom"
 	}]
 
@@ -45,37 +45,37 @@ package agentcontextresolver
 })
 
 #ImplementationSliceEvalPlan: close({
-	schema: "agent-context-resolver.implementation-slice-eval-plan.v1"
-	issueID: string & !=""
+	schema:         "agent-context-resolver.implementation-slice-eval-plan.v1"
+	issueID:        string & !=""
 	sourceIssueRef: string & !=""
 	loadedIssueRef: string & !=""
 	commands: [#ImplementationSliceEvalCommand, ...#ImplementationSliceEvalCommand]
 })
 
 #ImplementationSliceEvalCommand: close({
-	id:   string & !=""
+	id: string & !=""
 	argv: [string & !="", ...string & !=""]
-	expect: "pass" | "fail"
+	expect:       "pass" | "fail"
 	reasonClass?: "structural_bottom" | "missing_selector" | "load_error" | "syntax_error" | "tool_failure"
-	selector?: string & !=""
+	selector?:    string & !=""
 })
 
 #ImplementationSliceRunnerPlan: close({
-	schema: "agent-context-resolver.implementation-slice-runner-plan.v1"
+	schema:  "agent-context-resolver.implementation-slice-runner-plan.v1"
 	issueID: string & !=""
 	commands: [#ImplementationSliceRunnerCommand, ...#ImplementationSliceRunnerCommand]
 	expectations: {
 		failuresClassified: true
 		anyNonZeroAlone:    false
 	}
-	evidenceShape: "#ClassifiedRunnerResult"
+	evidenceShape:  "#ClassifiedRunnerResult"
 	sourceEvalPlan: #ImplementationSliceEvalPlan
 })
 
 #ImplementationSliceRunnerCommand: close({
 	id:           string & !=""
 	sourceEvalID: string & !=""
-	command:      [string & !="", ...string & !=""]
+	command: [string & !="", ...string & !=""]
 	expect:       "pass" | "fail"
 	reasonClass?: "structural_bottom"
 	stderrMustContain?: ["_|_", ...string]
@@ -87,14 +87,14 @@ package agentcontextresolver
 	let _materialization = materialization
 
 	obligations: #ImplementationSliceEvalObligations & {
-		loadedIssue:      _materialization.loadedIssue
+		loadedIssue:     _materialization.loadedIssue
 		materialization: _materialization
 	}
 
 	evalPlan: #ImplementationSliceEvalPlan & {
-		issueID:         _materialization.issueRef
-		sourceIssueRef:  _materialization.parsedRef
-		loadedIssueRef:  _materialization.loadedRef
+		issueID:        _materialization.issueRef
+		sourceIssueRef: _materialization.parsedRef
+		loadedIssueRef: _materialization.loadedRef
 		commands: [
 			for c in obligations.positive {
 				{

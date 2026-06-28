@@ -16,7 +16,7 @@ package agentcontextresolver
 		authority: false
 	}
 
-	mode?: "0755"
+	mode?:    "0755"
 	content?: string & !=""
 
 	commands: [

@@ -3,7 +3,7 @@ package agentcontextresolver
 #EvalPlan: close({
 	schema: "agent-context-resolver.eval-plan.v1"
 	event:  #ObservedHookEvent
-	evals:  [#EvalObligation, ...#EvalObligation]
+	evals: [#EvalObligation, ...#EvalObligation]
 })
 
 #EvalPlanFromIssue: close({
