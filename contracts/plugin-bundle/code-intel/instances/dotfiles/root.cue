@@ -25,7 +25,7 @@ package codeintelpluginbundle
 #ProjectionComponent: close({
 	id: #NonEmptyString
 	path: #NonEmptyString
-	role: "contract" | "generated-package" | "package-content" | "package-metadata" | "idempotency-lock" | "integration"
+	role: "contract" | "package-source" | "generated-package" | "package-content" | "package-metadata" | "idempotency-lock" | "integration"
 	generated: *false | bool
 	authority: bool
 })
@@ -52,7 +52,7 @@ package codeintelpluginbundle
 	weztermTypesAreAuthority?: false
 	luaWorkflowGeneratedAsAuthority?: false
 	resolverContractsLeak?: false
-}
+})
 
 #AdmissibleCodeIntelPluginBundleProjection: #CodeIntelPluginBundleProjection & {
 	generatedAuthority?: false
