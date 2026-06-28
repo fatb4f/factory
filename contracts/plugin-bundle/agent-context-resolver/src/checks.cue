@@ -1,38 +1,47 @@
 package agentcontextresolver
 
 _negativeBottomChecks: {
+	genericProviderTermAccepted:
+		*(pluginBundleRecommendationNegativeFixtures.genericProviderTermAccepted.input & #PluginBundleMatcherAdmissible) | _
+
+	danglingDependencyAccepted:
+		*(pluginBundleRecommendationNegativeFixtures.danglingDependencyAccepted.input & #PluginBundleMatcherAdmissible) | _
+
+	cueRuntimeDependencyAccepted:
+		*(pluginBundleRecommendationNegativeFixtures.cueRuntimeDependencyAccepted.input & #PluginBundleMatcherAdmissible) | _
+
 	routeOnlyPacket: {
-		kind: "issue-materialization-negative-check"
-		fixture: "negativeFixtures.routeOnlyPacket"
+		kind:        "issue-materialization-negative-check"
+		fixture:     "negativeFixtures.routeOnlyPacket"
 		reasonClass: "structural_bottom"
-		result: bool
+		result:      bool
 	}
 
 	missingContractPath: {
-		kind: "issue-materialization-negative-check"
-		fixture: "negativeFixtures.missingContractPath"
+		kind:        "issue-materialization-negative-check"
+		fixture:     "negativeFixtures.missingContractPath"
 		reasonClass: "structural_bottom"
-		result: bool
+		result:      bool
 	}
 
 	staticEvalPlan: {
-		kind: "issue-materialization-negative-check"
-		fixture: "negativeFixtures.staticEvalPlan"
+		kind:        "issue-materialization-negative-check"
+		fixture:     "negativeFixtures.staticEvalPlan"
 		reasonClass: "structural_bottom"
-		result: bool
+		result:      bool
 	}
 
 	missingNegativeCheckExpression: {
-		kind: "issue-materialization-negative-check"
-		fixture: "negativeFixtures.missingNegativeCheckExpression"
+		kind:        "issue-materialization-negative-check"
+		fixture:     "negativeFixtures.missingNegativeCheckExpression"
 		reasonClass: "structural_bottom"
-		result: bool
+		result:      bool
 	}
 
 	anyNonzeroAsPass: {
-		kind: "issue-materialization-negative-check"
-		fixture: "negativeFixtures.anyNonzeroAsPass"
+		kind:        "issue-materialization-negative-check"
+		fixture:     "negativeFixtures.anyNonzeroAsPass"
 		reasonClass: "structural_bottom"
-		result: bool
+		result:      bool
 	}
 }
