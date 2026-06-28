@@ -11,6 +11,9 @@ pluginBundlePackage: "dotfilespluginbundle"
 pluginBundleRequiredPaths: [
 	"SKILL.md",
 	"manifest.json",
+	"package.json",
+	"package.lock.json",
+	"cue.mod/module.cue",
 	"scripts/agent-context-resolver-hook",
 	"scripts/resolve-agent-context",
 	"generated/turn_start_fragments.json",
@@ -23,7 +26,10 @@ pluginBundleRequiredPaths: [
 	"contracts/agent-context-resolver/implementation_slice_eval_projection.cue",
 	"contracts/agent-context-resolver/implementation_slice_runner_result.cue",
 	"contracts/agent-context-resolver/implementation_slice_constructor_inventory.cue",
+	"contracts/agent-context-resolver/fixtures.cue",
+	"contracts/agent-context-resolver/checks.cue",
 	"contracts/agent-context-resolver/checks/checks.cue",
+	"contracts/meta/impl/catalog.cue",
 	"contracts/meta/impl/primitive.cue",
 	"contracts/meta/impl/surface.cue",
 	"contracts/meta/impl/predicate.cue",
@@ -59,11 +65,14 @@ bundledCueAuthorityBlock: #BundledCueAuthorityBlock & {
 			"implementation_slice_eval_projection.cue",
 			"implementation_slice_runner_result.cue",
 			"implementation_slice_constructor_inventory.cue",
+			"fixtures.cue",
+			"checks.cue",
 			"checks/checks.cue",
 		]
 	}
 	constructors: {
 		files: [
+			"catalog.cue",
 			"primitive.cue",
 			"surface.cue",
 			"predicate.cue",
