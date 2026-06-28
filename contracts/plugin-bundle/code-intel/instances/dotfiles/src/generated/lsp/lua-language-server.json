@@ -4,7 +4,7 @@
   "generated": true,
   "authority": false,
   "language": "lua",
-  "command": "lua-language-server",
+  "provider": "lua-language-server",
   "rootPatterns": [
     ".luarc.json",
     ".git"
@@ -17,7 +17,7 @@
     ]
   },
   "diagnostics": {
-    "globals": [
+    "knownGlobals": [
       "vim",
       "wezterm"
     ],
