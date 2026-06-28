@@ -1,5 +1,7 @@
 package dotfilespluginbundle
 
+import "list"
+
 pluginBundleRoot: ".codex/plugins/agent-context-resolver"
 pluginBundleSourceRoot: "contracts/plugin-bundle/agent-context-resolver/src"
 pluginBundleTemplateRoot: "contracts/plugin-bundle/template"
@@ -8,11 +10,48 @@ pluginBundlePackage: "dotfilespluginbundle"
 
 #ContainedBundlePath: string & !="" & !~"^/" & !~"(^|/)\\.\\.(/|$)"
 
-pluginBundleRequiredPaths: baseTemplateRequiredPaths + [
-	for addition in dotfilesTemplateApplicationAdditions {
-		addition.path
-	},
-]
+pluginBundleContractRequiredPaths: list.Concat([
+	baseTemplateRequiredPaths,
+	[
+		for addition in dotfilesTemplateApplicationAdditions {
+			addition.path
+		},
+	],
+])
+
+pluginBundleRuntimePackagePaths: list.Concat([
+	runtimeTemplateRequiredPaths,
+	[
+		for addition in runtimeTemplateApplicationAdditions {
+			addition.path
+		},
+	],
+])
+
+// Backwards-compatible aliases. New contract code should use the explicit names above.
+pluginBundleRequiredPaths: pluginBundleContractRequiredPaths
+pluginBundleRuntimeRequiredPaths: pluginBundleRuntimePackagePaths
+
+#RuntimePackageSubsetEvidence: close({
+	contractRequiredPaths: [...#ContainedBundlePath] & [_, ...]
+	runtimePackagePaths: [...#ContainedBundlePath] & [_, ...]
+	runtimePackagePathsSubsetOfContractPaths: true
+	subsetCheckAuthority: true
+	runtimePackageAuthority: false
+})
+
+pluginBundleRuntimeSubsetEvidence: #RuntimePackageSubsetEvidence & {
+	contractRequiredPaths: pluginBundleContractRequiredPaths
+	runtimePackagePaths: pluginBundleRuntimePackagePaths
+}
+
+_runtimePackagePathSubsetCheck: {
+	for path in pluginBundleRuntimePackagePaths {
+		if !list.Contains(pluginBundleContractRequiredPaths, path) {
+			"\(path)": _|_
+		}
+	}
+}
 
 #BundledCueAuthorityBlock: close({
 	root: "contracts"
@@ -69,6 +108,8 @@ bundledCueAuthorityBlock: #BundledCueAuthorityBlock & {
 	instanceRoot: pluginBundleContractRoot
 	materializedRoot: pluginBundleRoot
 	requiredPaths: [...#ContainedBundlePath] & [_, ...]
+	runtimePackagePaths: [...#ContainedBundlePath] & [_, ...]
+	runtimePackageSubset: #RuntimePackageSubsetEvidence
 	bundledCueAuthority: #BundledCueAuthorityBlock
 	containment: close({
 		allowHookIntegrationPath: ".codex/hooks.json"
@@ -81,7 +122,9 @@ bundledCueAuthorityBlock: #BundledCueAuthorityBlock & {
 })
 
 dotfilesAgentContextResolverBundleContract: #DotfilesAgentContextResolverBundleContract & {
-	requiredPaths: pluginBundleRequiredPaths
+	requiredPaths: pluginBundleContractRequiredPaths
+	runtimePackagePaths: pluginBundleRuntimePackagePaths
+	runtimePackageSubset: pluginBundleRuntimeSubsetEvidence
 	bundledCueAuthority: bundledCueAuthorityBlock
 	containment: {
 		allowHookIntegrationPath: ".codex/hooks.json"
