@@ -23,7 +23,7 @@ _negativeBottomChecks: {
 		*(negativeFixtures.proseReferenceAuthority.input & #AdmissibleDotfilesPluginBundleProjection) | _
 
 	materializationWithoutLock:
-		*(negativeFixtures.materializationWithoutLock.input & #DotfilesPluginMaterialization) | _
+		*(negativeFixtures.materializationWithoutLock.input & {provenance: {lockID: dotfilesAgentContextResolverLock.id}}) | _
 
 	controllerLeak:
 		*(dotfilesAgentContextResolverPromptSurfaceNegativeFixtures.controllerLeak.input & #ResolverPromptSurface) | _
