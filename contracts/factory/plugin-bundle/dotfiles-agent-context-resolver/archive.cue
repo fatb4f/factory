@@ -1,3 +1,0 @@
-package dotfilespluginbundle
-
-oldBundleRootInactive: true
