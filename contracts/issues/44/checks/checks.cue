@@ -3,7 +3,7 @@ package issue44checks
 import impl "github.com/fatb4f/contract.cuemod/contracts/meta/impl"
 
 import issue44 "github.com/fatb4f/contract.cuemod/contracts/issues/44:issue44"
-import resolver "github.com/fatb4f/contract.cuemod/contracts/agent-context-resolver:agentcontextresolver"
+import resolver "github.com/fatb4f/contract.cuemod/contracts/plugin-bundle/agent-context-resolver/src:agentcontextresolver"
 
 _routeOnlyPacket: impl.#MakeBottomCheckProof & {
 	in: {

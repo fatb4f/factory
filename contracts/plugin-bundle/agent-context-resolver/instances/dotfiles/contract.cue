@@ -1,10 +1,12 @@
 package dotfilespluginbundle
 
 pluginBundleRoot: ".codex/plugins/agent-context-resolver"
-pluginBundleContractRoot: "contracts/plugin-bundle/dotfiles-agent-context-resolver"
+pluginBundleSourceRoot: "contracts/plugin-bundle/agent-context-resolver/src"
+pluginBundleTemplateRoot: "contracts/plugin-bundle/agent-context-resolver/template"
+pluginBundleContractRoot: "contracts/plugin-bundle/agent-context-resolver/instances/dotfiles"
 pluginBundlePackage: "dotfilespluginbundle"
 
-#ContainedBundlePath: string & !="" & !~"^/" & !~"(^|/)\.\.(/|$)"
+#ContainedBundlePath: string & !="" & !~"^/" & !~"(^|/)\\.\\.(/|$)"
 
 pluginBundleRequiredPaths: [
 	"SKILL.md",
@@ -81,6 +83,9 @@ bundledCueAuthorityBlock: #BundledCueAuthorityBlock & {
 	contractRoot: pluginBundleContractRoot
 	package: pluginBundlePackage
 	targetRepo: "github.com/fatb4f/dotfiles"
+	sourceRoot: pluginBundleSourceRoot
+	templateRoot: pluginBundleTemplateRoot
+	instanceRoot: pluginBundleContractRoot
 	materializedRoot: pluginBundleRoot
 	requiredPaths: [...#ContainedBundlePath] & [_, ...]
 	bundledCueAuthority: #BundledCueAuthorityBlock

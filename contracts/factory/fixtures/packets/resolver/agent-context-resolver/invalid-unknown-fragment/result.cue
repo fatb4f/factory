@@ -1,6 +1,6 @@
 package invalidunknownfragment
 
-import "github.com/fatb4f/contract.cuemod/contracts/agent-context-resolver:agentcontextresolver"
+import "github.com/fatb4f/contract.cuemod/contracts/plugin-bundle/agent-context-resolver/src:agentcontextresolver"
 
 registry: agentcontextresolver.#Registry & {
 	fragments: [

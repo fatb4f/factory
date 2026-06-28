@@ -4,7 +4,7 @@ import (
 	"list"
 	"strings"
 
-	agentprojection "github.com/fatb4f/contract.cuemod/contracts/agent-context-resolver/projections/agent-skill:agentskillprojection"
+	agentprojection "github.com/fatb4f/contract.cuemod/contracts/plugin-bundle/agent-context-resolver/src/projections/agent-skill:agentskillprojection"
 )
 
 agentContextResolverAssertions: {

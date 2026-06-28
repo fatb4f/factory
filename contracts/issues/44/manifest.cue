@@ -2,7 +2,7 @@ package issue44
 
 import impl "github.com/fatb4f/contract.cuemod/contracts/meta/impl"
 
-import resolver "github.com/fatb4f/contract.cuemod/contracts/agent-context-resolver:agentcontextresolver"
+import resolver "github.com/fatb4f/contract.cuemod/contracts/plugin-bundle/agent-context-resolver/src:agentcontextresolver"
 
 #Issue44Manifest: close({
 	issue: 44

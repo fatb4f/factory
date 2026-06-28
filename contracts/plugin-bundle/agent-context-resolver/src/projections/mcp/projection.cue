@@ -1,7 +1,7 @@
 package mcpprojection
 
 import (
-	resolver "github.com/fatb4f/contract.cuemod/contracts/agent-context-resolver:agentcontextresolver"
+	resolver "github.com/fatb4f/contract.cuemod/contracts/plugin-bundle/agent-context-resolver/src:agentcontextresolver"
 	mcp "github.com/fatb4f/contract.cuemod/contracts/protocols/mcp"
 )
 

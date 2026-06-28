@@ -10,6 +10,10 @@ package dotfilespluginbundle
 	id: #NonEmptyString
 	authority: false
 	contractRoot: pluginBundleContractRoot
+	sourceRoot: pluginBundleSourceRoot
+	templateRoot: pluginBundleTemplateRoot
+	instanceRoot: pluginBundleContractRoot
+	materializedRoot: pluginBundleRoot
 	projection: "dotfiles-agent-context-resolver-plugin-bundle-v1"
 	target: close({
 		repo: "github.com/fatb4f/dotfiles"
@@ -26,6 +30,10 @@ dotfilesAgentContextResolverLock: #BundleLockEvidence & {
 	id: "dotfiles-agent-context-resolver-plugin-bundle-v1"
 	authority: false
 	contractRoot: pluginBundleContractRoot
+	sourceRoot: pluginBundleSourceRoot
+	templateRoot: pluginBundleTemplateRoot
+	instanceRoot: pluginBundleContractRoot
+	materializedRoot: pluginBundleRoot
 	projection: "dotfiles-agent-context-resolver-plugin-bundle-v1"
 	target: dotfilesTarget
 	files: [

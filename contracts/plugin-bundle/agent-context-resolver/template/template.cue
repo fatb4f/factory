@@ -1,7 +1,7 @@
 package pluginbundletemplate
 
 #NonEmptyString: string & !=""
-#RelativePath: string & !="" & !~"^/" & !~"(^|/)\.\.(/|$)"
+#RelativePath: string & !="" & !~"^/" & !~"(^|/)\\.\\.(/|$)"
 
 #TemplateFile: close({
 	path: #RelativePath

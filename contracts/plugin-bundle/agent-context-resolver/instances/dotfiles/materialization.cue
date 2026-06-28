@@ -10,6 +10,10 @@ package dotfilespluginbundle
 	provenance: close({
 		kind: "projection"
 		contractRoot: pluginBundleContractRoot
+		sourceRoot: pluginBundleSourceRoot
+		templateRoot: pluginBundleTemplateRoot
+		instanceRoot: pluginBundleContractRoot
+		materializedRoot: pluginBundleRoot
 		projection: "dotfiles-agent-context-resolver-plugin-bundle-v1"
 		lockID: #NonEmptyString
 		authority: false
@@ -24,6 +28,10 @@ dotfilesAgentContextResolverMaterializationInput: {
 	provenance: {
 		kind: "projection"
 		contractRoot: pluginBundleContractRoot
+		sourceRoot: dotfilesAgentContextResolverLock.sourceRoot
+		templateRoot: dotfilesAgentContextResolverLock.templateRoot
+		instanceRoot: dotfilesAgentContextResolverLock.instanceRoot
+		materializedRoot: dotfilesAgentContextResolverLock.materializedRoot
 		projection: "dotfiles-agent-context-resolver-plugin-bundle-v1"
 		lockID: dotfilesAgentContextResolverLock.id
 		authority: false

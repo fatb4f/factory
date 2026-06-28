@@ -1,7 +1,7 @@
 package invalidruntimeroutedrift
 
 import (
-	resolver "github.com/fatb4f/contract.cuemod/contracts/agent-context-resolver:agentcontextresolver"
+	resolver "github.com/fatb4f/contract.cuemod/contracts/plugin-bundle/agent-context-resolver/src:agentcontextresolver"
 	runtime "github.com/fatb4f/contract.cuemod/contracts/agent-runtime:agentruntime"
 	fixtures "github.com/fatb4f/contract.cuemod/fixtures/agent-runtime:agentruntime"
 )

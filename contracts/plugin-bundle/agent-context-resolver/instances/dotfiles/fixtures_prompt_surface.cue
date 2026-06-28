@@ -20,7 +20,14 @@ promptSurfaceControllerPacketFixture: {
 	generatedFrom: {routeInventory: "generated/route_inventory.json"}
 }
 
-promptSurfaceFixtureBase: dotfilesAgentContextResolverPromptSurface
+promptSurfaceFixtureBase: {
+	schema: "agent.resolver-prompt-surface.v1"
+	intent: "dotfiles-agent-context-resolver"
+	selectedFragments: ["agent-context-resolver.authority"]
+	selectedRoutes: [{id: "resolver.inspect.current", kind: "inspect", objective: "Inspect resolver authority and generated boundary."}]
+	execution: {mode: "prompt-only", routeExecution: false, controllerPacket: false, debugEvidence: "stderr-or-file"}
+	hints: [{text: "Emit only the compact prompt surface on UserPromptSubmit stdout."}]
+}
 
 dotfilesAgentContextResolverPromptSurfaceNegativeFixtures: {
 	controllerLeak: {input: promptSurfaceFixtureBase & {controller: promptSurfaceControllerPacketFixture.controller}}
@@ -34,5 +41,13 @@ dotfilesAgentContextResolverPromptSurfaceNegativeFixtures: {
 	generatedFromLeak: {input: promptSurfaceFixtureBase & {generatedFrom: promptSurfaceControllerPacketFixture.generatedFrom}}
 	rawRegistryLeak: {input: promptSurfaceFixtureBase & {rawRegistry: {fragments: promptSurfaceControllerPacketFixture.availableFragmentIDs}}}
 	rawTranscriptLeak: {input: promptSurfaceFixtureBase & {rawTranscript: "UserPromptSubmit full transcript"}}
-	debugPacketAsDefaultOut: {input: dotfilesAgentContextResolverHookEmissionContract & {stdout: {payload: promptSurfaceControllerPacketFixture}}}
+	debugPacketAsDefaultOut: {input: {
+		defaultMode: "compact"
+		debugMode: "debug"
+		stdout: {mode: "compact", payload: promptSurfaceControllerPacketFixture}
+		stderr: {mode: "debug", optional: true, payload: "route-controller-packet"}
+		fullPacketDefaultStdout: false
+		generatedArtifactsAuthority: false
+		debug: {allowed: true, sinks: ["stderr", "file"], fullPacketSchema: "agent.route-controller-packet.v1", authority: false}
+	}}
 }
