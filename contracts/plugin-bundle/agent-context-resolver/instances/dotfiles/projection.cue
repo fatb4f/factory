@@ -24,6 +24,7 @@ projectionComponents: [
 	{id: "plugin-bundle-contract", path: pluginBundleContractRoot, role: "contract", authority: true},
 	{id: "plugin-bundle-source", path: pluginBundleSourceRoot, role: "contract", authority: true},
 	{id: "plugin-bundle-template", path: pluginBundleTemplateRoot, role: "contract", authority: true},
+	{id: "template-application", path: "\(pluginBundleContractRoot)/template_application.cue", role: "contract", authority: true},
 	{id: "dotfiles-materialized-package-root", path: pluginBundleRoot, role: "generated-package", generated: true, authority: false},
 	{id: "bundled-resolver-contracts", path: "\(pluginBundleRoot)/contracts/agent-context-resolver", role: "package-content", generated: true, authority: false},
 	{id: "bundled-dotfiles-contracts", path: "\(pluginBundleRoot)/contracts/dotfiles", role: "package-content", generated: true, authority: false},
@@ -41,6 +42,7 @@ projectionComponents: [
 projectionGates: [
 	{id: "plugin-bundle-cue-vet", kind: "cue-vet", target: "./contracts/plugin-bundle/agent-context-resolver/instances/dotfiles", required: true},
 	{id: "plugin-bundle-contract-export", kind: "cue-export", target: "dotfilesAgentContextResolverBundleContract", required: true},
+	{id: "plugin-bundle-template-application-export", kind: "cue-export", target: "dotfilesAgentContextResolverTemplateApplication", required: true},
 	{id: "plugin-bundle-materialization-export", kind: "cue-export", target: "dotfilesAgentContextResolverMaterialization", required: true},
 	{id: "plugin-bundle-lock-export", kind: "cue-export", target: "dotfilesAgentContextResolverLock", required: true},
 	{id: "plugin-bundle-package-export", kind: "cue-export", target: "dotfilesAgentContextResolverPackage", required: true},
@@ -52,6 +54,7 @@ projectionGates: [
 
 dotfilesAgentContextResolverBundleInput: {
 	contract: dotfilesAgentContextResolverBundleContract
+	templateApplication: dotfilesAgentContextResolverTemplateApplication
 	target: dotfilesTarget
 	components: projectionComponents
 	generatedFiles: generatedFileInventory
