@@ -38,6 +38,7 @@ package dotfilespluginbundle
 
 #DotfilesPluginBundleProjection: close({
 	contract: #DotfilesAgentContextResolverBundleContract
+	templateApplication: #PluginBundleTemplateApplication
 	target: #DotfilesTarget
 	components: [...#ProjectionComponent] & [_, ...]
 	generatedFiles: [...#DotfilesTargetFile] & [_, ...]
