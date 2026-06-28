@@ -46,13 +46,58 @@ import "list"
 })
 
 #RouteInventory: close({
-	generatedFrom: "contracts/agent-context-resolver/routes.cue"
+	generatedFrom: "contracts/plugin-bundle/agent-context-resolver/src/routes.cue"
 	routes: [...#RegisteredRoute] & [_, ...]
 	gates: [...#Gate] & [_, ...]
 })
 
+#RouteInventoryDependencyValidation: close({
+	inventory: #RouteInventory
+	registeredRouteIDs: [for route in inventory.routes {route.id}]
+
+	for route in inventory.routes {
+		for dependencyID in route.dependsOn {
+			if !list.Contains(registeredRouteIDs, dependencyID) {
+				_missingDependencyTarget: _|_
+			}
+		}
+	}
+})
+
+#RouteOrderingContract: close({
+	sortBy: ["sequence", "priority", "id"]
+	sequenceOrder: "ascending"
+	priorityOrder: "descending-within-sequence"
+	generatorOwnsOrdering: true
+})
+
+#PromptRouteGraphExpansion: close({
+	promptRouteID: #DeclaredID
+	selectedRouteIDs: [...#DeclaredID] & [_, ...]
+	routes: [...#RegisteredRoute] & [_, ...]
+	ordering: #RouteOrderingContract | *{
+		sortBy: ["sequence", "priority", "id"]
+		sequenceOrder: "ascending"
+		priorityOrder: "descending-within-sequence"
+		generatorOwnsOrdering: true
+	}
+
+	_selectedRegisteredRoutes: [
+		for route in routes
+		if list.Contains(selectedRouteIDs, route.id) {route},
+	]
+
+	for route in _selectedRegisteredRoutes {
+		for dependencyID in route.dependsOn {
+			if !list.Contains(selectedRouteIDs, dependencyID) {
+				_missingDependencyClosure: _|_
+			}
+		}
+	}
+})
+
 routeInventory: #RouteInventory & {
-	generatedFrom: "contracts/agent-context-resolver/routes.cue"
+	generatedFrom: "contracts/plugin-bundle/agent-context-resolver/src/routes.cue"
 	gates:         gateInventory
 	routes: [
 		{
@@ -192,6 +237,24 @@ routeInventory: #RouteInventory & {
 			promptRouteIDs: ["repo"]
 		},
 	]
+}
+
+routeDependencyValidation: #RouteInventoryDependencyValidation & {
+	inventory: routeInventory
+}
+
+promptRouteExpansions: [
+	for promptRoute in promptRoutes {
+		promptRouteID: promptRoute.id
+		selectedRouteIDs: promptRoute.invokes
+		routes: routeInventory.routes
+	},
+]
+
+promptRouteGraphValidation: {
+	for expansion in promptRouteExpansions {
+		"\(expansion.promptRouteID)": #PromptRouteGraphExpansion & expansion
+	}
 }
 
 _availableFragmentIDs: [for fragment in turnStartFragmentSet.fragments {fragment.id}]
