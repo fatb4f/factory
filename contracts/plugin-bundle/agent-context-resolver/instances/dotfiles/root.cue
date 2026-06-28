@@ -24,7 +24,7 @@ package dotfilespluginbundle
 #ProjectionComponent: close({
 	id: #NonEmptyString
 	path: #NonEmptyString
-	role: "contract" | "projection" | "generated-output" | "evidence" | "integration"
+	role: "contract" | "projection" | "generated-output" | "evidence" | "integration" | "generated-package" | "package-content" | "package-metadata" | "idempotency-lock"
 	generated: *false | bool
 	authority: bool
 })
@@ -43,6 +43,7 @@ package dotfilespluginbundle
 	generatedFiles: [...#DotfilesTargetFile] & [_, ...]
 	materialization: #DotfilesPluginMaterialization
 	lock: #BundleLockEvidence
+	package: #IdempotentPluginBundlePackage
 	gates: [...#Gate] & [_, ...]
 	providerReachability?: #ProviderReachabilityEvidence
 
