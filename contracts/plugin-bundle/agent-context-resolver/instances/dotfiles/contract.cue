@@ -22,6 +22,20 @@ pluginBundleRequiredPaths: [
 	"generated/fragment_inventory.json",
 	"generated/provider_inventory.json",
 	"generated/dotfiles.schema-map.json",
+	"generated/mcp/server-manifest.json",
+	"generated/mcp/tool-registry.json",
+	"generated/mcp/context-projection.json",
+	"generated/lsp/cue-lsp.json",
+	"generated/lsp/lua-language-server.json",
+	"generated/lsp/provider-routing.json",
+	"generated/types/wezterm/wezterm.lua",
+	"generated/types/wezterm/events.lua",
+	"generated/types/wezterm/config-builder.lua",
+	"generated/types/nvim/vim.lua",
+	"generated/workflows/lua-first/workflow.json",
+	"generated/workflows/lua-first/entrypoints.json",
+	"generated/workflows/lua-first/diagnostic-map.json",
+	"contracts/dotfiles/lua-first-workflow.cue",
 	"contracts/agent-context-resolver/implementation_slice_materializer.cue",
 	"contracts/agent-context-resolver/implementation_slice_eval_projection.cue",
 	"contracts/agent-context-resolver/implementation_slice_runner_result.cue",
@@ -49,6 +63,11 @@ pluginBundleRequiredPaths: [
 		files: [...#ContainedBundlePath] & [_, ...]
 		contiguous: true
 	})
+	dotfiles: close({
+		root: "contracts/dotfiles"
+		files: [...#ContainedBundlePath] & [_, ...]
+		contiguous: true
+	})
 	constructors: close({
 		root: "contracts/meta/impl"
 		files: [...#ContainedBundlePath] & [_, ...]
@@ -68,6 +87,11 @@ bundledCueAuthorityBlock: #BundledCueAuthorityBlock & {
 			"fixtures.cue",
 			"checks.cue",
 			"checks/checks.cue",
+		]
+	}
+	dotfiles: {
+		files: [
+			"lua-first-workflow.cue",
 		]
 	}
 	constructors: {
