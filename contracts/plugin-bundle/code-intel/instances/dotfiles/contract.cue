@@ -3,6 +3,7 @@ package codeintelpluginbundle
 pluginBundleRoot: ".codex/plugins/code-intel"
 pluginBundleTemplateRoot: "contracts/plugin-bundle/template"
 pluginBundleContractRoot: "contracts/plugin-bundle/code-intel/instances/dotfiles"
+pluginBundleSourceRoot: "\(pluginBundleContractRoot)/src"
 pluginBundlePackage: "codeintelpluginbundle"
 
 codeIntelRequiredPaths: [
@@ -23,6 +24,12 @@ codeIntelRequiredPaths: [
 	"generated/workflows/lua-first/diagnostic-map.json",
 	"contracts/code-intel/lua-first-workflow.cue",
 	"contracts/code-intel/checks.cue",
+]
+
+codeIntelSourceInventory: [
+	for relativePath in codeIntelRequiredPaths {
+		"\(pluginBundleSourceRoot)/\(relativePath)"
+	},
 ]
 
 #CodeIntelAuthorityBlock: close({
