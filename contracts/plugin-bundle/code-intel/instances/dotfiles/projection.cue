@@ -22,6 +22,7 @@ generatedFileInventory: [
 
 projectionComponents: [
 	{id: "code-intel-contract", path: pluginBundleContractRoot, role: "contract", authority: true},
+	{id: "code-intel-source-tree", path: pluginBundleSourceRoot, role: "package-source", authority: true},
 	{id: "plugin-bundle-template", path: pluginBundleTemplateRoot, role: "contract", authority: true},
 	{id: "code-intel-materialized-root", path: pluginBundleRoot, role: "generated-package", generated: true, authority: false},
 	{id: "bundled-mcp-surfaces", path: "\(pluginBundleRoot)/generated/mcp", role: "package-content", generated: true, authority: false},
