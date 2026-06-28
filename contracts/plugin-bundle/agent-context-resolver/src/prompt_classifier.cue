@@ -80,9 +80,9 @@ _genericStandaloneTerms: ["provider", "providers", "dotfiles"]
 })
 
 promptMatcherValidation: {
-	for route in promptRoutes {
-		"\(route.id)": #PromptMatcherGuard & {
-			route: route
+	for promptRoute in promptRoutes {
+		"\(promptRoute.id)": #PromptMatcherGuard & {
+			route: promptRoute
 		}
 	}
 }

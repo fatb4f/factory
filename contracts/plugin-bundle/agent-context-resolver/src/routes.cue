@@ -81,19 +81,6 @@ import "list"
 		priorityOrder: "descending-within-sequence"
 		generatorOwnsOrdering: true
 	}
-
-	_selectedRegisteredRoutes: [
-		for route in routes
-		if list.Contains(selectedRouteIDs, route.id) {route},
-	]
-
-	for route in _selectedRegisteredRoutes {
-		for dependencyID in route.dependsOn {
-			if !list.Contains(selectedRouteIDs, dependencyID) {
-				_missingDependencyClosure: _|_
-			}
-		}
-	}
 })
 
 routeInventory: #RouteInventory & {
@@ -253,7 +240,21 @@ promptRouteExpansions: [
 
 promptRouteGraphValidation: {
 	for expansion in promptRouteExpansions {
-		"\(expansion.promptRouteID)": #PromptRouteGraphExpansion & expansion
+		"\(expansion.promptRouteID)": {
+			input: #PromptRouteGraphExpansion & expansion
+			_selectedRegisteredRoutes: [
+				for route in input.routes
+				if list.Contains(input.selectedRouteIDs, route.id) {route},
+			]
+
+			for route in _selectedRegisteredRoutes {
+				for dependencyID in route.dependsOn {
+					if !list.Contains(input.selectedRouteIDs, dependencyID) {
+						_missingDependencyClosure: _|_
+					}
+				}
+			}
+		}
 	}
 }
 
