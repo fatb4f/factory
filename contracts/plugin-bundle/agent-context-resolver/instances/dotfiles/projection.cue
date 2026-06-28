@@ -5,14 +5,33 @@ dotfilesTarget: #DotfilesTarget & {
 	root: "."
 }
 
-dotfilesTargetInventory: [
-	for relativePath in pluginBundleRequiredPaths {
+dotfilesContractTargetInventory: [
+	for relativePath in pluginBundleContractRequiredPaths {
 		"\(pluginBundleRoot)/\(relativePath)"
 	},
 ]
 
+dotfilesRuntimePackageTargetInventory: [
+	for relativePath in pluginBundleRuntimePackagePaths {
+		"\(pluginBundleRoot)/\(relativePath)"
+	},
+]
+
+// Backwards-compatible aliases. The materialized package uses the runtime inventory.
+dotfilesTargetInventory: dotfilesContractTargetInventory
+dotfilesRuntimeTargetInventory: dotfilesRuntimePackageTargetInventory
+
 generatedFileInventory: [
-	for targetPath in dotfilesTargetInventory {
+	for targetPath in dotfilesRuntimePackageTargetInventory {
+		path: targetPath
+		generated: true
+		authority: false
+		source: "bundle-projection"
+	},
+]
+
+fullGeneratedFileInventory: [
+	for targetPath in dotfilesContractTargetInventory {
 		path: targetPath
 		generated: true
 		authority: false
@@ -25,12 +44,10 @@ projectionComponents: [
 	{id: "plugin-bundle-source", path: pluginBundleSourceRoot, role: "contract", authority: true},
 	{id: "plugin-bundle-template", path: pluginBundleTemplateRoot, role: "contract", authority: true},
 	{id: "template-application", path: "\(pluginBundleContractRoot)/template_application.cue", role: "contract", authority: true},
-	{id: "dotfiles-materialized-package-root", path: pluginBundleRoot, role: "generated-package", generated: true, authority: false},
-	{id: "bundled-resolver-contracts", path: "\(pluginBundleRoot)/contracts/agent-context-resolver", role: "package-content", generated: true, authority: false},
-	{id: "bundled-constructor-contracts", path: "\(pluginBundleRoot)/contracts/meta/impl", role: "package-content", generated: true, authority: false},
-	{id: "resolver-generated-surfaces", path: "\(pluginBundleRoot)/generated", role: "package-content", generated: true, authority: false},
-	{id: "package-manifest", path: "\(pluginBundleRoot)/package.json", role: "package-metadata", generated: true, authority: false},
-	{id: "package-lock", path: "\(pluginBundleRoot)/package.lock.json", role: "idempotency-lock", generated: true, authority: false},
+	{id: "dotfiles-runtime-package-root", path: pluginBundleRoot, role: "generated-package", generated: true, authority: false},
+	{id: "runtime-generated-surfaces", path: "\(pluginBundleRoot)/generated", role: "package-content", generated: true, authority: false},
+	{id: "runtime-manifest", path: "\(pluginBundleRoot)/manifest.json", role: "package-metadata", generated: true, authority: false},
+	{id: "runtime-package-lock", path: "\(pluginBundleRoot)/package.lock.json", role: "idempotency-lock", generated: true, authority: false},
 	{id: "codex-hook-integration", path: ".codex/hooks.json", role: "integration", generated: true, authority: false},
 ]
 
@@ -62,7 +79,6 @@ dotfilesAgentContextResolverBundleInput: {
 			"fragment_inventory",
 			"prompt_routes",
 			"route_inventory",
-			"provider_inventory",
 		]
 	}
 }
