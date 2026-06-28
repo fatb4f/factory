@@ -6,16 +6,16 @@
   "target_repo": "fatb4f/factory",
   "entrypoint": "contracts/upstream-monitor/codex/contract-surface/AGENTS.md",
   "adapter": "github_app",
-  "run_id": "20260628T045532Z",
+  "run_id": "20260628T165523Z",
   "publication": {
-    "report_run_path": "contracts/upstream-monitor/codex/contract-surface/reports/runs/20260628T045532Z.codex-impact.md",
+    "report_run_path": "contracts/upstream-monitor/codex/contract-surface/reports/runs/20260628T165523Z.codex-impact.md",
     "report_latest_path": "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md",
-    "evidence_run_path": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260628T045532Z.codex-impact.report.json",
+    "evidence_run_path": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260628T165523Z.codex-impact.report.json",
     "evidence_latest_path": "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json",
     "issue_targets": {},
-    "report_run_commit": "c042e90a081c802a961274dc9609cc6b414e7b05",
-    "report_latest_commit": "e5f85fd2777c47707951275c98297dfec425cdd7",
-    "evidence_run_commit": "86ccc96d58370d0af53bb8910fddecb03886d795"
+    "report_run_commit": "4a36f3785938c98131957c493037687ef0c879bf",
+    "report_latest_commit": "7ee755c93ef93ebaf4a8e41e8169901bba9f85e2",
+    "evidence_run_commit": "ba184a8e96b9e19ca38afc7b95fbf50a72b819ee"
   },
   "authority_reads": {
     "agents": [
@@ -41,35 +41,39 @@
       "ref": "main",
       "status": "resolved",
       "head_commit": "bdd282f3bbd55df3a869a5438519cd948c134d4d",
-      "workspace_version": "0.0.0"
+      "workspace_version": "0.0.0",
+      "previous_recorded_head": "bdd282f3bbd55df3a869a5438519cd948c134d4d",
+      "change_since_previous_evidence": "none"
     },
     "latest-alpha-cli": {
       "repo": "openai/codex",
       "ref": "latest-alpha-cli",
       "status": "resolved",
+      "head_commit": "e4198a095c36a9f8f703b61be900f66df85e0984",
       "relation_to_main": "ahead-by-1",
       "changed_files_from_main": ["codex-rs/Cargo.toml"],
       "workspace_version": "0.143.0-alpha.29",
-      "relation": "distinct-channel"
+      "relation": "distinct-channel",
+      "change_since_previous_evidence": "none"
     }
   },
   "upstream_items": {
-    "critical": [
-      {"ids": ["30292", "30293", "30294", "30295", "30296"], "channel": "main", "impact": "blocking-gate"},
-      {"ids": ["30282", "30283", "30188"], "channel": "main", "impact": "blocking-gate"}
-    ],
-    "high": [
-      {"id": "29691", "channel": "main", "commit": "9dbdb4e2c08723e8fc9c18f64d7ccad3dadc03a7", "classes": ["plugin", "marketplace", "policy", "adapter", "config"], "impact": "contract-update"},
-      {"id": "30384", "channel": "main", "commit": "bdd282f3bbd55df3a869a5438519cd948c134d4d", "classes": ["app-server", "protocol", "timeout", "adapter"], "impact": "contract-update"},
-      {"id": "30327", "channel": "main", "commit": "d2885dc3cdbaf98a60e7256ec3e7dfdf2381041d", "classes": ["protocol", "storage", "context-window", "rollout-trace"], "impact": "contract-update"},
-      {"id": "30314", "channel": "main", "commit": "4f1b5a4b734da8f159e1b727042b4534ed091307", "classes": ["app-server", "logging", "adapter", "observability"], "impact": "contract-update"},
-      {"id": "latest-alpha-cli", "channel": "latest-alpha-cli", "impact": "note"}
-    ],
-    "notes": [
-      {"id": "27999", "channel": "main", "impact": "note"},
-      {"ids": ["27249", "27968"], "channel": "main", "impact": "note"},
-      {"ids": ["27815", "27824", "27836"], "channel": "main", "impact": "note"}
+    "critical": [],
+    "high": [],
+    "notes": [],
+    "noLocalAction": [
+      {
+        "id": "no-new-upstream-impact",
+        "channels": ["main", "latest-alpha-cli"],
+        "impact": "no-local-action",
+        "reason": "Both evidence channels resolve to the same heads recorded in the previous latest evidence artifact."
+      }
     ]
+  },
+  "baseline_reference": {
+    "previous_latest_evidence_run_id": "20260628T045532Z",
+    "previous_main_head": "bdd282f3bbd55df3a869a5438519cd948c134d4d",
+    "previous_alpha_workspace_version": "0.143.0-alpha.29"
   },
   "validation_notes": {
     "cue_executed": false,
