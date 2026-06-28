@@ -42,9 +42,7 @@ package codeintelpluginbundle
 	target: #CodeIntelTarget
 	components: [...#ProjectionComponent] & [_, ...]
 	generatedFiles: [...#CodeIntelTargetFile] & [_, ...]
-	materialization: #CodeIntelMaterialization
-	lock: #CodeIntelBundleLock
-	package: #CodeIntelPackage
+	outputPlan: #CodeIntelOutputPlan
 	gates: [...#Gate] & [_, ...]
 	providerReachability: #ProviderReachabilityEvidence
 
