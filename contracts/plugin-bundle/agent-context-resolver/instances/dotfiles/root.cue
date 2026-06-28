@@ -49,6 +49,10 @@ package dotfilespluginbundle
 	codexAuthority?: false
 	generatedAuthority?: false
 	providerOutputIsAuthority?: false
+	mcpOutputIsAuthority?: false
+	lspDiagnosticsAreAuthority?: false
+	weztermTypesAreAuthority?: false
+	luaWorkflowGeneratedAsAuthority?: false
 	externalFactoryRootLookup?: false
 	externalContractCuemodLookup?: false
 	topLevelPluginRoot?: false
@@ -59,6 +63,10 @@ package dotfilespluginbundle
 	codexAuthority?: false
 	generatedAuthority?: false
 	providerOutputIsAuthority?: false
+	mcpOutputIsAuthority?: false
+	lspDiagnosticsAreAuthority?: false
+	weztermTypesAreAuthority?: false
+	luaWorkflowGeneratedAsAuthority?: false
 	externalFactoryRootLookup?: false
 	externalContractCuemodLookup?: false
 	topLevelPluginRoot?: false
