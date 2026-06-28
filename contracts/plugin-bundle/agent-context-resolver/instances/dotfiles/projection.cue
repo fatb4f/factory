@@ -24,9 +24,11 @@ projectionComponents: [
 	{id: "plugin-bundle-contract", path: pluginBundleContractRoot, role: "contract", authority: true},
 	{id: "plugin-bundle-source", path: pluginBundleSourceRoot, role: "contract", authority: true},
 	{id: "plugin-bundle-template", path: pluginBundleTemplateRoot, role: "contract", authority: true},
-	{id: "dotfiles-materialized-plugin-root", path: pluginBundleRoot, role: "generated-output", generated: true, authority: false},
-	{id: "bundled-resolver-contracts", path: "\(pluginBundleRoot)/contracts/agent-context-resolver", role: "generated-output", generated: true, authority: false},
-	{id: "bundled-constructor-contracts", path: "\(pluginBundleRoot)/contracts/meta/impl", role: "generated-output", generated: true, authority: false},
+	{id: "dotfiles-materialized-package-root", path: pluginBundleRoot, role: "generated-package", generated: true, authority: false},
+	{id: "bundled-resolver-contracts", path: "\(pluginBundleRoot)/contracts/agent-context-resolver", role: "package-content", generated: true, authority: false},
+	{id: "bundled-constructor-contracts", path: "\(pluginBundleRoot)/contracts/meta/impl", role: "package-content", generated: true, authority: false},
+	{id: "package-manifest", path: "\(pluginBundleRoot)/package.json", role: "package-metadata", generated: true, authority: false},
+	{id: "package-lock", path: "\(pluginBundleRoot)/package.lock.json", role: "idempotency-lock", generated: true, authority: false},
 	{id: "codex-hook-integration", path: ".codex/hooks.json", role: "integration", generated: true, authority: false},
 ]
 
@@ -35,6 +37,7 @@ projectionGates: [
 	{id: "plugin-bundle-contract-export", kind: "cue-export", target: "dotfilesAgentContextResolverBundleContract", required: true},
 	{id: "plugin-bundle-materialization-export", kind: "cue-export", target: "dotfilesAgentContextResolverMaterialization", required: true},
 	{id: "plugin-bundle-lock-export", kind: "cue-export", target: "dotfilesAgentContextResolverLock", required: true},
+	{id: "plugin-bundle-package-export", kind: "cue-export", target: "dotfilesAgentContextResolverPackage", required: true},
 	{id: "plugin-bundle-negative-bottom", kind: "negative-bottom", target: "_negativeBottomChecks", required: true},
 ]
 
@@ -45,6 +48,7 @@ dotfilesAgentContextResolverBundleInput: {
 	generatedFiles: generatedFileInventory
 	materialization: dotfilesAgentContextResolverMaterializationInput
 	lock: dotfilesAgentContextResolverLock
+	package: dotfilesAgentContextResolverPackage
 	gates: projectionGates
 	providerReachability: {
 		kind: "provider-reachability"
