@@ -1,5 +1,7 @@
 package dotfilespluginbundle
 
+import "list"
+
 pluginBundleRoot: ".codex/plugins/agent-context-resolver"
 pluginBundleSourceRoot: "contracts/plugin-bundle/agent-context-resolver/src"
 pluginBundleTemplateRoot: "contracts/plugin-bundle/template"
@@ -8,11 +10,23 @@ pluginBundlePackage: "dotfilespluginbundle"
 
 #ContainedBundlePath: string & !="" & !~"^/" & !~"(^|/)\\.\\.(/|$)"
 
-pluginBundleRequiredPaths: baseTemplateRequiredPaths + [
-	for addition in dotfilesTemplateApplicationAdditions {
-		addition.path
-	},
-]
+pluginBundleRequiredPaths: list.Concat([
+	baseTemplateRequiredPaths,
+	[
+		for addition in dotfilesTemplateApplicationAdditions {
+			addition.path
+		},
+	],
+])
+
+pluginBundleRuntimeRequiredPaths: list.Concat([
+	runtimeTemplateRequiredPaths,
+	[
+		for addition in runtimeTemplateApplicationAdditions {
+			addition.path
+		},
+	],
+])
 
 #BundledCueAuthorityBlock: close({
 	root: "contracts"

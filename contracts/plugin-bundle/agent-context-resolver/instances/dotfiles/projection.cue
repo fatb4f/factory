@@ -11,7 +11,22 @@ dotfilesTargetInventory: [
 	},
 ]
 
+dotfilesRuntimeTargetInventory: [
+	for relativePath in pluginBundleRuntimeRequiredPaths {
+		"\(pluginBundleRoot)/\(relativePath)"
+	},
+]
+
 generatedFileInventory: [
+	for targetPath in dotfilesRuntimeTargetInventory {
+		path: targetPath
+		generated: true
+		authority: false
+		source: "bundle-projection"
+	},
+]
+
+fullGeneratedFileInventory: [
 	for targetPath in dotfilesTargetInventory {
 		path: targetPath
 		generated: true

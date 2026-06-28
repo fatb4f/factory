@@ -56,6 +56,14 @@ baseTemplateRequiredPaths: [
 	"contracts/meta/impl/checks/checks.cue",
 ]
 
+runtimeTemplateRequiredPaths: [
+	"SKILL.md",
+	"manifest.json",
+	"package.lock.json",
+	"scripts/agent-context-resolver-hook",
+	"scripts/resolve-agent-context",
+]
+
 dotfilesTemplateApplicationAdditions: [
 	{path: "generated/turn_start_fragments.json", kind: "resolver-output", generated: true, authority: false, reason: "bundle resolver turn-start fragment projection"},
 	{path: "generated/prompt_routes.json", kind: "resolver-output", generated: true, authority: false, reason: "bundle resolver prompt route projection"},
@@ -63,6 +71,13 @@ dotfilesTemplateApplicationAdditions: [
 	{path: "generated/fragment_inventory.json", kind: "resolver-output", generated: true, authority: false, reason: "bundle resolver fragment inventory projection"},
 	{path: "generated/provider_inventory.json", kind: "resolver-output", generated: true, authority: false, reason: "bundle resolver provider inventory projection"},
 	{path: "generated/dotfiles.schema-map.json", kind: "resolver-output", generated: true, authority: false, reason: "bundle dotfiles schema-map projection"},
+]
+
+runtimeTemplateApplicationAdditions: [
+	dotfilesTemplateApplicationAdditions[0],
+	dotfilesTemplateApplicationAdditions[1],
+	dotfilesTemplateApplicationAdditions[2],
+	dotfilesTemplateApplicationAdditions[3],
 ]
 
 dotfilesAgentContextResolverTemplateApplication: #PluginBundleTemplateApplication & {
