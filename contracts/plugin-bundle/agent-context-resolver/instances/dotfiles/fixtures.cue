@@ -6,6 +6,10 @@ negativeFixtures: {
 	externalDependency: {input: dotfilesAgentContextResolverBundleInput & {externalFactoryRootLookup: true}}
 	contractCuemodDependency: {input: dotfilesAgentContextResolverBundleInput & {externalContractCuemodLookup: true}}
 	providerOutputAsAuthority: {input: dotfilesAgentContextResolverBundleInput & {providerOutputIsAuthority: true}}
+	mcpOutputAsAuthority: {input: dotfilesAgentContextResolverBundleInput & {mcpOutputIsAuthority: true}}
+	lspDiagnosticsAsAuthority: {input: dotfilesAgentContextResolverBundleInput & {lspDiagnosticsAreAuthority: true}}
+	weztermTypesAsAuthority: {input: dotfilesAgentContextResolverBundleInput & {weztermTypesAreAuthority: true}}
+	luaWorkflowGeneratedAsAuthority: {input: dotfilesAgentContextResolverBundleInput & {luaWorkflowGeneratedAsAuthority: true}}
 	topLevelPluginRoot: {input: dotfilesAgentContextResolverBundleInput & {topLevelPluginRoot: true}}
 	proseReferenceAuthority: {input: dotfilesAgentContextResolverBundleInput & {proseReferenceAuthority: true}}
 	materializationWithoutLock: {input: {
