@@ -27,10 +27,12 @@ This plugin is a generated, read-only code-intelligence bundle for dotfiles work
 
 Use `generated/lsp/cue-lsp.json` for editor/server configuration and `contracts/code-intel/checks.cue` for local bundle boundary checks.
 
-## Validation from package root
+## Validation
 
 ```sh
+cd contracts/plugin-bundle/code-intel/src
 cue vet ./contracts/code-intel
 cue export ./contracts/code-intel -e codeIntelLuaFirstWorkflow
 cue export ./contracts/code-intel -e codeIntelBoundaryReport
+cue export ./contracts/code-intel -e codeIntelImplementationRecommendations
 ```
