@@ -107,6 +107,7 @@ codeIntelPluginBundleTemplate: #PluginBundleTemplate & {
 		{path: "generated/workflows/lua-first/entrypoints.json", required: true, authority: false},
 		{path: "generated/workflows/lua-first/diagnostic-map.json", required: true, authority: false},
 		{path: "contracts/code-intel/lua-first-workflow.cue", required: true, authority: false},
+		{path: "contracts/code-intel/checks.cue", required: true, authority: false},
 	]
 	denies: [
 		"MCP output treated as authority",
