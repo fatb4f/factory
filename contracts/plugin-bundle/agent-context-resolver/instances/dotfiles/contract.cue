@@ -8,52 +8,10 @@ pluginBundlePackage: "dotfilespluginbundle"
 
 #ContainedBundlePath: string & !="" & !~"^/" & !~"(^|/)\\.\\.(/|$)"
 
-pluginBundleRequiredPaths: [
-	"SKILL.md",
-	"manifest.json",
-	"package.json",
-	"package.lock.json",
-	"cue.mod/module.cue",
-	"scripts/agent-context-resolver-hook",
-	"scripts/resolve-agent-context",
-	"generated/turn_start_fragments.json",
-	"generated/prompt_routes.json",
-	"generated/route_inventory.json",
-	"generated/fragment_inventory.json",
-	"generated/provider_inventory.json",
-	"generated/dotfiles.schema-map.json",
-	"generated/mcp/server-manifest.json",
-	"generated/mcp/tool-registry.json",
-	"generated/mcp/context-projection.json",
-	"generated/lsp/cue-lsp.json",
-	"generated/lsp/lua-language-server.json",
-	"generated/lsp/provider-routing.json",
-	"generated/types/wezterm/wezterm.lua",
-	"generated/types/wezterm/events.lua",
-	"generated/types/wezterm/config-builder.lua",
-	"generated/types/nvim/vim.lua",
-	"generated/workflows/lua-first/workflow.json",
-	"generated/workflows/lua-first/entrypoints.json",
-	"generated/workflows/lua-first/diagnostic-map.json",
-	"contracts/dotfiles/lua-first-workflow.cue",
-	"contracts/agent-context-resolver/implementation_slice_materializer.cue",
-	"contracts/agent-context-resolver/implementation_slice_eval_projection.cue",
-	"contracts/agent-context-resolver/implementation_slice_runner_result.cue",
-	"contracts/agent-context-resolver/implementation_slice_constructor_inventory.cue",
-	"contracts/agent-context-resolver/fixtures.cue",
-	"contracts/agent-context-resolver/checks.cue",
-	"contracts/agent-context-resolver/checks/checks.cue",
-	"contracts/meta/impl/catalog.cue",
-	"contracts/meta/impl/primitive.cue",
-	"contracts/meta/impl/surface.cue",
-	"contracts/meta/impl/predicate.cue",
-	"contracts/meta/impl/promotion.cue",
-	"contracts/meta/impl/fixture.cue",
-	"contracts/meta/impl/bottom.cue",
-	"contracts/meta/impl/validation.cue",
-	"contracts/meta/impl/completion.cue",
-	"contracts/meta/impl/exports.cue",
-	"contracts/meta/impl/checks/checks.cue",
+pluginBundleRequiredPaths: baseTemplateRequiredPaths + [
+	for addition in dotfilesTemplateApplicationAdditions {
+		addition.path
+	},
 ]
 
 #BundledCueAuthorityBlock: close({
