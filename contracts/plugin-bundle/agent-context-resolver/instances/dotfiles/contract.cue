@@ -2,7 +2,7 @@ package dotfilespluginbundle
 
 pluginBundleRoot: ".codex/plugins/agent-context-resolver"
 pluginBundleSourceRoot: "contracts/plugin-bundle/agent-context-resolver/src"
-pluginBundleTemplateRoot: "contracts/plugin-bundle/agent-context-resolver/template"
+pluginBundleTemplateRoot: "contracts/plugin-bundle/template"
 pluginBundleContractRoot: "contracts/plugin-bundle/agent-context-resolver/instances/dotfiles"
 pluginBundlePackage: "dotfilespluginbundle"
 
@@ -18,11 +18,6 @@ pluginBundleRequiredPaths: baseTemplateRequiredPaths + [
 	root: "contracts"
 	resolver: close({
 		root: "contracts/agent-context-resolver"
-		files: [...#ContainedBundlePath] & [_, ...]
-		contiguous: true
-	})
-	dotfiles: close({
-		root: "contracts/dotfiles"
 		files: [...#ContainedBundlePath] & [_, ...]
 		contiguous: true
 	})
@@ -45,11 +40,6 @@ bundledCueAuthorityBlock: #BundledCueAuthorityBlock & {
 			"fixtures.cue",
 			"checks.cue",
 			"checks/checks.cue",
-		]
-	}
-	dotfiles: {
-		files: [
-			"lua-first-workflow.cue",
 		]
 	}
 	constructors: {
