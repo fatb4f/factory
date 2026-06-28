@@ -30,6 +30,8 @@ package dotfilespluginbundle
 		packageContentsOnly: true
 		generatedOutputAuthority: false
 		runtimeGenerationRequired: false
+		runtimePackagePathsSubsetOfContractPaths: true
+		fullContractSurfaceRetained: true
 	})
 })
 
