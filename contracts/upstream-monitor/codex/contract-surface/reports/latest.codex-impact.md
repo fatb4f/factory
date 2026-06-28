@@ -8,9 +8,9 @@ signal_id: loop_bootstrap_request
 target_repo: fatb4f/factory
 entrypoint: contracts/upstream-monitor/codex/contract-surface/AGENTS.md
 adapter: github_app
-run_result: terminal_success_with_validation_caveats
+run_result: terminal_success_no_new_upstream_impact_with_validation_caveats
 channels: main, latest-alpha-cli
-run_id: 20260628T045532Z
+run_id: 20260628T165523Z
 ```
 
 ## Channel resolution
@@ -23,6 +23,8 @@ repo: openai/codex
 ref: main
 head_commit: bdd282f3bbd55df3a869a5438519cd948c134d4d
 workspace_version: 0.0.0
+previous_recorded_head: bdd282f3bbd55df3a869a5438519cd948c134d4d
+change_since_previous_evidence: none
 ```
 
 ### latest-alpha-cli
@@ -31,110 +33,51 @@ workspace_version: 0.0.0
 status: resolved
 repo: openai/codex
 ref: latest-alpha-cli
+head_commit: e4198a095c36a9f8f703b61be900f66df85e0984
 relation_to_main: ahead-by-1
 changed_files_from_main: codex-rs/Cargo.toml
 workspace_version: 0.143.0-alpha.29
 channel_relation: distinct-from-main
+change_since_previous_evidence: none
 ```
 
 `latest-alpha-cli` remains a separate upstream evidence channel and is not collapsed into `main`.
 
 ## Critical
 
-### openai/codex#30292-#30296 — MCP lifecycle coordination stack
+No new critical upstream impact was admitted in this run.
+
+Previously recorded critical items remain in the latest evidence baseline:
 
 ```text
-channel: main
-classes: mcp, storage, adapter
-impact: blocking-gate
-```
-
-### openai/codex#30282 / #30283 / #30188 — canonical TurnItem rollout lifecycle stack
-
-```text
-channel: main
-classes: protocol, storage, rollout-trace, ui, multi-agent
-impact: blocking-gate
+- openai/codex#30292-#30296 — MCP lifecycle coordination stack
+- openai/codex#30282 / #30283 / #30188 — canonical TurnItem rollout lifecycle stack
 ```
 
 ## High
 
-### openai/codex#29691 — marketplace source policy runtime enforcement
+No new high upstream impact was admitted in this run.
+
+Previously recorded high items remain in the latest evidence baseline:
 
 ```text
-channel: main
-commit: 9dbdb4e2c08723e8fc9c18f64d7ccad3dadc03a7
-classes: plugin, marketplace, policy, adapter, config
-impact: contract-update
-```
-
-Local impact: plugin-bundle and resolver contracts should model runtime source-policy projection as an enforcement gate, not only catalogue/config metadata.
-
-### openai/codex#30384 — app-server currentTime/read timeout increase
-
-```text
-channel: main
-commit: bdd282f3bbd55df3a869a5438519cd948c134d4d
-classes: app-server, protocol, timeout, adapter
-impact: contract-update
-```
-
-Local impact: app-server adapter contracts should avoid hard-coding the older 5s currentTime/read timeout.
-
-### openai/codex#30327 — stable synthesized call output IDs
-
-```text
-channel: main
-commit: d2885dc3cdbaf98a60e7256ec3e7dfdf2381041d
-classes: protocol, storage, context-window, rollout-trace
-impact: contract-update
-```
-
-### openai/codex#30314 — structured app-server JSON shutdown logs
-
-```text
-channel: main
-commit: 4f1b5a4b734da8f159e1b727042b4534ed091307
-classes: app-server, logging, adapter, observability
-impact: contract-update
-```
-
-### latest-alpha-cli — CLI alpha version channel
-
-```text
-channel: latest-alpha-cli
-ref: latest-alpha-cli
-relation_to_main: ahead-by-1
-changed_files_from_main: codex-rs/Cargo.toml
-workspace_version: 0.143.0-alpha.29
-classes: release-channel, config
-impact: note
+- openai/codex#29691 — marketplace source policy runtime enforcement
+- openai/codex#30384 — app-server currentTime/read timeout increase
+- openai/codex#30327 — stable synthesized call output IDs
+- openai/codex#30314 — structured app-server JSON shutdown logs
+- latest-alpha-cli — CLI alpha version channel
 ```
 
 ## Notes
 
-### openai/codex#27999 — image generation error history
+No new note-level upstream impact was admitted in this run.
+
+Previously recorded note items remain in the latest evidence baseline:
 
 ```text
-channel: main
-classes: protocol, storage, ui
-impact: note
-```
-
-### openai/codex#27249 / #27968 — session segmentation and rollout reference histories
-
-```text
-channel: main
-classes: storage, rollout-trace, protocol
-impact: note
-```
-
-### openai/codex#27815 / #27824 / #27836 — pending environment lifecycle
-
-```text
-channel: main
-classes: adapter, context-window, protocol
-impact: note
+- openai/codex#27999 — image generation error history
+- openai/codex#27249 / #27968 — session segmentation and rollout reference histories
+- openai/codex#27815 / #27824 / #27836 — pending environment lifecycle
 ```
 
 ## No local action
@@ -143,19 +86,12 @@ No issue updates were performed because `upstreamCodexPublicationPlan.issueTarge
 
 No contract authority was changed from upstream evidence.
 
+No new local target update was admitted because both observed upstream evidence channels match the prior recorded heads.
+
 ## Suggested local targets
 
 ```text
-contracts/factory/adapters/mcp/oauth_credentials.cue
-contracts/factory/adapters/mcp/config_layers.cue
-contracts/factory/adapters/mcp/tool_namespace.cue
-contracts/factory/rollout/turn_items.cue
-contracts/factory/rollout/thread_projection.cue
-contracts/factory/rollout/response_item_ids.cue
-contracts/factory/adapters/app-server/current_time.cue
-contracts/factory/adapters/plugin-bundle/marketplace_policy.cue
-contracts/factory/security/exec_server_process_events.cue
-contracts/agent-context-resolver/projection.cue
+contracts/upstream-monitor/codex/contract-surface/AGENTS.md
 contracts/upstream-monitor/codex/contract-surface/report.cue
 contracts/upstream-monitor/codex/contract-surface/publication.cue
 ```
@@ -181,9 +117,9 @@ contracts/upstream-monitor/codex/contract-surface/public.cue
 Publication admission observed:
 
 ```text
-report run path: contracts/upstream-monitor/codex/contract-surface/reports/runs/20260628T045532Z.codex-impact.md
+report run path: contracts/upstream-monitor/codex/contract-surface/reports/runs/20260628T165523Z.codex-impact.md
 report latest path: contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md
-evidence run path: contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260628T045532Z.codex-impact.report.json
+evidence run path: contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260628T165523Z.codex-impact.report.json
 evidence latest path: contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json
 issueTargets: {}
 ```
@@ -199,7 +135,7 @@ Caveat: the loop entrypoint still contains older initial-gate text forbidding up
 ## Control action
 
 ```text
-action: publish-contract-local-run-and-latest-report
-reason: upstream evidence from main and latest-alpha-cli was reduced through the fixed report template and admitted repo-local publication paths
-next_state: align contract-surface AGENTS initial-gate text with the admitted Z4 report publication slice
+action: publish-contract-local-no-new-impact-run-and-latest-report
+reason: upstream evidence from main and latest-alpha-cli resolved to the same channel heads recorded in the previous evidence artifact
+next_state: continue scheduled observation; align contract-surface AGENTS initial-gate text with the admitted Z4 report publication slice
 ```
