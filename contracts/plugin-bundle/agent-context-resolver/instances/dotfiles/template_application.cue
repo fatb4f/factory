@@ -2,7 +2,7 @@ package dotfilespluginbundle
 
 #TemplateApplicationAddition: close({
 	path: #ContainedBundlePath
-	kind: "mcp" | "lsp" | "types" | "workflow" | "cue-authority"
+	kind: "resolver-output" | "mcp" | "lsp" | "types" | "workflow" | "cue-authority"
 	generated: true
 	authority: false
 	reason: #NonEmptyString
@@ -36,12 +36,6 @@ baseTemplateRequiredPaths: [
 	"cue.mod/module.cue",
 	"scripts/agent-context-resolver-hook",
 	"scripts/resolve-agent-context",
-	"generated/turn_start_fragments.json",
-	"generated/prompt_routes.json",
-	"generated/route_inventory.json",
-	"generated/fragment_inventory.json",
-	"generated/provider_inventory.json",
-	"generated/dotfiles.schema-map.json",
 	"contracts/agent-context-resolver/implementation_slice_materializer.cue",
 	"contracts/agent-context-resolver/implementation_slice_eval_projection.cue",
 	"contracts/agent-context-resolver/implementation_slice_runner_result.cue",
@@ -63,6 +57,12 @@ baseTemplateRequiredPaths: [
 ]
 
 dotfilesTemplateApplicationAdditions: [
+	{path: "generated/turn_start_fragments.json", kind: "resolver-output", generated: true, authority: false, reason: "bundle resolver turn-start fragment projection"},
+	{path: "generated/prompt_routes.json", kind: "resolver-output", generated: true, authority: false, reason: "bundle resolver prompt route projection"},
+	{path: "generated/route_inventory.json", kind: "resolver-output", generated: true, authority: false, reason: "bundle resolver route inventory projection"},
+	{path: "generated/fragment_inventory.json", kind: "resolver-output", generated: true, authority: false, reason: "bundle resolver fragment inventory projection"},
+	{path: "generated/provider_inventory.json", kind: "resolver-output", generated: true, authority: false, reason: "bundle resolver provider inventory projection"},
+	{path: "generated/dotfiles.schema-map.json", kind: "resolver-output", generated: true, authority: false, reason: "bundle dotfiles schema-map projection"},
 	{path: "generated/mcp/server-manifest.json", kind: "mcp", generated: true, authority: false, reason: "bundle read-only MCP server metadata for dotfiles context projection"},
 	{path: "generated/mcp/tool-registry.json", kind: "mcp", generated: true, authority: false, reason: "bundle read-only MCP tool registry evidence"},
 	{path: "generated/mcp/context-projection.json", kind: "mcp", generated: true, authority: false, reason: "bundle read-only MCP context projection evidence"},
