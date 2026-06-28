@@ -2,7 +2,7 @@ package dotfilespluginbundle
 
 #TemplateApplicationAddition: close({
 	path: #ContainedBundlePath
-	kind: "resolver-output" | "mcp" | "lsp" | "types" | "workflow" | "cue-authority"
+	kind: "resolver-output"
 	generated: true
 	authority: false
 	reason: #NonEmptyString
@@ -12,7 +12,7 @@ package dotfilespluginbundle
 	schema: "factory.plugin-bundle.template-application.v1"
 	template: close({
 		id: "agent-context-resolver"
-		root: "contracts/plugin-bundle/agent-context-resolver/template"
+		root: "contracts/plugin-bundle/template"
 		materializedRoot: ".codex/plugins/agent-context-resolver"
 	})
 	instance: close({
@@ -63,20 +63,6 @@ dotfilesTemplateApplicationAdditions: [
 	{path: "generated/fragment_inventory.json", kind: "resolver-output", generated: true, authority: false, reason: "bundle resolver fragment inventory projection"},
 	{path: "generated/provider_inventory.json", kind: "resolver-output", generated: true, authority: false, reason: "bundle resolver provider inventory projection"},
 	{path: "generated/dotfiles.schema-map.json", kind: "resolver-output", generated: true, authority: false, reason: "bundle dotfiles schema-map projection"},
-	{path: "generated/mcp/server-manifest.json", kind: "mcp", generated: true, authority: false, reason: "bundle read-only MCP server metadata for dotfiles context projection"},
-	{path: "generated/mcp/tool-registry.json", kind: "mcp", generated: true, authority: false, reason: "bundle read-only MCP tool registry evidence"},
-	{path: "generated/mcp/context-projection.json", kind: "mcp", generated: true, authority: false, reason: "bundle read-only MCP context projection evidence"},
-	{path: "generated/lsp/cue-lsp.json", kind: "lsp", generated: true, authority: false, reason: "bundle CUE LSP provider metadata"},
-	{path: "generated/lsp/lua-language-server.json", kind: "lsp", generated: true, authority: false, reason: "bundle Lua language server provider metadata"},
-	{path: "generated/lsp/provider-routing.json", kind: "lsp", generated: true, authority: false, reason: "bundle LSP provider routing evidence"},
-	{path: "generated/types/wezterm/wezterm.lua", kind: "types", generated: true, authority: false, reason: "bundle WezTerm Lua type overlay"},
-	{path: "generated/types/wezterm/events.lua", kind: "types", generated: true, authority: false, reason: "bundle WezTerm event type overlay"},
-	{path: "generated/types/wezterm/config-builder.lua", kind: "types", generated: true, authority: false, reason: "bundle WezTerm config-builder type overlay"},
-	{path: "generated/types/nvim/vim.lua", kind: "types", generated: true, authority: false, reason: "bundle Neovim vim global type overlay"},
-	{path: "generated/workflows/lua-first/workflow.json", kind: "workflow", generated: true, authority: false, reason: "bundle Lua-first prompt workflow projection"},
-	{path: "generated/workflows/lua-first/entrypoints.json", kind: "workflow", generated: true, authority: false, reason: "bundle Lua-first entrypoint projection"},
-	{path: "generated/workflows/lua-first/diagnostic-map.json", kind: "workflow", generated: true, authority: false, reason: "bundle Lua-first diagnostic projection"},
-	{path: "contracts/dotfiles/lua-first-workflow.cue", kind: "cue-authority", generated: true, authority: false, reason: "bundle dotfiles workflow contract as materialized non-authority copy"},
 ]
 
 dotfilesAgentContextResolverTemplateApplication: #PluginBundleTemplateApplication & {
