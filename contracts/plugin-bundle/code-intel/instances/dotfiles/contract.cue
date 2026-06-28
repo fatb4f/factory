@@ -22,6 +22,7 @@ codeIntelRequiredPaths: [
 	"generated/workflows/lua-first/entrypoints.json",
 	"generated/workflows/lua-first/diagnostic-map.json",
 	"contracts/code-intel/lua-first-workflow.cue",
+	"contracts/code-intel/checks.cue",
 ]
 
 #CodeIntelAuthorityBlock: close({
@@ -37,7 +38,7 @@ codeIntelRequiredPaths: [
 })
 
 codeIntelAuthorityBlock: #CodeIntelAuthorityBlock & {
-	codeIntel: {files: ["lua-first-workflow.cue"]}
+	codeIntel: {files: ["lua-first-workflow.cue", "checks.cue"]}
 }
 
 #CodeIntelBundleContract: close({
