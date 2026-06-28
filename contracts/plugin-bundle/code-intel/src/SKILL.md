@@ -33,4 +33,5 @@ Use `generated/lsp/cue-lsp.json` for editor/server configuration and `contracts/
 cue vet ./contracts/code-intel
 cue export ./contracts/code-intel -e codeIntelLuaFirstWorkflow
 cue export ./contracts/code-intel -e codeIntelBoundaryReport
+cue export ./contracts/code-intel -e codeIntelImplementationRecommendations
 ```
