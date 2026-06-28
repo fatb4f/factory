@@ -11,14 +11,6 @@ dotfilesAgentContextResolverReport: {
 		additions: len(dotfilesAgentContextResolverTemplateApplication.additions)
 		instanceOwnsTemplate: false
 	}
-	bundledTooling: {
-		mcp: true
-		cueLSP: true
-		luaLSP: true
-		weztermTypes: true
-		luaFirstWorkflow: true
-		authority: false
-	}
 }
 
 dotfilesAgentContextResolverPromptSurfaceReport: {
@@ -35,12 +27,4 @@ dotfilesTemplateApplicationReport: {
 	resultRequiredPaths: len(dotfilesAgentContextResolverTemplateApplication.resultRequiredPaths)
 	generatedOutputAuthority: false
 	instanceOwnsTemplate: false
-}
-
-dotfilesLuaFirstWorkflowReport: {
-	schema: "factory.plugin-bundle.dotfiles.lua-first-workflow.report.v1"
-	status: "admitted"
-	path: pluginBundleContractRoot
-	workflow: dotfilesLuaFirstWorkflow.id
-	gates: [for gate in dotfilesLuaFirstWorkflow.gates {gate.id}]
 }
