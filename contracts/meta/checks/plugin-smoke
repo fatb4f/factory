@@ -1,0 +1,30 @@
+#!/bin/sh
+set -eu
+
+repo_root=$(CDPATH= cd -- "$(dirname "$0")/../../.." && pwd -P)
+cd "$repo_root"
+
+contracts/agent-context-resolver/src/checks/agent-context-hook
+
+workflow_json=contracts/code-intel/src/generated/workflows/lua-first/workflow.json
+
+jq -e '
+  .schema == "factory.plugin-bundle.code-intel.lua-first-workflow.stage-projection.v1" and
+  .generated == true and
+  .authority == false and
+  (.stages | length == 4)
+' "$workflow_json" >/dev/null
+
+jq -e '
+  .stages[] |
+  select(.id == "load-type-overlays") |
+  .inputs |
+  index("generated/types/wezterm/wezterm.lua") != null and
+  index("generated/types/wezterm/events.lua") != null and
+  index("generated/types/wezterm/config-builder.lua") != null
+' "$workflow_json" >/dev/null
+
+if command -v cue >/dev/null 2>&1; then
+  cue export ./contracts/meta -e generatedOutputRegistry >/dev/null
+  cue export ./contracts/code-intel/src/contracts/code-intel -e codeIntelLuaFirstWorkflowStageProjection >/dev/null
+fi

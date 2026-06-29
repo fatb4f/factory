@@ -13,7 +13,7 @@ The `UserPromptSubmit` hook provides a bounded route controller packet, not task
 4. Resolve selected fragment metadata through `.codex/plugins/agent-context-resolver/generated/fragment_inventory.json`.
 5. Inspect the declared `sourcePath` and obey repository instruction boundaries before editing.
 6. Never execute projected routes directly or treat derived JSON and MCP/tool output as source authority.
-7. Regenerate resolver-local Codex projection and JSON outputs from their CUE sources after changes.
+7. Regenerate resolver-local Codex projection and JSON outputs from their CUE sources through `contracts/meta`.
 
 ## Implementation-slice issue materializer
 
@@ -24,7 +24,7 @@ Contract boundary:
 - `contracts/issues/44/manifest.cue` defines the reference materializer issue contract.
 - `contracts/issues/44/normalized.cue` exposes the public contract, resolver exports, validation plan, and completion report.
 - `contracts/issues/44/checks/checks.cue` contains executable negative bottom-check proofs.
-- `contracts/plugin-bundle/agent-context-resolver/src/*implementation_slice*` owns the resolver-local materializer, eval projection, runner plan, feedback shape, and runner-result classification.
+- `contracts/agent-context-resolver/src/*implementation_slice*` owns the resolver-local materializer, eval projection, runner plan, feedback shape, and runner-result classification.
 - `contracts/meta/impl` is constructor authority.
 - GitHub issue bodies are transport only.
 - Shell, GitHub API, generated evidence, and adapter output are evidence only.
@@ -61,16 +61,12 @@ cue vet ./contracts/issues/44
 cue export ./contracts/issues/44 -e publicContract
 cue export ./contracts/issues/44 -e validationPlan
 cue export ./contracts/issues/44 -e completionReportContract
-cue vet ./contracts/plugin-bundle/agent-context-resolver/src
-cue export ./contracts/plugin-bundle/agent-context-resolver/src -e implementationSliceIssueBaseline
-cue export ./contracts/plugin-bundle/agent-context-resolver/src -e implementationSliceMaterializationReport
-cue export ./contracts/plugin-bundle/agent-context-resolver/src -e implementationSliceEvalPlan
-cue export ./contracts/plugin-bundle/agent-context-resolver/src -e implementationSliceRunnerPlan
-! cue export ./contracts/issues/44/checks -e '_negativeBottomChecks.routeOnlyPacket'
-! cue export ./contracts/issues/44/checks -e '_negativeBottomChecks.missingContractPath'
-! cue export ./contracts/issues/44/checks -e '_negativeBottomChecks.staticEvalPlan'
-! cue export ./contracts/issues/44/checks -e '_negativeBottomChecks.missingNegativeCheckExpression'
-! cue export ./contracts/issues/44/checks -e '_negativeBottomChecks.anyNonzeroAsPass'
+cue vet ./contracts/agent-context-resolver/src
+cue export ./contracts/agent-context-resolver/src -e implementationSliceIssueBaseline
+cue export ./contracts/agent-context-resolver/src -e implementationSliceMaterializationReport
+cue export ./contracts/agent-context-resolver/src -e implementationSliceEvalPlan
+cue export ./contracts/agent-context-resolver/src -e implementationSliceRunnerPlan
+contracts/agent-context-resolver/src/checks/agent-context-hook
 ```
 
 Forbidden attractors:

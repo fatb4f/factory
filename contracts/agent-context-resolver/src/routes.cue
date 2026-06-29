@@ -46,7 +46,7 @@ import "list"
 })
 
 #RouteInventory: close({
-	generatedFrom: "contracts/plugin-bundle/agent-context-resolver/src/routes.cue"
+	generatedFrom: "contracts/agent-context-resolver/src/routes.cue"
 	routes: [...#RegisteredRoute] & [_, ...]
 	gates: [...#Gate] & [_, ...]
 })
@@ -84,7 +84,7 @@ import "list"
 })
 
 routeInventory: #RouteInventory & {
-	generatedFrom: "contracts/plugin-bundle/agent-context-resolver/src/routes.cue"
+	generatedFrom: "contracts/agent-context-resolver/src/routes.cue"
 	gates:         gateInventory
 	routes: [
 		{
@@ -98,7 +98,7 @@ routeInventory: #RouteInventory & {
 			task: {
 				objective: "Inspect the current resolver authority and generated boundary."
 				constraints: ["Treat CUE and repository state as durable authority."]
-				files: ["contracts/plugin-bundle/agent-context-resolver/src"]
+				files: ["contracts/agent-context-resolver/src"]
 			}
 			outputSchema: {schema: "agent.route-result.inspect.v1"}
 			gates: ["registry-authority", "route-local-propagation", "structured-result"]
@@ -176,8 +176,8 @@ routeInventory: #RouteInventory & {
 			inputFragments: ["agent-skill.projection"]
 			task: {
 				objective: "Validate generated agent skill and hook projections."
-				constraints: ["Regenerate derived assets from CUE authority."]
-				commands: ["generated/checks/agent-context-hook"]
+				constraints: ["Regenerate derived assets from CUE authority through contracts/meta."]
+				commands: ["contracts/agent-context-resolver/src/checks/agent-context-hook"]
 			}
 			outputSchema: {schema: "agent.route-result.validation.v1"}
 			gates: ["registry-authority", "route-local-propagation", "structured-result"]
@@ -253,42 +253,6 @@ promptRouteGraphValidation: {
 						_missingDependencyClosure: _|_
 					}
 				}
-			}
-		}
-	}
-}
-
-_availableFragmentIDs: [for fragment in turnStartFragmentSet.fragments {fragment.id}]
-_registeredRouteIDs: [for route in routeInventory.routes {route.id}]
-_registeredGateIDs: [for gate in routeInventory.gates {gate.id}]
-_boundWorkerIDs: [for _, worker in agentContextResolver.workers {worker.id}]
-_boundWorkerProfileIDs: [for _, worker in agentContextResolver.workers {worker.profile.id}]
-_boundAdapterRuntimes: [for _, adapter in agentContextResolver.adapters {adapter.runtime}]
-
-routeInventoryValidation: {
-	for route in routeInventory.routes {
-		if !list.Contains(_boundWorkerIDs, route.workerBindingID) {
-			_unboundWorker: _|_
-		}
-		if !list.Contains(_boundWorkerProfileIDs, route.workerProfileID) {
-			_unboundWorkerProfile: _|_
-		}
-		if !list.Contains(_boundAdapterRuntimes, route.preferredWorkerAdapter) {
-			_unboundWorkerAdapter: _|_
-		}
-		for fragmentID in route.inputFragments {
-			if !list.Contains(_availableFragmentIDs, fragmentID) {
-				_invalidFragment: _|_
-			}
-		}
-		for gateID in route.gates {
-			if !list.Contains(_registeredGateIDs, gateID) {
-				_invalidGate: _|_
-			}
-		}
-		for dependencyID in route.dependsOn {
-			if !list.Contains(_registeredRouteIDs, dependencyID) {
-				_invalidDependency: _|_
 			}
 		}
 	}

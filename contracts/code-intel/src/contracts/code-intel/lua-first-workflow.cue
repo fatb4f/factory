@@ -28,6 +28,15 @@ package codeintel
 	authority: "dotfiles-source" | "evidence-only"
 })
 
+#LuaFirstStageProjection: close({
+	order: int & >0
+	id: #NonEmptyString
+	goal: #NonEmptyString
+	inputs: [...#ContainedPath] & [_, ...]
+	outputs: [...#NonEmptyString] & [_, ...]
+	authority: "dotfiles-source" | "evidence-only"
+})
+
 #CodeIntelLuaFirstWorkflow: close({
 	schema: "factory.plugin-bundle.code-intel.lua-first-workflow.v1"
 	id: #NonEmptyString
@@ -39,6 +48,15 @@ package codeintel
 		owns: [...#NonEmptyString] & [_, ...]
 		doesNotOwn: [...#NonEmptyString] & [_, ...]
 	})
+})
+
+#CodeIntelLuaFirstWorkflowStageProjection: close({
+	schema: "factory.plugin-bundle.code-intel.lua-first-workflow.stage-projection.v1"
+	id: #NonEmptyString
+	generated: true
+	authority: false
+	intent: #NonEmptyString
+	stages: [...#LuaFirstStageProjection] & [_, ...]
 })
 
 codeIntelLuaFirstWorkflow: #CodeIntelLuaFirstWorkflow & {
@@ -67,4 +85,50 @@ codeIntelLuaFirstWorkflow: #CodeIntelLuaFirstWorkflow & {
 		owns: ["code-intel bundle workflow shape", "provider ordering for Lua-first dotfiles work"]
 		doesNotOwn: ["fatb4f/dotfiles source authority", "runtime execution", "truth of LSP diagnostics", "WezTerm runtime behavior", "Neovim runtime behavior"]
 	}
+}
+
+codeIntelLuaFirstWorkflowStageProjection: #CodeIntelLuaFirstWorkflowStageProjection & {
+	id: "dotfiles-code-intel-lua-first"
+	generated: true
+	authority: false
+	intent: "Resolve dotfiles Lua surfaces before generic repository context."
+	stages: [
+		{
+			order: 1
+			id: "collect-lua-entrypoints"
+			goal: "Discover Neovim and WezTerm Lua entrypoints before broad search."
+			inputs: ["generated/workflows/lua-first/entrypoints.json"]
+			outputs: ["ordered Lua entrypoint set"]
+			authority: "dotfiles-source"
+		},
+		{
+			order: 2
+			id: "load-type-overlays"
+			goal: "Attach generated Neovim and WezTerm overlays as read-only evidence."
+			inputs: [
+				"generated/types/nvim/vim.lua",
+				"generated/types/wezterm/wezterm.lua",
+				"generated/types/wezterm/events.lua",
+				"generated/types/wezterm/config-builder.lua",
+			]
+			outputs: ["Lua library overlay"]
+			authority: "evidence-only"
+		},
+		{
+			order: 3
+			id: "route-provider"
+			goal: "Select lua-language-server or cue-lsp by path and language."
+			inputs: ["generated/lsp/provider-routing.json"]
+			outputs: ["provider route"]
+			authority: "evidence-only"
+		},
+		{
+			order: 4
+			id: "project-diagnostics"
+			goal: "Map diagnostics without granting them mutation authority."
+			inputs: ["generated/workflows/lua-first/diagnostic-map.json"]
+			outputs: ["diagnostic evidence"]
+			authority: "evidence-only"
+		},
+	]
 }
