@@ -10,7 +10,7 @@ entrypoint: contracts/upstream-monitor/codex/contract-surface/AGENTS.md
 adapter: github_app
 run_result: terminal_success_new_main_upstream_impact_with_validation_caveats
 channels: main, latest-alpha-cli
-run_id: 20260629T045515Z
+run_id: 20260629T165258Z
 ```
 
 ## Channel resolution
@@ -21,11 +21,11 @@ run_id: 20260629T045515Z
 status: resolved
 repo: openai/codex
 ref: main
-head_commit: ccdfb4f342a2e659be7ab878309cc5d81683d737
+head_commit: 80f54d1266b4571ef649e7e5ecc382dd4e670937
 workspace_version: 0.0.0
-previous_recorded_head: bdd282f3bbd55df3a869a5438519cd948c134d4d
-change_since_previous_evidence: ahead-by-5
-changed_files_since_previous_evidence: 48
+previous_recorded_head: ccdfb4f342a2e659be7ab878309cc5d81683d737
+change_since_previous_evidence: ahead-by-1
+changed_files_since_previous_evidence: 10
 ```
 
 ### latest-alpha-cli
@@ -35,7 +35,7 @@ status: resolved
 repo: openai/codex
 ref: latest-alpha-cli
 head_commit: e4198a095c36a9f8f703b61be900f66df85e0984
-relation_to_main: diverged-from-current-main; ahead-by-1; behind-by-5
+relation_to_main: diverged-from-current-main; ahead-by-1; behind-by-6
 changed_files_from_current_main: codex-rs/Cargo.toml
 workspace_version: 0.143.0-alpha.29
 channel_relation: distinct-from-main
@@ -46,24 +46,28 @@ change_since_previous_evidence: none
 
 ## Critical
 
-### main: auto-review on-request escalation prompt rollback
+No critical impacts admitted in this run.
+
+## High
+
+### main: first-class `max` reasoning effort
 
 ```text
-id: openai/codex#30508
+id: openai/codex#30467
 upstream_repo: openai/codex
 kind: commit/merged-pr-evidence
 status: admitted
-severity: critical
-classes: policy, protocol
+severity: high
+classes: protocol, config, ui
 evidence_channel: main
 refs:
-- ccdfb4f342a2e659be7ab878309cc5d81683d737
-- openai/codex#30508
+- 80f54d1266b4571ef649e7e5ecc382dd4e670937
+- openai/codex#30467
 ```
 
-Impact: upstream reverted the dedicated `on_request_auto_review.md` prompt path and now routes `ApprovalsReviewer::AutoReview` through the generic `on_request.md` instruction body plus the auto-review suffix. This intersects local contract-surface policy because it changes the effective permissions/escalation instruction fragment emitted to the model for `on-request` approval mode.
+Impact: upstream changed `max` from an opaque custom reasoning-effort string into a first-class `ReasoningEffort::Max` protocol/config value. The wire value remains `max`, but parsing, serialization, Bedrock catalog projection, request mapping, and TUI display now treat it as a known effort.
 
-Local reason: this is a prompt/policy contract surface, not just implementation detail. Any local assumptions that auto-review has a distinct on-request guidance body should be treated as stale until the local contract surface explicitly models generic-body-plus-suffix behavior.
+Local reason: this intersects the declared contract surface because reasoning effort is serialized protocol/config metadata exchanged across core, TUI, app-server, and SDK boundaries. Any local model/reasoning schema that assumes `max` is only a custom value should be treated as stale.
 
 Suggested local targets:
 
@@ -73,43 +77,25 @@ contracts/upstream-monitor/codex/contract-surface/publication.cue
 contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md
 ```
 
-## High
-
-### main: skills instructions fragment rendering changes
-
-```text
-id: main-skills-instructions-fragment-rendering
-upstream_repo: openai/codex
-kind: commit-range-evidence
-status: admitted
-severity: high
-classes: adapter, protocol
-evidence_channel: main
-refs:
-- bdd282f3bbd55df3a869a5438519cd948c134d4d..ccdfb4f342a2e659be7ab878309cc5d81683d737
-```
-
-Impact: upstream changed available-skills context fragment construction and rendering paths across core and skills extension code. The current core path preserves skill-root lines and chooses alias-aware vs absolute-path usage instructions; the extension path continues rendering skill instructions as developer/user contextual fragments.
-
-Local reason: this intersects the contract-surface monitor because skills are model-context fragments with explicit role/marker/body projection. Local report consumers should keep skills-context evidence separate from plugin marketplace and MCP evidence.
-
 ## Notes
 
-### main: plugin/skills test surface churn
+### main: reasoning effort tests and UI snapshots updated
 
 ```text
-id: main-plugin-skills-test-surface-churn
+id: main-reasoning-effort-test-ui-churn
 upstream_repo: openai/codex
 kind: commit-range-evidence
 status: admitted
 severity: note
-classes: adapter
+classes: ui, adapter
 evidence_channel: main
 refs:
-- bdd282f3bbd55df3a869a5438519cd948c134d4d..ccdfb4f342a2e659be7ab878309cc5d81683d737
+- ccdfb4f342a2e659be7ab878309cc5d81683d737..80f54d1266b4571ef649e7e5ecc382dd4e670937
 ```
 
-Impact: upstream changed multiple app-server plugin and skills tests. The changes were not admitted as direct local contract changes in this run because the observed files are primarily test fixtures/smoke coverage, but they remain supporting evidence for plugin and skills behavior drift.
+Impact: upstream updated tests and TUI snapshot output around `max` reasoning display, including changing rendered model-reasoning popup text from lowercase `max` to productized `Max`.
+
+Local reason: this is supporting evidence for user-facing projection drift. It does not require a separate local mutation unless a local UI/report projection enumerates display labels.
 
 ## No local action
 
@@ -150,9 +136,9 @@ contracts/upstream-monitor/codex/contract-surface/report.cue
 Publication admission observed:
 
 ```text
-report run path: contracts/upstream-monitor/codex/contract-surface/reports/runs/20260629T045515Z.codex-impact.md
+report run path: contracts/upstream-monitor/codex/contract-surface/reports/runs/20260629T165258Z.codex-impact.md
 report latest path: contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md
-evidence run path: contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260629T045515Z.codex-impact.report.json
+evidence run path: contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260629T165258Z.codex-impact.report.json
 evidence latest path: contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json
 issueTargets: {}
 ```
@@ -169,6 +155,6 @@ Caveat: the loop entrypoint still contains older initial-gate text forbidding up
 
 ```text
 action: publish-contract-local-new-main-impact-run-and-latest-report
-reason: upstream main advanced by 5 commits and changed policy/prompt plus skills context-fragment surfaces; latest-alpha-cli did not move
+reason: upstream main advanced by 1 commit and changed reasoning-effort protocol/config/UI handling; latest-alpha-cli did not move
 next_state: continue scheduled observation; keep main and latest-alpha-cli evidence channels distinct
 ```
