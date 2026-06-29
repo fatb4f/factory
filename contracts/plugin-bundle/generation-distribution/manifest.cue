@@ -3,11 +3,11 @@ package pluginbundlegenerationdistribution
 import impl "github.com/fatb4f/contract.cuemod/contracts/meta/impl"
 
 _issue: {
-	number: 82
-	title:  "cue(plugin-bundle): define generation and distribution surface"
-	path:   "contracts/plugin-bundle/generation-distribution/manifest.cue"
+	number:    82
+	title:     "cue(plugin-bundle): define generation and distribution surface"
+	path:      "contracts/plugin-bundle/generation-distribution/manifest.cue"
 	issuePath: "contracts/issues/82/manifest.cue"
-	parent: 79
+	parent:    79
 	dependsOn: [80, 81]
 }
 
@@ -196,14 +196,36 @@ _bottomCheckNames: [
 ]
 
 _bottomCheckPlans: [
-	for name in _bottomCheckNames {
-		impl.#MakeBottomCheckPlan & {
-			in: {
-				name:         name
-				fixture:      name
-				checkSurface: "_negativeBottomChecks"
-				checkFile:    "./contracts/plugin-bundle/generation-distribution/checks"
-			}
+	impl.#MakeBottomCheckPlan & {
+		in: {
+			name:         "generatedPackageAuthorityAccepted"
+			fixture:      "generatedPackageAuthorityAccepted"
+			checkSurface: "_negativeBottomChecks"
+			checkFile:    "./contracts/plugin-bundle/generation-distribution/checks"
+		}
+	},
+	impl.#MakeBottomCheckPlan & {
+		in: {
+			name:         "distributionOutsidePluginRootAccepted"
+			fixture:      "distributionOutsidePluginRootAccepted"
+			checkSurface: "_negativeBottomChecks"
+			checkFile:    "./contracts/plugin-bundle/generation-distribution/checks"
+		}
+	},
+	impl.#MakeBottomCheckPlan & {
+		in: {
+			name:         "nonDeterministicGenerationAccepted"
+			fixture:      "nonDeterministicGenerationAccepted"
+			checkSurface: "_negativeBottomChecks"
+			checkFile:    "./contracts/plugin-bundle/generation-distribution/checks"
+		}
+	},
+	impl.#MakeBottomCheckPlan & {
+		in: {
+			name:         "runtimeExternalSourceLookupAccepted"
+			fixture:      "runtimeExternalSourceLookupAccepted"
+			checkSurface: "_negativeBottomChecks"
+			checkFile:    "./contracts/plugin-bundle/generation-distribution/checks"
 		}
 	},
 ]
@@ -217,19 +239,19 @@ pluginBundleGenerationDistributionPlan: #PluginBundleGenerationPlan & {
 	materializedRoots: sourceRoots
 	emittedArtifacts: [
 		{
-			bundleID: "agent-context-resolver"
-			sourceRoot: "contracts/plugin-bundle/agent-context-resolver/src"
-			distributionRoot: ".codex/plugins/agent-context-resolver"
-			runtimeFiles: ["manifest.json", "SKILL.md", "scripts/agent-context-resolver-hook", "scripts/resolve-agent-context"]
-			lockEvidence: ["package.lock.json"]
+			bundleID:           "agent-context-resolver"
+			sourceRoot:         "contracts/plugin-bundle/agent-context-resolver/src"
+			distributionRoot:  ".codex/plugins/agent-context-resolver"
+			runtimeFiles:      ["manifest.json", "SKILL.md", "scripts/agent-context-resolver-hook", "scripts/resolve-agent-context"]
+			lockEvidence:      ["package.lock.json"]
 			authorityBoundary: "projection-only"
 		},
 		{
-			bundleID: "code-intel"
-			sourceRoot: "contracts/plugin-bundle/code-intel/src"
-			distributionRoot: ".codex/plugins/code-intel"
-			runtimeFiles: ["manifest.json", "SKILL.md"]
-			lockEvidence: []
+			bundleID:           "code-intel"
+			sourceRoot:         "contracts/plugin-bundle/code-intel/src"
+			distributionRoot:  ".codex/plugins/code-intel"
+			runtimeFiles:      ["manifest.json", "SKILL.md"]
+			lockEvidence:      []
 			authorityBoundary: "projection-only"
 		},
 	]
@@ -278,16 +300,16 @@ _completion: impl.#MakeCompletionReport & {
 }
 
 normalizedPluginBundleGenerationDistributionManifest: {
-	issue: _issue
+	issue:    _issue
 	workflow: _workflowIndex
-	plan: pluginBundleGenerationDistributionPlan
-	primitives: [for primitive in _primitives {primitive.out}]
-	surfaces: _surfaces.out
+	plan:     pluginBundleGenerationDistributionPlan
+	primitives:       [for primitive in _primitives {primitive.out}]
+	surfaces:         _surfaces.out
 	negativeFixtures: negativePluginBundleGenerationDistributionFixtures
 	bottomCheckPlans: [for plan in _bottomCheckPlans {plan.out}]
 	generation: {
 		templateAuthority: pluginBundleGenerationDistributionPlan.templateShape
-		sourceRoots: pluginBundleGenerationDistributionPlan.sourceRoots
+		sourceRoots:       pluginBundleGenerationDistributionPlan.sourceRoots
 		distributionRoots: [for artifact in pluginBundleGenerationDistributionPlan.emittedArtifacts {artifact.distributionRoot}]
 		invariants: [
 			"CUE source roots are authority",
@@ -299,6 +321,5 @@ normalizedPluginBundleGenerationDistributionManifest: {
 	}
 }
 
-pluginBundleGenerationDistributionValidationPlan: _validation.out
+pluginBundleGenerationDistributionValidationPlan:           _validation.out
 pluginBundleGenerationDistributionCompletionReportContract: _completion.out
-pluginBundleGenerationDistributionNegativeBottomChecks: _|_
