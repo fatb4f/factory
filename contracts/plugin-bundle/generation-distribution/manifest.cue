@@ -323,3 +323,5 @@ normalizedPluginBundleGenerationDistributionManifest: {
 
 pluginBundleGenerationDistributionValidationPlan:           _validation.out
 pluginBundleGenerationDistributionCompletionReportContract: _completion.out
+normalizedPluginBundleGenerationDistributionAuthority:      normalizedPluginBundleGenerationDistributionManifest
+pluginBundleMaterializationPlan:                            pluginBundleGenerationDistributionPlan
