@@ -1,3 +1,1 @@
-```cue
-x: 1
-```
+cleanup
