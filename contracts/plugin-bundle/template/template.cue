@@ -119,21 +119,3 @@ pluginBundleTemplateContract: close({
 		"validation commands do not reference issue-81-local checks",
 	]
 })
-
-_negativeBottomChecks: {
-	generatedAuthorityAccepted: *(#PluginBundleAuthorityPolicy & {
-		generatedAuthority: true
-	}) | _
-	externalLookupAccepted: *(#PluginBundleAuthorityPolicy & {
-		externalFactoryRootLookup: true
-	}) | _
-	absolutePathAccepted:    *(#RelativeContractPath & "/absolute/path") | _
-	parentTraversalAccepted: *(#RelativeContractPath & "../outside") | _
-	missingRequiredPathAccepted: *(#PluginBundleContractsShape & {
-		requiredPaths: []
-	}) | _
-	bundleLocalOverrideAccepted: *(#PluginBundleSrcRootShape & {
-		bundleLocalShapeOverride: true
-	}) | _
-	staleIssue81CheckReferenceAccepted: *(#ValidationCommand & "cue export ./\(_staleIssue81Path)/checks -e _negativeBottomChecks.shapeDrift") | _
-}

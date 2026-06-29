@@ -1,17 +1,21 @@
 package meta
 
-_defaultForbiddenPattern: "\(bottomSurfaceToken)|\(cueExprToken)|\(invalidFlagToken)|\(truthFlagToken)|\(inlineCtorToken)"
+_defaultForbiddenPattern: "\(bottomSurfaceToken)|\(cueExprToken)|\(invalidFlagToken)|\(truthFlagToken)|\(inlineCtorToken)|\(defaultFallbackToken)|\(topDisjunctionToken)|\(rawBottomToken)"
 
-bottomSurfaceToken: "bottom\(checkWord)Surface"
-checkWord:          "Check"
-cueExprToken:       "\(cueExprWord):"
-cueExprWord:        "expression"
-invalidFlagToken:   "\(invalidFlagWord): true"
-invalidFlagWord:    "isInvalid"
-truthFlagToken:     "operator\(truthFlagWord)"
-truthFlagWord:      "TruthFlag"
-inlineCtorToken:    "inline \(ctorWord) definition"
-ctorWord:           "constructor"
+bottomSurfaceToken:   "bottom\(checkWord)Surface"
+checkWord:            "Check"
+cueExprToken:         "\(cueExprWord):"
+cueExprWord:          "expression"
+invalidFlagToken:     "\(invalidFlagWord): true"
+invalidFlagWord:      "isInvalid"
+truthFlagToken:       "operator\(truthFlagWord)"
+truthFlagWord:        "TruthFlag"
+inlineCtorToken:      "inline \(ctorWord) definition"
+ctorWord:             "constructor"
+defaultFallbackToken: "\\*\\("
+pipeRegexToken:       "\\|"
+topDisjunctionToken:  "\(pipeRegexToken) _"
+rawBottomToken:       "_\\|_"
 
 constructorLibraryBaseline: close({
 	kind:    "constructor-library"
@@ -108,6 +112,7 @@ constructorManifestBaseline: close({
 		"carry constructor calls only",
 		"carry bottom-check plans in manifest packages",
 		"construct executable bottom proofs only in check packages",
+		"construct executable bottom proofs through #MakeBottomCheckProof, without hand-written defaults, top fallbacks, invalidity flags, or expression strings",
 		"keep target expansion, transport, and runtime execution outside constructor authority",
 	]
 })
