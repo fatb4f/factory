@@ -21,6 +21,14 @@ invalidWord:  "isInvalid"
 	evidence: [...string & !=""] & [_, ...]
 })
 
+#ContractAssertion: close({
+	id:            string & !=""
+	claim:         string & !=""
+	negativeCheck: string & !=""
+	proofKey:      string & !=""
+	refusal:       string & !=""
+})
+
 _negativeFixtures: {
 	stringifiedBottomCheckAccepted: impl.#MakeNegativeFixture & {
 		in: {
@@ -57,7 +65,204 @@ _negativeFixtures: {
 	}
 }
 
+contractAssertions: {
+	stringifiedBottomCheckAccepted: #ContractAssertion & {
+		id:            "meta.manifest.bottom-checks-are-cue-values"
+		claim:         "bottom checks are generated from loaded CUE value intersections, not strings"
+		negativeCheck: "stringifiedBottomCheckAccepted"
+		proofKey:      "stringifiedBottomCheckAccepted"
+		refusal:       "string metadata cannot satisfy bottom-check proof authority"
+	}
+	"\(operatorWord)\(truthWord)\(flagWord)Accepted": #ContractAssertion & {
+		id:            "meta.predicates.derive-truth-from-structure"
+		claim:         "predicate truth is derived from observed structure, not operator flags"
+		negativeCheck: "\(operatorWord)\(truthWord)\(flagWord)Accepted"
+		proofKey:      "\(operatorWord)\(truthWord)\(flagWord)Accepted"
+		refusal:       "operator-supplied truth cannot satisfy predicate authority"
+	}
+	inlineConstructorDefinitionAccepted: #ContractAssertion & {
+		id:            "meta.manifest.no-inline-constructor-bodies"
+		claim:         "contract slice manifests reference repo-local constructors and do not embed constructor bodies"
+		negativeCheck: "inlineConstructorDefinitionAccepted"
+		proofKey:      "inlineConstructorDefinitionAccepted"
+		refusal:       "constructor bodies remain under contracts/meta"
+	}
+	primitiveEmptyInventoryAccepted: #ContractAssertion & {
+		id:            "meta.primitive.requires-nonempty-field-inventory"
+		claim:         "primitive constructors require non-empty requiredFields"
+		negativeCheck: "primitiveEmptyInventoryAccepted"
+		proofKey:      "primitiveEmptyInventoryAccepted"
+		refusal:       "empty primitive inventory is inadmissible"
+	}
+	observedEmptyInventoryAccepted: #ContractAssertion & {
+		id:            "meta.observed.requires-nonempty-fact-inventory"
+		claim:         "observed-surface constructors require non-empty factFields"
+		negativeCheck: "observedEmptyInventoryAccepted"
+		proofKey:      "observedEmptyInventoryAccepted"
+		refusal:       "empty observed inventory is inadmissible"
+	}
+	admissibleMissingObservedAccepted: #ContractAssertion & {
+		id:            "meta.admissible.requires-observed-surface-reference"
+		claim:         "admissible surfaces must bind an observed surface"
+		negativeCheck: "admissibleMissingObservedAccepted"
+		proofKey:      "admissibleMissingObservedAccepted"
+		refusal:       "missing observed surface reference is inadmissible"
+	}
+	predicateMissingObservedAccepted: #ContractAssertion & {
+		id:            "meta.predicate.requires-observed-surface-reference"
+		claim:         "predicate sets must bind observed and admissible surfaces"
+		negativeCheck: "predicateMissingObservedAccepted"
+		proofKey:      "predicateMissingObservedAccepted"
+		refusal:       "missing observed surface reference is inadmissible"
+	}
+	promotionWithoutPredicatesAccepted: #ContractAssertion & {
+		id:            "meta.promotion.requires-control-predicates"
+		claim:         "promotion candidates require non-empty control predicates"
+		negativeCheck: "promotionWithoutPredicatesAccepted"
+		proofKey:      "promotionWithoutPredicatesAccepted"
+		refusal:       "promotion without predicates is inadmissible"
+	}
+	promotionWithoutEvidenceAccepted: #ContractAssertion & {
+		id:            "meta.promotion.requires-admissibility-evidence"
+		claim:         "promotion candidates require non-empty admissibility evidence"
+		negativeCheck: "promotionWithoutEvidenceAccepted"
+		proofKey:      "promotionWithoutEvidenceAccepted"
+		refusal:       "promotion without evidence is inadmissible"
+	}
+	surfaceSetEmptyInventoryAccepted: #ContractAssertion & {
+		id:            "meta.surface-set.requires-nonempty-inventories"
+		claim:         "surface sets require non-empty admissible, observed, candidate, fixture, check, and export inventories"
+		negativeCheck: "surfaceSetEmptyInventoryAccepted"
+		proofKey:      "surfaceSetEmptyInventoryAccepted"
+		refusal:       "empty surface set inventory is inadmissible"
+	}
+	negativeFixtureInvalidFlagAccepted: #ContractAssertion & {
+		id:            "meta.negative-fixture.rejects-invalidity-flags"
+		claim:         "negative fixtures use structural bottom, not invalidity flags"
+		negativeCheck: "negativeFixtureInvalidFlagAccepted"
+		proofKey:      "negativeFixtureInvalidFlagAccepted"
+		refusal:       "invalidity flag cannot substitute for structural conflict"
+	}
+	bottomPlanMissingCheckSurfaceAccepted: #ContractAssertion & {
+		id:            "meta.bottom-plan.requires-check-surface"
+		claim:         "bottom-check plans bind an explicit check surface"
+		negativeCheck: "bottomPlanMissingCheckSurfaceAccepted"
+		proofKey:      "bottomPlanMissingCheckSurfaceAccepted"
+		refusal:       "missing check surface is inadmissible"
+	}
+	bottomProofTargetTopAccepted: #ContractAssertion & {
+		id:            "meta.bottom-proof.rejects-top-targets"
+		claim:         "bottom-check proofs require concrete adapter-bound targets"
+		negativeCheck: "bottomProofTargetTopAccepted"
+		proofKey:      "bottomProofTargetTopAccepted"
+		refusal:       "top target cannot prove bottom"
+	}
+	bottomProofInputTopAccepted: #ContractAssertion & {
+		id:            "meta.bottom-proof.rejects-top-inputs"
+		claim:         "bottom-check proofs require concrete proof inputs"
+		negativeCheck: "bottomProofInputTopAccepted"
+		proofKey:      "bottomProofInputTopAccepted"
+		refusal:       "top input cannot prove bottom"
+	}
+	validationMissingCheckSurfaceAccepted: #ContractAssertion & {
+		id:            "meta.validation-plan.requires-check-surface"
+		claim:         "validation plans bind an explicit check surface"
+		negativeCheck: "validationMissingCheckSurfaceAccepted"
+		proofKey:      "validationMissingCheckSurfaceAccepted"
+		refusal:       "validation without a check surface is inadmissible"
+	}
+	completionWithoutEvidenceAccepted: #ContractAssertion & {
+		id:            "meta.completion-report.requires-evidence"
+		claim:         "completion reports require evidence"
+		negativeCheck: "completionWithoutEvidenceAccepted"
+		proofKey:      "completionWithoutEvidenceAccepted"
+		refusal:       "completion without evidence is inadmissible"
+	}
+	generatedAuthorityAccepted: #ContractAssertion & {
+		id:            "meta.observed.generated-artifacts-are-evidence-only"
+		claim:         "generated artifacts remain evidence and cannot become observed authority"
+		negativeCheck: "generatedAuthorityAccepted"
+		proofKey:      "generatedAuthorityAccepted"
+		refusal:       "generated authority is inadmissible"
+	}
+	manifestExecutableProofObjectAccepted: #ContractAssertion & {
+		id:            "meta.manifest.executable-proofs-live-in-check-packages"
+		claim:         "manifest packages carry plans; executable proof objects live in check packages"
+		negativeCheck: "manifestExecutableProofObjectAccepted"
+		proofKey:      "manifestExecutableProofObjectAccepted"
+		refusal:       "manifest executable proof object is inadmissible"
+	}
+	evalAuthorityAccepted: #ContractAssertion & {
+		id:            "meta.eval.evidence-summary-not-authority"
+		claim:         "eval reports summarize evidence and do not become authority"
+		negativeCheck: "evalAuthorityAccepted"
+		proofKey:      "evalAuthorityAccepted"
+		refusal:       "eval authority is inadmissible"
+	}
+	contractGeneratorMissingOutputAccepted: #ContractAssertion & {
+		id:            "meta.generator.requires-output-inventory"
+		claim:         "contract generators declare generated output paths"
+		negativeCheck: "contractGeneratorMissingOutputAccepted"
+		proofKey:      "contractGeneratorMissingOutputAccepted"
+		refusal:       "generator without output inventory is inadmissible"
+	}
+	contractValidatorAbsoluteTargetAccepted: #ContractAssertion & {
+		id:            "meta.validator.rejects-absolute-targets"
+		claim:         "contract validators use repo-relative targets"
+		negativeCheck: "contractValidatorAbsoluteTargetAccepted"
+		proofKey:      "contractValidatorAbsoluteTargetAccepted"
+		refusal:       "absolute target is inadmissible"
+	}
+	contractValidatorParentTraversalCommandAccepted: #ContractAssertion & {
+		id:            "meta.validator.rejects-parent-traversal-commands"
+		claim:         "contract validator commands cannot escape by parent traversal"
+		negativeCheck: "contractValidatorParentTraversalCommandAccepted"
+		proofKey:      "contractValidatorParentTraversalCommandAccepted"
+		refusal:       "parent traversal command is inadmissible"
+	}
+	contractValidatorExternalLookupCommandAccepted: #ContractAssertion & {
+		id:            "meta.validator.rejects-external-lookup-authority"
+		claim:         "contract validator commands cannot encode external lookup authority"
+		negativeCheck: "contractValidatorExternalLookupCommandAccepted"
+		proofKey:      "contractValidatorExternalLookupCommandAccepted"
+		refusal:       "external lookup authority is inadmissible"
+	}
+	contractValidatorStaleLocalCheckAccepted: #ContractAssertion & {
+		id:            "meta.validator.rejects-stale-local-checks"
+		claim:         "contract validators cannot reference stale local check paths"
+		negativeCheck: "contractValidatorStaleLocalCheckAccepted"
+		proofKey:      "contractValidatorStaleLocalCheckAccepted"
+		refusal:       "stale local check reference is inadmissible"
+	}
+	generatedComplianceAuthorityAccepted: #ContractAssertion & {
+		id:            "meta.generated-compliance.evidence-only"
+		claim:         "generated compliance artifacts remain evidence only"
+		negativeCheck: "generatedComplianceAuthorityAccepted"
+		proofKey:      "generatedComplianceAuthorityAccepted"
+		refusal:       "generated compliance authority is inadmissible"
+	}
+}
+
+assertionGeneratedCheckManifest: close({
+	kind: "assertion-generated-check-manifest"
+	checks: [
+		for _, assertion in contractAssertions {
+			assertionID:   assertion.id
+			negativeCheck: assertion.negativeCheck
+			proofKey:      assertion.proofKey
+			refusal:       assertion.refusal
+			expected:      "bottom"
+		},
+	]
+})
+
 _negativeBottomChecks: {
+	for _, assertion in contractAssertions {
+		"\(assertion.negativeCheck)": _assertionProofs[assertion.proofKey]
+	}
+}
+
+_assertionProofs: {
 	stringifiedBottomCheckAccepted:
 		_negativeFixtures.stringifiedBottomCheckAccepted.out.input & #ConstructorManifestCandidate
 
@@ -260,7 +465,7 @@ _malformedConstructorCalls: {
 		kind:    "contract-generator"
 		id:      "badGenerator"
 		name:    "badGenerator"
-		command: "contracts/meta/scripts/scaffold-contract-slice"
+		command: "just scaffold-contract-slice"
 		inputs: ["slice-id"]
 		outputs: []
 		invariants: ["bad generator omits required outputs"]
