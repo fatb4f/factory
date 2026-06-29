@@ -1,14 +1,14 @@
 # Agent Context Resolver Seed
 
 This directory is a self-contained seed for importing the agent-context
-resolver authority chain into `contract.cuemod` with sparse checkout.
+resolver authority chain into `manifest.cuemod` with sparse checkout.
 
 The authority flow is:
 
 ```text
-contract/registry.cue
+contract/manifest.cue
   -> generated/registry.index.json
-  -> contract/projection.cue
+  -> contract/manifest.cue
   -> generated/fragment_inventory.json
   -> turnStart producer
   -> generated/turn_start_fragments.json

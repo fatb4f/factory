@@ -25,7 +25,7 @@ This plugin is a generated, read-only code-intelligence bundle for dotfiles work
 
 ## CUE workflow
 
-Use `generated/lsp/cue-lsp.json` for editor/server configuration and `contracts/code-intel/checks.cue` for local bundle boundary checks.
+Use `generated/lsp/cue-lsp.json` for editor/server configuration and `contracts/code-intel/manifest.cue` for local bundle boundary checks.
 
 ## Validation
 

@@ -22,7 +22,7 @@ Use repo-local CUE contract slices as the canonical workflow reference. Do not c
 Contract boundary:
 
 - A repo-local `manifest.cue` defines the materialized contract slice.
-- A repo-local `checks/checks.cue` contains executable negative bottom-check proofs.
+- A repo-local `checks/manifest.cue` contains executable negative bottom-check proofs.
 - `contracts/plugin-bundle/agent-context-resolver/src/*implementation_slice*` owns the resolver-local materializer, eval projection, runner plan, feedback shape, and runner-result classification.
 - `contracts/meta` is constructor authority.
 - Shell, generated evidence, and adapter output are evidence only.
