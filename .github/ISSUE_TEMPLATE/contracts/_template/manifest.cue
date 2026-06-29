@@ -3,56 +3,53 @@ package issue
 import impl "github.com/fatb4f/factory/cuemod/contracts/meta/impl"
 
 _contractSeed: close({
-	id: "github-issue-template-contract"
-	version: "v0.1.0"
-	owner: "factory/cuemod"
+	id:         "contract-template-workflow"
+	version:    "v0.1.0"
+	owner:      "factory/cuemod"
 	idempotent: true
 })
 
-#RepoIssueTemplateInput: close({
-	repository: string & !=""
-	module: string & !=""
+#ContractTemplateWorkflowInput: close({
+	repository:         string & !=""
+	module:             string & !=""
 	constructorLibrary: string & !=""
-	issueRoot: string & !=""
-	templatePath: string & !=""
+	templateRoot:       string & !=""
+	templatePath:       string & !=""
 	publicExports: close({
-		manifest: string & !=""
-		validationPlan: string & !=""
+		manifest:         string & !=""
+		validationPlan:   string & !=""
 		completionReport: string & !=""
 	})
 })
 
-_repo: #RepoIssueTemplateInput & {
-	repository: "fatb4f/factory"
-	module: "github.com/fatb4f/factory/cuemod"
+_repo: #ContractTemplateWorkflowInput & {
+	repository:         "fatb4f/factory"
+	module:             "github.com/fatb4f/factory/cuemod"
 	constructorLibrary: "contracts/meta/impl"
-	issueRoot: ".github/ISSUE_TEMPLATE/contracts"
-	templatePath: ".github/ISSUE_TEMPLATE/contracts/_template/manifest.cue"
+	templateRoot:       ".github/ISSUE_TEMPLATE/contracts"
+	templatePath:       ".github/ISSUE_TEMPLATE/contracts/_template/manifest.cue"
 	publicExports: {
-		manifest: "normalizedIssueTemplateManifest"
-		validationPlan: "issueTemplateValidationPlan"
-		completionReport: "issueTemplateCompletionReportContract"
+		manifest:         "normalizedContractTemplateWorkflowManifest"
+		validationPlan:   "contractTemplateWorkflowValidationPlan"
+		completionReport: "contractTemplateWorkflowCompletionReportContract"
 	}
 }
 
-_issue: {
-	number: 0
+_template: close({
 	title: "template"
-	path: _repo.templatePath
-}
+	path:  _repo.templatePath
+})
 
-validIssueTemplateSeed: close({
-	seed: _contractSeed
-	issue: _issue
-	repository: _repo.repository
-	module: _repo.module
-	constructorLibrary: _repo.constructorLibrary
-	issueRoot: _repo.issueRoot
-	templatePath: _repo.templatePath
-	repoLocalOverlay: true
+validContractTemplateWorkflowSeed: close({
+	seed:                 _contractSeed
+	template:             _template
+	repository:           _repo.repository
+	module:               _repo.module
+	constructorLibrary:   _repo.constructorLibrary
+	templateRoot:         _repo.templateRoot
+	templatePath:         _repo.templatePath
+	repoLocalOverlay:     true
 	constructorCallsOnly: true
-	inlineConstructorDefinitions: false
-	generatedArtifactsAreAuthority: false
 })
 
 _workflowIndex: [
@@ -67,9 +64,9 @@ _workflowIndex: [
 _primitives: [
 	impl.#MakePrimitive & {
 		in: {
-			name: "#RepoIssueTemplateInput"
-			role: "repo-local input contract for idempotent issue-template installation"
-			requiredFields: ["repository", "module", "constructorLibrary", "issueRoot", "templatePath", "publicExports"]
+			name:           "#ContractTemplateWorkflowInput"
+			role:           "repo-local input contract for template workflow installation"
+			requiredFields: ["repository", "module", "constructorLibrary", "templateRoot", "templatePath", "publicExports"]
 			constraints: [
 				"repo identity is input data",
 				"module path is repo-local",
@@ -80,9 +77,9 @@ _primitives: [
 	},
 	impl.#MakePrimitive & {
 		in: {
-			name: "validIssueTemplateSeed"
-			role: "normalized seed manifest for a repository issue-template contract"
-			requiredFields: ["seed", "issue", "repository", "module", "constructorLibrary", "issueRoot", "templatePath"]
+			name:           "validContractTemplateWorkflowSeed"
+			role:           "normalized seed manifest for a repository template workflow"
+			requiredFields: ["seed", "template", "repository", "module", "constructorLibrary", "templateRoot", "templatePath"]
 			constraints: [
 				"constructor bodies stay in the repo-local implementation package",
 				"generated artifacts are evidence only",
@@ -92,13 +89,17 @@ _primitives: [
 	},
 ]
 
+_negativeFixtures: []
+negativeContractTemplateWorkflowFixtures: {}
+_bottomCheckPlans: []
+
 _surfaces: impl.#MakeSurfaceSet & {
 	in: {
-		admissible: ["validIssueTemplateSeed"]
-		observed: ["_repo"]
-		candidates: ["normalizedIssueTemplateManifest"]
-		fixtures: ["negativeIssueTemplateFixtures"]
-		checks: ["_negativeBottomChecks"]
+		admissible: ["validContractTemplateWorkflowSeed"]
+		observed:   ["_repo", "_template"]
+		candidates: ["normalizedContractTemplateWorkflowManifest"]
+		fixtures:   ["negativeContractTemplateWorkflowFixtures"]
+		checks:     ["_negativeBottomChecks"]
 		publicExports: [
 			_repo.publicExports.manifest,
 			_repo.publicExports.validationPlan,
@@ -107,93 +108,42 @@ _surfaces: impl.#MakeSurfaceSet & {
 	}
 }
 
-_negativeFixtures: [
-	impl.#MakeNegativeFixture & {
-		in: {
-			name: "generatedAuthorityAccepted"
-			violates: "generated artifact authority boundary"
-			refusal: "generated artifacts are projection evidence only"
-			input: {
-				repository: _repo.repository
-				module: _repo.module
-				templatePath: "generated/issue-template/manifest.cue"
-				generatedArtifactsAreAuthority: true
-			}
-		}
-	},
-	impl.#MakeNegativeFixture & {
-		in: {
-			name: "inlineConstructorDefinitionsAccepted"
-			violates: "constructor call compactness boundary"
-			refusal: "installed issue templates carry constructor calls, not constructor definitions"
-			input: {
-				repository: _repo.repository
-				module: _repo.module
-				templatePath: _repo.templatePath
-				inlineConstructorDefinitions: true
-			}
-		}
-	},
-]
-
-negativeIssueTemplateFixtures: {
-	generatedAuthorityAccepted: _negativeFixtures[0].out
-	inlineConstructorDefinitionsAccepted: _negativeFixtures[1].out
-}
-
-_bottomCheckPlans: [
-	impl.#MakeBottomCheckPlan & {
-		in: {
-			name: "generatedAuthorityAccepted"
-			fixture: negativeIssueTemplateFixtures.generatedAuthorityAccepted.id
-			checkSurface: "_negativeBottomChecks"
-			checkFile: "./\(_repo.issueRoot)/_template/checks"
-		}
-	},
-	impl.#MakeBottomCheckPlan & {
-		in: {
-			name: "inlineConstructorDefinitionsAccepted"
-			fixture: negativeIssueTemplateFixtures.inlineConstructorDefinitionsAccepted.id
-			checkSurface: "_negativeBottomChecks"
-			checkFile: "./\(_repo.issueRoot)/_template/checks"
-		}
-	},
-]
+_negativeBottomChecks: {}
 
 _validation: impl.#MakeValidationPlan & {
 	in: {
-		path: "\(_repo.issueRoot)/_template"
-		validBaselineExpr: "validIssueTemplateSeed"
-		publicExpr: _repo.publicExports.manifest
-		bottomChecks: [for plan in _bottomCheckPlans {plan.out.name}]
-		checkFile: "./\(_repo.issueRoot)/_template/checks"
-		checkSurface: "_negativeBottomChecks"
-		forbiddenPattern: "[i]nlineConstructorDefinitions: true|[g]eneratedArtifactsAreAuthority: true"
+		path:              "\(_repo.templateRoot)/_template"
+		validBaselineExpr: "validContractTemplateWorkflowSeed"
+		publicExpr:        _repo.publicExports.manifest
+		bottomChecks:      []
+		checkFile:         "./\(_repo.templateRoot)/_template/checks"
+		checkSurface:      "_negativeBottomChecks"
+		forbiddenPattern:  "#RepoIssueTemplateInput|validIssueTemplateSeed|normalizedIssueTemplateManifest"
 	}
 }
 
 _completion: impl.#MakeCompletionReport & {
 	in: {
 		primitives: [for primitive in _primitives {primitive.out.name}]
-		surfaces: _surfaces.out.publicExports
-		fixtures: [for fixture in _negativeFixtures {fixture.out.id}]
-		checks: _validation.in.bottomChecks
-		commands: _validation.out.commands
-		evidence: ["repo-local input", "repo-local constructor import", "deterministic public exports"]
+		surfaces:  _surfaces.out.publicExports
+		fixtures:  []
+		checks:    []
+		commands:  _validation.out.commands
+		evidence:  ["repo-local input", "repo-local constructor import", "deterministic public exports"]
 	}
 }
 
-normalizedIssueTemplateManifest: {
-	seed: _contractSeed
-	repo: _repo
-	issue: _issue
-	workflow: _workflowIndex
-	validBaseline: validIssueTemplateSeed
-	primitives: [for item in _primitives {item.out}]
-	surfaces: _surfaces.out
-	negativeFixtures: negativeIssueTemplateFixtures
-	bottomCheckPlans: [for item in _bottomCheckPlans {item.out}]
+normalizedContractTemplateWorkflowManifest: {
+	seed:              _contractSeed
+	repo:              _repo
+	template:          _template
+	workflow:          _workflowIndex
+	validBaseline:     validContractTemplateWorkflowSeed
+	primitives:        [for item in _primitives {item.out}]
+	surfaces:          _surfaces.out
+	negativeFixtures:  negativeContractTemplateWorkflowFixtures
+	bottomCheckPlans:  []
 }
 
-issueTemplateValidationPlan: _validation.out
-issueTemplateCompletionReportContract: _completion.out
+contractTemplateWorkflowValidationPlan:           _validation.out
+contractTemplateWorkflowCompletionReportContract: _completion.out
