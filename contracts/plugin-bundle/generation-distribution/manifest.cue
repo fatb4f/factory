@@ -325,3 +325,4 @@ pluginBundleGenerationDistributionValidationPlan:           _validation.out
 pluginBundleGenerationDistributionCompletionReportContract: _completion.out
 normalizedPluginBundleGenerationDistributionAuthority:      normalizedPluginBundleGenerationDistributionManifest
 pluginBundleMaterializationPlan:                            pluginBundleGenerationDistributionPlan
+pluginBundleGenerationDistributionAuthorityPath:            "contracts/plugin-bundle/generation-distribution/manifest.cue"
