@@ -2,6 +2,41 @@
 set -eu
 
 contract_root=$(CDPATH= cd -- "$(dirname "$0")/.." && pwd -P)
-repo_root=$(CDPATH= cd -- "$contract_root/../.." && pwd -P)
+repo_root=$(CDPATH= cd -- "$contract_root/../../.." && pwd -P)
+cd "$repo_root"
 
-"$repo_root/test/agent-context-hook.sh"
+resolver=contracts/agent-context-resolver/src/scripts/resolve-agent-context
+route_inventory=contracts/agent-context-resolver/src/generated/route_inventory.json
+
+match_packet=$(
+	"$resolver" --prompt "Update the resolver hook without allowing MCP tool output to become context."
+)
+printf '%s\n' "$match_packet" | jq -e '
+	.schema == "agent.route-controller-packet.v1" and
+	(.selectedFragments | index("agent-context-resolver.authority") != null) and
+	(.controller.routes | length > 0)
+' >/dev/null
+
+no_match_packet=$(
+	"$resolver" --prompt "banana-only unrelated no-route surface"
+)
+[ "$(printf '%s\n' "$no_match_packet" | jq -c .)" = "{}" ]
+
+jq -er '
+	[.routes[].task.commands[]?] as $commands |
+	($commands | length) > 0 and
+	all($commands[];
+		(startswith(".codex/plugins/") | not) and
+		(startswith("generated/checks/") | not)
+	)
+' "$route_inventory" >/dev/null
+
+while IFS= read -r command_path; do
+	[ -n "$command_path" ] || continue
+	[ -e "$command_path" ] || {
+		printf 'missing projected command: %s\n' "$command_path" >&2
+		exit 1
+	}
+done <<EOF
+$(jq -r '.routes[].task.commands[]?' "$route_inventory")
+EOF
