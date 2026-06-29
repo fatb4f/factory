@@ -52,7 +52,7 @@ materializedBundleShapeValidationPlan: close({
 	path:     "contracts/plugin-bundle/code-intel/src"
 	positive: _materializedBundleShape.validation.commands
 	negative: [
-		"! cue export ./contracts/issues/81/checks -e _negativeBottomChecks.codeIntelShapeDrift",
+		"! cue export ./contracts/plugin-bundle/template -e _negativeBottomChecks.staleIssue81CheckReferenceAccepted",
 	]
 })
 

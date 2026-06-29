@@ -53,7 +53,7 @@ materializedBundleShapeValidationPlan: close({
 	path:     "contracts/plugin-bundle/agent-context-resolver/src"
 	positive: _materializedBundleShape.validation.commands
 	negative: [
-		"! cue export ./contracts/issues/81/checks -e _negativeBottomChecks.resolverShapeDrift",
+		"! cue export ./contracts/plugin-bundle/template -e _negativeBottomChecks.staleIssue81CheckReferenceAccepted",
 	]
 })
 
