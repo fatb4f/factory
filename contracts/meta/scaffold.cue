@@ -1,7 +1,7 @@
 package meta
 
 #RelativeContractPath: string & !="" & !~"^/" & !~"(^|/)\\.\\.(/|$)"
-#ValidatorCommand:     string & !="" & !~"(^|\\s)/" & !~"(^|\\s|/)\\.\\.(/|\\s|$)" & !~"contracts/issues/[1-9][0-9]*/checks" & !~"external lookup authority"
+#ValidatorCommand:     string & !="" & !~"(^|\\s)/" & !~"(^|\\s|/)\\.\\.(/|\\s|$)" & !~"external lookup authority"
 
 #ContractGenerator: close({
 	kind:    "contract-generator"
@@ -24,7 +24,7 @@ package meta
 	negativeChecks: [...string & !=""] & [_, ...]
 	forbiddenPattern: string & !=""
 	rejects: [...string & !=""] & [_, ...]
-	staleIssueLocalChecks?:   false
+	staleLocalChecks?:        false
 	externalLookupAuthority?: false
 	localOverrideEscapes?:    false
 })
@@ -53,7 +53,6 @@ contractScaffoldGenerator: #ContractGenerator & {
 	name:    "contractScaffoldGenerator"
 	command: "contracts/meta/scripts/scaffold-contract-slice"
 	inputs: [
-		"issue",
 		"slice-id",
 		"title",
 		"out",
@@ -77,18 +76,17 @@ contractScaffoldValidator: #ContractValidator & {
 	kind:       "contract-validator"
 	id:         "contractScaffoldValidator"
 	name:       "contractScaffoldValidator"
-	target:     "contracts/issues/<issue-number>"
-	targetPath: "contracts/issues/<issue-number>"
+	target:     "<contract-slice-path>"
+	targetPath: "<contract-slice-path>"
 	commands: [
-		"cue vet ./contracts/issues/<issue-number>",
-		"cue export ./contracts/issues/<issue-number> -e normalizedIssueManifest",
-		"cue export ./contracts/issues/<issue-number> -e issueValidationPlan",
-		"cue export ./contracts/issues/<issue-number> -e issueCompletionReportContract",
-		"! cue export ./contracts/issues/<issue-number>/checks -e '_negativeBottomChecks.<name>'",
+		"cue vet ./<contract-slice-path>",
+		"cue export ./<contract-slice-path> -e contractSliceManifest",
+		"cue export ./<contract-slice-path> -e contractSliceValidationPlan",
+		"cue export ./<contract-slice-path> -e contractSliceCompletionReport",
+		"! cue export ./<contract-slice-path>/checks -e '_negativeBottomChecks.<name>'",
 	]
 	negativeChecks: [
 		"generatedAuthorityAccepted",
-		"staleIssueLocalCheckAccepted",
 		"externalLookupAccepted",
 		"absolutePathAccepted",
 		"parentTraversalAccepted",
@@ -96,7 +94,6 @@ contractScaffoldValidator: #ContractValidator & {
 	forbiddenPattern: _defaultForbiddenPattern
 	rejects: [
 		"generated files treated as contract authority",
-		"stale issue-local check references",
 		"external lookup authority",
 		"absolute generated scaffold paths",
 		"parent traversal in generated scaffold paths",
@@ -109,9 +106,9 @@ generatedContractCompliance: #GeneratedContractCompliance & {
 	generator: contractScaffoldGenerator
 	validator: contractScaffoldValidator
 	requiredExports: [
-		"normalizedIssueManifest",
-		"issueValidationPlan",
-		"issueCompletionReportContract",
+		"contractSliceManifest",
+		"contractSliceValidationPlan",
+		"contractSliceCompletionReport",
 	]
 	requiredConstructors: [
 		"#MakePrimitive",

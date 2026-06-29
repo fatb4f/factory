@@ -30,7 +30,7 @@ pluginBundleScaffoldValidator: impl.#ContractValidator & {
 	forbiddenPattern: "^/|\\.\\./|external lookup authority"
 	rejects: [
 		"generated files treated as contract authority",
-		"stale issue-local checks",
+		"stale local checks",
 		"external lookup authority",
 		"absolute generated paths",
 		"parent traversal paths",

@@ -95,8 +95,8 @@ constructorLibraryBaseline: close({
 constructorManifestBaseline: close({
 	kind:           "constructor-manifest-baseline"
 	authority:      constructorCatalog
-	manifestPath:   "contracts/issues/<issue-number>/manifest.cue"
-	normalizedPath: "contracts/issues/<issue-number>/normalized.cue"
+	manifestPath:   "<contract-slice-path>/manifest.cue"
+	normalizedPath: "<contract-slice-path>/normalized.cue"
 	workflow: [
 		"#MakePrimitive",
 		"#MakeObservedSurface",
@@ -147,7 +147,7 @@ constructorValidationPlanBaseline: (_baselineValidation & {
 			"evalAuthorityAccepted",
 			"contractGeneratorMissingOutputAccepted",
 			"contractValidatorAbsoluteTargetAccepted",
-			"contractValidatorStaleIssueLocalCheckAccepted",
+			"contractValidatorStaleLocalCheckAccepted",
 			"generatedComplianceAuthorityAccepted",
 		]
 		checkFile:        "./contracts/meta/checks"
@@ -199,7 +199,7 @@ constructorCompletionReportBaseline: (_baselineCompletion & {
 			"negative.evalAuthorityAccepted",
 			"malformed.contractGeneratorMissingOutputAccepted",
 			"malformed.contractValidatorAbsoluteTargetAccepted",
-			"malformed.contractValidatorStaleIssueLocalCheckAccepted",
+			"malformed.contractValidatorStaleLocalCheckAccepted",
 			"negative.generatedComplianceAuthorityAccepted",
 		]
 		checks:   constructorValidationPlanBaseline.commands

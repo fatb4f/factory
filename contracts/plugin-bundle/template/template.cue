@@ -5,10 +5,8 @@ import impl "github.com/fatb4f/factory/contracts/meta"
 #NonEmptyString:       string & !=""
 #RelativeContractPath: string & !="" & !~"^/" & !~"(^|/)\\.\\.(/|$)"
 #RepoPath:             string & !=""
-_issuePathPrefix:      "contracts/issues"
-_issue81Segment:       "81"
-_staleIssue81Path:     "\(_issuePathPrefix)/\(_issue81Segment)"
-#ValidationCommand:    string & !="" & !~"\(_staleIssue81Path)"
+_staleLocalCheckPath:  "contracts/stale/checks"
+#ValidationCommand:    string & !="" & !~"\(_staleLocalCheckPath)"
 
 #PluginBundleCuePackage: close({
 	id:   #NonEmptyString
@@ -123,7 +121,7 @@ pluginBundleTemplateContract: close({
 		"generated artifacts are evidence only",
 		"bundle-local shape overrides are rejected",
 		"relative contract paths reject absolute paths and parent traversal",
-		"validation commands do not reference issue-81-local checks",
+		"validation commands do not reference stale local checks",
 	]
 })
 

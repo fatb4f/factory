@@ -85,7 +85,7 @@ _negativeBottomChecks: {
 	contractValidatorAbsoluteTargetAccepted:         _malformedConstructorCalls.contractValidatorAbsoluteTargetAccepted
 	contractValidatorParentTraversalCommandAccepted: _malformedConstructorCalls.contractValidatorParentTraversalCommandAccepted
 	contractValidatorExternalLookupCommandAccepted:  _malformedConstructorCalls.contractValidatorExternalLookupCommandAccepted
-	contractValidatorStaleIssueLocalCheckAccepted:   _malformedConstructorCalls.contractValidatorStaleIssueLocalCheckAccepted
+	contractValidatorStaleLocalCheckAccepted:        _malformedConstructorCalls.contractValidatorStaleLocalCheckAccepted
 	generatedComplianceAuthorityAccepted:            _malformedConstructorCalls.generatedComplianceAuthorityAccepted
 }
 
@@ -259,7 +259,7 @@ _malformedConstructorCalls: {
 		id:      "badGenerator"
 		name:    "badGenerator"
 		command: "contracts/meta/scripts/scaffold-contract-slice"
-		inputs: ["issue"]
+		inputs: ["slice-id"]
 		outputs: []
 		invariants: ["bad generator omits required outputs"]
 	})
@@ -268,9 +268,9 @@ _malformedConstructorCalls: {
 		kind:       "contract-validator"
 		id:         "badValidator"
 		name:       "badValidator"
-		target:     "/contracts/issues/0"
-		targetPath: "/contracts/issues/0"
-		commands: ["cue vet ./contracts/issues/0"]
+		target:     "/contracts/slices/example"
+		targetPath: "/contracts/slices/example"
+		commands: ["cue vet ./contracts/slices/example"]
 		negativeChecks: ["bad"]
 		forbiddenPattern: impl._defaultForbiddenPattern
 		rejects: ["bad absolute target path"]
@@ -300,17 +300,17 @@ _malformedConstructorCalls: {
 		rejects: ["bad external lookup authority command"]
 	})
 
-	contractValidatorStaleIssueLocalCheckAccepted: (impl.#ContractValidator & {
+	contractValidatorStaleLocalCheckAccepted: (impl.#ContractValidator & {
 		kind:       "contract-validator"
 		id:         "badValidator"
 		name:       "badValidator"
 		target:     "contracts/plugin-bundle/template"
 		targetPath: "contracts/plugin-bundle/template"
-		commands: ["cue export ./contracts/issues/81/checks -e _negativeBottomChecks.bad"]
+		commands: ["cue export ./contracts/slices/stale/checks -e _negativeBottomChecks.bad"]
 		negativeChecks: ["bad"]
 		forbiddenPattern: impl._defaultForbiddenPattern
-		rejects: ["bad stale issue-local check reference"]
-		staleIssueLocalChecks: true
+		rejects: ["bad stale local check reference"]
+		staleLocalChecks: true
 	})
 
 	generatedComplianceAuthorityAccepted: (impl.#GeneratedContractCompliance & {

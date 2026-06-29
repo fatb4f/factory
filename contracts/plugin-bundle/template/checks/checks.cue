@@ -5,9 +5,7 @@ import (
 	tmpl "github.com/fatb4f/factory/contracts/plugin-bundle/template:pluginbundletemplate"
 )
 
-_issuePathPrefix:  "contracts/issues"
-_issue81Segment:   "81"
-_staleIssue81Path: "\(_issuePathPrefix)/\(_issue81Segment)"
+_staleLocalCheckPath: "contracts/stale/checks"
 
 _negativeBottomChecks: {
 	generatedAuthorityAccepted!: (impl.#MakeBottomCheckProof & {
@@ -139,20 +137,20 @@ _negativeBottomChecks: {
 		}
 	}).out.bundleLocalOverrideAccepted
 
-	staleIssue81CheckReferenceAccepted!: (impl.#MakeBottomCheckProof & {
+	staleLocalCheckReferenceAccepted!: (impl.#MakeBottomCheckProof & {
 		in: {
-			name: "staleIssue81CheckReferenceAccepted"
+			name: "staleLocalCheckReferenceAccepted"
 			input: {
-				evidence: "issue-81-local validation references are inadmissible"
-				value: {command: "cue export ./\(_staleIssue81Path)/checks -e _negativeBottomChecks.shapeDrift"}
+				evidence: "stale local validation references are inadmissible"
+				value: {command: "cue export ./\(_staleLocalCheckPath) -e _negativeBottomChecks.shapeDrift"}
 			}
 			target: {
 				name: "#ValidationCommand"
 				contract: {
-					evidence: "template authority rejects stale issue-81 validation references"
+					evidence: "template authority rejects stale local validation references"
 					value: {command: tmpl.#ValidationCommand}
 				}
 			}
 		}
-	}).out.staleIssue81CheckReferenceAccepted
+	}).out.staleLocalCheckReferenceAccepted
 }

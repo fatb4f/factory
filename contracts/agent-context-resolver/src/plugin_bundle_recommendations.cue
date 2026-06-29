@@ -21,11 +21,10 @@ _pluginBundleWorkflowIndex: [for step in _pluginBundleRecommendationWorkflow {
 	instantiateAt: step.instantiateAt
 }]
 
-_pluginBundleRecommendationIssue: {
-	number:            46
+_pluginBundleRecommendationSlice: {
 	title:             "agent-context-resolver: implement CUE-authored route matching and dependency closure"
 	path:              "contracts/plugin-bundle/agent-context-resolver/src/plugin_bundle_recommendations.cue"
-	sourceTemplateRef: "contracts/issues/example/manifest.cue"
+	sourceTemplateRef: "contracts/meta/scripts/scaffold-contract-slice"
 }
 
 _pluginBundleTargetPaths: [

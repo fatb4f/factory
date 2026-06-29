@@ -3,21 +3,21 @@ package codeintel
 #RecommendationTargetPath: #ContainedPath
 
 #CodeIntelRecommendation: close({
-	id: #NonEmptyString
+	id:       #NonEmptyString
 	priority: "high" | "medium" | "low"
 	targets: [...#RecommendationTargetPath] & [_, ...]
-	observed: #NonEmptyString
+	observed:       #NonEmptyString
 	recommendation: #NonEmptyString
 	validation: [...#NonEmptyString] & [_, ...]
 })
 
 #CodeIntelRecommendationManifest: close({
-	schema: "factory.plugin-bundle.code-intel.recommendations.v1"
+	schema:         "factory.plugin-bundle.code-intel.recommendations.v1"
 	sourceTemplate: #ContainedPath
-	targetRoot: #ContainedPath
+	targetRoot:     #ContainedPath
 	workflow: [...close({
-		order: int & >0
-		id: #NonEmptyString
+		order:         int & >0
+		id:            #NonEmptyString
 		instantiateAt: #NonEmptyString
 	})] & [_, ...]
 	primitives: [...#NonEmptyString] & [_, ...]
@@ -27,7 +27,7 @@ package codeintel
 		evidence: #NonEmptyString
 	})] & [_, ...]
 	predicates: [...close({
-		id: #NonEmptyString
+		id:   #NonEmptyString
 		rule: #NonEmptyString
 	})] & [_, ...]
 	recommendations: [...#CodeIntelRecommendation] & [_, ...]
@@ -35,9 +35,9 @@ package codeintel
 })
 
 codeIntelImplementationRecommendations: #CodeIntelRecommendationManifest & {
-	schema: "factory.plugin-bundle.code-intel.recommendations.v1"
-	sourceTemplate: ".github/dotfiles-manifest-slice/contracts/issues/_template/manifest.cue"
-	targetRoot: "contracts/plugin-bundle/code-intel/src"
+	schema:         "factory.plugin-bundle.code-intel.recommendations.v1"
+	sourceTemplate: "contracts/meta/scripts/scaffold-contract-slice"
+	targetRoot:     "contracts/plugin-bundle/code-intel/src"
 	workflow: [
 		{order: 1, id: "#MakeDotfilesPrimitive", instantiateAt: "primitives"},
 		{order: 2, id: "#MakeObservedSurface", instantiateAt: "observedSurfaces"},
@@ -87,14 +87,14 @@ codeIntelImplementationRecommendations: #CodeIntelRecommendationManifest & {
 	]
 	recommendations: [
 		{
-			id: "align-lua-first-workflow-json"
+			id:       "align-lua-first-workflow-json"
 			priority: "high"
 			targets: [
 				"generated/workflows/lua-first/workflow.json",
 				"contracts/code-intel/lua-first-workflow.cue",
 				"SKILL.md",
 			]
-			observed: "workflow.json uses top-level stages plus boolean authority under the same schema that the CUE contract defines with entrypoints, providers, steps, and structured authority."
+			observed:       "workflow.json uses top-level stages plus boolean authority under the same schema that the CUE contract defines with entrypoints, providers, steps, and structured authority."
 			recommendation: "Generate workflow.json from codeIntelLuaFirstWorkflow, or give the stage-only artifact a separate schema and add a second CUE contract for that shape."
 			validation: [
 				"cue vet ./contracts/code-intel",
@@ -103,12 +103,12 @@ codeIntelImplementationRecommendations: #CodeIntelRecommendationManifest & {
 			]
 		},
 		{
-			id: "replace-negative-bottom-placeholders"
+			id:       "replace-negative-bottom-placeholders"
 			priority: "high"
 			targets: [
 				"contracts/code-intel/checks.cue",
 			]
-			observed: "_negativeBottomChecks uses defaults unioned with _, so forbidden fixture checks can evaluate to _ instead of proving bottom."
+			observed:       "_negativeBottomChecks uses defaults unioned with _, so forbidden fixture checks can evaluate to _ instead of proving bottom."
 			recommendation: "Model each forbidden fixture as an attempted admission into the closed boundary and require the validation plan to run commands that fail for those exports."
 			validation: [
 				"cue vet ./contracts/code-intel",
@@ -121,14 +121,14 @@ codeIntelImplementationRecommendations: #CodeIntelRecommendationManifest & {
 			]
 		},
 		{
-			id: "complete-wezterm-overlay-routing"
+			id:       "complete-wezterm-overlay-routing"
 			priority: "medium"
 			targets: [
 				"generated/workflows/lua-first/workflow.json",
 				"generated/lsp/lua-language-server.json",
 				"contracts/code-intel/lua-first-workflow.cue",
 			]
-			observed: "the workflow load-type-overlays stage omits events.lua and config-builder.lua, although the provider contract includes them."
+			observed:       "the workflow load-type-overlays stage omits events.lua and config-builder.lua, although the provider contract includes them."
 			recommendation: "Keep workflow stage inputs, provider paths, and Lua LSP library paths in lockstep for all WezTerm overlay files."
 			validation: [
 				"cue export ./contracts/code-intel -e codeIntelLuaFirstWorkflow",
@@ -136,14 +136,14 @@ codeIntelImplementationRecommendations: #CodeIntelRecommendationManifest & {
 			]
 		},
 		{
-			id: "add-generated-artifact-schema-gates"
+			id:       "add-generated-artifact-schema-gates"
 			priority: "medium"
 			targets: [
 				"SKILL.md",
 				"contracts/code-intel/lua-first-workflow.cue",
 				"contracts/code-intel/checks.cue",
 			]
-			observed: "the documented validation verifies the CUE package exports but does not verify that materialized generated JSON still conforms to the declared contracts."
+			observed:       "the documented validation verifies the CUE package exports but does not verify that materialized generated JSON still conforms to the declared contracts."
 			recommendation: "Extend validation with targeted generated-artifact gates for workflow JSON, entrypoint JSON, and boundary bottom checks."
 			validation: [
 				"cue vet ./contracts/code-intel",
