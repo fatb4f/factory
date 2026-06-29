@@ -86,6 +86,7 @@ constructorLibraryBaseline: close({
 		"constructorManifestBaseline",
 		"constructorValidationPlanBaseline",
 		"constructorCompletionReportBaseline",
+		"contractScaffoldGenerator",
 	]
 })
 
@@ -166,6 +167,7 @@ constructorCompletionReportBaseline: (_baselineCompletion & {
 			"constructorManifestBaseline",
 			"constructorValidationPlanBaseline",
 			"constructorCompletionReportBaseline",
+			"contractScaffoldGenerator",
 		]
 		fixtures: [
 			"negative.stringifiedBottomCheckAccepted",
