@@ -1,12 +1,12 @@
 name: Contract issue
-description: Submit a factory contract issue as a single CUE issue block.
+description: Submit a factory implementation issue as a single CUE issue block.
 title: "factory: "
 body:
   - type: textarea
     id: issue
     attributes:
       label: CUE issue manifest
-      description: Keep one top-level issue object. Do not add prose outside the CUE block.
+      description: Keep one top-level issue object. Do not add generator metadata, template paths, imports, or prose outside the CUE block.
       render: cue
       value: |
         issue: {
@@ -15,15 +15,6 @@ body:
         	repo:   "fatb4f/factory"
         	number: 0
         	title:  "factory: <title>"
-
-        	template: {
-        		name: "Factory contract issue"
-        		root: ".github/ISSUE_TEMPLATE/contracts"
-        		workflow: ".github/ISSUE_TEMPLATE/contracts/_template"
-        		manifest: ".github/ISSUE_TEMPLATE/contracts/issues/<issue-number>/manifest.cue"
-        		checks: ".github/ISSUE_TEMPLATE/contracts/issues/<issue-number>/checks/bottom.cue"
-        		import: "github.com/fatb4f/factory/contracts/meta/impl"
-        	}
 
         	tracking: {
         		parent: _|_
@@ -94,9 +85,9 @@ body:
 
         	validation: {
         		commands: [
-        			"cue vet <issue-contract-path>",
-        			"cue export <issue-contract-path> -e <normalized-export>",
-        			"! cue export <issue-contract-path>/checks -e '_negativeBottomChecks.<name>'",
+        			"cue vet <contract-surface>",
+        			"cue export <contract-surface> -e <normalized-export>",
+        			"! cue export <contract-surface>/checks -e '_negativeBottomChecks.<name>'",
         		]
         	}
 
