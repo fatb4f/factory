@@ -10,7 +10,7 @@ _issue81Segment:   "81"
 _staleIssue81Path: "\(_issuePathPrefix)/\(_issue81Segment)"
 
 _negativeBottomChecks: {
-	generatedAuthorityAccepted: (impl.#MakeBottomCheckProof & {
+	generatedAuthorityAccepted?: (impl.#MakeBottomCheckProof & {
 		in: {
 			name: "generatedAuthorityAccepted"
 			input: {
@@ -27,7 +27,7 @@ _negativeBottomChecks: {
 		}
 	}).out.generatedAuthorityAccepted
 
-	externalLookupAccepted: (impl.#MakeBottomCheckProof & {
+	externalLookupAccepted?: (impl.#MakeBottomCheckProof & {
 		in: {
 			name: "externalLookupAccepted"
 			input: {
@@ -44,7 +44,7 @@ _negativeBottomChecks: {
 		}
 	}).out.externalLookupAccepted
 
-	absolutePathAccepted: (impl.#MakeBottomCheckProof & {
+	absolutePathAccepted?: (impl.#MakeBottomCheckProof & {
 		in: {
 			name: "absolutePathAccepted"
 			input: {
@@ -61,7 +61,7 @@ _negativeBottomChecks: {
 		}
 	}).out.absolutePathAccepted
 
-	parentTraversalAccepted: (impl.#MakeBottomCheckProof & {
+	parentTraversalAccepted?: (impl.#MakeBottomCheckProof & {
 		in: {
 			name: "parentTraversalAccepted"
 			input: {
@@ -78,7 +78,7 @@ _negativeBottomChecks: {
 		}
 	}).out.parentTraversalAccepted
 
-	missingRequiredPathAccepted: (impl.#MakeBottomCheckProof & {
+	missingRequiredPathAccepted?: (impl.#MakeBottomCheckProof & {
 		in: {
 			name: "missingRequiredPathAccepted"
 			input: {
@@ -99,7 +99,7 @@ _negativeBottomChecks: {
 		}
 	}).out.missingRequiredPathAccepted
 
-	bundleLocalOverrideAccepted: (impl.#MakeBottomCheckProof & {
+	bundleLocalOverrideAccepted?: (impl.#MakeBottomCheckProof & {
 		in: {
 			name: "bundleLocalOverrideAccepted"
 			input: {
@@ -139,7 +139,7 @@ _negativeBottomChecks: {
 		}
 	}).out.bundleLocalOverrideAccepted
 
-	staleIssue81CheckReferenceAccepted: (impl.#MakeBottomCheckProof & {
+	staleIssue81CheckReferenceAccepted?: (impl.#MakeBottomCheckProof & {
 		in: {
 			name: "staleIssue81CheckReferenceAccepted"
 			input: {

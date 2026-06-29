@@ -1,5 +1,7 @@
 package pluginbundletemplate
 
+import impl "github.com/fatb4f/factory/contracts/meta"
+
 #NonEmptyString:       string & !=""
 #RelativeContractPath: string & !="" & !~"^/" & !~"(^|/)\\.\\.(/|$)"
 #RepoPath:             string & !=""
@@ -111,11 +113,40 @@ pluginBundleTemplateContract: close({
 		"#PluginBundleProjectionComponent",
 		"#PluginBundleProviderReachabilityEvidence",
 		"#PluginBundleAuthorityPolicy",
+		"pluginBundleScaffoldGenerator",
+		"pluginBundleScaffoldValidator",
+		"pluginBundleTemplateCompliance",
 	]
 	requirements: [
+		"template validates against contracts/meta generated compliance before its own child surfaces are admitted",
 		"generated artifacts are evidence only",
 		"bundle-local shape overrides are rejected",
 		"relative contract paths reject absolute paths and parent traversal",
 		"validation commands do not reference issue-81-local checks",
 	]
 })
+
+pluginBundleTemplateContractMetaCompliance: impl.#GeneratedContractCompliance & {
+	kind:      "generated-contract-compliance"
+	generator: impl.contractScaffoldGenerator
+	validator: impl.contractScaffoldValidator
+	requiredExports: [
+		"pluginBundleTemplateContract",
+		"pluginBundleScaffoldGenerator",
+		"pluginBundleScaffoldValidator",
+	]
+	requiredConstructors: [
+		"#ContractGenerator",
+		"#ContractValidator",
+		"#GeneratedContractCompliance",
+		"#MakeBottomCheckProof",
+	]
+	requiresBottomCheckProof:       true
+	generatedArtifactsAreAuthority: false
+	evidenceOnlyGeneratedArtifacts: true
+	bindings: {
+		generatorName:   impl.contractScaffoldGenerator.name
+		validatorName:   impl.contractScaffoldValidator.name
+		parentAuthority: "contracts/meta"
+	}
+}

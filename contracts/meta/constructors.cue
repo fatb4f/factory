@@ -11,7 +11,10 @@ package meta
 	"#MakeBottomCheckPlan" |
 	"#MakeBottomCheckProof" |
 	"#MakeValidationPlan" |
-	"#MakeCompletionReport"
+	"#MakeCompletionReport" |
+	"#ContractGenerator" |
+	"#ContractValidator" |
+	"#GeneratedContractCompliance"
 
 #ConstructorCatalogEntry: close({
 	id:      #ConstructorID
@@ -97,6 +100,21 @@ constructorCatalog: #ConstructorCatalog & {
 			file:    "contracts/meta/completion.cue"
 			purpose: "Constrain completion reports into deterministic review evidence."
 		},
+		{
+			id:      "#ContractGenerator"
+			file:    "contracts/meta/scaffold.cue"
+			purpose: "Declare next-layer scaffold generation contracts without making generated files authoritative."
+		},
+		{
+			id:      "#ContractValidator"
+			file:    "contracts/meta/scaffold.cue"
+			purpose: "Declare parent-authority validation contracts for generated scaffold candidates."
+		},
+		{
+			id:      "#GeneratedContractCompliance"
+			file:    "contracts/meta/scaffold.cue"
+			purpose: "Bind one generator and one validator to required exports, constructor use, bottom checks, and evidence-only boundaries."
+		},
 	]
 	invariants: [
 		"Constructor definitions live in the repo-local meta package.",
@@ -108,5 +126,7 @@ constructorCatalog: #ConstructorCatalog & {
 		"Constructor catalog entries identify available constructors; constructorAxis orders their instantiation.",
 		"AuthorityAxis ranks contract, assertions, fixtures, checks, and evals independently of constructor order.",
 		"Go wrappers are deferred to transport and materialization.",
+		"Generator contracts create candidates; validator contracts prove parent-authority compliance.",
+		"Generated artifacts remain evidence only until admitted by repo-local CUE validation.",
 	]
 }

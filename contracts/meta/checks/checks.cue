@@ -81,6 +81,10 @@ _negativeBottomChecks: {
 	generatedAuthorityAccepted:            _malformedConstructorCalls.generatedAuthorityAccepted
 	manifestExecutableProofObjectAccepted: _malformedConstructorCalls.manifestExecutableProofObjectAccepted
 	evalAuthorityAccepted:                 _malformedConstructorCalls.evalAuthorityAccepted
+	contractGeneratorMissingOutputAccepted: _malformedConstructorCalls.contractGeneratorMissingOutputAccepted
+	contractValidatorAbsoluteTargetAccepted: _malformedConstructorCalls.contractValidatorAbsoluteTargetAccepted
+	contractValidatorStaleIssueLocalCheckAccepted: _malformedConstructorCalls.contractValidatorStaleIssueLocalCheckAccepted
+	generatedComplianceAuthorityAccepted: _malformedConstructorCalls.generatedComplianceAuthorityAccepted
 }
 
 _malformedConstructorCalls: {
@@ -247,4 +251,50 @@ _malformedConstructorCalls: {
 		authority: true
 		evidence: ["check evidence"]
 	} & #EvalReportCandidate
+
+	contractGeneratorMissingOutputAccepted: (impl.#ContractGenerator & {
+		kind:    "contract-generator"
+		name:    "badGenerator"
+		command: "contracts/meta/scripts/scaffold-contract-slice"
+		inputs: ["issue"]
+		outputs: []
+		invariants: ["bad generator omits required outputs"]
+	})
+
+	contractValidatorAbsoluteTargetAccepted: (impl.#ContractValidator & {
+		kind:       "contract-validator"
+		name:       "badValidator"
+		targetPath: "/contracts/issues/0"
+		commands: ["cue vet ./contracts/issues/0"]
+		negativeChecks: ["bad"]
+		forbiddenPattern: impl._defaultForbiddenPattern
+		rejects: ["bad absolute target path"]
+	})
+
+	contractValidatorStaleIssueLocalCheckAccepted: (impl.#ContractValidator & {
+		kind:       "contract-validator"
+		name:       "badValidator"
+		targetPath: "contracts/plugin-bundle/template"
+		commands: ["cue export ./contracts/issues/81/checks -e _negativeBottomChecks.bad"]
+		negativeChecks: ["bad"]
+		forbiddenPattern: impl._defaultForbiddenPattern
+		rejects: ["bad stale issue-local check reference"]
+		staleIssueLocalChecks: true
+	})
+
+	generatedComplianceAuthorityAccepted: (impl.#GeneratedContractCompliance & {
+		kind:      "generated-contract-compliance"
+		generator: impl.contractScaffoldGenerator
+		validator: impl.contractScaffoldValidator
+		requiredExports: ["normalizedIssueManifest"]
+		requiredConstructors: ["#MakePrimitive", "#MakeBottomCheckProof"]
+		requiresBottomCheckProof: true
+		generatedArtifactsAreAuthority: true
+		evidenceOnlyGeneratedArtifacts: true
+		bindings: {
+			generatorName:   "contractScaffoldGenerator"
+			validatorName:   "contractScaffoldValidator"
+			parentAuthority: "contracts/meta"
+		}
+	})
 }

@@ -87,6 +87,8 @@ constructorLibraryBaseline: close({
 		"constructorValidationPlanBaseline",
 		"constructorCompletionReportBaseline",
 		"contractScaffoldGenerator",
+		"contractScaffoldValidator",
+		"generatedContractCompliance",
 	]
 })
 
@@ -143,6 +145,10 @@ constructorValidationPlanBaseline: (_baselineValidation & {
 			"generatedAuthorityAccepted",
 			"manifestExecutableProofObjectAccepted",
 			"evalAuthorityAccepted",
+			"contractGeneratorMissingOutputAccepted",
+			"contractValidatorAbsoluteTargetAccepted",
+			"contractValidatorStaleIssueLocalCheckAccepted",
+			"generatedComplianceAuthorityAccepted",
 		]
 		checkFile:        "./contracts/meta/checks"
 		checkSurface:     "_negativeBottomChecks"
@@ -168,6 +174,8 @@ constructorCompletionReportBaseline: (_baselineCompletion & {
 			"constructorValidationPlanBaseline",
 			"constructorCompletionReportBaseline",
 			"contractScaffoldGenerator",
+			"contractScaffoldValidator",
+			"generatedContractCompliance",
 		]
 		fixtures: [
 			"negative.stringifiedBottomCheckAccepted",
@@ -189,6 +197,10 @@ constructorCompletionReportBaseline: (_baselineCompletion & {
 			"negative.generatedAuthorityAccepted",
 			"negative.manifestExecutableProofObjectAccepted",
 			"negative.evalAuthorityAccepted",
+			"malformed.contractGeneratorMissingOutputAccepted",
+			"malformed.contractValidatorAbsoluteTargetAccepted",
+			"malformed.contractValidatorStaleIssueLocalCheckAccepted",
+			"negative.generatedComplianceAuthorityAccepted",
 		]
 		checks:   constructorValidationPlanBaseline.commands
 		commands: constructorValidationPlanBaseline.commands
