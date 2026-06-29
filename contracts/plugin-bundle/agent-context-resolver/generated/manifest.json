@@ -1,0 +1,12 @@
+{
+  "authority": false,
+  "bundleID": "agent-context-resolver",
+  "distributionRoot": ".codex/plugins/agent-context-resolver",
+  "generated": true,
+  "generatedRoot": "contracts/plugin-bundle/agent-context-resolver/generated",
+  "runtimeRequiresContractCuemodLookup": false,
+  "runtimeRequiresExternalFactoryLookup": false,
+  "schema": "factory.plugin-bundle.runtime-manifest.v1",
+  "sourceRoot": "contracts/plugin-bundle/agent-context-resolver/src",
+  "targetRepo": "fatb4f/factory"
+}

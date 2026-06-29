@@ -1,0 +1,29 @@
+{
+  "authority": false,
+  "bundleID": "agent-context-resolver",
+  "contentIdentity": {
+    "SKILL.md": "sha256:04eb67faf4d3815e679986bcfb70b66b2165b4bda3b94710cf8bc95d73e4fbd1",
+    "manifest.json": "sha256:2a7c7d8ace4beb14f5a73d38ee1fe68f4fa209c60bb99a19616cc10068c6478f",
+    "scripts/agent-context-resolver-hook": "sha256:6fc13f7787036ab2bb2072b1bb7bbe2bd3de7017269bd6ae38370ad7c10c4fd6",
+    "scripts/resolve-agent-context": "sha256:52e46d8e54579272aff9daf5a95974fea6f9e176b4c521ef4761aeeca31751b6"
+  },
+  "distributionRoot": ".codex/plugins/agent-context-resolver",
+  "function": "materializePluginBundle",
+  "generated": true,
+  "generatedOutputsAreAuthority": false,
+  "generatedRoot": "contracts/plugin-bundle/agent-context-resolver/generated",
+  "idempotenceProof": "same input inventory and content hashes reproduce the same write set",
+  "inventory": [
+    "manifest.json",
+    "SKILL.md",
+    "scripts/agent-context-resolver-hook",
+    "scripts/resolve-agent-context",
+    "package.lock.json",
+    "materialization-report.json"
+  ],
+  "runtimeExternalSourceLookupRequired": false,
+  "schema": "factory.plugin-bundle.materialization-report.v1",
+  "sourceRoot": "contracts/plugin-bundle/agent-context-resolver/src",
+  "targetRepo": "fatb4f/factory",
+  "validationStatus": "pass"
+}
