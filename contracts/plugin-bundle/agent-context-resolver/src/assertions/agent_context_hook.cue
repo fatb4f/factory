@@ -23,7 +23,7 @@ agentContextResolverAssertions: {
 				hooks: UserPromptSubmit: [{
 					hooks: [{
 						type:          "command"
-						command:       ".codex/skills/resolve-agent-context/scripts/agent-context-resolver-hook"
+						command:       ".codex/plugins/agent-context-resolver/scripts/agent-context-resolver-hook"
 						timeout:       10
 						statusMessage: "Routing repository contract context"
 					}]
@@ -32,12 +32,12 @@ agentContextResolverAssertions: {
 			skillContent: agentprojection.skillContent & !~"(^|/)bin/"
 			scripts: {
 				"agent-context-resolver-hook": agentprojection.projection.scripts["agent-context-resolver-hook"] & {
-					path:       ".codex/skills/resolve-agent-context/scripts/agent-context-resolver-hook"
+					path:       ".codex/plugins/agent-context-resolver/scripts/agent-context-resolver-hook"
 					executable: true
 					content:    agentprojection.agentContextResolverHook & !~"dotfiles-agent-context-hook"
 				}
 				"resolve-agent-context": agentprojection.projection.scripts["resolve-agent-context"] & {
-					path:       ".codex/skills/resolve-agent-context/scripts/resolve-agent-context"
+					path:       ".codex/plugins/agent-context-resolver/scripts/resolve-agent-context"
 					executable: true
 					content:    agentprojection.resolveAgentContext & !~"dotfiles-agent-context-hook"
 				}
@@ -51,8 +51,8 @@ agentContextResolverAssertions: {
 			compactHintsContain:      "resolver-authority"
 			evidenceSource:           "user_prompt"
 			generatedFrom:            agentContextResolverAssertions.agentContextHook.generatedFrom
-			resolverCommand:          ".codex/skills/resolve-agent-context/scripts/resolve-agent-context"
-			resolverSkill:            ".codex/skills/resolve-agent-context/SKILL.md"
+			resolverCommand:          ".codex/plugins/agent-context-resolver/scripts/resolve-agent-context"
+			resolverSkill:            ".codex/plugins/agent-context-resolver/SKILL.md"
 			allSelectedAreAvailable:  true
 			allRoutesAreRegistered:   true
 			allRuntimeRefsRegistered: true
@@ -82,7 +82,7 @@ agentContextResolverAssertions: {
 						task: {
 							objective: "Inspect the current resolver authority and generated boundary."
 							constraints: ["Treat CUE and repository state as durable authority."]
-							files: ["contracts/agent-context-resolver"]
+							files: ["contracts/plugin-bundle/agent-context-resolver/src"]
 						}
 						outputSchema: {schema: "agent.route-result.inspect.v1"}
 						gates: ["registry-authority", "route-local-propagation", "structured-result"]
@@ -139,7 +139,7 @@ agentContextResolverAssertions: {
 					execution: {
 						allowed:                 false
 						requiresMCPAdapter:      true
-						requiresRuntimeRegistry: true
+						requiresRuntimeRegistry: false
 						backend:                 "codex-sdk"
 					}
 					deny: {
@@ -193,7 +193,7 @@ agentContextResolverAssertions: {
 				]
 			}
 			routeInventory: {
-				generatedFrom: "contracts/agent-context-resolver/routes.cue"
+				generatedFrom: "contracts/plugin-bundle/agent-context-resolver/src/routes.cue"
 				routeIDs: [
 					"resolver.inspect.current",
 					"resolver.plan.compile",

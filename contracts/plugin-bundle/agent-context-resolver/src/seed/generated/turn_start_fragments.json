@@ -4,12 +4,12 @@
     {
       "id": "agent-context-resolver.authority",
       "sourceContract": "agent-context-resolver",
-      "sourcePath": "contracts/agent-context-resolver/resolver.cue",
+      "sourcePath": "contracts/plugin-bundle/agent-context-resolver/src/resolver.cue",
       "role": "authority",
       "surface": "turn_start",
       "summary": "Authoritative resolver lifecycle and context selection boundary.",
-      "authorityRoot": "contracts/agent-context-resolver",
-      "contractPath": "contracts/agent-context-resolver/resolver.cue"
+      "authorityRoot": "contracts/plugin-bundle/agent-context-resolver/src",
+      "contractPath": "contracts/plugin-bundle/agent-context-resolver/src/resolver.cue"
     },
     {
       "id": "agent-skill.projection",

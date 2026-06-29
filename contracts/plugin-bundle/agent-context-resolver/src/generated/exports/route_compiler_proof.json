@@ -47,7 +47,7 @@
                     "Treat CUE and repository state as durable authority."
                 ],
                 "files": [
-                    "contracts/agent-context-resolver"
+                    "contracts/plugin-bundle/agent-context-resolver/src"
                 ]
             },
             "outputSchema": {
@@ -114,7 +114,7 @@
                         "agent-context-resolver.authority"
                     ],
                     "files": [
-                        "contracts/agent-context-resolver"
+                        "contracts/plugin-bundle/agent-context-resolver/src"
                     ]
                 },
                 "excludes": [
@@ -140,7 +140,7 @@
                         "agent-context-resolver.authority"
                     ],
                     "files": [
-                        "contracts/agent-context-resolver"
+                        "contracts/plugin-bundle/agent-context-resolver/src"
                     ],
                     "priorArtifacts": [
                         "resolver.inspect.current"
@@ -296,11 +296,11 @@
             "evidence": [
                 {
                     "kind": "contract",
-                    "ref": "contracts/agent-context-resolver/proof.cue"
+                    "ref": "contracts/plugin-bundle/agent-context-resolver/src/proof.cue"
                 },
                 {
                     "kind": "contract",
-                    "ref": "contracts/agent-context-resolver/merge.cue"
+                    "ref": "contracts/plugin-bundle/agent-context-resolver/src/merge.cue"
                 }
             ],
             "diagnostics": [],
@@ -338,11 +338,11 @@
             "evidence": [
                 {
                     "kind": "contract",
-                    "ref": "contracts/agent-context-resolver/proof.cue"
+                    "ref": "contracts/plugin-bundle/agent-context-resolver/src/proof.cue"
                 },
                 {
                     "kind": "contract",
-                    "ref": "contracts/agent-context-resolver/merge.cue"
+                    "ref": "contracts/plugin-bundle/agent-context-resolver/src/merge.cue"
                 }
             ],
             "diagnostics": [],
@@ -375,7 +375,7 @@
                             "agent-context-resolver.authority"
                         ],
                         "files": [
-                            "contracts/agent-context-resolver"
+                            "contracts/plugin-bundle/agent-context-resolver/src"
                         ]
                     },
                     "excludes": [
@@ -409,7 +409,7 @@
                             "agent-context-resolver.authority"
                         ],
                         "files": [
-                            "contracts/agent-context-resolver"
+                            "contracts/plugin-bundle/agent-context-resolver/src"
                         ],
                         "priorArtifacts": [
                             "resolver.inspect.current"
@@ -463,7 +463,7 @@
                                 "agent-context-resolver.authority"
                             ],
                             "files": [
-                                "contracts/agent-context-resolver"
+                                "contracts/plugin-bundle/agent-context-resolver/src"
                             ]
                         },
                         "excludes": [
@@ -523,7 +523,7 @@
                                 "agent-context-resolver.authority"
                             ],
                             "files": [
-                                "contracts/agent-context-resolver"
+                                "contracts/plugin-bundle/agent-context-resolver/src"
                             ],
                             "priorArtifacts": [
                                 "resolver.inspect.current"
@@ -575,7 +575,7 @@
             ],
             "requiresA2AAdapter": true,
             "requiresMCPAdapter": false,
-            "requiresRuntimeRegistry": true,
+            "requiresRuntimeRegistry": false,
             "backend": "a2a"
         },
         "deny": {

@@ -109,12 +109,12 @@ _repo: close({
 	targets:          [...#PluginBundleMaterializationTarget] & [_, ...]
 })
 
-#AgentContextResolverMaterializationTarget: #PluginBundleMaterializationTarget & close({
+#AgentContextResolverMaterializationTarget: #PluginBundleMaterializationTarget & {
 	sourceBundle:     "agent-context-resolver"
 	targetRepository: "fatb4f/factory" | "fatb4f/dotfiles"
 	targetPath:       ".codex/plugins/agent-context-resolver"
 	distributionMode: "repo-local-runtime-projection" | "consumer-runtime-projection"
-})
+}
 
 #AgentContextResolverMaterializationSlice: close({
 	bundleID:        "agent-context-resolver"
@@ -242,8 +242,8 @@ normalizedCrossRepoPluginBundleDistributionManifest: close({
 _validation: impl.#MakeValidationPlan & {in: {path: "contracts/plugin-bundle/generation-distribution", validBaselineExpr: "normalizedPluginBundleGenerationDistributionManifest", publicExpr: "normalizedPluginBundleGenerationDistributionManifest", bottomChecks: _bottomCheckNames, checkFile: "./contracts/plugin-bundle/generation-distribution/checks", checkSurface: "_negativeBottomChecks", forbiddenPattern: "[g]eneratedPackageAuthorityAccepted: true|[p]athContainedAccepted: false|[n]onDeterministicGenerationAccepted: true|[r]untimeExternalSourceLookupAccepted: true"}}
 _completion: impl.#MakeCompletionReport & {in: {primitives: [for primitive in _primitives {primitive.out.name}], surfaces: _surfaces.out.publicExports, fixtures: [for fixture in _negativeFixtures {fixture.out.id}], checks: _bottomCheckNames, commands: _validation.out.commands, evidence: ["template-owned src-root shape", "distribution artifacts under .codex/plugins are projections only"]}}
 
-_materializationValidation: impl.#MakeValidationPlan & {in: {path: "contracts/plugin-bundle/generation-distribution", validBaselineExpr: "normalizedPluginBundleMaterializationManifest", publicExpr: "normalizedPluginBundleMaterializationManifest", bottomChecks: [], checkFile: "./contracts/plugin-bundle/generation-distribution/checks", checkSurface: "_negativeBottomChecks", forbiddenPattern: "[i]dempotent: false|[d]eterministic: false|[p]athContained: false|[p]rojectionOnly: false|[i]sAuthority: true"}}
-_materializationCompletion: impl.#MakeCompletionReport & {in: {primitives: [for primitive in _primitives {primitive.out.name}], surfaces: _surfaces.out.publicExports, fixtures: [], checks: [], commands: _materializationValidation.out.commands, evidence: ["generation-distribution authority exports pluginBundleMaterializationPlan", "agent-context-resolver target matrix includes fatb4f/factory and fatb4f/dotfiles"]}}
+_materializationValidation: impl.#MakeValidationPlan & {in: {path: "contracts/plugin-bundle/generation-distribution", validBaselineExpr: "normalizedPluginBundleMaterializationManifest", publicExpr: "normalizedPluginBundleMaterializationManifest", bottomChecks: _bottomCheckNames, checkFile: "./contracts/plugin-bundle/generation-distribution/checks", checkSurface: "_negativeBottomChecks", forbiddenPattern: "[i]dempotent: false|[d]eterministic: false|[p]athContained: false|[p]rojectionOnly: false|[i]sAuthority: true"}}
+_materializationCompletion: impl.#MakeCompletionReport & {in: {primitives: [for primitive in _primitives {primitive.out.name}], surfaces: _surfaces.out.publicExports, fixtures: [for fixture in _negativeFixtures {fixture.out.id}], checks: _bottomCheckNames, commands: _materializationValidation.out.commands, evidence: ["generation-distribution authority exports pluginBundleMaterializationPlan", "agent-context-resolver target matrix includes fatb4f/factory and fatb4f/dotfiles"]}}
 
 normalizedPluginBundleGenerationDistributionManifest: {
 	seed:                  _contractSeed

@@ -40,8 +40,8 @@ repoRegistry: #RepoContractRegistry & {
 	contracts: [
 		{
 			id:            "agent-context-resolver"
-			authorityRoot: "contracts/agent-context-resolver"
-			contractPath:  "contracts/agent-context-resolver/resolver.cue"
+			authorityRoot: "contracts/plugin-bundle/agent-context-resolver/src"
+			contractPath:  "contracts/plugin-bundle/agent-context-resolver/src/resolver.cue"
 			hooks: {
 				turnStart:        true
 				userPromptSubmit: true
@@ -50,7 +50,7 @@ repoRegistry: #RepoContractRegistry & {
 				{
 					id:             "agent-context-resolver.authority"
 					sourceContract: "agent-context-resolver"
-					sourcePath:     "contracts/agent-context-resolver/resolver.cue"
+					sourcePath:     "contracts/plugin-bundle/agent-context-resolver/src/resolver.cue"
 					role:           "authority"
 					surface:        "turn_start"
 					summary:        "Authoritative resolver lifecycle and context selection boundary."
@@ -58,7 +58,7 @@ repoRegistry: #RepoContractRegistry & {
 				{
 					id:             "agent-context-resolver.prompt-routing"
 					sourceContract: "agent-context-resolver"
-					sourcePath:     "contracts/agent-context-resolver/prompt_classifier.cue"
+					sourcePath:     "contracts/plugin-bundle/agent-context-resolver/src/prompt_classifier.cue"
 					role:           "workflow"
 					surface:        "prompt"
 					summary:        "Prompt classifier route hints and declared fragment selection rules."

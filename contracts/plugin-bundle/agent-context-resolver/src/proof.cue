@@ -58,7 +58,7 @@ routeCompilerProof: #ResolvedRoutePlan & {
 					objective: routeInventory.routes[0].task.objective
 					acceptedFacts: []
 					selectedFragments: routeInventory.routes[0].inputFragments
-					files: ["contracts/agent-context-resolver"]
+					files: ["contracts/plugin-bundle/agent-context-resolver/src"]
 				}
 				excludes: ["full transcript", "unselected fragments", "raw registry", "unbounded tool logs", "irrelevant route outputs"]
 				return: {
@@ -72,7 +72,7 @@ routeCompilerProof: #ResolvedRoutePlan & {
 					objective: routeInventory.routes[1].task.objective
 					acceptedFacts: []
 					selectedFragments: routeInventory.routes[1].inputFragments
-					files: ["contracts/agent-context-resolver"]
+					files: ["contracts/plugin-bundle/agent-context-resolver/src"]
 					priorArtifacts: ["resolver.inspect.current"]
 				}
 				excludes: ["full transcript", "unselected fragments", "raw registry", "unbounded tool logs", "irrelevant route outputs"]
@@ -145,8 +145,8 @@ routeCompilerProof: #ResolvedRoutePlan & {
 			]
 			facts: []
 			evidence: [
-				{kind: "contract", ref: "contracts/agent-context-resolver/proof.cue"},
-				{kind: "contract", ref: "contracts/agent-context-resolver/merge.cue"},
+				{kind: "contract", ref: "contracts/plugin-bundle/agent-context-resolver/src/proof.cue"},
+				{kind: "contract", ref: "contracts/plugin-bundle/agent-context-resolver/src/merge.cue"},
 			]
 			diagnostics: []
 			conflicts: []
@@ -271,7 +271,7 @@ routeCompilerProof: #ResolvedRoutePlan & {
 			secondaryWorkerAdapters: ["sdk-direct", "mcp", "cli"]
 			requiresA2AAdapter:      true
 			requiresMCPAdapter:      false
-			requiresRuntimeRegistry: true
+			requiresRuntimeRegistry: false
 			backend:                 "a2a"
 		}
 		deny: {

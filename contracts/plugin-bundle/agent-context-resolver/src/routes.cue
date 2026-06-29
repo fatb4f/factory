@@ -98,7 +98,7 @@ routeInventory: #RouteInventory & {
 			task: {
 				objective: "Inspect the current resolver authority and generated boundary."
 				constraints: ["Treat CUE and repository state as durable authority."]
-				files: ["contracts/agent-context-resolver"]
+				files: ["contracts/plugin-bundle/agent-context-resolver/src"]
 			}
 			outputSchema: {schema: "agent.route-result.inspect.v1"}
 			gates: ["registry-authority", "route-local-propagation", "structured-result"]

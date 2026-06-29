@@ -17,7 +17,7 @@ projection: agentskill.#SkillProjection & {
 			UserPromptSubmit: [{
 				hooks: [{
 					type:          "command"
-					command:       ".codex/skills/resolve-agent-context/scripts/agent-context-resolver-hook"
+					command:       ".codex/plugins/agent-context-resolver/scripts/agent-context-resolver-hook"
 					timeout:       10
 					statusMessage: "Routing repository contract context"
 				}]
@@ -26,13 +26,13 @@ projection: agentskill.#SkillProjection & {
 	}
 	scripts: {
 		"agent-context-resolver-hook": {
-			path:       ".codex/skills/resolve-agent-context/scripts/agent-context-resolver-hook"
+			path:       ".codex/plugins/agent-context-resolver/scripts/agent-context-resolver-hook"
 			content:    agentContextResolverHook
 			executable: true
 			provenance: metadata.provenance
 		}
 		"resolve-agent-context": {
-			path:       ".codex/skills/resolve-agent-context/scripts/resolve-agent-context"
+			path:       ".codex/plugins/agent-context-resolver/scripts/resolve-agent-context"
 			content:    resolveAgentContext
 			executable: true
 			provenance: metadata.provenance
@@ -50,7 +50,7 @@ skillContent: """
 
 	The `UserPromptSubmit` hook provides a bounded route controller packet, not task authority.
 
-	1. Run `.codex/skills/resolve-agent-context/scripts/resolve-agent-context --prompt "<prompt>"`.
+	1. Run `.codex/plugins/agent-context-resolver/scripts/resolve-agent-context --prompt "<prompt>"`.
 	2. Treat `selectedFragments` as a subset of `availableFragmentIDs`.
 	3. Treat `controller.routes` as a subset of `controller.availableRouteIDs`.
 	4. Resolve selected fragment metadata through `contracts/plugin-bundle/agent-context-resolver/src/generated/fragment_inventory.json`.
@@ -64,29 +64,14 @@ agentContextResolverHook: """
 	set -eu
 
 	script_dir=$(CDPATH= cd -- "$(dirname "$0")" && pwd -P)
-	if [ -n "${CONTRACT_FACTORY_ROOT:-}" ]; then
-		repo_root=$CONTRACT_FACTORY_ROOT
-	elif [ -n "${CONTRACT_CUEMOD_ROOT:-}" ]; then
-		repo_root=$CONTRACT_CUEMOD_ROOT
-	else
-		repo_root=$script_dir
-		while [ "$repo_root" != "/" ] && [ ! -d "$repo_root/.git" ] && [ ! -d "$repo_root/cue.mod" ]; do
-			repo_root=$(CDPATH= cd -- "$repo_root/.." && pwd -P)
-		done
-	fi
-	[ -d "$repo_root" ] || exit 2
-	if [ -d "$repo_root/generated" ] && [ -f "$repo_root/cue.mod/module.cue" ] && grep -q '/contracts/agent-context-resolver"' "$repo_root/cue.mod/module.cue"; then
-		generated_dir="$repo_root/generated"
-	else
-		generated_dir="$repo_root/contracts/plugin-bundle/agent-context-resolver/src/generated"
-	fi
+	plugin_root=$(CDPATH= cd -- "$script_dir/.." && pwd -P)
+	generated_dir="$plugin_root/generated"
 	[ -d "$generated_dir" ] || exit 2
 	input_json=$(mktemp "${TMPDIR:-/tmp}/agent-context-resolver.XXXXXX.json")
 	trap 'rm -f "$input_json"' EXIT HUP INT TERM
 	cat >"$input_json"
 
 	prompt=$(jq -er 'select(.hook_event_name == "UserPromptSubmit") | .prompt' "$input_json") || {
-		printf '{}\\n'
 		exit 0
 	}
 
@@ -239,12 +224,12 @@ agentContextResolverHook: """
 							agentRuntimeRegistry: "absent",
 							mcpRouteExecutor: "absent"
 						},
-						execution: {
-							allowed: false,
-							requiresMCPAdapter: true,
-							requiresRuntimeRegistry: true,
-							backend: "codex-sdk"
-						},
+					execution: {
+						allowed: false,
+						requiresMCPAdapter: false,
+						requiresRuntimeRegistry: false,
+						backend: "codex-sdk"
+					},
 						deny: {
 							directSDKSpawn: true,
 							rawTranscriptForwarding: true,
@@ -261,18 +246,46 @@ agentContextResolverHook: """
 					routeInventory: "contracts/plugin-bundle/agent-context-resolver/src/generated/route_inventory.json"
 				},
 				resolver: {
-					command: ".codex/skills/resolve-agent-context/scripts/resolve-agent-context",
-					skill: ".codex/skills/resolve-agent-context/SKILL.md"
+					command: ".codex/plugins/agent-context-resolver/scripts/resolve-agent-context",
+					skill: ".codex/plugins/agent-context-resolver/SKILL.md"
 				}
 			}'
 	)
 
 	[ "$(printf '%s' "$classification" | jq '.controller.routes | length')" -gt 0 ] || {
-		printf '{}\\n'
 		exit 0
 	}
 
-	printf '%s\n' "$classification"
+	if [ "${AGENT_CONTEXT_RESOLVER_PACKET:-}" = 1 ]; then
+		printf '%s\\n' "$classification"
+		exit 0
+	fi
+
+	printf '%s\\n' "$classification" | jq -c '{
+		hookSpecificOutput: {
+			hookEventName: "UserPromptSubmit",
+			additionalContext: ({
+				schema: "agent.resolver-prompt-surface.v1",
+				intent: .controller.intent,
+				selectedFragments: .selectedFragments,
+				selectedRoutes: [
+					.controller.routes[]
+					| {
+						id,
+						kind,
+						objective: .task.objective
+					}
+				],
+				execution: {
+					mode: "prompt-only",
+					routeExecution: false,
+					controllerPacket: false,
+					debugEvidence: "stderr-or-file"
+				},
+				hints: (.compactHints | map({text: .}))
+			} | tojson)
+		}
+	}'
 	"""
 
 resolveAgentContext: """
@@ -307,7 +320,7 @@ resolveAgentContext: """
 	output=$(
 		printf '{"hook_event_name":"UserPromptSubmit","prompt":%s}\\n' \\
 			"$(printf '%s' "$prompt" | jq -Rs .)" |
-			"$script_dir/agent-context-resolver-hook"
+			AGENT_CONTEXT_RESOLVER_PACKET=1 "$script_dir/agent-context-resolver-hook"
 	)
 	printf '%s\\n' "$output" | jq -er '
 		if . == {} then

@@ -2,7 +2,7 @@
   "schema": "factory.observed-packet-evidence.v1",
   "id": "factory.validation.evidence.agent-context-hook-packet",
   "assertionID": "factory.validation.agent-context-hook",
-  "packetBytes": 17462,
+  "packetBytes": 17483,
   "packet": {
     "schema": "agent.route-controller-packet.v1",
     "availableFragmentIDs": [
@@ -97,7 +97,7 @@
               "Treat CUE and repository state as durable authority."
             ],
             "files": [
-              "contracts/agent-context-resolver"
+              "contracts/plugin-bundle/agent-context-resolver/src"
             ]
           },
           "outputSchema": {
@@ -230,7 +230,7 @@
                 "agent-context-resolver.authority"
               ],
               "files": [
-                "contracts/agent-context-resolver"
+                "contracts/plugin-bundle/agent-context-resolver/src"
               ],
               "priorArtifacts": [],
               "validationCommands": []
@@ -422,7 +422,7 @@
                   "agent-context-resolver.authority"
                 ],
                 "files": [
-                  "contracts/agent-context-resolver"
+                  "contracts/plugin-bundle/agent-context-resolver/src"
                 ],
                 "priorArtifacts": [],
                 "validationCommands": []
@@ -559,8 +559,8 @@
         },
         "execution": {
           "allowed": false,
-          "requiresMCPAdapter": true,
-          "requiresRuntimeRegistry": true,
+          "requiresMCPAdapter": false,
+          "requiresRuntimeRegistry": false,
           "backend": "codex-sdk"
         },
         "deny": {
@@ -576,13 +576,13 @@
       }
     },
     "generatedFrom": {
-      "turnStart": "contracts/plugin-bundle/agent-context-resolver/src/generated/turn_start_fragments.json",
-      "promptRoutes": "contracts/plugin-bundle/agent-context-resolver/src/generated/prompt_routes.json",
-      "routeInventory": "contracts/plugin-bundle/agent-context-resolver/src/generated/route_inventory.json"
+      "turnStart": ".codex/plugins/agent-context-resolver/generated/turn_start_fragments.json",
+      "promptRoutes": ".codex/plugins/agent-context-resolver/generated/prompt_routes.json",
+      "routeInventory": ".codex/plugins/agent-context-resolver/generated/route_inventory.json"
     },
     "resolver": {
-      "command": ".codex/skills/resolve-agent-context/scripts/resolve-agent-context",
-      "skill": ".codex/skills/resolve-agent-context/SKILL.md"
+      "command": ".codex/plugins/agent-context-resolver/scripts/resolve-agent-context",
+      "skill": ".codex/plugins/agent-context-resolver/SKILL.md"
     }
   },
   "provenance": {

@@ -62,13 +62,13 @@ import (
 	}
 
 	resolver: {
-		command: ".codex/skills/resolve-agent-context/scripts/resolve-agent-context"
-		skill:   ".codex/skills/resolve-agent-context/SKILL.md"
+		command: ".codex/plugins/agent-context-resolver/scripts/resolve-agent-context"
+		skill:   ".codex/plugins/agent-context-resolver/SKILL.md"
 		...
 	}
 
 	generatedFrom: {
-		turnStart: "contracts/plugin-bundle/agent-context-resolver/src/generated/turn_start_fragments.json"
+		turnStart: ".codex/plugins/agent-context-resolver/generated/turn_start_fragments.json"
 		...
 	}
 
@@ -81,7 +81,7 @@ import (
 #CodexHooksProjection: {
 	hooks: UserPromptSubmit: [{
 		hooks: [{
-			command: ".codex/skills/resolve-agent-context/scripts/agent-context-resolver-hook"
+			command: ".codex/plugins/agent-context-resolver/scripts/agent-context-resolver-hook"
 			...
 		}, ...]
 		...

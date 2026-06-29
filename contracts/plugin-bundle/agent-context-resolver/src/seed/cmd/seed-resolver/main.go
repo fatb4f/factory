@@ -476,7 +476,7 @@ func validateRouteDeclarations(routes []route, available map[string]bool) error 
 }
 
 func validateRouteInventory(inventory routeInventory, available map[string]bool) (map[string]registeredRoute, error) {
-	if inventory.GeneratedFrom != "contracts/agent-context-resolver/routes.cue" {
+	if inventory.GeneratedFrom != "contracts/plugin-bundle/agent-context-resolver/src/routes.cue" {
 		return nil, errors.New("route inventory does not declare CUE route authority")
 	}
 	routesByID := make(map[string]registeredRoute, len(inventory.Routes))

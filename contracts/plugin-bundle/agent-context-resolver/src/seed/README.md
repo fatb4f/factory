@@ -43,7 +43,7 @@ semantics, the positive classification fixture, and every negative fixture.
 
 ```bash
 git sparse-checkout init --cone
-git sparse-checkout set contracts/agent-context-resolver/seed
+git sparse-checkout set contracts/plugin-bundle/agent-context-resolver/src/seed
 ```
 
 The imported directory has no dependency on files outside this seed.

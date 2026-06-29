@@ -14,7 +14,7 @@ assertion_results=generated/evidence/assertion-results.json
 rm -f "$assertion_results"
 
 prompt=$(jq -r '.prompt' generated/fixtures/agent-context-hook-prompt.json)
-.codex/skills/resolve-agent-context/scripts/resolve-agent-context --prompt "$prompt" >"$packet_file"
+.codex/plugins/agent-context-resolver/scripts/resolve-agent-context --prompt "$prompt" >"$packet_file"
 
 packet_bytes=$(wc -c <"$packet_file" | tr -d ' ')
 
