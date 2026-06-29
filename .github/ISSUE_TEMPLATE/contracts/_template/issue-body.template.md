@@ -32,5 +32,14 @@ issue : {
 		root: "chezmoi"
 		surfaces: ["<surface>"]
 	}
+
+	authoritySplit: {
+		neovim: ["<neovim>"]
+		wezterm: ["<wezterm>"]
+		xplr: ["<xplr>"]
+		smartSplits: ["<smartSplits>"]
+		cue: ["<cue>"]
+		cli: ["<cli>"]
+	}
 }
 ```
