@@ -1,45 +1,5 @@
 ```cue
 issue : {
-	id:     "dotfiles.nvim-qol-control-surface"
-	kind:   "implementation-slice"
-	repo:   "fatb4f/dotfiles"
-	number: 44
-	title:  "dotfiles: add Neovim QoL control surface"
-
-	template: {
-		name: "Dotfiles manifest slice"
-		root: ".github/dotfiles-manifest-slice"
-		workflow: ".github/dotfiles-manifest-slice/contracts/dotfiles/workflow"
-		manifest: ".github/dotfiles-manifest-slice/contracts/issues/44/manifest.cue"
-		checks: ".github/dotfiles-manifest-slice/contracts/issues/44/checks/bottom.cue"
-		import: "github.com/fatb4f/dotfiles/.github/dotfiles-manifest-slice/contracts/dotfiles/workflow"
-	}
-
-	tracking: {
-		parent: _|_
-		dependsOn: []
-		blocks: []
-	}
-
-	goal: {
-		implement: ["<implement>"]
-		notImplement: ["<not implement>"]
-	}
-
-	intent: "<intent>"
-
-	authorityRoot: {
-		root: "chezmoi"
-		surfaces: ["<surface>"]
-	}
-
-	authoritySplit: {
-		neovim: ["<neovim>"]
-		wezterm: ["<wezterm>"]
-		xplr: ["<xplr>"]
-		smartSplits: ["<smartSplits>"]
-		cue: ["<cue>"]
-		cli: ["<cli>"]
-	}
+	"targetSurfaces": []
 }
 ```
