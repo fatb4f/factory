@@ -23,7 +23,7 @@ reflectionInventory: {
 		"contracts/factory/introspection.cue",
 		"contracts/factory/reflection.cue",
 		".codex/hooks.json",
-		"contracts/agent-context-resolver/generated/route_inventory.json",
+		"contracts/plugin-bundle/agent-context-resolver/src/generated/route_inventory.json",
 	]
 	assertionSurfaces: [
 		"contracts/factory/assertions/generated/agent_context_hook.cue:#AgentContextHookPacket",

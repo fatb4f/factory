@@ -268,7 +268,9 @@ package factory
 })
 
 injectedProvenance: {
-	sourceDigest:    "sha256:1111111111111111111111111111111111111111111111111111111111111111"
-	inventoryDigest: "sha256:2222222222222222222222222222222222222222222222222222222222222222"
-	materializedAt:  "run:1111111111111111"
+	origin:          "reflection"
+	reflector:       "factory.validation-reflector.v1"
+	sourceDigest:    string @tag(sourceDigest)
+	inventoryDigest: string @tag(inventoryDigest)
+	materializedAt:  string @tag(materializedAt)
 }

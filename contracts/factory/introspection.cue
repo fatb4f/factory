@@ -54,7 +54,7 @@ package factory
 	target?:         #CueTarget
 	payloadBinding?: #PayloadBinding
 	outputs:         [#EvidencePacket, ...#EvidencePacket]
-	materializes:    * [] | [...#Materialization]
+	materializes:    [...#Materialization]
 	requiredInputs?: [...string]
 })
 

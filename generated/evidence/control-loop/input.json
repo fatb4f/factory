@@ -1,0 +1,61 @@
+{
+    "schema": "factory.control-loop-stage-export.v1",
+    "loopID": "factory.validation.control-loop",
+    "stage": "input",
+    "authority": false,
+    "bounded": true,
+    "sourceStage": {
+        "id": "factory.validation.loop.input",
+        "kind": "contract-source-adapter-surface-generated-state",
+        "schema": "factory.loop-stage.input.v1",
+        "sourceAuthority": true,
+        "source": "contracts/factory/reflection.cue",
+        "produces": [
+            "contracts/factory/assertions/schema.cue",
+            "contracts/factory/control.cue",
+            "contracts/factory/introspection.cue",
+            "contracts/factory/reflection.cue",
+            ".codex/hooks.json",
+            "contracts/plugin-bundle/agent-context-resolver/src/generated/route_inventory.json",
+            "generated/checks",
+            "generated/fixtures",
+            "generated/evidence"
+        ]
+    },
+    "exportSurface": {
+        "authority": false,
+        "bounded": true,
+        "generatedFrom": "contracts/factory/control.cue",
+        "path": "generated/evidence/control-loop/input.json",
+        "provenance": {
+            "inventoryDigest": "sha256:dc8c6da2e202455a98b639a6c7dd5712e7bb89ef50d4d2c6bb3ddbdf60f8bfe1",
+            "materializedAt": "run:7d885cfb0f96cc35",
+            "origin": "reflection",
+            "reflector": "factory.validation-reflector.v1",
+            "sourceDigest": "sha256:4fce3485a92e034670dcdce37f5d28aef72fe9d78aed8667ee270d1fce2a8dd9"
+        },
+        "redacted": false,
+        "schema": "factory.control-loop-stage-export.v1",
+        "stage": "input"
+    },
+    "provenance": {
+        "inventoryDigest": "sha256:dc8c6da2e202455a98b639a6c7dd5712e7bb89ef50d4d2c6bb3ddbdf60f8bfe1",
+        "materializedAt": "run:7d885cfb0f96cc35",
+        "origin": "reflection",
+        "reflector": "factory.validation-reflector.v1",
+        "sourceDigest": "sha256:4fce3485a92e034670dcdce37f5d28aef72fe9d78aed8667ee270d1fce2a8dd9"
+    },
+    "payload": {
+        "surfaces": [
+            "contracts/factory/assertions/schema.cue",
+            "contracts/factory/control.cue",
+            "contracts/factory/introspection.cue",
+            "contracts/factory/reflection.cue",
+            ".codex/hooks.json",
+            "contracts/plugin-bundle/agent-context-resolver/src/generated/route_inventory.json",
+            "generated/checks",
+            "generated/fixtures",
+            "generated/evidence"
+        ]
+    }
+}

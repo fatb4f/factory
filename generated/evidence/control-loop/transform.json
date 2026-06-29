@@ -1,0 +1,55 @@
+{
+    "schema": "factory.control-loop-stage-export.v1",
+    "loopID": "factory.validation.control-loop",
+    "stage": "transform",
+    "authority": false,
+    "bounded": true,
+    "sourceStage": {
+        "id": "factory.validation.loop.transform",
+        "kind": "reflective-introspection-inventory-generation",
+        "schema": "factory.reflection-inventory.v1",
+        "sourceAuthority": true,
+        "source": "contracts/factory/reflection.cue",
+        "consumes": [
+            "contracts/factory/assertions/schema.cue",
+            "contracts/factory/control.cue",
+            "contracts/factory/introspection.cue",
+            "contracts/factory/reflection.cue",
+            ".codex/hooks.json",
+            "contracts/plugin-bundle/agent-context-resolver/src/generated/route_inventory.json",
+            "generated/checks",
+            "generated/fixtures",
+            "generated/evidence"
+        ],
+        "produces": [
+            "reflectionInventory",
+            "generated/evidence/control-loop/transform.json"
+        ]
+    },
+    "exportSurface": {
+        "authority": false,
+        "bounded": true,
+        "generatedFrom": "contracts/factory/control.cue",
+        "path": "generated/evidence/control-loop/transform.json",
+        "provenance": {
+            "inventoryDigest": "sha256:dc8c6da2e202455a98b639a6c7dd5712e7bb89ef50d4d2c6bb3ddbdf60f8bfe1",
+            "materializedAt": "run:7d885cfb0f96cc35",
+            "origin": "reflection",
+            "reflector": "factory.validation-reflector.v1",
+            "sourceDigest": "sha256:4fce3485a92e034670dcdce37f5d28aef72fe9d78aed8667ee270d1fce2a8dd9"
+        },
+        "redacted": false,
+        "schema": "factory.control-loop-stage-export.v1",
+        "stage": "transform"
+    },
+    "provenance": {
+        "inventoryDigest": "sha256:dc8c6da2e202455a98b639a6c7dd5712e7bb89ef50d4d2c6bb3ddbdf60f8bfe1",
+        "materializedAt": "run:7d885cfb0f96cc35",
+        "origin": "reflection",
+        "reflector": "factory.validation-reflector.v1",
+        "sourceDigest": "sha256:4fce3485a92e034670dcdce37f5d28aef72fe9d78aed8667ee270d1fce2a8dd9"
+    },
+    "payload": {
+        "inventory": "generated/evidence/materialization-report.json#/inventory"
+    }
+}

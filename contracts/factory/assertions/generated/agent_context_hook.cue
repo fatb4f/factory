@@ -68,7 +68,7 @@ import (
 	}
 
 	generatedFrom: {
-		turnStart: "contracts/agent-context-resolver/generated/turn_start_fragments.json"
+		turnStart: "contracts/plugin-bundle/agent-context-resolver/src/generated/turn_start_fragments.json"
 		...
 	}
 
@@ -125,8 +125,8 @@ agentContextHookAssertion: assertions.#AdmittedAssertion & {
 	provenance: {
 		origin: "reflection"
 		reflector: "factory.validation-reflector.v1"
-		sourceDigest: "sha256:68399ca8b4fad7297d905e9e05ca5aa232dc92527948627e6f8e03636d86dc1d"
-		inventoryDigest: "sha256:02685744eae9a84d114c2cf4744464ce423447f79fb583121eb92a99ad1b11b0"
-		materializedAt: "run:b6087d3676e98a34"
+		sourceDigest: "sha256:4fce3485a92e034670dcdce37f5d28aef72fe9d78aed8667ee270d1fce2a8dd9"
+		inventoryDigest: "sha256:dc8c6da2e202455a98b639a6c7dd5712e7bb89ef50d4d2c6bb3ddbdf60f8bfe1"
+		materializedAt: "run:7d885cfb0f96cc35"
 	}
 }
