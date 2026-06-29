@@ -19,10 +19,17 @@ package impl
 	purpose: string & !=""
 })
 
+#ConstructorCatalogAxes: close({
+	constructorOrder: "constructorAxis"
+	authorityStrata:  "authorityAxis"
+	shape:            "metaDualAxisShape"
+})
+
 #ConstructorCatalog: close({
 	kind: "constructor-catalog"
 	package: "impl"
 	root: "contracts/meta/impl"
+	axes: #ConstructorCatalogAxes
 	constructors: [...#ConstructorCatalogEntry] & [_, ...]
 	invariants: [...string & !=""] & [_, ...]
 })
@@ -31,6 +38,11 @@ constructorCatalog: #ConstructorCatalog & {
 	kind: "constructor-catalog"
 	package: "impl"
 	root: "contracts/meta/impl"
+	axes: {
+		constructorOrder: "constructorAxis"
+		authorityStrata:  "authorityAxis"
+		shape:            "metaDualAxisShape"
+	}
 	constructors: [
 		{
 			id: "#MakePrimitive"
@@ -94,6 +106,9 @@ constructorCatalog: #ConstructorCatalog & {
 		"CUE expressions remain CUE values, not stringified expression metadata.",
 		"Negative checks are generated as intersections, not invalidity flags.",
 		"Manifest packages carry bottom-check plans; check packages carry executable proof objects.",
+		"Constructor order and authority strata are separate axes.",
+		"Constructor catalog entries identify available constructors; constructorAxis orders their instantiation.",
+		"AuthorityAxis ranks contract, assertions, fixtures, checks, and evals independently of constructor order.",
 		"Go wrappers are deferred to transport and materialization."
 	]
 }
