@@ -1,1 +1,5 @@
-issue body template
+```cue
+issue : {
+	id: "dotfiles.nvim-qol-control-surface"
+}
+```
