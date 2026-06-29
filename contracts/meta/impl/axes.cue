@@ -12,7 +12,7 @@ package impl
 	invariant: string & !=""
 })
 
-constructorAxis: #ConstructorAxis & {
+_constructorAxis: #ConstructorAxis & {
 	kind: "constructor-axis"
 	pipeline: [
 		{order: 1, id: "#MakePrimitive", instantiateAt: "_primitives"},
@@ -30,6 +30,8 @@ constructorAxis: #ConstructorAxis & {
 	invariant: "Constructor order defines instantiation sequence only; it does not define artifact authority."
 }
 
+constructorAxis: _constructorAxis
+
 #AuthorityStratumID:
 	"contract" |
 	"assertions" |
@@ -42,8 +44,8 @@ constructorAxis: #ConstructorAxis & {
 	id:        #AuthorityStratumID
 	role:      string & !=""
 	authority: string & !=""
-	accepts:   *[...string & !=""] | [...string & !=""]
-	rejects:   *[...string & !=""] | [...string & !=""]
+	accepts:   *[] | [...string & !=""]
+	rejects:   *[] | [...string & !=""]
 })
 
 #AuthorityAxis: close({
@@ -53,7 +55,7 @@ constructorAxis: #ConstructorAxis & {
 	invariant: string & !=""
 })
 
-authorityAxis: #AuthorityAxis & {
+_authorityAxis: #AuthorityAxis & {
 	kind:  "authority-axis"
 	order: ["contract", "assertions", "fixtures", "checks", "evals"]
 	strata: [
@@ -101,6 +103,8 @@ authorityAxis: #AuthorityAxis & {
 	invariant: "Authority rank is independent from constructor instantiation order."
 }
 
+authorityAxis: _authorityAxis
+
 #DualAxisShape: close({
 	kind:            "meta-dual-axis-shape"
 	constructorAxis: #ConstructorAxis
@@ -110,8 +114,8 @@ authorityAxis: #AuthorityAxis & {
 
 metaDualAxisShape: #DualAxisShape & {
 	kind:            "meta-dual-axis-shape"
-	constructorAxis: constructorAxis
-	authorityAxis:   authorityAxis
+	constructorAxis: _constructorAxis
+	authorityAxis:   _authorityAxis
 	invariants: [
 		"Constructor order and authority strata are separate axes.",
 		"Constructor calls use impl.#MakeX & { in: {...} } according to constructor-specific signatures.",
