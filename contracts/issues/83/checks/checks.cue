@@ -1,7 +1,0 @@
-package issue83checks
-
-import gen "github.com/fatb4f/contract.cuemod/contracts/plugin-bundle/generation-distribution:pluginbundlegenerationdistribution"
-
-crossRepoPluginBundleDistributionTargetMatrix: gen.crossRepoPluginBundleDistributionTargetMatrix
-
-_negativeBottomChecks: gen.crossRepoPluginBundleDistributionNegativeBottomChecks

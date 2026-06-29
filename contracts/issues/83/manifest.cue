@@ -1,8 +1,0 @@
-package issue83
-
-import gen "github.com/fatb4f/contract.cuemod/contracts/plugin-bundle/generation-distribution:pluginbundlegenerationdistribution"
-
-normalizedCrossRepoPluginBundleDistributionManifest: gen.normalizedCrossRepoPluginBundleDistributionManifest
-crossRepoPluginBundleDistributionValidationPlan:     gen.crossRepoPluginBundleDistributionValidationPlan
-crossRepoPluginBundleDistributionCompletionReportContract: gen.crossRepoPluginBundleDistributionCompletionReportContract
-crossRepoPluginBundleDistributionTargetMatrix:       gen.crossRepoPluginBundleDistributionTargetMatrix
