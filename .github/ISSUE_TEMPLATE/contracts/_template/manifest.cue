@@ -1,12 +1,17 @@
 package issue
 
-import impl "github.com/fatb4f/factory/cuemod/contracts/meta/impl"
+import impl "github.com/fatb4f/factory/contracts/meta/impl"
 
 _contractSeed: close({
 	id:         "github-issue-template-single-cue-block"
 	version:    "v0.1.0"
-	owner:      "factory/cuemod"
+	owner:      "factory/contracts"
 	idempotent: true
+})
+
+cueModule: close({
+	path:   "cue.mod"
+	module: "github.com/fatb4f/factory"
 })
 
 issueBodyShape: close({
@@ -42,6 +47,8 @@ issueTemplateYaml: close({
 	fieldType:  "textarea"
 	fieldID:    "issue"
 	render:     issueBodyShape.fenceLanguage
+	module:     cueModule.module
+	import:     "github.com/fatb4f/factory/contracts/meta/impl"
 })
 
 issueBodyFixture: close({
@@ -67,6 +74,7 @@ _primitives: [
 			constraints: [
 				"submitted issue bodies are one cue fence only",
 				"the fenced value contains one top-level issue object",
+				"imports resolve through root cue.mod only",
 			]
 			closed: true
 		}
@@ -79,6 +87,7 @@ _primitives: [
 			constraints: [
 				"template metadata is carried under issue.template",
 				"workflow entries preserve order, id, and instantiateAt shape",
+				"no cuemod path is admitted as a module or import root",
 			]
 			closed: true
 		}
@@ -89,24 +98,27 @@ negativeIssueTemplateFixtures: {
 	extraMarkdownHeading: {id: "extraMarkdownHeading"}
 	missingCueFence:     {id: "missingCueFence"}
 	missingTopLevelIssue: {id: "missingTopLevelIssue"}
+	cuemodImportRoot:    {id: "cuemodImportRoot"}
 }
 
 _negativeFixtures: [
 	negativeIssueTemplateFixtures.extraMarkdownHeading,
 	negativeIssueTemplateFixtures.missingCueFence,
 	negativeIssueTemplateFixtures.missingTopLevelIssue,
+	negativeIssueTemplateFixtures.cuemodImportRoot,
 ]
 
 _bottomCheckPlans: [
 	{name: "extraMarkdownHeadingRejected", fixture: negativeIssueTemplateFixtures.extraMarkdownHeading.id, checkSurface: "_negativeBottomChecks", checkFile: "./.github/ISSUE_TEMPLATE/contracts/_template/checks/body_shape.cue"},
 	{name: "missingCueFenceRejected", fixture: negativeIssueTemplateFixtures.missingCueFence.id, checkSurface: "_negativeBottomChecks", checkFile: "./.github/ISSUE_TEMPLATE/contracts/_template/checks/body_shape.cue"},
 	{name: "missingTopLevelIssueRejected", fixture: negativeIssueTemplateFixtures.missingTopLevelIssue.id, checkSurface: "_negativeBottomChecks", checkFile: "./.github/ISSUE_TEMPLATE/contracts/_template/checks/body_shape.cue"},
+	{name: "cuemodImportRootRejected", fixture: negativeIssueTemplateFixtures.cuemodImportRoot.id, checkSurface: "_negativeBottomChecks", checkFile: "./.github/ISSUE_TEMPLATE/contracts/_template/checks/module_root.cue"},
 ]
 
 _surfaces: impl.#MakeSurfaceSet & {
 	in: {
 		admissible: ["#IssueTemplateCueBlock", "#IssueBody"]
-		observed:   ["issueTemplateYaml", "issueBodyFixture"]
+		observed:   ["cueModule", "issueTemplateYaml", "issueBodyFixture"]
 		candidates: ["normalizedIssueTemplateManifest"]
 		fixtures:   ["negativeIssueTemplateFixtures"]
 		checks:     ["_negativeBottomChecks"]
@@ -129,7 +141,7 @@ _validation: impl.#MakeValidationPlan & {
 		bottomChecks:      [for plan in _bottomCheckPlans {plan.name}]
 		checkFile:         "./.github/ISSUE_TEMPLATE/contracts/_template/checks"
 		checkSurface:      "_negativeBottomChecks"
-		forbiddenPattern:  "```[j]son|```[y]aml"
+		forbiddenPattern:  "[c]uemod|```[j]son|```[y]aml"
 	}
 }
 
@@ -140,12 +152,13 @@ _completion: impl.#MakeCompletionReport & {
 		fixtures:  [for fixture in _negativeFixtures {fixture.id}]
 		checks:    _validation.in.bottomChecks
 		commands:  _validation.out.commands
-		evidence:  ["single cue fence", "top-level issue object", "issue #44 shape parity"]
+		evidence:  ["root cue.mod module", "single cue fence", "top-level issue object", "issue #44 shape parity"]
 	}
 }
 
 normalizedIssueTemplateManifest: {
 	seed:             _contractSeed
+	cueModule:        cueModule
 	shape:            issueBodyShape
 	template:         issueTemplateYaml
 	fixture:          issueBodyFixture
