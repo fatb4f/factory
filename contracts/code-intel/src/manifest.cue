@@ -5,22 +5,18 @@ import (
 )
 
 _materializedBundleShape: tmpl.#PluginBundleSrcRootShape & {
-	srcRoot: "contracts/plugin-bundle/code-intel/src"
+	srcRoot: "contracts/code-intel/src"
 	contracts: {
-		root: "contracts/plugin-bundle/code-intel/src/contracts/code-intel"
+		root: "contracts/code-intel/src/contracts/code-intel"
 		cuePackages: [
-			{id: "codeintel", path: "contracts/code-intel/manifest.cue"},
-			{id: "codeintel", path: "contracts/code-intel/manifest.cue"},
-			{id: "codeintel", path: "contracts/code-intel/manifest.cue"},
+			{id: "codeintel", path: "contracts/code-intel/src/contracts/code-intel/manifest.cue"},
 		]
 		requiredPaths: [
-			"contracts/code-intel/manifest.cue",
-			"contracts/code-intel/manifest.cue",
-			"contracts/code-intel/manifest.cue",
+			"contracts/code-intel/src/contracts/code-intel/manifest.cue",
 		]
 	}
 	generated: {
-		root:         "contracts/plugin-bundle/code-intel/src/generated"
+		root:         "contracts/code-intel/src/generated"
 		evidenceOnly: true
 		artifacts: [
 			{path: "generated/mcp/server-manifest.json", required: true, evidenceOnly: true},
@@ -32,8 +28,8 @@ _materializedBundleShape: tmpl.#PluginBundleSrcRootShape & {
 	}
 	validation: {
 		commands: [
-			"cue vet ./contracts/plugin-bundle/code-intel/src",
-			"cue export ./contracts/plugin-bundle/code-intel/src -e normalizedMaterializedBundleShapeManifest",
+			"cue vet ./contracts/code-intel/src",
+			"cue export ./contracts/code-intel/src -e normalizedMaterializedBundleShapeManifest",
 		]
 		negativeChecks: ["codeIntelShapeDrift"]
 		forbiddenAttractors: []
@@ -51,7 +47,7 @@ _materializedBundleShape: tmpl.#PluginBundleSrcRootShape & {
 normalizedMaterializedBundleShapeManifest: _materializedBundleShape
 
 materializedBundleShapeValidationPlan: close({
-	path:     "contracts/plugin-bundle/code-intel/src"
+	path:     "contracts/code-intel/src"
 	positive: _materializedBundleShape.validation.commands
 	negative: [
 		"! cue export ./contracts/plugin-bundle/template/checks -e _negativeBottomChecks.staleLocalCheckReferenceAccepted",
