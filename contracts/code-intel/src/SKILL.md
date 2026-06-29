@@ -30,9 +30,11 @@ Use `generated/lsp/cue-lsp.json` for editor/server configuration and `contracts/
 ## Validation
 
 ```sh
-cd contracts/plugin-bundle/code-intel/src
+cd contracts/code-intel/src
 cue vet ./contracts/code-intel
 cue export ./contracts/code-intel -e codeIntelLuaFirstWorkflow
+cue export ./contracts/code-intel -e codeIntelLuaFirstWorkflowStageProjection
 cue export ./contracts/code-intel -e codeIntelBoundaryReport
 cue export ./contracts/code-intel -e codeIntelImplementationRecommendations
+cue vet -c -d '#CodeIntelLuaFirstWorkflowStageProjection' ./contracts/code-intel ./generated/workflows/lua-first/workflow.json
 ```
