@@ -11,6 +11,15 @@ _issue: {
 	dependsOn: [80, 81]
 }
 
+_crossRepoIssue: {
+	number:    83
+	title:     "cue(plugin-bundle): define cross-repo generation and distribution targets"
+	path:      "contracts/plugin-bundle/generation-distribution/manifest.cue"
+	issuePath: "contracts/issues/83/manifest.cue"
+	parent:    79
+	dependsOn: [80, 81, 82]
+}
+
 #PluginBundleGenerationPlan: close({
 	templateShape: string & !=""
 	sourceRoots: [...string & !=""] & [_, ...]
@@ -271,6 +280,87 @@ pluginBundleGenerationDistributionPlan: #PluginBundleGenerationPlan & {
 		distributionDiffPolicy: "path-contained-reviewable"
 	}
 }
+
+CrossRepoPluginBundleDistributionTarget: close({
+	sourceBundle: string & !=""
+	sourceAuthority: string & !=""
+	targetRepository: string & !=""
+	targetPath: string & !=""
+	distributionMode: "repo-local-runtime-projection" | "consumer-runtime-projection"
+})
+
+CrossRepoPluginBundleDistributionTargetMatrix: close({
+	targets: [...CrossRepoPluginBundleDistributionTarget] & [_, ...]
+	sourceAuthority: "contracts/plugin-bundle/generation-distribution"
+	reviewBoundary: "path-contained-reviewable"
+})
+
+normalizedCrossRepoPluginBundleDistributionManifest: close({
+	issue: _crossRepoIssue
+	distributionTargets: [
+		{
+			sourceBundle:     "agent-context-resolver"
+			sourceAuthority:  "contracts/plugin-bundle/generation-distribution"
+			targetRepository: "fatb4f/factory"
+			targetPath:       ".codex/plugins/agent-context-resolver"
+			distributionMode: "repo-local-runtime-projection"
+		},
+		{
+			sourceBundle:     "agent-context-resolver"
+			sourceAuthority:  "contracts/plugin-bundle/generation-distribution"
+			targetRepository: "fatb4f/dotfiles"
+			targetPath:       ".codex/plugins/agent-context-resolver"
+			distributionMode: "consumer-runtime-projection"
+		},
+		{
+			sourceBundle:     "code-intel"
+			sourceAuthority:  "contracts/plugin-bundle/generation-distribution"
+			targetRepository: "fatb4f/dotfiles"
+			targetPath:       ".codex/plugins/code-intel"
+			distributionMode: "consumer-runtime-projection"
+		},
+	]
+	invariants: [
+		"factory owns canonical plugin-bundle generation/distribution authority",
+		"agent-context-resolver distributes to factory and dotfiles",
+		"code-intel distributes to dotfiles only",
+		"cross-repo promotions require reviewable, path-contained diffs",
+	]
+})
+
+crossRepoPluginBundleDistributionValidationPlan: close({
+	path: "contracts/plugin-bundle/generation-distribution"
+	positive: [
+		"cue vet ./contracts/plugin-bundle/generation-distribution",
+		"cue export ./contracts/plugin-bundle/generation-distribution -e normalizedCrossRepoPluginBundleDistributionManifest",
+		"cue export ./contracts/plugin-bundle/generation-distribution -e crossRepoPluginBundleDistributionValidationPlan",
+		"cue export ./contracts/plugin-bundle/generation-distribution -e crossRepoPluginBundleDistributionCompletionReportContract",
+	]
+	negative: [
+		"! cue export ./contracts/plugin-bundle/generation-distribution/checks -e _negativeBottomChecks.codeIntelDistributedToFactoryAccepted",
+		"! cue export ./contracts/plugin-bundle/generation-distribution/checks -e _negativeBottomChecks.dotfilesSourceAuthorityAccepted",
+		"! cue export ./contracts/plugin-bundle/generation-distribution/checks -e _negativeBottomChecks.outsidePluginRootAccepted",
+		"! cue export ./contracts/plugin-bundle/generation-distribution/checks -e _negativeBottomChecks.unreviewedCrossRepoWriteAccepted",
+	]
+})
+
+crossRepoPluginBundleDistributionCompletionReportContract: close({
+	summary: [
+		"canonical plugin-bundle generation/distribution now owns cross-repo targets",
+		"issue 83 is an issue-local projection only",
+		"negative checks bottom through the canonical plugin-bundle check surface",
+	]
+	canonicalFiles: [
+		"contracts/plugin-bundle/generation-distribution/manifest.cue",
+		"contracts/plugin-bundle/generation-distribution/checks/checks.cue",
+	]
+	issueFiles: [
+		"contracts/issues/83/manifest.cue",
+		"contracts/issues/83/checks/checks.cue",
+	]
+	validation:  crossRepoPluginBundleDistributionValidationPlan
+	finalResult: "issue #83 tracks the plugin-bundle cross-repo target matrix"
+})
 
 _validation: impl.#MakeValidationPlan & {
 	in: {
