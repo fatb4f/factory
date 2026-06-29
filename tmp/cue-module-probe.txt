@@ -1,1 +1,0 @@
-import impl "github.com/fatb4f/factory/cuemod/contracts/meta/impl"
