@@ -40,7 +40,7 @@ contracts-code-intel-src:
 	cue export ./contracts/code-intel/src -e materializedBundleShapeCompletionReportContract >/dev/null
 
 contracts-consolidation-guards:
-	! rg 'contracts/plugin-bundle/(agent-context-resolver|code-intel)/src' ./contracts/agent-context-resolver/src ./contracts/code-intel/src
+	! rg 'contracts/plugin-bundle/code-intel/src' ./contracts/code-intel/src
 	! rg 'contracts/code-intel/manifest\.cue' ./contracts/code-intel/src
 
 scaffold-smoke:
