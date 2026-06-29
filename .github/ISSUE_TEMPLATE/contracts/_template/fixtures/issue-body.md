@@ -6,15 +6,6 @@ issue: {
 	number: 0
 	title:  "factory: <title>"
 
-	template: {
-		name: "Factory contract issue"
-		root: ".github/ISSUE_TEMPLATE/contracts"
-		workflow: ".github/ISSUE_TEMPLATE/contracts/_template"
-		manifest: ".github/ISSUE_TEMPLATE/contracts/issues/<issue-number>/manifest.cue"
-		checks: ".github/ISSUE_TEMPLATE/contracts/issues/<issue-number>/checks/bottom.cue"
-		import: "github.com/fatb4f/factory/contracts/meta/impl"
-	}
-
 	tracking: {
 		parent: _|_
 		dependsOn: []
@@ -84,9 +75,9 @@ issue: {
 
 	validation: {
 		commands: [
-			"cue vet <issue-contract-path>",
-			"cue export <issue-contract-path> -e <normalized-export>",
-			"! cue export <issue-contract-path>/checks -e '_negativeBottomChecks.<name>'",
+			"cue vet <contract-surface>",
+			"cue export <contract-surface> -e <normalized-export>",
+			"! cue export <contract-surface>/checks -e '_negativeBottomChecks.<name>'",
 		]
 	}
 
