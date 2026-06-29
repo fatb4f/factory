@@ -8,8 +8,9 @@ _contractSeed: close({
 })
 
 templateAuthority: close({
-	agents:   ".github/ISSUE_TEMPLATE/contracts/_template/AGENTS.md"
-	template: ".github/ISSUE_TEMPLATE/contracts/_template/issue-body.template.md"
+	agents:         ".github/ISSUE_TEMPLATE/contracts/_template/AGENTS.md"
+	activeTemplate: ".github/ISSUE_TEMPLATE/contracts.md"
+	template:       ".github/ISSUE_TEMPLATE/contracts/_template/issue-body.template.md"
 })
 
 issueBodyShape: close({
@@ -46,6 +47,7 @@ issueTemplateValidationPlan: {
 	kind: "validation-plan"
 	commands: [
 		"test -f .github/ISSUE_TEMPLATE/contracts/_template/AGENTS.md",
+		"test -f .github/ISSUE_TEMPLATE/contracts.md",
 		"test -f .github/ISSUE_TEMPLATE/contracts/_template/issue-body.template.md",
 	]
 }

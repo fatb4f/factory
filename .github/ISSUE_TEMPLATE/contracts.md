@@ -1,3 +1,9 @@
+---
+name: Contract issue
+about: Submit a factory implementation issue as a single CUE issue block.
+title: "factory: "
+---
+
 ```cue
 issue: {
 	id:     "factory.<slice-id>"
