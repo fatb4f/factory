@@ -1,11 +1,11 @@
 package issue
 
-import impl "github.com/fatb4f/contract.cuemod/contracts/meta/impl"
+import impl "github.com/fatb4f/factory/cuemod/contracts/meta/impl"
 
 _contractSeed: close({
 	id: "github-issue-template-contract"
 	version: "v0.1.0"
-	owner: "contract.cuemod"
+	owner: "factory/cuemod"
 	idempotent: true
 })
 
@@ -24,7 +24,7 @@ _contractSeed: close({
 
 _repo: #RepoIssueTemplateInput & {
 	repository: "fatb4f/factory"
-	module: "github.com/fatb4f/contract.cuemod"
+	module: "github.com/fatb4f/factory/cuemod"
 	constructorLibrary: "contracts/meta/impl"
 	issueRoot: ".github/ISSUE_TEMPLATE/contracts"
 	templatePath: ".github/ISSUE_TEMPLATE/contracts/_template/manifest.cue"
