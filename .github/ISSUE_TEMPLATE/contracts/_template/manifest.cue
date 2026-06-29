@@ -14,6 +14,15 @@ cueModule: close({
 	module: "github.com/fatb4f/factory"
 })
 
+issueGenerator: close({
+	formPath:          ".github/ISSUE_TEMPLATE/contracts.yml"
+	fixturePath:       ".github/ISSUE_TEMPLATE/contracts/_template/fixtures/issue-body.md"
+	constructorImport: "github.com/fatb4f/factory/contracts/meta/impl"
+	outputRoot:        ".github/ISSUE_TEMPLATE/contracts/issues"
+	checkRoot:         ".github/ISSUE_TEMPLATE/contracts/_template/checks"
+	bodyFieldID:       "issue"
+})
+
 issueBodyShape: close({
 	fenceLanguage: "cue"
 	rootLabel:     "issue"
@@ -24,7 +33,6 @@ issueBodyShape: close({
 		"repo",
 		"number",
 		"title",
-		"template",
 		"tracking",
 		"goal",
 		"intent",
@@ -37,22 +45,29 @@ issueBodyShape: close({
 		"validation",
 		"completionReport",
 	]
-	requiredTemplateFields: ["name", "root", "workflow", "manifest", "checks", "import"]
+	forbiddenIssueFields: [
+		"template",
+		"manifest",
+		"checks",
+		"import",
+		"issueRoot",
+		"templatePath",
+		"constructorLibrary",
+	]
 	requiredWorkflowFields: ["order", "id", "instantiateAt"]
 })
 
-issueTemplateYaml: close({
-	path:       ".github/ISSUE_TEMPLATE/contracts.yml"
+issueForm: close({
+	path:       issueGenerator.formPath
 	fieldCount: 1
 	fieldType:  "textarea"
-	fieldID:    "issue"
+	fieldID:    issueGenerator.bodyFieldID
 	render:     issueBodyShape.fenceLanguage
 	module:     cueModule.module
-	import:     "github.com/fatb4f/factory/contracts/meta/impl"
 })
 
 issueBodyFixture: close({
-	path: ".github/ISSUE_TEMPLATE/contracts/_template/fixtures/issue-body.md"
+	path: issueGenerator.fixturePath
 })
 
 _workflowIndex: [
@@ -68,12 +83,11 @@ _workflowIndex: [
 _primitives: [
 	impl.#MakePrimitive & {
 		in: {
-			name:           "#IssueTemplateCueBlock"
-			role:           "single fenced CUE issue body contract"
-			requiredFields: ["fenceLanguage", "rootLabel", "outerMarkdown", "requiredIssueFields"]
+			name:           "#IssueFormGenerator"
+			role:           "repo-local generator metadata for rendering a GitHub issue body"
+			requiredFields: ["formPath", "fixturePath", "constructorImport", "outputRoot", "checkRoot", "bodyFieldID"]
 			constraints: [
-				"submitted issue bodies are one cue fence only",
-				"the fenced value contains one top-level issue object",
+				"generator metadata is not emitted into issue bodies",
 				"imports resolve through root cue.mod only",
 			]
 			closed: true
@@ -82,12 +96,12 @@ _primitives: [
 	impl.#MakePrimitive & {
 		in: {
 			name:           "#IssueBody"
-			role:           "top-level issue object shape mirrored from dotfiles issue #44"
+			role:           "top-level implementation issue object shape mirrored from dotfiles issue #44 without generator metadata"
 			requiredFields: issueBodyShape.requiredIssueFields
 			constraints: [
-				"template metadata is carried under issue.template",
+				"issue body carries implementation intent, authority, workflow, validation, and completion terms only",
 				"workflow entries preserve order, id, and instantiateAt shape",
-				"no alternate module path is admitted as an import root",
+				"generator paths, imports, and issue-form terms stay outside issue body",
 			]
 			closed: true
 		}
@@ -95,10 +109,11 @@ _primitives: [
 ]
 
 negativeIssueTemplateFixtures: {
-	extraMarkdownHeading:     {id: "extraMarkdownHeading"}
-	missingCueFence:         {id: "missingCueFence"}
-	missingTopLevelIssue:    {id: "missingTopLevelIssue"}
-	alternateModuleRoot:     {id: "alternateModuleRoot"}
+	extraMarkdownHeading:  {id: "extraMarkdownHeading"}
+	missingCueFence:      {id: "missingCueFence"}
+	missingTopLevelIssue: {id: "missingTopLevelIssue"}
+	alternateModuleRoot:  {id: "alternateModuleRoot"}
+	bodyCarriesGenerator: {id: "bodyCarriesGenerator"}
 }
 
 _negativeFixtures: [
@@ -106,19 +121,21 @@ _negativeFixtures: [
 	negativeIssueTemplateFixtures.missingCueFence,
 	negativeIssueTemplateFixtures.missingTopLevelIssue,
 	negativeIssueTemplateFixtures.alternateModuleRoot,
+	negativeIssueTemplateFixtures.bodyCarriesGenerator,
 ]
 
 _bottomCheckPlans: [
 	{name: "extraMarkdownHeadingRejected", fixture: negativeIssueTemplateFixtures.extraMarkdownHeading.id, checkSurface: "_negativeBottomChecks", checkFile: "./.github/ISSUE_TEMPLATE/contracts/_template/checks/body_shape.cue"},
 	{name: "missingCueFenceRejected", fixture: negativeIssueTemplateFixtures.missingCueFence.id, checkSurface: "_negativeBottomChecks", checkFile: "./.github/ISSUE_TEMPLATE/contracts/_template/checks/body_shape.cue"},
 	{name: "missingTopLevelIssueRejected", fixture: negativeIssueTemplateFixtures.missingTopLevelIssue.id, checkSurface: "_negativeBottomChecks", checkFile: "./.github/ISSUE_TEMPLATE/contracts/_template/checks/body_shape.cue"},
+	{name: "bodyCarriesGeneratorRejected", fixture: negativeIssueTemplateFixtures.bodyCarriesGenerator.id, checkSurface: "_negativeBottomChecks", checkFile: "./.github/ISSUE_TEMPLATE/contracts/_template/checks/body_shape.cue"},
 	{name: "alternateModuleRootRejected", fixture: negativeIssueTemplateFixtures.alternateModuleRoot.id, checkSurface: "_negativeBottomChecks", checkFile: "./.github/ISSUE_TEMPLATE/contracts/_template/checks/module_root.cue"},
 ]
 
 _surfaces: impl.#MakeSurfaceSet & {
 	in: {
-		admissible: ["#IssueTemplateCueBlock", "#IssueBody"]
-		observed:   ["cueModule", "issueTemplateYaml", "issueBodyFixture"]
+		admissible: ["#IssueFormGenerator", "#IssueBody"]
+		observed:   ["cueModule", "issueGenerator", "issueForm", "issueBodyFixture"]
 		candidates: ["normalizedIssueTemplateManifest"]
 		fixtures:   ["negativeIssueTemplateFixtures"]
 		checks:     ["_negativeBottomChecks"]
@@ -135,7 +152,7 @@ _surfaces: impl.#MakeSurfaceSet & {
 
 _validation: impl.#MakeValidationPlan & {
 	in: {
-		path:              "./.github/ISSUE_TEMPLATE/contracts/_template"
+		path:              ".github/ISSUE_TEMPLATE/contracts/_template"
 		validBaselineExpr: "issueBodyShape"
 		publicExpr:        "normalizedIssueTemplateManifest"
 		bottomChecks:      [for plan in _bottomCheckPlans {plan.name}]
@@ -152,15 +169,16 @@ _completion: impl.#MakeCompletionReport & {
 		fixtures:  [for fixture in _negativeFixtures {fixture.id}]
 		checks:    _validation.in.bottomChecks
 		commands:  _validation.out.commands
-		evidence:  ["root cue.mod module", "single cue fence", "top-level issue object", "issue #44 shape parity"]
+		evidence:  ["generator metadata separated from issue body", "root cue.mod module", "single cue fence", "top-level issue object", "issue #44 body-shape parity"]
 	}
 }
 
 normalizedIssueTemplateManifest: {
 	seed:             _contractSeed
 	cueModule:        cueModule
+	generator:        issueGenerator
 	shape:            issueBodyShape
-	template:         issueTemplateYaml
+	form:             issueForm
 	fixture:          issueBodyFixture
 	workflow:         _workflowIndex
 	primitives:       [for item in _primitives {item.out}]
