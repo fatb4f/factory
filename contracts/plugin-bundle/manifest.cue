@@ -18,6 +18,8 @@ _repo: close({
 	authorityPath:      "contracts/plugin-bundle/manifest.cue"
 })
 
+_generatedCheckRoot: "contracts/plugin-bundle/agent-context-resolver/generated/checks/plugin-bundle-root"
+
 #PluginBundleSourceRoot: close({
 	bundleID:               string & !=""
 	path:                   string & =~"^contracts/plugin-bundle/[^/]+/src$"
@@ -107,13 +109,13 @@ _pluginBundleRootAuthority: #PluginBundleRootAuthority & {
 		runtimeRequiresContractCuemodLookup:  false
 		broadRepoScanRequired:               false
 	}
-	generatedRoots: []
+	generatedRoots: ["contracts/plugin-bundle/agent-context-resolver/generated"]
 	generatedRootScope: "bundle-local"
 }
 
 _pluginBundleRootInventory: #PluginBundleRootInventory & {
 	bundleSourceRoots: [
-		{bundleID: "agent-context-resolver", path: "contracts/plugin-bundle/agent-context-resolver/src", role: "bundle-source-authority", templateShapeAuthority: "contracts/plugin-bundle/template/template.cue"},
+		{bundleID: "agent-context-resolver", path: "contracts/plugin-bundle/agent-context-resolver/src", role: "bundle-source-authority", templateShapeAuthority: "contracts/plugin-bundle/template/template.cue", generatedRoot: "contracts/plugin-bundle/agent-context-resolver/generated"},
 		{bundleID: "code-intel", path: "contracts/plugin-bundle/code-intel/src", role: "bundle-source-authority", templateShapeAuthority: "contracts/plugin-bundle/template/template.cue"},
 	]
 	runtimeProjectionRoots: _pluginBundleRootAuthority.projections
@@ -141,7 +143,7 @@ _surfaces: impl.#MakeSurfaceSet & {
 		observed: ["contracts/plugin-bundle/template", "contracts/plugin-bundle/generation-distribution", "contracts/plugin-bundle/agent-context-resolver/src", "contracts/plugin-bundle/code-intel/src", ".codex/plugins/agent-context-resolver", ".codex/plugins/code-intel"]
 		candidates: ["pluginBundleRootAuthority", "pluginBundleRootInventory", "normalizedPluginBundleRootManifest"]
 		fixtures: ["negativePluginBundleRootFixtures"]
-		checks: ["_negativeBottomChecks"]
+		checks: ["generated assertion checks at \(_generatedCheckRoot)"]
 		publicExports: ["pluginBundleRootAuthority", "pluginBundleRootInventory", "normalizedPluginBundleRootManifest", "pluginBundleRootValidationPlan", "pluginBundleRootCompletionReportContract", "pluginBundleRootAuthorityPath"]
 	}
 }
@@ -166,11 +168,11 @@ negativePluginBundleRootFixtures: {
 
 _bottomCheckNames: ["factoryRootAsPluginBundleAuthorityAccepted", "generatedRuntimeAuthorityAccepted", "projectionOutsideCodexPluginsAccepted", "externalRuntimeLookupAccepted", "sourceRootOutsidePluginBundleAccepted", "topLevelGeneratedRootAccepted"]
 
-_bottomCheckPlans: [for fixtureName in _bottomCheckNames {impl.#MakeBottomCheckPlan & {in: {name: fixtureName, fixture: fixtureName, checkSurface: "_negativeBottomChecks", checkFile: "./contracts/plugin-bundle/checks"}}}]
+_bottomCheckPlans: [for fixtureName in _bottomCheckNames {impl.#MakeBottomCheckPlan & {in: {name: fixtureName, fixture: fixtureName, checkSurface: "_negativeBottomChecks", checkFile: "./\(_generatedCheckRoot)"}}}]
 
-_validation: impl.#MakeValidationPlan & {in: {path: "contracts/plugin-bundle", validBaselineExpr: "normalizedPluginBundleRootManifest", publicExpr: "pluginBundleRootAuthority", bottomChecks: _bottomCheckNames, checkFile: "./contracts/plugin-bundle/checks", checkSurface: "_negativeBottomChecks", forbiddenPattern: "[g]eneratedOutputsAreAuthority: true|[r]untimeOutputsAreAuthority: true|[i]ssueLocalContractsAreAuthority: true|[r]untimeRequiresExternalFactoryLookup: true|[r]untimeRequiresContractCuemodLookup: true|[t]opLevelGeneratedRoot: true"}}
+_validation: impl.#MakeValidationPlan & {in: {path: "contracts/plugin-bundle", validBaselineExpr: "normalizedPluginBundleRootManifest", publicExpr: "pluginBundleRootAuthority", bottomChecks: _bottomCheckNames, checkFile: "./\(_generatedCheckRoot)", checkSurface: "_negativeBottomChecks", forbiddenPattern: "[g]eneratedOutputsAreAuthority: true|[r]untimeOutputsAreAuthority: true|[i]ssueLocalContractsAreAuthority: true|[r]untimeRequiresExternalFactoryLookup: true|[r]untimeRequiresContractCuemodLookup: true|[t]opLevelGeneratedRoot: true"}}
 
-_completion: impl.#MakeCompletionReport & {in: {primitives: [for primitive in _primitives {primitive.out.name}], surfaces: _surfaces.out.publicExports, fixtures: [for fixture in _negativeFixtures {fixture.out.id}], checks: _bottomCheckNames, commands: _validation.out.commands, evidence: ["root contract anchors contracts/plugin-bundle as source authority", "contracts/factory is referenced as factory boundary, not nested plugin-bundle authority", "contracts/meta/impl constructors define root primitive/surface/validation/completion shape", "runtime packages remain path-contained non-authority projections"]}}
+_completion: impl.#MakeCompletionReport & {in: {primitives: [for primitive in _primitives {primitive.out.name}], surfaces: _surfaces.out.publicExports, fixtures: [for fixture in _negativeFixtures {fixture.out.id}], checks: _bottomCheckNames, commands: _validation.out.commands, evidence: ["root contract anchors contracts/plugin-bundle as source authority", "contracts/factory is referenced as factory boundary, not nested plugin-bundle authority", "contracts/meta/impl constructors define root primitive/surface/validation/completion shape", "runtime packages remain path-contained non-authority projections", "executable root checks are generated under the agent-context-resolver generated projection root"]}}
 
 pluginBundleRootAuthority:                 _pluginBundleRootAuthority
 pluginBundleRootInventory:                 _pluginBundleRootInventory
