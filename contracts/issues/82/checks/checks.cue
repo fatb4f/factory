@@ -22,6 +22,10 @@ package issue82checks
 	runtimeRequiresContractCuemodLookup?: false
 })
 
+_issueProjection: {
+	canonicalChecks: "contracts/plugin-bundle/generation-distribution/checks/checks.cue"
+}
+
 _negativeFixtures: {
 	generatedPackageAuthorityAccepted: {
 		input: {
