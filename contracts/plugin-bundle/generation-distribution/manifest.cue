@@ -20,6 +20,52 @@ _crossRepoIssue: {
 	dependsOn: [80, 81, 82]
 }
 
+_materializationIssue: {
+	number:    84
+	title:     "plugin-bundle: materialize generated runtime packages"
+	path:      "contracts/plugin-bundle/generation-distribution/manifest.cue"
+	issuePath: "contracts/plugin-bundle/generation-distribution/manifest.cue"
+	parent:    83
+	dependsOn: [42, 83]
+}
+
+_contractSeed: close({
+	id:         "plugin-bundle-materialization"
+	version:    "v0.1.0"
+	owner:      "factory/plugin-bundle"
+	idempotent: true
+})
+
+_repo: close({
+	repository:         "fatb4f/factory"
+	module:             "github.com/fatb4f/factory/cuemod"
+	constructorLibrary: "contracts/meta/impl"
+	issueRoot:          ".github/ISSUE_TEMPLATE/contracts"
+	templatePath:       ".github/ISSUE_TEMPLATE/contracts/_template/manifest.cue"
+	sourceAuthority:    "contracts/plugin-bundle/generation-distribution"
+	planExport:         "pluginBundleMaterializationPlan"
+})
+
+_issues: close({
+	parent: close({
+		title: "plugin-bundle: materialize generated runtime packages"
+		path:  "contracts/plugin-bundle/generation-distribution/manifest.cue"
+		dependsOn: [42, 83]
+	})
+	materializerFunction: close({
+		title:  "plugin-bundle: implement idempotent materializer function"
+		path:   "contracts/plugin-bundle/generation-distribution/manifest.cue"
+		parent: 84
+		dependsOn: [83]
+	})
+	agentContextResolverMaterialization: close({
+		title:  "plugin-bundle: materialize agent-context-resolver for factory and dotfiles"
+		path:   "contracts/plugin-bundle/generation-distribution/manifest.cue"
+		parent: 84
+		dependsOn: [84, 83]
+	})
+})
+
 #PluginBundleGenerationPlan: close({
 	templateShape: string & !=""
 	sourceRoots: [...string & !=""] & [_, ...]
@@ -29,8 +75,8 @@ _crossRepoIssue: {
 })
 
 #PluginBundleDistributionPackage: close({
-	bundleID: string & !=""
-	sourceRoot: string & =~"^contracts/plugin-bundle/[^/]+/src$"
+	bundleID:         string & !=""
+	sourceRoot:       string & =~"^contracts/plugin-bundle/[^/]+/src$"
 	distributionRoot: string & =~"^\\.codex/plugins/[^/]+$"
 	runtimeFiles: [...string & !=""]
 	lockEvidence: [...string & !=""]
@@ -45,25 +91,97 @@ _crossRepoIssue: {
 })
 
 #GeneratedPackageAuthorityBoundary: close({
-	path: string & =~"^\\.codex/plugins/[^/]+/.+"
-	role: "projection"
+	path:                       string & =~"^\\.codex/plugins/[^/]+/.+"
+	role:                       "projection"
 	generatedPackageAuthority?: false
 })
 
 #DistributionRootContainmentBoundary: close({
-	bundleID: string & !=""
+	bundleID:         string & !=""
 	distributionRoot: string & =~"^\\.codex/plugins/[^/]+$"
-	pathContained: true
+	pathContained:    true
 })
 
 #DeterministicGenerationBoundary: close({
-	generatedAtRuntime?: false
+	generatedAtRuntime?:    false
 	nonDeterministicInput?: false
 })
 
 #RuntimeExternalSourceLookupBoundary: close({
 	runtimeRequiresExternalFactoryLookup?: false
-	runtimeRequiresContractCuemodLookup?: false
+	runtimeRequiresContractCuemodLookup?:  false
+})
+
+#PluginBundleMaterializationProgram: close({
+	sourceAuthority: _repo.sourceAuthority
+	planExport:      _repo.planExport
+	materializer:    #PluginBundleMaterializerFunctionRef
+	targets: [...#PluginBundleMaterializationTarget] & [_, ...]
+})
+
+#PluginBundleMaterializerFunctionRef: close({
+	issue:                  string | int
+	role:                   "idempotent projection writer"
+	mustBeDeterministic:    true
+	mustBeIdempotent:       true
+	mustBePathContained:    true
+	mustNotOwnPolicy:       true
+	mustNotOwnAuthority:    true
+	mustEmitReviewableDiff: true
+})
+
+#PluginBundleMaterializerFunction: close({
+	inputExport:     _repo.planExport
+	sourceAuthority: _repo.sourceAuthority
+	writeRoot:       ".codex/plugins"
+	modes: [...("plan" | "check" | "apply")] & ["plan", "check", "apply"]
+	idempotent:        true
+	deterministic:     true
+	pathContained:     true
+	projectionOnly:    true
+	authorityBoundary: "projection-only"
+	lockEvidence: close({
+		recordsSourceAuthority: true
+		recordsGeneratedFiles:  true
+		isAuthority:            false
+	})
+})
+
+#PluginBundleMaterializationTarget: close({
+	sourceBundle:      string & !=""
+	sourceAuthority:   _repo.sourceAuthority
+	targetRepository:  string & !=""
+	targetPath:        string & =~"^\\.codex/plugins/[^/]+$"
+	distributionMode:  "repo-local-runtime-projection" | "consumer-runtime-projection"
+	authorityBoundary: "projection-only"
+	pathContained:     true
+	reviewableDiff:    true
+})
+
+#AgentContextResolverMaterializationTarget: #PluginBundleMaterializationTarget & close({
+	sourceBundle:     "agent-context-resolver"
+	targetRepository: "fatb4f/factory" | "fatb4f/dotfiles"
+	targetPath:       ".codex/plugins/agent-context-resolver"
+	distributionMode: "repo-local-runtime-projection" | "consumer-runtime-projection"
+})
+
+#AgentContextResolverMaterializationSlice: close({
+	bundleID:              "agent-context-resolver"
+	sourceAuthority:       _repo.sourceAuthority
+	dependsOnMaterializer: 84
+	targets: [
+		#AgentContextResolverMaterializationTarget & {
+			targetRepository: "fatb4f/factory"
+			distributionMode: "repo-local-runtime-projection"
+		},
+		#AgentContextResolverMaterializationTarget & {
+			targetRepository: "fatb4f/dotfiles"
+			distributionMode: "consumer-runtime-projection"
+		},
+	]
+	idempotent:     true
+	deterministic:  true
+	projectionOnly: true
 })
 
 _workflowIndex: [
@@ -248,19 +366,19 @@ pluginBundleGenerationDistributionPlan: #PluginBundleGenerationPlan & {
 	materializedRoots: sourceRoots
 	emittedArtifacts: [
 		{
-			bundleID:           "agent-context-resolver"
-			sourceRoot:         "contracts/plugin-bundle/agent-context-resolver/src"
-			distributionRoot:  ".codex/plugins/agent-context-resolver"
-			runtimeFiles:      ["manifest.json", "SKILL.md", "scripts/agent-context-resolver-hook", "scripts/resolve-agent-context"]
-			lockEvidence:      ["package.lock.json"]
+			bundleID:         "agent-context-resolver"
+			sourceRoot:       "contracts/plugin-bundle/agent-context-resolver/src"
+			distributionRoot: ".codex/plugins/agent-context-resolver"
+			runtimeFiles: ["manifest.json", "SKILL.md", "scripts/agent-context-resolver-hook", "scripts/resolve-agent-context"]
+			lockEvidence: ["package.lock.json"]
 			authorityBoundary: "projection-only"
 		},
 		{
-			bundleID:           "code-intel"
-			sourceRoot:         "contracts/plugin-bundle/code-intel/src"
-			distributionRoot:  ".codex/plugins/code-intel"
-			runtimeFiles:      ["manifest.json", "SKILL.md"]
-			lockEvidence:      []
+			bundleID:         "code-intel"
+			sourceRoot:       "contracts/plugin-bundle/code-intel/src"
+			distributionRoot: ".codex/plugins/code-intel"
+			runtimeFiles: ["manifest.json", "SKILL.md"]
+			lockEvidence: []
 			authorityBoundary: "projection-only"
 		},
 	]
@@ -281,18 +399,37 @@ pluginBundleGenerationDistributionPlan: #PluginBundleGenerationPlan & {
 	}
 }
 
+pluginBundleMaterializationPlan: #PluginBundleMaterializationProgram & {
+	sourceAuthority: _repo.sourceAuthority
+	planExport:      _repo.planExport
+	materializer: {
+		issue:                  84
+		role:                   "idempotent projection writer"
+		mustBeDeterministic:    true
+		mustBeIdempotent:       true
+		mustBePathContained:    true
+		mustNotOwnPolicy:       true
+		mustNotOwnAuthority:    true
+		mustEmitReviewableDiff: true
+	}
+	targets: _materializationIssue & {
+		materializerFunction:                #PluginBundleMaterializerFunction
+		agentContextResolverMaterialization: #AgentContextResolverMaterializationSlice
+	}
+}
+
 CrossRepoPluginBundleDistributionTarget: close({
-	sourceBundle: string & !=""
-	sourceAuthority: string & !=""
+	sourceBundle:     string & !=""
+	sourceAuthority:  string & !=""
 	targetRepository: string & !=""
-	targetPath: string & !=""
+	targetPath:       string & !=""
 	distributionMode: "repo-local-runtime-projection" | "consumer-runtime-projection"
 })
 
 CrossRepoPluginBundleDistributionTargetMatrix: close({
 	targets: [...CrossRepoPluginBundleDistributionTarget] & [_, ...]
 	sourceAuthority: "contracts/plugin-bundle/generation-distribution"
-	reviewBoundary: "path-contained-reviewable"
+	reviewBoundary:  "path-contained-reviewable"
 })
 
 normalizedCrossRepoPluginBundleDistributionManifest: close({
@@ -377,10 +514,10 @@ _validation: impl.#MakeValidationPlan & {
 _completion: impl.#MakeCompletionReport & {
 	in: {
 		primitives: [for primitive in _primitives {primitive.out.name}]
-		surfaces:  _surfaces.out.publicExports
-		fixtures:  [for fixture in _negativeFixtures {fixture.out.id}]
-		checks:    _bottomCheckNames
-		commands:  _validation.out.commands
+		surfaces: _surfaces.out.publicExports
+		fixtures: [for fixture in _negativeFixtures {fixture.out.id}]
+		checks:   _bottomCheckNames
+		commands: _validation.out.commands
 		evidence: [
 			"template-owned src-root shape from #80",
 			"materialized resolver/code-intel src-root conformance from #81",
@@ -393,7 +530,7 @@ normalizedPluginBundleGenerationDistributionManifest: {
 	issue:    _issue
 	workflow: _workflowIndex
 	plan:     pluginBundleGenerationDistributionPlan
-	primitives:       [for primitive in _primitives {primitive.out}]
+	primitives: [for primitive in _primitives {primitive.out}]
 	surfaces:         _surfaces.out
 	negativeFixtures: negativePluginBundleGenerationDistributionFixtures
 	bottomCheckPlans: [for plan in _bottomCheckPlans {plan.out}]
@@ -416,3 +553,195 @@ pluginBundleGenerationDistributionCompletionReportContract: _completion.out
 normalizedPluginBundleGenerationDistributionAuthority:      normalizedPluginBundleGenerationDistributionManifest
 pluginBundleMaterializationPlan:                            pluginBundleGenerationDistributionPlan
 pluginBundleGenerationDistributionAuthorityPath:            "contracts/plugin-bundle/generation-distribution/manifest.cue"
+
+_materializerFunction: #PluginBundleMaterializerFunction
+
+_agentContextResolverMaterialization: #AgentContextResolverMaterializationSlice
+
+_negativeFixtures: [
+	impl.#MakeNegativeFixture & {
+		in: {
+			name:     "nonIdempotentMaterializerAccepted"
+			violates: "materializer idempotence"
+			refusal:  "materializer must converge to no diff on unchanged input"
+			input: {
+				idempotent: false
+			}
+		}
+	},
+	impl.#MakeNegativeFixture & {
+		in: {
+			name:     "materializerOwnsPolicyAccepted"
+			violates: "authority boundary"
+			refusal:  "materializer consumes CUE authority but does not define bundle policy"
+			input: {
+				sourceAuthority:  "materializer-runtime"
+				mustNotOwnPolicy: false
+			}
+		}
+	},
+	impl.#MakeNegativeFixture & {
+		in: {
+			name:     "writeOutsidePluginRootAccepted"
+			violates: "path containment"
+			refusal:  "materializer writes stay under .codex/plugins/<bundle-id>"
+			input: {
+				writeRoot:     "contracts/plugin-bundle/generated"
+				pathContained: false
+			}
+		}
+	},
+	impl.#MakeNegativeFixture & {
+		in: {
+			name:     "lockEvidenceAuthorityAccepted"
+			violates: "generated evidence boundary"
+			refusal:  "lock evidence records generated state but is not source authority"
+			input: {
+				lockEvidence: {
+					isAuthority: true
+				}
+			}
+		}
+	},
+	impl.#MakeNegativeFixture & {
+		in: {
+			name:     "dotfilesSourceAuthorityAccepted"
+			violates: "consumer authority boundary"
+			refusal:  "fatb4f/dotfiles receives generated runtime projection only"
+			input: {
+				targetRepository:          "fatb4f/dotfiles"
+				sourceAuthority:           "fatb4f/dotfiles:.codex/plugins/agent-context-resolver"
+				targetOwnsSourceAuthority: true
+			}
+		}
+	},
+	impl.#MakeNegativeFixture & {
+		in: {
+			name:     "factoryCodeIntelWriteAccepted"
+			violates: "agent-context-resolver-only target set"
+			refusal:  "this slice materializes agent-context-resolver only; code-intel is not a factory target"
+			input: {
+				sourceBundle:     "code-intel"
+				targetRepository: "fatb4f/factory"
+				targetPath:       ".codex/plugins/code-intel"
+			}
+		}
+	},
+	impl.#MakeNegativeFixture & {
+		in: {
+			name:     "outsideAgentContextResolverRootAccepted"
+			violates: "path containment"
+			refusal:  "agent-context-resolver writes stay under .codex/plugins/agent-context-resolver"
+			input: {
+				targetRepository: "fatb4f/dotfiles"
+				targetPath:       ".codex/agent-context-resolver"
+				pathContained:    false
+			}
+		}
+	},
+	impl.#MakeNegativeFixture & {
+		in: {
+			name:     "unreviewableDiffAccepted"
+			violates: "review boundary"
+			refusal:  "materialization must produce reviewable path-contained diffs in each target repository"
+			input: {
+				targetRepository: "fatb4f/dotfiles"
+				reviewableDiff:   false
+			}
+		}
+	},
+]
+
+negativePluginBundleMaterializationFixtures: {
+	nonIdempotentMaterializerAccepted:       _negativeFixtures[0].out
+	materializerOwnsPolicyAccepted:          _negativeFixtures[1].out
+	writeOutsidePluginRootAccepted:          _negativeFixtures[2].out
+	lockEvidenceAuthorityAccepted:           _negativeFixtures[3].out
+	dotfilesSourceAuthorityAccepted:         _negativeFixtures[4].out
+	factoryCodeIntelWriteAccepted:           _negativeFixtures[5].out
+	outsideAgentContextResolverRootAccepted: _negativeFixtures[6].out
+	unreviewableDiffAccepted:                _negativeFixtures[7].out
+}
+
+_materializationBottomCheckPlans: [
+	for fixtureName in [
+		"nonIdempotentMaterializerAccepted",
+		"materializerOwnsPolicyAccepted",
+		"writeOutsidePluginRootAccepted",
+		"lockEvidenceAuthorityAccepted",
+		"dotfilesSourceAuthorityAccepted",
+		"factoryCodeIntelWriteAccepted",
+		"outsideAgentContextResolverRootAccepted",
+		"unreviewableDiffAccepted",
+	] {
+		impl.#MakeBottomCheckPlan & {
+			in: {
+				name:         fixtureName
+				fixture:      fixtureName
+				checkSurface: "_negativeBottomChecks"
+				checkFile:    "./contracts/plugin-bundle/generation-distribution/checks"
+			}
+		}
+	},
+]
+
+_materializationValidation: impl.#MakeValidationPlan & {
+	in: {
+		path:              "contracts/plugin-bundle/generation-distribution"
+		validBaselineExpr: "normalizedPluginBundleMaterializationManifest"
+		publicExpr:        "normalizedPluginBundleMaterializationManifest"
+		bottomChecks: [for plan in _materializationBottomCheckPlans {plan.out.name}]
+		checkFile:        "./contracts/plugin-bundle/generation-distribution/checks"
+		checkSurface:     "_negativeBottomChecks"
+		forbiddenPattern: "[i]dempotent: false|[d]eterministic: false|[p]athContained: false|[p]rojectionOnly: false|[i]sAuthority: true|[t]argetOwnsSourceAuthority: true|[m]aterializedIsAuthority: true|[g]eneratedPackageAuthority: true|[s]ourceAuthority: \"materializer-runtime\""
+	}
+}
+
+_materializationCompletion: impl.#MakeCompletionReport & {
+	in: {
+		primitives: [for primitive in _primitives {primitive.out.name}]
+		surfaces: _surfaces.out.publicExports
+		fixtures: [for fixture in _negativeFixtures {fixture.out.id}]
+		checks:   _materializationValidation.in.bottomChecks
+		commands: _materializationValidation.out.commands
+		evidence: [
+			"issue-template constructor pattern",
+			"generation-distribution authority exports pluginBundleMaterializationPlan",
+			"agent-context-resolver target matrix includes fatb4f/factory and fatb4f/dotfiles",
+			"materializer is idempotent, deterministic, path-contained, and projection-only",
+		]
+	}
+}
+
+_parentProgram: #PluginBundleMaterializationProgram & {
+	sourceAuthority: _repo.sourceAuthority
+	planExport:      _repo.planExport
+	materializer: {
+		issue:                  84
+		role:                   "idempotent projection writer"
+		mustBeDeterministic:    true
+		mustBeIdempotent:       true
+		mustBePathContained:    true
+		mustNotOwnPolicy:       true
+		mustNotOwnAuthority:    true
+		mustEmitReviewableDiff: true
+	}
+	targets: _agentContextResolverMaterialization.targets
+}
+
+normalizedPluginBundleMaterializationManifest: {
+	seed:                                _contractSeed
+	repo:                                _repo
+	issues:                              _issues
+	workflow:                            _workflowIndex
+	parentProgram:                       _parentProgram
+	materializerFunction:                _materializerFunction
+	agentContextResolverMaterialization: _agentContextResolverMaterialization
+	primitives: [for primitive in _primitives {primitive.out}]
+	surfaces:         _surfaces.out
+	negativeFixtures: negativePluginBundleMaterializationFixtures
+	bottomCheckPlans: [for plan in _materializationBottomCheckPlans {plan.out}]
+}
+
+pluginBundleMaterializationValidationPlan:           _materializationValidation.out
+pluginBundleMaterializationCompletionReportContract: _materializationCompletion.out
