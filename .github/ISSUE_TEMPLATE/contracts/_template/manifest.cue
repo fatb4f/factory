@@ -1,107 +1,108 @@
 package issue
 
-import impl "github.com/fatb4f/dotfiles/github/dotfiles-manifest-slice/contracts/dotfiles/workflow"
+import impl "github.com/fatb4f/contract.cuemod/contracts/meta/impl"
 
-_implementationWorkflow: [
-	{order: 1, id: "#MakeDotfilesPrimitive", constructor: impl.#MakeDotfilesPrimitive, instantiateAt: "_primitives"},
-	{order: 2, id: "#MakeObservedSurface", constructor: impl.#MakeObservedSurface, instantiateAt: "_observed"},
-	{order: 3, id: "#MakeAdmissibleSurface", constructor: impl.#MakeAdmissibleSurface, instantiateAt: "_admissible"},
-	{order: 4, id: "#MakePredicateSet", constructor: impl.#MakePredicateSet, instantiateAt: "_predicates"},
-	{order: 5, id: "#MakePromotionCandidate", constructor: impl.#MakePromotionCandidate, instantiateAt: "_promotion"},
-	{order: 6, id: "#MakeSurfaceSet", constructor: impl.#MakeSurfaceSet, instantiateAt: "_surfaces"},
-	{order: 7, id: "#MakeNegativeFixture", constructor: impl.#MakeNegativeFixture, instantiateAt: "_negativeFixtures"},
-	{order: 8, id: "#MakeBottomCheckPlan", constructor: impl.#MakeBottomCheckPlan, instantiateAt: "_bottomCheckPlans"},
-	{order: 9, id: "#MakeBottomCheckProof", constructor: impl.#MakeBottomCheckProof, instantiateAt: "checks/_negativeBottomChecks"},
-	{order: 10, id: "#MakeValidationPlan", constructor: impl.#MakeValidationPlan, instantiateAt: "_validation"},
-	{order: 11, id: "#MakeCompletionReport", constructor: impl.#MakeCompletionReport, instantiateAt: "_completion"},
-]
+_contractSeed: close({
+	id: "github-issue-template-contract"
+	version: "v0.1.0"
+	owner: "contract.cuemod"
+	idempotent: true
+})
 
-_workflowIndex: [for step in _implementationWorkflow {
-	order: step.order
-	id: step.id
-	instantiateAt: step.instantiateAt
-}]
+#RepoIssueTemplateInput: close({
+	repository: string & !=""
+	module: string & !=""
+	constructorLibrary: string & !=""
+	issueRoot: string & !=""
+	templatePath: string & !=""
+	publicExports: close({
+		manifest: string & !=""
+		validationPlan: string & !=""
+		completionReport: string & !=""
+	})
+})
+
+_repo: #RepoIssueTemplateInput & {
+	repository: "fatb4f/factory"
+	module: "github.com/fatb4f/contract.cuemod"
+	constructorLibrary: "contracts/meta/impl"
+	issueRoot: ".github/ISSUE_TEMPLATE/contracts"
+	templatePath: ".github/ISSUE_TEMPLATE/contracts/_template/manifest.cue"
+	publicExports: {
+		manifest: "normalizedIssueTemplateManifest"
+		validationPlan: "issueTemplateValidationPlan"
+		completionReport: "issueTemplateCompletionReportContract"
+	}
+}
 
 _issue: {
 	number: 0
 	title: "template"
-	path: ".github/dotfiles-manifest-slice/contracts/issues/_template/manifest.cue"
+	path: _repo.templatePath
 }
 
+validIssueTemplateSeed: close({
+	seed: _contractSeed
+	issue: _issue
+	repository: _repo.repository
+	module: _repo.module
+	constructorLibrary: _repo.constructorLibrary
+	issueRoot: _repo.issueRoot
+	templatePath: _repo.templatePath
+	repoLocalOverlay: true
+	constructorCallsOnly: true
+	inlineConstructorDefinitions: false
+	generatedArtifactsAreAuthority: false
+})
+
+_workflowIndex: [
+	{order: 1, id: "#MakePrimitive", instantiateAt: "_primitives"},
+	{order: 2, id: "#MakeSurfaceSet", instantiateAt: "_surfaces"},
+	{order: 3, id: "#MakeNegativeFixture", instantiateAt: "_negativeFixtures"},
+	{order: 4, id: "#MakeBottomCheckPlan", instantiateAt: "_bottomCheckPlans"},
+	{order: 5, id: "#MakeValidationPlan", instantiateAt: "_validation"},
+	{order: 6, id: "#MakeCompletionReport", instantiateAt: "_completion"},
+]
+
 _primitives: [
-	impl.#MakeDotfilesPrimitive & {
+	impl.#MakePrimitive & {
 		in: {
-			name: "#DotfilesConfigSurface"
-			role: "bounded dotfiles configuration surface"
-			requiredFields: ["path", "role"]
+			name: "#RepoIssueTemplateInput"
+			role: "repo-local input contract for idempotent issue-template installation"
+			requiredFields: ["repository", "module", "constructorLibrary", "issueRoot", "templatePath", "publicExports"]
 			constraints: [
-				"edits must stay inside declared target paths",
-				"runtime observations are evidence only",
-				"generated artifacts are not authority",
+				"repo identity is input data",
+				"module path is repo-local",
+				"public export names are deterministic",
+			]
+			closed: true
+		}
+	},
+	impl.#MakePrimitive & {
+		in: {
+			name: "validIssueTemplateSeed"
+			role: "normalized seed manifest for a repository issue-template contract"
+			requiredFields: ["seed", "issue", "repository", "module", "constructorLibrary", "issueRoot", "templatePath"]
+			constraints: [
+				"constructor bodies stay in the repo-local implementation package",
+				"generated artifacts are evidence only",
 			]
 			closed: true
 		}
 	},
 ]
 
-_observed: [
-	impl.#MakeObservedSurface & {
-		in: {
-			name: "#ObservedDotfilesSurface"
-			target: "#DotfilesConfigSurface"
-			paths: ["<target-path>"]
-			evidence: "repo-local observed files"
-		}
-	},
-]
-
-_admissible: [
-	impl.#MakeAdmissibleSurface & {
-		in: {
-			name: "#AdmissibleDotfilesSurface"
-			target: "#DotfilesConfigSurface"
-			allows: ["<allowed-change>"]
-			forbids: ["<forbidden-change>"]
-		}
-	},
-]
-
-_predicates: [
-	impl.#MakePredicateSet & {
-		in: {
-			name: "#DotfilesSlicePredicates"
-			predicates: [
-				{id: "target-paths-declared", rule: "all materialized edits must be under declared target paths"},
-				{id: "runtime-evidence-only", rule: "runtime observations are evidence only"},
-				{id: "no-generated-authority", rule: "generated artifacts must not define authority"},
-			]
-		}
-	},
-]
-
-_promotion: [
-	impl.#MakePromotionCandidate & {
-		in: {
-			name: "#DotfilesImplementationCandidate"
-			from: "#ObservedDotfilesSurface"
-			to: "#AdmissibleDotfilesSurface"
-			intent: ["<intent>"]
-			nonGoals: ["<non-goal>"]
-		}
-	},
-]
-
 _surfaces: impl.#MakeSurfaceSet & {
 	in: {
-		admissible: ["#AdmissibleDotfilesSurface"]
-		observed: ["#ObservedDotfilesSurface"]
-		candidates: ["#DotfilesImplementationCandidate"]
-		fixtures: ["_negativeFixtures"]
+		admissible: ["validIssueTemplateSeed"]
+		observed: ["_repo"]
+		candidates: ["normalizedIssueTemplateManifest"]
+		fixtures: ["negativeIssueTemplateFixtures"]
 		checks: ["_negativeBottomChecks"]
 		publicExports: [
-			"normalizedDotfilesIssueManifest",
-			"dotfilesValidationPlan",
-			"dotfilesCompletionReportContract",
+			_repo.publicExports.manifest,
+			_repo.publicExports.validationPlan,
+			_repo.publicExports.completionReport,
 		]
 	}
 }
@@ -109,72 +110,90 @@ _surfaces: impl.#MakeSurfaceSet & {
 _negativeFixtures: [
 	impl.#MakeNegativeFixture & {
 		in: {
-			name: "generated-authority-rejected"
+			name: "generatedAuthorityAccepted"
+			violates: "generated artifact authority boundary"
+			refusal: "generated artifacts are projection evidence only"
 			input: {
-				path: "generated/example.cue"
-				role: "authority"
-				isGenerated: true
+				repository: _repo.repository
+				module: _repo.module
+				templatePath: "generated/issue-template/manifest.cue"
+				generatedArtifactsAreAuthority: true
 			}
-			expect: "bottom"
-			reason: "generated artifacts are not authority"
+		}
+	},
+	impl.#MakeNegativeFixture & {
+		in: {
+			name: "inlineConstructorDefinitionsAccepted"
+			violates: "constructor call compactness boundary"
+			refusal: "installed issue templates carry constructor calls, not constructor definitions"
+			input: {
+				repository: _repo.repository
+				module: _repo.module
+				templatePath: _repo.templatePath
+				inlineConstructorDefinitions: true
+			}
 		}
 	},
 ]
 
+negativeIssueTemplateFixtures: {
+	generatedAuthorityAccepted: _negativeFixtures[0].out
+	inlineConstructorDefinitionsAccepted: _negativeFixtures[1].out
+}
+
 _bottomCheckPlans: [
 	impl.#MakeBottomCheckPlan & {
 		in: {
-			name: "generated-authority-bottoms"
-			fixture: "generated-authority-rejected"
-			checkSurface: "checks/_negativeBottomChecks"
+			name: "generatedAuthorityAccepted"
+			fixture: negativeIssueTemplateFixtures.generatedAuthorityAccepted.id
+			checkSurface: "_negativeBottomChecks"
+			checkFile: "./\(_repo.issueRoot)/_template/checks"
+		}
+	},
+	impl.#MakeBottomCheckPlan & {
+		in: {
+			name: "inlineConstructorDefinitionsAccepted"
+			fixture: negativeIssueTemplateFixtures.inlineConstructorDefinitionsAccepted.id
+			checkSurface: "_negativeBottomChecks"
+			checkFile: "./\(_repo.issueRoot)/_template/checks"
 		}
 	},
 ]
 
 _validation: impl.#MakeValidationPlan & {
 	in: {
-		name: "dotfilesValidationPlan"
-		commands: [
-			"cue vet ./.github/dotfiles-manifest-slice/contracts/issues/<issue-number>",
-			"cue export ./.github/dotfiles-manifest-slice/contracts/issues/<issue-number> -e normalizedDotfilesIssueManifest",
-			"cue export ./.github/dotfiles-manifest-slice/contracts/issues/<issue-number> -e dotfilesValidationPlan",
-			"cue export ./.github/dotfiles-manifest-slice/contracts/issues/<issue-number> -e dotfilesCompletionReportContract",
-			"! cue export ./.github/dotfiles-manifest-slice/contracts/issues/<issue-number>/checks -e '_negativeBottomChecks.<name>'",
-			"! rg '[t]arget:\\s*_|[i]nput:\\s*_|[e]xpression:|[i]sInvalid: true|[o]peratorTruthFlag|[i]nline constructor|[g]enerated.*authority' ./.github/dotfiles-manifest-slice/contracts/issues/<issue-number>",
-		]
+		path: "\(_repo.issueRoot)/_template"
+		validBaselineExpr: "validIssueTemplateSeed"
+		publicExpr: _repo.publicExports.manifest
+		bottomChecks: [for plan in _bottomCheckPlans {plan.out.name}]
+		checkFile: "./\(_repo.issueRoot)/_template/checks"
+		checkSurface: "_negativeBottomChecks"
+		forbiddenPattern: "[i]nlineConstructorDefinitions: true|[g]eneratedArtifactsAreAuthority: true"
 	}
 }
 
 _completion: impl.#MakeCompletionReport & {
 	in: {
-		name: "dotfilesCompletionReportContract"
-		sections: [
-			"summary",
-			"manifest workflow",
-			"target surfaces",
-			"materialized config changes",
-			"public eval surfaces",
-			"negative checks",
-			"validation",
-			"evidence",
-			"forbidden attractors avoided",
-		]
+		primitives: [for primitive in _primitives {primitive.out.name}]
+		surfaces: _surfaces.out.publicExports
+		fixtures: [for fixture in _negativeFixtures {fixture.out.id}]
+		checks: _validation.in.bottomChecks
+		commands: _validation.out.commands
+		evidence: ["repo-local input", "repo-local constructor import", "deterministic public exports"]
 	}
 }
 
-normalizedDotfilesIssueManifest: {
+normalizedIssueTemplateManifest: {
+	seed: _contractSeed
+	repo: _repo
 	issue: _issue
 	workflow: _workflowIndex
+	validBaseline: validIssueTemplateSeed
 	primitives: [for item in _primitives {item.out}]
-	observed: [for item in _observed {item.out}]
-	admissible: [for item in _admissible {item.out}]
-	predicates: [for item in _predicates {item.out}]
-	promotion: [for item in _promotion {item.out}]
 	surfaces: _surfaces.out
-	negativeFixtures: [for item in _negativeFixtures {item.out}]
+	negativeFixtures: negativeIssueTemplateFixtures
 	bottomCheckPlans: [for item in _bottomCheckPlans {item.out}]
 }
 
-dotfilesValidationPlan: _validation.out
-
-dotfilesCompletionReportContract: _completion.out
+issueTemplateValidationPlan: _validation.out
+issueTemplateCompletionReportContract: _completion.out
