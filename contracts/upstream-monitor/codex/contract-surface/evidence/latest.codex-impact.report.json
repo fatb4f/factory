@@ -6,16 +6,16 @@
   "target_repo": "fatb4f/factory",
   "entrypoint": "contracts/upstream-monitor/codex/contract-surface/AGENTS.md",
   "adapter": "github_app",
-  "run_id": "20260629T045515Z",
+  "run_id": "20260629T165258Z",
   "publication": {
-    "report_run_path": "contracts/upstream-monitor/codex/contract-surface/reports/runs/20260629T045515Z.codex-impact.md",
+    "report_run_path": "contracts/upstream-monitor/codex/contract-surface/reports/runs/20260629T165258Z.codex-impact.md",
     "report_latest_path": "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md",
-    "evidence_run_path": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260629T045515Z.codex-impact.report.json",
+    "evidence_run_path": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260629T165258Z.codex-impact.report.json",
     "evidence_latest_path": "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json",
     "issue_targets": {},
-    "report_run_commit": "cb600503c8053f0cbd58e9839bc31ef553a158b8",
-    "report_latest_commit": "7e1b5852d81da84d8e6ff2ca970b860eebcfa68d",
-    "evidence_run_commit": "7c56b15f36239f257f9a3667045ffcf0dda42f5f"
+    "report_run_commit": "e336fc99eb704e53eb7fe734fc50788ddf8b5f6e",
+    "report_latest_commit": "018bb05f81908aba17a5883a3b721cd667a17fa4",
+    "evidence_run_commit": "1b56a5b1325264b1636d3e2b49421ee40f379acc"
   },
   "authority_reads": {
     "agents": [
@@ -41,18 +41,18 @@
       "repo": "openai/codex",
       "ref": "main",
       "status": "resolved",
-      "head_commit": "ccdfb4f342a2e659be7ab878309cc5d81683d737",
+      "head_commit": "80f54d1266b4571ef649e7e5ecc382dd4e670937",
       "workspace_version": "0.0.0",
-      "previous_recorded_head": "bdd282f3bbd55df3a869a5438519cd948c134d4d",
-      "change_since_previous_evidence": "ahead-by-5",
-      "changed_files_since_previous_evidence": 48
+      "previous_recorded_head": "ccdfb4f342a2e659be7ab878309cc5d81683d737",
+      "change_since_previous_evidence": "ahead-by-1",
+      "changed_files_since_previous_evidence": 10
     },
     "latest-alpha-cli": {
       "repo": "openai/codex",
       "ref": "latest-alpha-cli",
       "status": "resolved",
       "head_commit": "e4198a095c36a9f8f703b61be900f66df85e0984",
-      "relation_to_main": "diverged-from-current-main; ahead-by-1; behind-by-5",
+      "relation_to_main": "diverged-from-current-main; ahead-by-1; behind-by-6",
       "changed_files_from_current_main": ["codex-rs/Cargo.toml"],
       "workspace_version": "0.143.0-alpha.29",
       "relation": "distinct-channel",
@@ -60,33 +60,30 @@
     }
   },
   "upstream_items": {
-    "critical": [
-      {
-        "id": "openai/codex#30508",
-        "channels": ["main"],
-        "impact": "policy-contract-update",
-        "classes": ["policy", "protocol"],
-        "reason": "Main changed prompt/policy routing for auto-review on-request behavior.",
-        "evidence": ["commit ccdfb4f342a2e659be7ab878309cc5d81683d737"]
-      }
-    ],
+    "critical": [],
     "high": [
       {
-        "id": "main-skills-instructions-fragment-rendering",
+        "id": "openai/codex#30467",
         "channels": ["main"],
-        "impact": "context-fragment-update",
-        "classes": ["adapter", "protocol"],
-        "reason": "Main changed available-skills contextual fragment rendering paths.",
-        "evidence": ["codex-rs/core/src/context/available_skills_instructions.rs", "codex-rs/ext/skills/src/fragments.rs"]
+        "impact": "reasoning-effort-protocol-config-update",
+        "classes": ["protocol", "config", "ui"],
+        "reason": "Main changed max from an opaque custom reasoning-effort string into first-class ReasoningEffort::Max while preserving the max wire value.",
+        "evidence": [
+          "commit 80f54d1266b4571ef649e7e5ecc382dd4e670937",
+          "codex-rs/protocol/src/openai_models.rs",
+          "codex-rs/core/src/client.rs",
+          "codex-rs/model-provider/src/amazon_bedrock/catalog.rs",
+          "codex-rs/tui/src/chatwidget/model_popups.rs"
+        ]
       }
     ],
     "notes": [
       {
-        "id": "main-plugin-skills-test-surface-churn",
+        "id": "main-reasoning-effort-test-ui-churn",
         "channels": ["main"],
         "impact": "supporting-evidence-only",
-        "classes": ["adapter"],
-        "reason": "Plugin and skills tests changed, but no direct local contract mutation was admitted."
+        "classes": ["ui", "adapter"],
+        "reason": "Reasoning-effort tests and TUI snapshots changed to reflect first-class Max display and custom future-value coverage."
       }
     ],
     "noLocalAction": [
@@ -99,8 +96,8 @@
     ]
   },
   "baseline_reference": {
-    "previous_latest_evidence_run_id": "20260628T165523Z",
-    "previous_main_head": "bdd282f3bbd55df3a869a5438519cd948c134d4d",
+    "previous_latest_evidence_run_id": "20260629T045515Z",
+    "previous_main_head": "ccdfb4f342a2e659be7ab878309cc5d81683d737",
     "previous_alpha_workspace_version": "0.143.0-alpha.29"
   },
   "validation_notes": {
