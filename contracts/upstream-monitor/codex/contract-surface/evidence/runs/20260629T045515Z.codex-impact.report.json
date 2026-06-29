@@ -1,0 +1,121 @@
+{
+  "apiVersion": "factory.upstream-monitor.codex/v0",
+  "kind": "CodexImpactReportEvidence",
+  "loop": "codex-contract-surface",
+  "signal_id": "loop_bootstrap_request",
+  "target_repo": "fatb4f/factory",
+  "entrypoint": "contracts/upstream-monitor/codex/contract-surface/AGENTS.md",
+  "adapter": "github_app",
+  "run_id": "20260629T045515Z",
+  "publication": {
+    "report_run_path": "contracts/upstream-monitor/codex/contract-surface/reports/runs/20260629T045515Z.codex-impact.md",
+    "report_latest_path": "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md",
+    "evidence_run_path": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260629T045515Z.codex-impact.report.json",
+    "evidence_latest_path": "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json",
+    "issue_targets": {},
+    "report_run_commit": "cb600503c8053f0cbd58e9839bc31ef553a158b8",
+    "report_latest_commit": "7e1b5852d81da84d8e6ff2ca970b860eebcfa68d"
+  },
+  "authority_reads": {
+    "agents": [
+      "contracts/upstream-monitor/AGENTS.md",
+      "contracts/upstream-monitor/codex/AGENTS.md",
+      "contracts/upstream-monitor/codex/contract-surface/AGENTS.md"
+    ],
+    "cue": [
+      "contracts/upstream-monitor/codex/contract-surface/publication.cue",
+      "contracts/upstream-monitor/codex/contract-surface/public.cue",
+      "contracts/upstream-monitor/codex/contract-surface/report.cue"
+    ],
+    "publication_admission": {
+      "issueTargets": {},
+      "report_run_pattern": "contracts/upstream-monitor/codex/contract-surface/reports/runs/<run_id>.codex-impact.md",
+      "report_latest_path": "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md",
+      "evidence_run_pattern": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/<run_id>.codex-impact.report.json",
+      "evidence_latest_path": "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json"
+    }
+  },
+  "channels": {
+    "main": {
+      "repo": "openai/codex",
+      "ref": "main",
+      "status": "resolved",
+      "head_commit": "ccdfb4f342a2e659be7ab878309cc5d81683d737",
+      "workspace_version": "0.0.0",
+      "previous_recorded_head": "bdd282f3bbd55df3a869a5438519cd948c134d4d",
+      "change_since_previous_evidence": "ahead-by-5",
+      "changed_files_since_previous_evidence": 48
+    },
+    "latest-alpha-cli": {
+      "repo": "openai/codex",
+      "ref": "latest-alpha-cli",
+      "status": "resolved",
+      "head_commit": "e4198a095c36a9f8f703b61be900f66df85e0984",
+      "relation_to_main": "diverged-from-current-main; ahead-by-1; behind-by-5",
+      "changed_files_from_current_main": [
+        "codex-rs/Cargo.toml"
+      ],
+      "workspace_version": "0.143.0-alpha.29",
+      "relation": "distinct-channel",
+      "change_since_previous_evidence": "none"
+    }
+  },
+  "upstream_items": {
+    "critical": [
+      {
+        "id": "openai/codex#30508",
+        "channels": ["main"],
+        "impact": "policy-contract-update",
+        "classes": ["policy", "protocol"],
+        "reason": "Reverts dedicated on_request_auto_review.md prompt path and routes auto-review on-request through generic on_request.md plus auto-review suffix.",
+        "evidence": [
+          "commit ccdfb4f342a2e659be7ab878309cc5d81683d737",
+          "codex-rs/prompts/src/permissions_instructions.rs",
+          "codex-rs/prompts/templates/permissions/approval_policy/on_request_auto_review.md removed"
+        ]
+      }
+    ],
+    "high": [
+      {
+        "id": "main-skills-instructions-fragment-rendering",
+        "channels": ["main"],
+        "impact": "context-fragment-update",
+        "classes": ["adapter", "protocol"],
+        "reason": "Available skills instructions and extension fragments changed around developer/user contextual fragment rendering.",
+        "evidence": [
+          "codex-rs/core/src/context/available_skills_instructions.rs",
+          "codex-rs/ext/skills/src/fragments.rs"
+        ]
+      }
+    ],
+    "notes": [
+      {
+        "id": "main-plugin-skills-test-surface-churn",
+        "channels": ["main"],
+        "impact": "supporting-evidence-only",
+        "classes": ["adapter"],
+        "reason": "Plugin and skills tests changed, but no direct local contract mutation was admitted."
+      }
+    ],
+    "noLocalAction": [
+      {
+        "id": "no-issue-targets",
+        "channels": ["main", "latest-alpha-cli"],
+        "impact": "no-issue-update",
+        "reason": "upstreamCodexPublicationPlan.issueTargets is empty."
+      }
+    ]
+  },
+  "baseline_reference": {
+    "previous_latest_evidence_run_id": "20260628T165523Z",
+    "previous_main_head": "bdd282f3bbd55df3a869a5438519cd948c134d4d",
+    "previous_alpha_workspace_version": "0.143.0-alpha.29"
+  },
+  "validation_notes": {
+    "cue_executed": false,
+    "reason": "GitHub App adapter exposes content read/write operations, not a repo shell.",
+    "issue_updates": "none; public upstreamCodexPublicationPlan.issueTargets is empty",
+    "forbidden_attractor_search": "GitHub code search for configured terms returned no matches.",
+    "caveat": "contract-surface AGENTS initial-gate text still conflicts with the newer admitted publication task prompt."
+  }
+}
