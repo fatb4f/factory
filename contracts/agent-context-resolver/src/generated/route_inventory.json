@@ -1,5 +1,5 @@
 {
-    "generatedFrom": "contracts/plugin-bundle/agent-context-resolver/src/routes.cue",
+    "generatedFrom": "contracts/agent-context-resolver/src/routes.cue",
     "gates": [
         {
             "id": "registry-authority",
@@ -80,7 +80,7 @@
                     "Treat CUE and repository state as durable authority."
                 ],
                 "files": [
-                    "contracts/plugin-bundle/agent-context-resolver/src"
+                    "contracts/agent-context-resolver/src"
                 ]
             },
             "outputSchema": {
@@ -207,10 +207,10 @@
             "task": {
                 "objective": "Validate generated agent skill and hook projections.",
                 "constraints": [
-                    "Regenerate derived assets from CUE authority."
+                    "Regenerate derived assets from CUE authority through contracts/meta."
                 ],
                 "commands": [
-                    "generated/checks/agent-context-hook"
+                    "contracts/agent-context-resolver/src/checks/agent-context-hook"
                 ]
             },
             "outputSchema": {
