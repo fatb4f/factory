@@ -28,10 +28,12 @@ pluginBundleGenerationDistributionValidationPlan: close({
 		"cue export ./contracts/plugin-bundle/generation-distribution -e normalizedPluginBundleGenerationDistributionManifest",
 		"cue export ./contracts/plugin-bundle/generation-distribution -e pluginBundleGenerationDistributionValidationPlan",
 		"cue export ./contracts/plugin-bundle/generation-distribution -e pluginBundleGenerationDistributionCompletionReportContract",
+		"cue export ./contracts/plugin-bundle/generation-distribution -e pluginBundleMaterializationPlan",
 		"cue vet ./contracts/issues/82",
 		"cue export ./contracts/issues/82 -e normalizedPluginBundleGenerationDistributionManifest",
 		"cue export ./contracts/issues/82 -e pluginBundleGenerationDistributionValidationPlan",
 		"cue export ./contracts/issues/82 -e pluginBundleGenerationDistributionCompletionReportContract",
+		"cue export ./contracts/issues/82 -e pluginBundleMaterializationPlan",
 	]
 	negative: [
 		"! cue export ./contracts/plugin-bundle/generation-distribution/checks -e _negativeBottomChecks.generatedPackageAuthorityAccepted",
@@ -67,3 +69,4 @@ pluginBundleGenerationDistributionCompletionReportContract: close({
 normalizedIssueManifest: normalizedPluginBundleGenerationDistributionManifest
 issue82ValidationPlan: pluginBundleGenerationDistributionValidationPlan
 issue82CompletionReportContract: pluginBundleGenerationDistributionCompletionReportContract
+pluginBundleMaterializationPlan: gen.pluginBundleMaterializationPlan
