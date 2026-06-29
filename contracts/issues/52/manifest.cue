@@ -1,11 +1,13 @@
 package issue52
 
-import impl "github.com/fatb4f/contract.cuemod/contracts/meta/impl"
+import impl "github.com/fatb4f/factory/cuemod/contracts/meta/impl"
+
+_module: "github.com/fatb4f/factory/cuemod"
 
 #Issue52Manifest: close({
 	issue: 52
 	repository: "fatb4f/factory"
-	module: "github.com/fatb4f/contract.cuemod"
+	module: _module
 	constructorLibrary: "contracts/meta/impl"
 	manifestPath: "contracts/issues/52/manifest.cue"
 	normalizedPath: "contracts/issues/52/normalized.cue"
@@ -19,7 +21,7 @@ import impl "github.com/fatb4f/contract.cuemod/contracts/meta/impl"
 validBaseline: #Issue52Manifest & {
 	issue: 52
 	repository: "fatb4f/factory"
-	module: "github.com/fatb4f/contract.cuemod"
+	module: _module
 	constructorLibrary: "contracts/meta/impl"
 	manifestPath: "contracts/issues/52/manifest.cue"
 	normalizedPath: "contracts/issues/52/normalized.cue"
@@ -102,7 +104,7 @@ _negativeFixtures: [
 			input: {
 				issue: 52
 				repository: "fatb4f/factory"
-				module: "github.com/fatb4f/contract.cuemod"
+				module: _module
 				constructorLibrary: "contracts/meta/impl"
 				manifestPath: "contracts/issues/52/manifest.cue"
 				normalizedPath: "contracts/issues/52/normalized.cue"
@@ -122,7 +124,7 @@ _negativeFixtures: [
 			input: {
 				issue: 52
 				repository: "fatb4f/factory"
-				module: "github.com/fatb4f/contract.cuemod"
+				module: _module
 				constructorLibrary: "contracts/meta/impl"
 				manifestPath: "contracts/issues/52/manifest.cue"
 				normalizedPath: "contracts/issues/52/normalized.cue"
@@ -142,7 +144,7 @@ _negativeFixtures: [
 			input: {
 				issue: 52
 				repository: "fatb4f/factory"
-				module: "github.com/fatb4f/contract.cuemod"
+				module: _module
 				constructorLibrary: "contracts/meta/impl"
 				manifestPath: "contracts/issues/52/manifest.cue"
 				normalizedPath: "contracts/issues/52/normalized.cue"
