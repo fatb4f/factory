@@ -12,7 +12,7 @@ issue: {
 		workflow: ".github/ISSUE_TEMPLATE/contracts/_template"
 		manifest: ".github/ISSUE_TEMPLATE/contracts/issues/<issue-number>/manifest.cue"
 		checks: ".github/ISSUE_TEMPLATE/contracts/issues/<issue-number>/checks/bottom.cue"
-		import: "github.com/fatb4f/factory/cuemod/contracts/meta/impl"
+		import: "github.com/fatb4f/factory/contracts/meta/impl"
 	}
 
 	tracking: {
@@ -41,7 +41,7 @@ issue: {
 
 	authoritySplit: {
 		cue: [
-			"contract and validation authority",
+			"contract and validation authority under github.com/fatb4f/factory",
 		]
 		adapters: [
 			"external execution only; no authority ownership",
