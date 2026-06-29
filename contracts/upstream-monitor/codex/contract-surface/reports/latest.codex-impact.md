@@ -8,9 +8,9 @@ signal_id: loop_bootstrap_request
 target_repo: fatb4f/factory
 entrypoint: contracts/upstream-monitor/codex/contract-surface/AGENTS.md
 adapter: github_app
-run_result: terminal_success_no_new_upstream_impact_with_validation_caveats
+run_result: terminal_success_new_main_upstream_impact_with_validation_caveats
 channels: main, latest-alpha-cli
-run_id: 20260628T165523Z
+run_id: 20260629T045515Z
 ```
 
 ## Channel resolution
@@ -21,10 +21,11 @@ run_id: 20260628T165523Z
 status: resolved
 repo: openai/codex
 ref: main
-head_commit: bdd282f3bbd55df3a869a5438519cd948c134d4d
+head_commit: ccdfb4f342a2e659be7ab878309cc5d81683d737
 workspace_version: 0.0.0
 previous_recorded_head: bdd282f3bbd55df3a869a5438519cd948c134d4d
-change_since_previous_evidence: none
+change_since_previous_evidence: ahead-by-5
+changed_files_since_previous_evidence: 48
 ```
 
 ### latest-alpha-cli
@@ -34,8 +35,8 @@ status: resolved
 repo: openai/codex
 ref: latest-alpha-cli
 head_commit: e4198a095c36a9f8f703b61be900f66df85e0984
-relation_to_main: ahead-by-1
-changed_files_from_main: codex-rs/Cargo.toml
+relation_to_main: diverged-from-current-main; ahead-by-1; behind-by-5
+changed_files_from_current_main: codex-rs/Cargo.toml
 workspace_version: 0.143.0-alpha.29
 channel_relation: distinct-from-main
 change_since_previous_evidence: none
@@ -45,40 +46,70 @@ change_since_previous_evidence: none
 
 ## Critical
 
-No new critical upstream impact was admitted in this run.
-
-Previously recorded critical items remain in the latest evidence baseline:
+### main: auto-review on-request escalation prompt rollback
 
 ```text
-- openai/codex#30292-#30296 — MCP lifecycle coordination stack
-- openai/codex#30282 / #30283 / #30188 — canonical TurnItem rollout lifecycle stack
+id: openai/codex#30508
+upstream_repo: openai/codex
+kind: commit/merged-pr-evidence
+status: admitted
+severity: critical
+classes: policy, protocol
+evidence_channel: main
+refs:
+- ccdfb4f342a2e659be7ab878309cc5d81683d737
+- openai/codex#30508
+```
+
+Impact: upstream reverted the dedicated `on_request_auto_review.md` prompt path and now routes `ApprovalsReviewer::AutoReview` through the generic `on_request.md` instruction body plus the auto-review suffix. This intersects local contract-surface policy because it changes the effective permissions/escalation instruction fragment emitted to the model for `on-request` approval mode.
+
+Local reason: this is a prompt/policy contract surface, not just implementation detail. Any local assumptions that auto-review has a distinct on-request guidance body should be treated as stale until the local contract surface explicitly models generic-body-plus-suffix behavior.
+
+Suggested local targets:
+
+```text
+contracts/upstream-monitor/codex/contract-surface/report.cue
+contracts/upstream-monitor/codex/contract-surface/publication.cue
+contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md
 ```
 
 ## High
 
-No new high upstream impact was admitted in this run.
-
-Previously recorded high items remain in the latest evidence baseline:
+### main: skills instructions fragment rendering changes
 
 ```text
-- openai/codex#29691 — marketplace source policy runtime enforcement
-- openai/codex#30384 — app-server currentTime/read timeout increase
-- openai/codex#30327 — stable synthesized call output IDs
-- openai/codex#30314 — structured app-server JSON shutdown logs
-- latest-alpha-cli — CLI alpha version channel
+id: main-skills-instructions-fragment-rendering
+upstream_repo: openai/codex
+kind: commit-range-evidence
+status: admitted
+severity: high
+classes: adapter, protocol
+evidence_channel: main
+refs:
+- bdd282f3bbd55df3a869a5438519cd948c134d4d..ccdfb4f342a2e659be7ab878309cc5d81683d737
 ```
+
+Impact: upstream changed available-skills context fragment construction and rendering paths across core and skills extension code. The current core path preserves skill-root lines and chooses alias-aware vs absolute-path usage instructions; the extension path continues rendering skill instructions as developer/user contextual fragments.
+
+Local reason: this intersects the contract-surface monitor because skills are model-context fragments with explicit role/marker/body projection. Local report consumers should keep skills-context evidence separate from plugin marketplace and MCP evidence.
 
 ## Notes
 
-No new note-level upstream impact was admitted in this run.
-
-Previously recorded note items remain in the latest evidence baseline:
+### main: plugin/skills test surface churn
 
 ```text
-- openai/codex#27999 — image generation error history
-- openai/codex#27249 / #27968 — session segmentation and rollout reference histories
-- openai/codex#27815 / #27824 / #27836 — pending environment lifecycle
+id: main-plugin-skills-test-surface-churn
+upstream_repo: openai/codex
+kind: commit-range-evidence
+status: admitted
+severity: note
+classes: adapter
+evidence_channel: main
+refs:
+- bdd282f3bbd55df3a869a5438519cd948c134d4d..ccdfb4f342a2e659be7ab878309cc5d81683d737
 ```
+
+Impact: upstream changed multiple app-server plugin and skills tests. The changes were not admitted as direct local contract changes in this run because the observed files are primarily test fixtures/smoke coverage, but they remain supporting evidence for plugin and skills behavior drift.
 
 ## No local action
 
@@ -86,14 +117,15 @@ No issue updates were performed because `upstreamCodexPublicationPlan.issueTarge
 
 No contract authority was changed from upstream evidence.
 
-No new local target update was admitted because both observed upstream evidence channels match the prior recorded heads.
+No local contract mutation was performed; only admitted report/evidence projections were written.
 
 ## Suggested local targets
 
 ```text
-contracts/upstream-monitor/codex/contract-surface/AGENTS.md
 contracts/upstream-monitor/codex/contract-surface/report.cue
 contracts/upstream-monitor/codex/contract-surface/publication.cue
+contracts/upstream-monitor/codex/contract-surface/public.cue
+contracts/upstream-monitor/codex/contract-surface/AGENTS.md
 ```
 
 ## Issue updates
@@ -112,14 +144,15 @@ contracts/upstream-monitor/codex/AGENTS.md
 contracts/upstream-monitor/codex/contract-surface/AGENTS.md
 contracts/upstream-monitor/codex/contract-surface/publication.cue
 contracts/upstream-monitor/codex/contract-surface/public.cue
+contracts/upstream-monitor/codex/contract-surface/report.cue
 ```
 
 Publication admission observed:
 
 ```text
-report run path: contracts/upstream-monitor/codex/contract-surface/reports/runs/20260628T165523Z.codex-impact.md
+report run path: contracts/upstream-monitor/codex/contract-surface/reports/runs/20260629T045515Z.codex-impact.md
 report latest path: contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md
-evidence run path: contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260628T165523Z.codex-impact.report.json
+evidence run path: contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260629T045515Z.codex-impact.report.json
 evidence latest path: contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json
 issueTargets: {}
 ```
@@ -135,7 +168,7 @@ Caveat: the loop entrypoint still contains older initial-gate text forbidding up
 ## Control action
 
 ```text
-action: publish-contract-local-no-new-impact-run-and-latest-report
-reason: upstream evidence from main and latest-alpha-cli resolved to the same channel heads recorded in the previous evidence artifact
-next_state: continue scheduled observation; align contract-surface AGENTS initial-gate text with the admitted Z4 report publication slice
+action: publish-contract-local-new-main-impact-run-and-latest-report
+reason: upstream main advanced by 5 commits and changed policy/prompt plus skills context-fragment surfaces; latest-alpha-cli did not move
+next_state: continue scheduled observation; keep main and latest-alpha-cli evidence channels distinct
 ```
