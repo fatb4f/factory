@@ -63,3 +63,7 @@ pluginBundleGenerationDistributionCompletionReportContract: close({
 	validation:          pluginBundleGenerationDistributionValidationPlan
 	finalResult:         "issue #82 tracks the plugin-bundle generation/distribution authority surface"
 })
+
+normalizedIssueManifest: normalizedPluginBundleGenerationDistributionManifest
+issue82ValidationPlan: pluginBundleGenerationDistributionValidationPlan
+issue82CompletionReportContract: pluginBundleGenerationDistributionCompletionReportContract
