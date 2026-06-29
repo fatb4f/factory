@@ -24,7 +24,6 @@ trap 'rm -f "$input_json"' EXIT HUP INT TERM
 cat >"$input_json"
 
 prompt=$(jq -er 'select(.hook_event_name == "UserPromptSubmit") | .prompt' "$input_json") || {
-	printf '{}\n'
 	exit 0
 }
 
@@ -206,8 +205,36 @@ classification=$(
 )
 
 [ "$(printf '%s' "$classification" | jq '.controller.routes | length')" -gt 0 ] || {
-	printf '{}\n'
 	exit 0
 }
 
-printf '%s\n' "$classification"
+if [ "${AGENT_CONTEXT_RESOLVER_PACKET:-}" = 1 ]; then
+	printf '%s\n' "$classification"
+	exit 0
+fi
+
+printf '%s\n' "$classification" | jq -c '{
+	hookSpecificOutput: {
+		hookEventName: "UserPromptSubmit",
+		additionalContext: ({
+			schema: "agent.resolver-prompt-surface.v1",
+			intent: .controller.intent,
+			selectedFragments: .selectedFragments,
+			selectedRoutes: [
+				.controller.routes[]
+				| {
+					id,
+					kind,
+					objective: .task.objective
+				}
+			],
+			execution: {
+				mode: "prompt-only",
+				routeExecution: false,
+				controllerPacket: false,
+				debugEvidence: "stderr-or-file"
+			},
+			hints: (.compactHints | map({text: .}))
+		} | tojson)
+	}
+}'
