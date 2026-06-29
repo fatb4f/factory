@@ -27,8 +27,24 @@ contracts-plugin-bundle-template:
 	! cue export ./contracts/plugin-bundle/template/checks -e _negativeBottomChecks.bundleLocalOverrideAccepted >/dev/null
 	! cue export ./contracts/plugin-bundle/template/checks -e _negativeBottomChecks.staleLocalCheckReferenceAccepted >/dev/null
 
+contracts-agent-context-resolver-src:
+	cue vet ./contracts/agent-context-resolver/src
+	cue export ./contracts/agent-context-resolver/src -e normalizedMaterializedBundleShapeManifest >/dev/null
+	cue export ./contracts/agent-context-resolver/src -e materializedBundleShapeValidationPlan >/dev/null
+	cue export ./contracts/agent-context-resolver/src -e materializedBundleShapeCompletionReportContract >/dev/null
+
+contracts-code-intel-src:
+	cue vet ./contracts/code-intel/src
+	cue export ./contracts/code-intel/src -e normalizedMaterializedBundleShapeManifest >/dev/null
+	cue export ./contracts/code-intel/src -e materializedBundleShapeValidationPlan >/dev/null
+	cue export ./contracts/code-intel/src -e materializedBundleShapeCompletionReportContract >/dev/null
+
+contracts-consolidation-guards:
+	! rg 'contracts/plugin-bundle/(agent-context-resolver|code-intel)/src' ./contracts/agent-context-resolver/src ./contracts/code-intel/src
+	! rg 'contracts/code-intel/manifest\.cue' ./contracts/code-intel/src
+
 scaffold-smoke:
 	cue export ./contracts/meta -e contractScaffoldGenerator >/dev/null
 	cue export ./contracts/meta -e contractScaffoldValidator >/dev/null
 
-validate-all: contracts-meta contracts-plugin-bundle-template scaffold-smoke
+validate-all: contracts-meta contracts-plugin-bundle-template contracts-agent-context-resolver-src contracts-code-intel-src contracts-consolidation-guards scaffold-smoke
