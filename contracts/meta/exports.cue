@@ -1,4 +1,4 @@
-package impl
+package meta
 
 _defaultForbiddenPattern: "\(bottomSurfaceToken)|\(cueExprToken)|\(invalidFlagToken)|\(truthFlagToken)|\(inlineCtorToken)"
 
@@ -20,61 +20,64 @@ constructorLibraryBaseline: close({
 		{
 			name:        "#PrimitiveSpec"
 			constructor: "#MakePrimitive"
-			file:        "contracts/meta/impl/primitive.cue"
+			file:        "contracts/meta/primitive.cue"
 		},
 		{
 			name:        "#SurfaceSetSpec"
 			constructor: "#MakeSurfaceSet"
-			file:        "contracts/meta/impl/surface.cue"
+			file:        "contracts/meta/surface.cue"
 		},
 		{
 			name:        "#ObservedSurfaceSpec"
 			constructor: "#MakeObservedSurface"
-			file:        "contracts/meta/impl/surface.cue"
+			file:        "contracts/meta/surface.cue"
 		},
 		{
 			name:        "#AdmissibleSurfaceSpec"
 			constructor: "#MakeAdmissibleSurface"
-			file:        "contracts/meta/impl/surface.cue"
+			file:        "contracts/meta/surface.cue"
 		},
 		{
 			name:        "#PredicateSetSpec"
 			constructor: "#MakePredicateSet"
-			file:        "contracts/meta/impl/predicate.cue"
+			file:        "contracts/meta/predicate.cue"
 		},
 		{
 			name:        "#PromotionCandidateSpec"
 			constructor: "#MakePromotionCandidate"
-			file:        "contracts/meta/impl/promotion.cue"
+			file:        "contracts/meta/promotion.cue"
 		},
 		{
 			name:        "#NegativeFixtureSpec"
 			constructor: "#MakeNegativeFixture"
-			file:        "contracts/meta/impl/fixture.cue"
+			file:        "contracts/meta/fixture.cue"
 		},
 		{
 			name:        "#BottomCheckPlanSpec"
 			constructor: "#MakeBottomCheckPlan"
-			file:        "contracts/meta/impl/bottom.cue"
+			file:        "contracts/meta/bottom.cue"
 		},
 		{
 			name:        "#BottomCheckProofSpec"
 			constructor: "#MakeBottomCheckProof"
-			file:        "contracts/meta/impl/bottom.cue"
+			file:        "contracts/meta/bottom.cue"
 		},
 		{
 			name:        "#ValidationPlanSpec"
 			constructor: "#MakeValidationPlan"
-			file:        "contracts/meta/impl/validation.cue"
+			file:        "contracts/meta/validation.cue"
 		},
 		{
 			name:        "#CompletionReportSpec"
 			constructor: "#MakeCompletionReport"
-			file:        "contracts/meta/impl/completion.cue"
+			file:        "contracts/meta/completion.cue"
 		},
 	]
 	exports: [
 		"constructorCatalog",
+		"constructorAxis",
+		"authorityAxis",
+		"metaDualAxisShape",
 		"constructorLibraryBaseline",
 		"constructorManifestBaseline",
 		"constructorValidationPlanBaseline",
@@ -101,7 +104,7 @@ constructorManifestBaseline: close({
 		"#MakeCompletionReport",
 	]
 	requirements: [
-		"import repo-local constructors from contracts/meta/impl",
+		"import repo-local constructors from contracts/meta",
 		"carry constructor calls only",
 		"carry bottom-check plans in manifest packages",
 		"construct executable bottom proofs only in check packages",
@@ -111,7 +114,7 @@ constructorManifestBaseline: close({
 
 constructorValidationPlanBaseline: (_baselineValidation & {
 	in: {
-		path:              "contracts/meta/impl"
+		path:              "contracts/meta"
 		validBaselineExpr: "constructorLibraryBaseline"
 		publicExpr:        "constructorManifestBaseline"
 		bottomChecks: [
@@ -131,8 +134,11 @@ constructorValidationPlanBaseline: (_baselineValidation & {
 			"bottomProofInputTopAccepted",
 			"validationMissingCheckSurfaceAccepted",
 			"completionWithoutEvidenceAccepted",
+			"generatedAuthorityAccepted",
+			"manifestExecutableProofObjectAccepted",
+			"evalAuthorityAccepted",
 		]
-		checkFile:        "./contracts/meta/impl/checks"
+		checkFile:        "./contracts/meta/checks"
 		checkSurface:     "_negativeBottomChecks"
 		forbiddenPattern: _defaultForbiddenPattern
 	}
@@ -148,6 +154,9 @@ constructorCompletionReportBaseline: (_baselineCompletion & {
 	in: {
 		primitives: [for spec in constructorLibraryBaseline.specs {spec.name}]
 		surfaces: [
+			"constructorAxis",
+			"authorityAxis",
+			"metaDualAxisShape",
 			"constructorLibraryBaseline",
 			"constructorManifestBaseline",
 			"constructorValidationPlanBaseline",
@@ -170,6 +179,9 @@ constructorCompletionReportBaseline: (_baselineCompletion & {
 			"malformed.bottomProofInputTopAccepted",
 			"malformed.validationMissingCheckSurfaceAccepted",
 			"malformed.completionWithoutEvidenceAccepted",
+			"negative.generatedAuthorityAccepted",
+			"negative.manifestExecutableProofObjectAccepted",
+			"negative.evalAuthorityAccepted",
 		]
 		checks:   constructorValidationPlanBaseline.commands
 		commands: constructorValidationPlanBaseline.commands

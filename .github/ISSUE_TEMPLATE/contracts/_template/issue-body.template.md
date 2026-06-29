@@ -9,10 +9,10 @@ issue: {
 	template: {
 		name: "Factory manifest slice"
 		root: "contracts"
-		workflow: "contracts/meta/impl"
+		workflow: "contracts/meta"
 		manifest: "contracts/issues/<issue-number>/manifest.cue"
 		checks: "contracts/issues/<issue-number>/checks/bottom.cue"
-		import: "github.com/fatb4f/factory/contracts/meta/impl"
+		import: "github.com/fatb4f/factory/contracts/meta"
 	}
 
 	tracking: {
@@ -106,7 +106,7 @@ issue: {
 
 	validation: {
 		commands: [
-			"cue export ./contracts/meta/impl",
+			"cue export ./contracts/meta",
 			"cue vet ./contracts/issues/<issue-number>",
 			"cue export ./contracts/issues/<issue-number> -e _primitives",
 			"cue export ./contracts/issues/<issue-number> -e _observed",

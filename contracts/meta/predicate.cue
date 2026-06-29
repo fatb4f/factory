@@ -1,9 +1,9 @@
-package impl
+package meta
 
 #PredicateSetSpec: close({
-	name: string & !=""
-	role: string & !=""
-	observedSurface: string & !=""
+	name:              string & !=""
+	role:              string & !=""
+	observedSurface:   string & !=""
 	admissibleSurface: string & !=""
 	derivedPredicates: [...string & !=""] & [_, ...]
 	operatorSupplied: false | *false
@@ -12,10 +12,10 @@ package impl
 })
 
 #PredicateSetDescriptor: close({
-	kind: "predicate-set"
-	name: string & !=""
-	role: string & !=""
-	observedSurface: string & !=""
+	kind:              "predicate-set"
+	name:              string & !=""
+	role:              string & !=""
+	observedSurface:   string & !=""
 	admissibleSurface: string & !=""
 	derivedPredicates: [...string & !=""] & [_, ...]
 	operatorSupplied: false
@@ -26,13 +26,13 @@ package impl
 	in: #PredicateSetSpec
 
 	out: #PredicateSetDescriptor & {
-		kind: "predicate-set"
-		name: in.name
-		role: in.role
-		observedSurface: in.observedSurface
+		kind:              "predicate-set"
+		name:              in.name
+		role:              in.role
+		observedSurface:   in.observedSurface
 		admissibleSurface: in.admissibleSurface
 		derivedPredicates: in.derivedPredicates
-		operatorSupplied: in.operatorSupplied
-		constraints: in.constraints
+		operatorSupplied:  in.operatorSupplied
+		constraints:       in.constraints
 	}
 }

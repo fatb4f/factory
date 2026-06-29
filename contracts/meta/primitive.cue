@@ -1,15 +1,15 @@
-package impl
+package meta
 
 #PrimitiveSpec: close({
 	name: string & !=""
 	role: string & !=""
 	requiredFields: [...string & !=""] & [_, ...]
 	constraints: [...string & !=""] | *[]
-	closed: bool | *true
-	observedPhase?: false
-	admissiblePhase?: false
-	loweredObject?: false
-	proofObject?: false
+	closed:               bool | *true
+	observedPhase?:       false
+	admissiblePhase?:     false
+	loweredObject?:       false
+	proofObject?:         false
 	materializedSurface?: false
 })
 
@@ -26,11 +26,11 @@ package impl
 	in: #PrimitiveSpec
 
 	out: #PrimitiveDescriptor & {
-		kind: "primitive-spec"
-		name: in.name
-		role: in.role
+		kind:           "primitive-spec"
+		name:           in.name
+		role:           in.role
 		requiredFields: in.requiredFields
-		constraints: in.constraints
-		closed: in.closed
+		constraints:    in.constraints
+		closed:         in.closed
 	}
 }

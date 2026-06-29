@@ -1,12 +1,12 @@
-package impl
+package meta
 
 #ValidationPlanSpec: close({
-	path: string & !=""
+	path:              string & !=""
 	validBaselineExpr: string & !=""
-	publicExpr: string & !=""
+	publicExpr:        string & !=""
 	bottomChecks: [...string & !=""] & [_, ...]
-	checkFile: string & !=""
-	checkSurface: string & !=""
+	checkFile:        string & !=""
+	checkSurface:     string & !=""
 	forbiddenPattern: string | *_defaultForbiddenPattern
 })
 

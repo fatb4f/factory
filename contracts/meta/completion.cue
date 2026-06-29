@@ -1,4 +1,4 @@
-package impl
+package meta
 
 #CompletionReportSpec: close({
 	primitives: [...string & !=""] & [_, ...]
@@ -41,11 +41,11 @@ package impl
 
 		expected: {
 			primitives: in.primitives
-			surfaces: in.surfaces
-			fixtures: in.fixtures
-			checks: in.checks
-			commands: in.commands
-			evidence: in.evidence
+			surfaces:   in.surfaces
+			fixtures:   in.fixtures
+			checks:     in.checks
+			commands:   in.commands
+			evidence:   in.evidence
 		}
 	}
 }

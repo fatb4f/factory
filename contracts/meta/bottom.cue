@@ -1,4 +1,4 @@
-package impl
+package meta
 
 #BottomCheckPlanSpec: close({
 	name:                 string & !=""

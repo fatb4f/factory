@@ -1,4 +1,4 @@
-package impl
+package meta
 
 #ObservedSurfaceSpec: close({
 	name: string & !=""
@@ -22,31 +22,31 @@ package impl
 	in: #ObservedSurfaceSpec
 
 	out: #ObservedSurfaceDescriptor & {
-		kind: "observed-surface"
-		name: in.name
-		role: in.role
-		factFields: in.factFields
+		kind:                "observed-surface"
+		name:                in.name
+		role:                in.role
+		factFields:          in.factFields
 		mayRepresentInvalid: in.mayRepresentInvalid
-		constraints: in.constraints
+		constraints:         in.constraints
 	}
 }
 
 #AdmissibleSurfaceSpec: close({
-	name: string & !=""
-	role: string & !=""
+	name:            string & !=""
+	role:            string & !=""
 	observedSurface: string & !=""
 	requiredFields: [...string & !=""] & [_, ...]
 	rejectedFields: [...string & !=""] | *[]
 	closed: true | *true
 	constraints: [...string & !=""] | *[]
 	generatedArtifactsAreAuthority?: false
-	stringifiedCueExpression?: false
+	stringifiedCueExpression?:       false
 })
 
 #AdmissibleSurfaceDescriptor: close({
-	kind: "admissible-surface"
-	name: string & !=""
-	role: string & !=""
+	kind:            "admissible-surface"
+	name:            string & !=""
+	role:            string & !=""
 	observedSurface: string & !=""
 	requiredFields: [...string & !=""] & [_, ...]
 	rejectedFields: [...string & !=""]
@@ -58,14 +58,14 @@ package impl
 	in: #AdmissibleSurfaceSpec
 
 	out: #AdmissibleSurfaceDescriptor & {
-		kind: "admissible-surface"
-		name: in.name
-		role: in.role
+		kind:            "admissible-surface"
+		name:            in.name
+		role:            in.role
 		observedSurface: in.observedSurface
-		requiredFields: in.requiredFields
-		rejectedFields: in.rejectedFields
-		closed: in.closed
-		constraints: in.constraints
+		requiredFields:  in.requiredFields
+		rejectedFields:  in.rejectedFields
+		closed:          in.closed
+		constraints:     in.constraints
 	}
 }
 
@@ -93,12 +93,12 @@ package impl
 	in: #SurfaceSetSpec
 
 	out: #SurfaceSetDescriptor & {
-		kind: "surface-set"
-		admissible: in.admissible
-		observed: in.observed
-		candidates: in.candidates
-		fixtures: in.fixtures
-		checks: in.checks
+		kind:          "surface-set"
+		admissible:    in.admissible
+		observed:      in.observed
+		candidates:    in.candidates
+		fixtures:      in.fixtures
+		checks:        in.checks
 		publicExports: in.publicExports
 	}
 }

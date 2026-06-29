@@ -61,7 +61,7 @@ _runtimePackagePathSubsetCheck: {
 		contiguous: true
 	})
 	constructors: close({
-		root: "contracts/meta/impl"
+		root: "contracts/meta"
 		files: [...#ContainedBundlePath] & [_, ...]
 		contiguous: true
 	})

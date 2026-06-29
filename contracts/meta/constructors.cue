@@ -1,4 +1,4 @@
-package impl
+package meta
 
 #ConstructorID:
 	"#MakePrimitive" |
@@ -14,86 +14,99 @@ package impl
 	"#MakeCompletionReport"
 
 #ConstructorCatalogEntry: close({
-	id: #ConstructorID
-	file: string & =~"^contracts/meta/impl/.+\\.cue$"
+	id:      #ConstructorID
+	file:    string & =~"^contracts/meta/.+\\.cue$"
 	purpose: string & !=""
 })
 
 #ConstructorCatalog: close({
-	kind: "constructor-catalog"
-	package: "impl"
-	root: "contracts/meta/impl"
+	kind:    "constructor-catalog"
+	package: "meta"
+	root:    "contracts/meta"
+	axes: close({
+		constructorOrder: "constructorAxis"
+		authorityStrata:  "authorityAxis"
+		shape:            "metaDualAxisShape"
+	})
 	constructors: [...#ConstructorCatalogEntry] & [_, ...]
 	invariants: [...string & !=""] & [_, ...]
 })
 
 constructorCatalog: #ConstructorCatalog & {
-	kind: "constructor-catalog"
-	package: "impl"
-	root: "contracts/meta/impl"
+	kind:    "constructor-catalog"
+	package: "meta"
+	root:    "contracts/meta"
+	axes: {
+		constructorOrder: "constructorAxis"
+		authorityStrata:  "authorityAxis"
+		shape:            "metaDualAxisShape"
+	}
 	constructors: [
 		{
-			id: "#MakePrimitive"
-			file: "contracts/meta/impl/primitive.cue"
+			id:      "#MakePrimitive"
+			file:    "contracts/meta/primitive.cue"
 			purpose: "Compress repeated primitive descriptions into a known metadata shape."
 		},
 		{
-			id: "#MakeObservedSurface"
-			file: "contracts/meta/impl/surface.cue"
+			id:      "#MakeObservedSurface"
+			file:    "contracts/meta/surface.cue"
 			purpose: "Describe broad observed fact substrates that can carry valid and invalid states."
 		},
 		{
-			id: "#MakeAdmissibleSurface"
-			file: "contracts/meta/impl/surface.cue"
+			id:      "#MakeAdmissibleSurface"
+			file:    "contracts/meta/surface.cue"
 			purpose: "Describe narrow admissible surfaces that reject invalid structure."
 		},
 		{
-			id: "#MakePredicateSet"
-			file: "contracts/meta/impl/predicate.cue"
+			id:      "#MakePredicateSet"
+			file:    "contracts/meta/predicate.cue"
 			purpose: "Describe predicates derived from observed structure."
 		},
 		{
-			id: "#MakePromotionCandidate"
-			file: "contracts/meta/impl/promotion.cue"
+			id:      "#MakePromotionCandidate"
+			file:    "contracts/meta/promotion.cue"
 			purpose: "Describe closed promotion candidates wired to predicate control."
 		},
 		{
-			id: "#MakeSurfaceSet"
-			file: "contracts/meta/impl/surface.cue"
+			id:      "#MakeSurfaceSet"
+			file:    "contracts/meta/surface.cue"
 			purpose: "Declare expected admissible, observed, candidate, fixture, check, and export surfaces."
 		},
 		{
-			id: "#MakeNegativeFixture"
-			file: "contracts/meta/impl/fixture.cue"
+			id:      "#MakeNegativeFixture"
+			file:    "contracts/meta/fixture.cue"
 			purpose: "Make rejection cases first-class fixtures."
 		},
 		{
-			id: "#MakeBottomCheckPlan"
-			file: "contracts/meta/impl/bottom.cue"
+			id:      "#MakeBottomCheckPlan"
+			file:    "contracts/meta/bottom.cue"
 			purpose: "Declare intended negative checks in manifests without executable proof targets."
 		},
 		{
-			id: "#MakeBottomCheckProof"
-			file: "contracts/meta/impl/bottom.cue"
+			id:      "#MakeBottomCheckProof"
+			file:    "contracts/meta/bottom.cue"
 			purpose: "Generate executable CUE intersections from check packages with adapter-bound targets."
 		},
 		{
-			id: "#MakeValidationPlan"
-			file: "contracts/meta/impl/validation.cue"
+			id:      "#MakeValidationPlan"
+			file:    "contracts/meta/validation.cue"
 			purpose: "Generate deterministic validation command lists."
 		},
 		{
-			id: "#MakeCompletionReport"
-			file: "contracts/meta/impl/completion.cue"
+			id:      "#MakeCompletionReport"
+			file:    "contracts/meta/completion.cue"
 			purpose: "Constrain completion reports into deterministic review evidence."
 		},
 	]
 	invariants: [
-		"Constructor definitions live in the repo-local impl package.",
+		"Constructor definitions live in the repo-local meta package.",
 		"Issue manifests carry constructor calls, not constructor bodies.",
 		"CUE expressions remain CUE values, not stringified expression metadata.",
 		"Negative checks are generated as intersections, not invalidity flags.",
 		"Manifest packages carry bottom-check plans; check packages carry executable proof objects.",
-		"Go wrappers are deferred to transport and materialization."
+		"Constructor order and authority strata are separate axes.",
+		"Constructor catalog entries identify available constructors; constructorAxis orders their instantiation.",
+		"AuthorityAxis ranks contract, assertions, fixtures, checks, and evals independently of constructor order.",
+		"Go wrappers are deferred to transport and materialization.",
 	]
 }

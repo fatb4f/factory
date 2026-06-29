@@ -1,6 +1,6 @@
 package agentcontextresolver
 
-import impl "github.com/fatb4f/factory/contracts/meta/impl"
+import impl "github.com/fatb4f/factory/contracts/meta"
 
 _pluginBundleRecommendationWorkflow: [
 	{order: 1, id: "#MakePrimitive", constructor: impl.#MakePrimitive, instantiateAt: "_pluginBundlePrimitives"},
@@ -280,7 +280,7 @@ _pluginBundleCompletion: impl.#MakeCompletionReport & {
 		checks: [for item in _pluginBundleBottomCheckPlans {item.out.name}]
 		commands: _pluginBundleValidation.out.commands
 		evidence: [
-			"constructor library under contracts/meta/impl",
+			"constructor library under contracts/meta",
 			"plugin-bundle source package under contracts/plugin-bundle/agent-context-resolver/src",
 			"review findings for substring matching and dangling route dependencies",
 		]

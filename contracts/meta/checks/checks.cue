@@ -1,6 +1,6 @@
-package implchecks
+package metachecks
 
-import impl "github.com/fatb4f/factory/contracts/meta/impl"
+import impl "github.com/fatb4f/factory/contracts/meta"
 
 operatorWord: "operator"
 truthWord:    "Truth"
@@ -12,6 +12,11 @@ invalidWord:  "isInvalid"
 	stringifiedBottomCheckAccepted?:                   false
 	"\(operatorWord)\(truthWord)\(flagWord)Accepted"?: false
 	inlineConstructorDefinitionAccepted?:              false
+})
+
+#EvalReportCandidate: close({
+	authority?: false
+	evidence: [...string & !=""] & [_, ...]
 })
 
 _negativeFixtures: {
@@ -40,7 +45,7 @@ _negativeFixtures: {
 	inlineConstructorDefinitionAccepted: impl.#MakeNegativeFixture & {
 		in: {
 			name:     "inlineConstructorDefinitionAccepted"
-			violates: "constructor bodies must remain in contracts/meta/impl"
+			violates: "constructor bodies must remain in contracts/meta"
 			refusal:  "keep manifests compact and reference repo-local constructors"
 			input: {
 				constructorCallsOnly:                false
@@ -73,6 +78,9 @@ _negativeBottomChecks: {
 	bottomProofInputTopAccepted:           _malformedConstructorCalls.bottomProofInputTopAccepted
 	validationMissingCheckSurfaceAccepted: _malformedConstructorCalls.validationMissingCheckSurfaceAccepted
 	completionWithoutEvidenceAccepted:     _malformedConstructorCalls.completionWithoutEvidenceAccepted
+	generatedAuthorityAccepted:            _malformedConstructorCalls.generatedAuthorityAccepted
+	manifestExecutableProofObjectAccepted: _malformedConstructorCalls.manifestExecutableProofObjectAccepted
+	evalAuthorityAccepted:                 _malformedConstructorCalls.evalAuthorityAccepted
 }
 
 _malformedConstructorCalls: {
@@ -195,11 +203,11 @@ _malformedConstructorCalls: {
 
 	validationMissingCheckSurfaceAccepted: (impl.#MakeValidationPlan & {
 		in: {
-			path:              "contracts/meta/impl"
+			path:              "contracts/meta"
 			validBaselineExpr: "constructorLibraryBaseline"
 			publicExpr:        "constructorManifestBaseline"
 			bottomChecks: ["bad"]
-			checkFile: "./contracts/meta/impl/checks"
+			checkFile: "./contracts/meta/checks"
 		}
 	}).out
 
@@ -209,8 +217,34 @@ _malformedConstructorCalls: {
 			surfaces: ["surface"]
 			fixtures: ["negative.fixture"]
 			checks: ["check"]
-			commands: ["cue vet ./contracts/meta/impl"]
+			commands: ["cue vet ./contracts/meta"]
 			evidence: []
 		}
 	}).out
+
+	generatedAuthorityAccepted: (impl.#MakeObservedSurface & {
+		in: {
+			name: "BadGeneratedAuthority"
+			role: "generated output promoted to contract authority"
+			factFields: ["generated"]
+			generatedArtifactsAreAuthority: true
+		}
+	}).out
+
+	manifestExecutableProofObjectAccepted: (impl.#MakeSurfaceSet & {
+		in: {
+			admissible: ["Admissible"]
+			observed: ["Observed"]
+			candidates: ["Candidate"]
+			fixtures: ["negative.fixture"]
+			checks: ["_negativeBottomChecks.fixture"]
+			publicExports: ["publicContract"]
+			manifestExecutableProofObject: true
+		}
+	}).out
+
+	evalAuthorityAccepted: {
+		authority: true
+		evidence: ["check evidence"]
+	} & #EvalReportCandidate
 }

@@ -25,7 +25,7 @@ Contract boundary:
 - `contracts/issues/44/normalized.cue` exposes the public contract, resolver exports, validation plan, and completion report.
 - `contracts/issues/44/checks/checks.cue` contains executable negative bottom-check proofs.
 - `contracts/plugin-bundle/agent-context-resolver/src/*implementation_slice*` owns the resolver-local materializer, eval projection, runner plan, feedback shape, and runner-result classification.
-- `contracts/meta/impl` is constructor authority.
+- `contracts/meta` is constructor authority.
 - GitHub issue bodies are transport only.
 - Shell, GitHub API, generated evidence, and adapter output are evidence only.
 
