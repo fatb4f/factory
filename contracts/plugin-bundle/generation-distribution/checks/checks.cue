@@ -1,6 +1,6 @@
 package pluginbundlegenerationdistributionchecks
 
-import gen "github.com/fatb4f/contract.cuemod/contracts/plugin-bundle/generation-distribution:pluginbundlegenerationdistribution"
+import gen "github.com/fatb4f/factory/contracts/plugin-bundle/generation-distribution:pluginbundlegenerationdistribution"
 
 _crossRepoFixtures: {
 	codeIntelDistributedToFactoryAccepted: {

@@ -1,6 +1,6 @@
 package pluginbundlegenerationdistribution
 
-import impl "github.com/fatb4f/contract.cuemod/contracts/meta/impl"
+import impl "github.com/fatb4f/factory/contracts/meta/impl"
 
 _contractSeed: close({
 	id:         "plugin-bundle-generation-distribution"
@@ -11,7 +11,7 @@ _contractSeed: close({
 
 _repo: close({
 	repository:         "fatb4f/factory"
-	module:             "github.com/fatb4f/factory/cuemod"
+	module:             "github.com/fatb4f/factory"
 	constructorLibrary: "contracts/meta/impl"
 	sourceAuthority:    "contracts/plugin-bundle/generation-distribution"
 	planExport:         "pluginBundleMaterializationPlan"

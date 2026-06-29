@@ -85,11 +85,7 @@ import "list"
 		selectedFragments: [...#DeclaredID]
 		hints:             #PromptHint
 		evidence:          #PromptEvidence
-		additionalContext: string & !=""
-		// Optional resolver-produced controller packet for route planning.
-		// Execution adapters may consume it later, but this output does not
-		// represent an SDK subagent.
-		controller?: #ResolvedRoutePlan
+		controller:         #ResolvedRoutePlan
 	})
 })
 

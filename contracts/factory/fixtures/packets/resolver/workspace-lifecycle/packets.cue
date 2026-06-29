@@ -1,6 +1,6 @@
 package workspacelifecycle
 
-import "github.com/fatb4f/contract.cuemod/contracts/context/packet"
+import "github.com/fatb4f/factory/contracts/context/packet"
 
 reason: [string]: resolver.#InclusionReason
 reason: {

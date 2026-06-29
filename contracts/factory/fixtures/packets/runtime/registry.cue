@@ -1,8 +1,8 @@
 package agentruntime
 
 import (
-	resolver "github.com/fatb4f/contract.cuemod/contracts/plugin-bundle/agent-context-resolver/src:agentcontextresolver"
-	runtime "github.com/fatb4f/contract.cuemod/contracts/agent-runtime:agentruntime"
+	resolver "github.com/fatb4f/factory/contracts/plugin-bundle/agent-context-resolver/src:agentcontextresolver"
+	runtime "github.com/fatb4f/factory/contracts/agent-runtime:agentruntime"
 )
 
 registry: runtime.#AgentRuntimeRegistry & runtime.runtimeRegistry

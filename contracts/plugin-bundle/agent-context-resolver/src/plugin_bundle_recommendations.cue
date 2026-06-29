@@ -1,6 +1,6 @@
 package agentcontextresolver
 
-import impl "github.com/fatb4f/contract.cuemod/contracts/meta/impl"
+import impl "github.com/fatb4f/factory/contracts/meta/impl"
 
 _pluginBundleRecommendationWorkflow: [
 	{order: 1, id: "#MakePrimitive", constructor: impl.#MakePrimitive, instantiateAt: "_pluginBundlePrimitives"},

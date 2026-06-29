@@ -3,7 +3,7 @@ package agentruntime
 import (
 	"list"
 
-	adaptercontracts "github.com/fatb4f/contract.cuemod/contracts/agent-runtime/adapters:agentruntimeadapters"
+	adaptercontracts "github.com/fatb4f/factory/contracts/agent-runtime/adapters:agentruntimeadapters"
 )
 
 #RuntimeRouteRegistration: close({

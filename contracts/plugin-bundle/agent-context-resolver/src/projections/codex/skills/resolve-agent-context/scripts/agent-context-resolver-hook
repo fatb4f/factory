@@ -16,7 +16,7 @@ fi
 if [ -d "$repo_root/generated" ] && [ -f "$repo_root/cue.mod/module.cue" ] && grep -q '/contracts/agent-context-resolver"' "$repo_root/cue.mod/module.cue"; then
 	generated_dir="$repo_root/generated"
 else
-	generated_dir="$repo_root/contracts/agent-context-resolver/generated"
+	generated_dir="$repo_root/contracts/plugin-bundle/agent-context-resolver/src/generated"
 fi
 [ -d "$generated_dir" ] || exit 2
 input_json=$(mktemp "${TMPDIR:-/tmp}/agent-context-resolver.XXXXXX.json")
@@ -194,9 +194,9 @@ classification=$(
 				}
 			},
 			generatedFrom: {
-				turnStart: "contracts/agent-context-resolver/generated/turn_start_fragments.json",
-				promptRoutes: "contracts/agent-context-resolver/generated/prompt_routes.json",
-				routeInventory: "contracts/agent-context-resolver/generated/route_inventory.json"
+				turnStart: "contracts/plugin-bundle/agent-context-resolver/src/generated/turn_start_fragments.json",
+				promptRoutes: "contracts/plugin-bundle/agent-context-resolver/src/generated/prompt_routes.json",
+				routeInventory: "contracts/plugin-bundle/agent-context-resolver/src/generated/route_inventory.json"
 			},
 			resolver: {
 				command: ".codex/skills/resolve-agent-context/scripts/resolve-agent-context",
@@ -210,10 +210,4 @@ classification=$(
 	exit 0
 }
 
-jq -cn --arg context "Agent route controller packet:
-$classification" '{
-	hookSpecificOutput: {
-		hookEventName: "UserPromptSubmit",
-		additionalContext: $context
-	}
-}'
+printf '%s\n' "$classification"

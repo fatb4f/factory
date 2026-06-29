@@ -4,19 +4,18 @@ import (
 	"list"
 	"strings"
 
-	agentprojection "github.com/fatb4f/contract.cuemod/contracts/plugin-bundle/agent-context-resolver/src/projections/agent-skill:agentskillprojection"
+	agentprojection "github.com/fatb4f/factory/contracts/plugin-bundle/agent-context-resolver/src/projections/agent-skill:agentskillprojection"
 )
 
 agentContextResolverAssertions: {
 	agentContextHook: {
 		hookEvent:                     "UserPromptSubmit"
 		emptyResultForUnmatchedPrompt: true
-		additionalContextPrefix:       "Agent route controller packet:\n"
 
 		generatedFrom: {
-			turnStart:      "contracts/agent-context-resolver/generated/turn_start_fragments.json"
-			promptRoutes:   "contracts/agent-context-resolver/generated/prompt_routes.json"
-			routeInventory: "contracts/agent-context-resolver/generated/route_inventory.json"
+			turnStart:      "contracts/plugin-bundle/agent-context-resolver/src/generated/turn_start_fragments.json"
+			promptRoutes:   "contracts/plugin-bundle/agent-context-resolver/src/generated/prompt_routes.json"
+			routeInventory: "contracts/plugin-bundle/agent-context-resolver/src/generated/route_inventory.json"
 		}
 
 		projection: {
@@ -212,6 +211,6 @@ agentContextResolverAssertions: {
 			strings.Contains(agentprojection.agentContextResolverHook, "denyRawRegistryDump") &&
 			strings.Contains(agentprojection.agentContextResolverHook, "denyUnselectedFragments") &&
 			strings.Contains(agentprojection.agentContextResolverHook, "directSDKSpawn") &&
-			strings.Contains(agentprojection.resolveAgentContext, "Agent route controller packet:")
+			strings.Contains(agentprojection.resolveAgentContext, "agent.route-controller-packet.v1")
 	}
 }

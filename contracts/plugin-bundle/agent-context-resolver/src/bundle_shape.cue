@@ -1,6 +1,6 @@
 package agentcontextresolver
 
-import tmpl "github.com/fatb4f/contract.cuemod/contracts/plugin-bundle/template:pluginbundletemplate"
+import tmpl "github.com/fatb4f/factory/contracts/plugin-bundle/template:pluginbundletemplate"
 
 _materializedBundleShape: tmpl.#PluginBundleSrcRootShape & {
 	srcRoot: "contracts/plugin-bundle/agent-context-resolver/src"

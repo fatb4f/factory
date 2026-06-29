@@ -1,6 +1,6 @@
 package implchecks
 
-import impl "github.com/fatb4f/contract.cuemod/contracts/meta/impl"
+import impl "github.com/fatb4f/factory/contracts/meta/impl"
 
 operatorWord: "operator"
 truthWord:    "Truth"

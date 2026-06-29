@@ -1,11 +1,11 @@
 package agentcontextresolver
 
 import (
-	graph "github.com/fatb4f/contract.cuemod/contracts/plugin-bundle/agent-context-resolver/src/internal/graph:graph"
+	graph "github.com/fatb4f/factory/contracts/plugin-bundle/agent-context-resolver/src/internal/graph:graph"
 )
 
 resolverModuleBoundary: {
-	modulePath:    "github.com/fatb4f/contract.cuemod/contracts/plugin-bundle/agent-context-resolver/src"
+	modulePath:    "github.com/fatb4f/factory/contracts/plugin-bundle/agent-context-resolver/src"
 	moduleRoot:    "."
 	publicSurface: "domain.cue"
 	deferred: ["contracts/agent-runtime"]

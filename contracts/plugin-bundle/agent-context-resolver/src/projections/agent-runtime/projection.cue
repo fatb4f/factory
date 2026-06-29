@@ -1,6 +1,6 @@
 package runtimeprojection
 
-import runtime "github.com/fatb4f/contract.cuemod/contracts/agent-runtime:agentruntime"
+import runtime "github.com/fatb4f/factory/contracts/agent-runtime:agentruntime"
 
 domain: {
 	id:          "agent-context-resolver/projections/agent-runtime"

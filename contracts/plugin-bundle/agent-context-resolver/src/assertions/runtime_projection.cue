@@ -1,6 +1,6 @@
 package assertions
 
-import runtimeprojection "github.com/fatb4f/contract.cuemod/contracts/plugin-bundle/agent-context-resolver/src/projections/agent-runtime:runtimeprojection"
+import runtimeprojection "github.com/fatb4f/factory/contracts/plugin-bundle/agent-context-resolver/src/projections/agent-runtime:runtimeprojection"
 
 runtimeProjectionAssertions: {
 	projection: runtimeprojection.domain & {

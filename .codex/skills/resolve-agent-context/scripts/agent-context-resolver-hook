@@ -15,10 +15,8 @@ fi
 [ -d "$repo_root" ] || exit 2
 if [ -d "$repo_root/generated" ] && [ -f "$repo_root/cue.mod/module.cue" ] && grep -q '/contracts/agent-context-resolver"' "$repo_root/cue.mod/module.cue"; then
 	generated_dir="$repo_root/generated"
-elif [ -d "$repo_root/contracts/plugin-bundle/agent-context-resolver/src/generated" ]; then
-	generated_dir="$repo_root/contracts/plugin-bundle/agent-context-resolver/src/generated"
 else
-	generated_dir="$repo_root/contracts/agent-context-resolver/generated"
+	generated_dir="$repo_root/contracts/plugin-bundle/agent-context-resolver/src/generated"
 fi
 [ -d "$generated_dir" ] || exit 2
 input_json=$(mktemp "${TMPDIR:-/tmp}/agent-context-resolver.XXXXXX.json")
@@ -212,10 +210,4 @@ classification=$(
 	exit 0
 }
 
-jq -cn --arg context "Agent route controller packet:
-$classification" '{
-	hookSpecificOutput: {
-		hookEventName: "UserPromptSubmit",
-		additionalContext: $context
-	}
-}'
+printf '%s\n' "$classification"

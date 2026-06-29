@@ -1,7 +1,7 @@
 package assertions
 
 import (
-	rootadapters "github.com/fatb4f/contract.cuemod/contracts/adapters"
+	rootadapters "github.com/fatb4f/factory/contracts/adapters"
 )
 
 adapterBoundaryAssertions: {
