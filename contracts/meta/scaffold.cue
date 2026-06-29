@@ -1,10 +1,12 @@
 package meta
 
 #RelativeContractPath: string & !="" & !~"^/" & !~"(^|/)\\.\\.(/|$)"
+#ValidatorCommand:     string & !="" & !~"(^|\\s)/" & !~"(^|\\s|/)\\.\\.(/|\\s|$)" & !~"contracts/issues/[1-9][0-9]*/checks" & !~"external lookup authority"
 
 #ContractGenerator: close({
 	kind:    "contract-generator"
-	name:    string & !=""
+	id:      string & !=""
+	name:    id
 	command: string & !=""
 	inputs: [...string & !=""] & [_, ...]
 	outputs: [...#RelativeContractPath] & [_, ...]
@@ -14,9 +16,11 @@ package meta
 
 #ContractValidator: close({
 	kind:       "contract-validator"
-	name:       string & !=""
-	targetPath: #RelativeContractPath
-	commands: [...string & !=""] & [_, ...]
+	id:         string & !=""
+	name:       id
+	target:     #RelativeContractPath
+	targetPath: target
+	commands: [...#ValidatorCommand] & [_, ...]
 	negativeChecks: [...string & !=""] & [_, ...]
 	forbiddenPattern: string & !=""
 	rejects: [...string & !=""] & [_, ...]
@@ -31,6 +35,8 @@ package meta
 	validator: #ContractValidator
 	requiredExports: [...string & !=""] & [_, ...]
 	requiredConstructors: [...#ConstructorID] & [_, ...]
+	mustUseConstructors:            true
+	mustUseMakeBottomCheckProof:    true
 	requiresBottomCheckProof:       true
 	generatedArtifactsAreAuthority: false
 	evidenceOnlyGeneratedArtifacts: true
@@ -43,6 +49,7 @@ package meta
 
 contractScaffoldGenerator: #ContractGenerator & {
 	kind:    "contract-generator"
+	id:      "contractScaffoldGenerator"
 	name:    "contractScaffoldGenerator"
 	command: "contracts/meta/scripts/scaffold-contract-slice"
 	inputs: [
@@ -68,7 +75,9 @@ contractScaffoldGenerator: #ContractGenerator & {
 
 contractScaffoldValidator: #ContractValidator & {
 	kind:       "contract-validator"
+	id:         "contractScaffoldValidator"
 	name:       "contractScaffoldValidator"
+	target:     "contracts/issues/<issue-number>"
 	targetPath: "contracts/issues/<issue-number>"
 	commands: [
 		"cue vet ./contracts/issues/<issue-number>",
@@ -117,6 +126,8 @@ generatedContractCompliance: #GeneratedContractCompliance & {
 		"#MakeValidationPlan",
 		"#MakeCompletionReport",
 	]
+	mustUseConstructors:            true
+	mustUseMakeBottomCheckProof:    true
 	requiresBottomCheckProof:       true
 	generatedArtifactsAreAuthority: false
 	evidenceOnlyGeneratedArtifacts: true

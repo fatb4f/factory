@@ -65,26 +65,28 @@ _negativeBottomChecks: {
 	inlineConstructorDefinitionAccepted:
 		_negativeFixtures.inlineConstructorDefinitionAccepted.out.input & #ConstructorManifestCandidate
 
-	primitiveEmptyInventoryAccepted:       _malformedConstructorCalls.primitiveEmptyInventoryAccepted
-	observedEmptyInventoryAccepted:        _malformedConstructorCalls.observedEmptyInventoryAccepted
-	admissibleMissingObservedAccepted:     _malformedConstructorCalls.admissibleMissingObservedAccepted
-	predicateMissingObservedAccepted:      _malformedConstructorCalls.predicateMissingObservedAccepted
-	promotionWithoutPredicatesAccepted:    _malformedConstructorCalls.promotionWithoutPredicatesAccepted
-	promotionWithoutEvidenceAccepted:      _malformedConstructorCalls.promotionWithoutEvidenceAccepted
-	surfaceSetEmptyInventoryAccepted:      _malformedConstructorCalls.surfaceSetEmptyInventoryAccepted
-	negativeFixtureInvalidFlagAccepted:    _malformedConstructorCalls.negativeFixtureInvalidFlagAccepted
-	bottomPlanMissingCheckSurfaceAccepted: _malformedConstructorCalls.bottomPlanMissingCheckSurfaceAccepted
-	bottomProofTargetTopAccepted:          _malformedConstructorCalls.bottomProofTargetTopAccepted
-	bottomProofInputTopAccepted:           _malformedConstructorCalls.bottomProofInputTopAccepted
-	validationMissingCheckSurfaceAccepted: _malformedConstructorCalls.validationMissingCheckSurfaceAccepted
-	completionWithoutEvidenceAccepted:     _malformedConstructorCalls.completionWithoutEvidenceAccepted
-	generatedAuthorityAccepted:            _malformedConstructorCalls.generatedAuthorityAccepted
-	manifestExecutableProofObjectAccepted: _malformedConstructorCalls.manifestExecutableProofObjectAccepted
-	evalAuthorityAccepted:                 _malformedConstructorCalls.evalAuthorityAccepted
-	contractGeneratorMissingOutputAccepted: _malformedConstructorCalls.contractGeneratorMissingOutputAccepted
-	contractValidatorAbsoluteTargetAccepted: _malformedConstructorCalls.contractValidatorAbsoluteTargetAccepted
-	contractValidatorStaleIssueLocalCheckAccepted: _malformedConstructorCalls.contractValidatorStaleIssueLocalCheckAccepted
-	generatedComplianceAuthorityAccepted: _malformedConstructorCalls.generatedComplianceAuthorityAccepted
+	primitiveEmptyInventoryAccepted:                 _malformedConstructorCalls.primitiveEmptyInventoryAccepted
+	observedEmptyInventoryAccepted:                  _malformedConstructorCalls.observedEmptyInventoryAccepted
+	admissibleMissingObservedAccepted:               _malformedConstructorCalls.admissibleMissingObservedAccepted
+	predicateMissingObservedAccepted:                _malformedConstructorCalls.predicateMissingObservedAccepted
+	promotionWithoutPredicatesAccepted:              _malformedConstructorCalls.promotionWithoutPredicatesAccepted
+	promotionWithoutEvidenceAccepted:                _malformedConstructorCalls.promotionWithoutEvidenceAccepted
+	surfaceSetEmptyInventoryAccepted:                _malformedConstructorCalls.surfaceSetEmptyInventoryAccepted
+	negativeFixtureInvalidFlagAccepted:              _malformedConstructorCalls.negativeFixtureInvalidFlagAccepted
+	bottomPlanMissingCheckSurfaceAccepted:           _malformedConstructorCalls.bottomPlanMissingCheckSurfaceAccepted
+	bottomProofTargetTopAccepted:                    _malformedConstructorCalls.bottomProofTargetTopAccepted
+	bottomProofInputTopAccepted:                     _malformedConstructorCalls.bottomProofInputTopAccepted
+	validationMissingCheckSurfaceAccepted:           _malformedConstructorCalls.validationMissingCheckSurfaceAccepted
+	completionWithoutEvidenceAccepted:               _malformedConstructorCalls.completionWithoutEvidenceAccepted
+	generatedAuthorityAccepted:                      _malformedConstructorCalls.generatedAuthorityAccepted
+	manifestExecutableProofObjectAccepted:           _malformedConstructorCalls.manifestExecutableProofObjectAccepted
+	evalAuthorityAccepted:                           _malformedConstructorCalls.evalAuthorityAccepted
+	contractGeneratorMissingOutputAccepted:          _malformedConstructorCalls.contractGeneratorMissingOutputAccepted
+	contractValidatorAbsoluteTargetAccepted:         _malformedConstructorCalls.contractValidatorAbsoluteTargetAccepted
+	contractValidatorParentTraversalCommandAccepted: _malformedConstructorCalls.contractValidatorParentTraversalCommandAccepted
+	contractValidatorExternalLookupCommandAccepted:  _malformedConstructorCalls.contractValidatorExternalLookupCommandAccepted
+	contractValidatorStaleIssueLocalCheckAccepted:   _malformedConstructorCalls.contractValidatorStaleIssueLocalCheckAccepted
+	generatedComplianceAuthorityAccepted:            _malformedConstructorCalls.generatedComplianceAuthorityAccepted
 }
 
 _malformedConstructorCalls: {
@@ -254,6 +256,7 @@ _malformedConstructorCalls: {
 
 	contractGeneratorMissingOutputAccepted: (impl.#ContractGenerator & {
 		kind:    "contract-generator"
+		id:      "badGenerator"
 		name:    "badGenerator"
 		command: "contracts/meta/scripts/scaffold-contract-slice"
 		inputs: ["issue"]
@@ -263,7 +266,9 @@ _malformedConstructorCalls: {
 
 	contractValidatorAbsoluteTargetAccepted: (impl.#ContractValidator & {
 		kind:       "contract-validator"
+		id:         "badValidator"
 		name:       "badValidator"
+		target:     "/contracts/issues/0"
 		targetPath: "/contracts/issues/0"
 		commands: ["cue vet ./contracts/issues/0"]
 		negativeChecks: ["bad"]
@@ -271,9 +276,35 @@ _malformedConstructorCalls: {
 		rejects: ["bad absolute target path"]
 	})
 
+	contractValidatorParentTraversalCommandAccepted: (impl.#ContractValidator & {
+		kind:       "contract-validator"
+		id:         "badValidator"
+		name:       "badValidator"
+		target:     "contracts/plugin-bundle/template"
+		targetPath: "contracts/plugin-bundle/template"
+		commands: ["cue vet ./../outside"]
+		negativeChecks: ["bad"]
+		forbiddenPattern: impl._defaultForbiddenPattern
+		rejects: ["bad parent traversal command path"]
+	})
+
+	contractValidatorExternalLookupCommandAccepted: (impl.#ContractValidator & {
+		kind:       "contract-validator"
+		id:         "badValidator"
+		name:       "badValidator"
+		target:     "contracts/plugin-bundle/template"
+		targetPath: "contracts/plugin-bundle/template"
+		commands: ["cue export ./contracts/plugin-bundle/template -e external lookup authority"]
+		negativeChecks: ["bad"]
+		forbiddenPattern: impl._defaultForbiddenPattern
+		rejects: ["bad external lookup authority command"]
+	})
+
 	contractValidatorStaleIssueLocalCheckAccepted: (impl.#ContractValidator & {
 		kind:       "contract-validator"
+		id:         "badValidator"
 		name:       "badValidator"
+		target:     "contracts/plugin-bundle/template"
 		targetPath: "contracts/plugin-bundle/template"
 		commands: ["cue export ./contracts/issues/81/checks -e _negativeBottomChecks.bad"]
 		negativeChecks: ["bad"]
@@ -288,7 +319,9 @@ _malformedConstructorCalls: {
 		validator: impl.contractScaffoldValidator
 		requiredExports: ["normalizedIssueManifest"]
 		requiredConstructors: ["#MakePrimitive", "#MakeBottomCheckProof"]
-		requiresBottomCheckProof: true
+		mustUseConstructors:            true
+		mustUseMakeBottomCheckProof:    true
+		requiresBottomCheckProof:       true
 		generatedArtifactsAreAuthority: true
 		evidenceOnlyGeneratedArtifacts: true
 		bindings: {

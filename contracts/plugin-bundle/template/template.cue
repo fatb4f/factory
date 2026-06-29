@@ -116,6 +116,7 @@ pluginBundleTemplateContract: close({
 		"pluginBundleScaffoldGenerator",
 		"pluginBundleScaffoldValidator",
 		"pluginBundleTemplateCompliance",
+		"pluginBundleTemplateContractMetaCompliance",
 	]
 	requirements: [
 		"template validates against contracts/meta generated compliance before its own child surfaces are admitted",
@@ -134,6 +135,7 @@ pluginBundleTemplateContractMetaCompliance: impl.#GeneratedContractCompliance & 
 		"pluginBundleTemplateContract",
 		"pluginBundleScaffoldGenerator",
 		"pluginBundleScaffoldValidator",
+		"pluginBundleTemplateCompliance",
 	]
 	requiredConstructors: [
 		"#ContractGenerator",
@@ -141,12 +143,43 @@ pluginBundleTemplateContractMetaCompliance: impl.#GeneratedContractCompliance & 
 		"#GeneratedContractCompliance",
 		"#MakeBottomCheckProof",
 	]
+	mustUseConstructors:            true
+	mustUseMakeBottomCheckProof:    true
 	requiresBottomCheckProof:       true
 	generatedArtifactsAreAuthority: false
 	evidenceOnlyGeneratedArtifacts: true
 	bindings: {
 		generatorName:   impl.contractScaffoldGenerator.name
 		validatorName:   impl.contractScaffoldValidator.name
+		parentAuthority: "contracts/meta"
+	}
+}
+
+pluginBundleTemplateCompliance: impl.#GeneratedContractCompliance & {
+	kind:      "generated-contract-compliance"
+	generator: pluginBundleScaffoldGenerator
+	validator: pluginBundleScaffoldValidator
+	requiredExports: [
+		"pluginBundleContract",
+		"pluginBundleValidationPlan",
+		"pluginBundleCompletionReport",
+	]
+	requiredConstructors: [
+		"#ContractGenerator",
+		"#ContractValidator",
+		"#GeneratedContractCompliance",
+		"#MakeBottomCheckProof",
+		"#MakeValidationPlan",
+		"#MakeCompletionReport",
+	]
+	mustUseConstructors:            true
+	mustUseMakeBottomCheckProof:    true
+	requiresBottomCheckProof:       true
+	generatedArtifactsAreAuthority: false
+	evidenceOnlyGeneratedArtifacts: true
+	bindings: {
+		generatorName:   pluginBundleScaffoldGenerator.name
+		validatorName:   pluginBundleScaffoldValidator.name
 		parentAuthority: "contracts/meta"
 	}
 }

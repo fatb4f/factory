@@ -19,7 +19,9 @@ pluginBundleTemplateCompliance: impl.#GeneratedContractCompliance & {
 		"#MakeValidationPlan",
 		"#MakeCompletionReport",
 	]
-	requiresBottomCheckProof: true
+	mustUseConstructors:            true
+	mustUseMakeBottomCheckProof:    true
+	requiresBottomCheckProof:       true
 	generatedArtifactsAreAuthority: false
 	evidenceOnlyGeneratedArtifacts: true
 	bindings: {

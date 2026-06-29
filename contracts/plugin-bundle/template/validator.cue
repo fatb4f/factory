@@ -4,7 +4,9 @@ import impl "github.com/fatb4f/factory/contracts/meta"
 
 pluginBundleScaffoldValidator: impl.#ContractValidator & {
 	kind:       "contract-validator"
+	id:         "pluginBundleScaffoldValidator"
 	name:       "pluginBundleScaffoldValidator"
+	target:     "contracts/plugin-bundle/<bundle-id>/src"
 	targetPath: "contracts/plugin-bundle/<bundle-id>/src"
 	commands: [
 		"cue vet ./contracts/plugin-bundle/<bundle-id>/src",

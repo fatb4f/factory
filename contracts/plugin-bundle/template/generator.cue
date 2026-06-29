@@ -4,6 +4,7 @@ import impl "github.com/fatb4f/factory/contracts/meta"
 
 pluginBundleScaffoldGenerator: impl.#ContractGenerator & {
 	kind:    "contract-generator"
+	id:      "pluginBundleScaffoldGenerator"
 	name:    "pluginBundleScaffoldGenerator"
 	command: "contracts/plugin-bundle/template/scripts/scaffold-plugin-bundle"
 	inputs: [
