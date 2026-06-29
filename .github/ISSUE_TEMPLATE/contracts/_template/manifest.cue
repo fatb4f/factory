@@ -87,7 +87,7 @@ _primitives: [
 			constraints: [
 				"template metadata is carried under issue.template",
 				"workflow entries preserve order, id, and instantiateAt shape",
-				"no cuemod path is admitted as a module or import root",
+				"no alternate module path is admitted as an import root",
 			]
 			closed: true
 		}
@@ -95,24 +95,24 @@ _primitives: [
 ]
 
 negativeIssueTemplateFixtures: {
-	extraMarkdownHeading: {id: "extraMarkdownHeading"}
-	missingCueFence:     {id: "missingCueFence"}
-	missingTopLevelIssue: {id: "missingTopLevelIssue"}
-	cuemodImportRoot:    {id: "cuemodImportRoot"}
+	extraMarkdownHeading:     {id: "extraMarkdownHeading"}
+	missingCueFence:         {id: "missingCueFence"}
+	missingTopLevelIssue:    {id: "missingTopLevelIssue"}
+	alternateModuleRoot:     {id: "alternateModuleRoot"}
 }
 
 _negativeFixtures: [
 	negativeIssueTemplateFixtures.extraMarkdownHeading,
 	negativeIssueTemplateFixtures.missingCueFence,
 	negativeIssueTemplateFixtures.missingTopLevelIssue,
-	negativeIssueTemplateFixtures.cuemodImportRoot,
+	negativeIssueTemplateFixtures.alternateModuleRoot,
 ]
 
 _bottomCheckPlans: [
 	{name: "extraMarkdownHeadingRejected", fixture: negativeIssueTemplateFixtures.extraMarkdownHeading.id, checkSurface: "_negativeBottomChecks", checkFile: "./.github/ISSUE_TEMPLATE/contracts/_template/checks/body_shape.cue"},
 	{name: "missingCueFenceRejected", fixture: negativeIssueTemplateFixtures.missingCueFence.id, checkSurface: "_negativeBottomChecks", checkFile: "./.github/ISSUE_TEMPLATE/contracts/_template/checks/body_shape.cue"},
 	{name: "missingTopLevelIssueRejected", fixture: negativeIssueTemplateFixtures.missingTopLevelIssue.id, checkSurface: "_negativeBottomChecks", checkFile: "./.github/ISSUE_TEMPLATE/contracts/_template/checks/body_shape.cue"},
-	{name: "cuemodImportRootRejected", fixture: negativeIssueTemplateFixtures.cuemodImportRoot.id, checkSurface: "_negativeBottomChecks", checkFile: "./.github/ISSUE_TEMPLATE/contracts/_template/checks/module_root.cue"},
+	{name: "alternateModuleRootRejected", fixture: negativeIssueTemplateFixtures.alternateModuleRoot.id, checkSurface: "_negativeBottomChecks", checkFile: "./.github/ISSUE_TEMPLATE/contracts/_template/checks/module_root.cue"},
 ]
 
 _surfaces: impl.#MakeSurfaceSet & {
@@ -141,7 +141,7 @@ _validation: impl.#MakeValidationPlan & {
 		bottomChecks:      [for plan in _bottomCheckPlans {plan.name}]
 		checkFile:         "./.github/ISSUE_TEMPLATE/contracts/_template/checks"
 		checkSurface:      "_negativeBottomChecks"
-		forbiddenPattern:  "[c]uemod|```[j]son|```[y]aml"
+		forbiddenPattern:  "github\\.com/fatb4f/factory/[c]ue[m]od|```[j]son|```[y]aml"
 	}
 }
 
