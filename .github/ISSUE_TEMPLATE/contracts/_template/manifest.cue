@@ -129,7 +129,7 @@ _validation: impl.#MakeValidationPlan & {
 		bottomChecks:      [for plan in _bottomCheckPlans {plan.name}]
 		checkFile:         "./.github/ISSUE_TEMPLATE/contracts/_template/checks"
 		checkSurface:      "_negativeBottomChecks"
-		forbiddenPattern:  "^###|```json|```yaml"
+		forbiddenPattern:  "```[j]son|```[y]aml"
 	}
 }
 
