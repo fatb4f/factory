@@ -1,5 +1,27 @@
 package issue82checks
 
+#GeneratedPackageAuthorityBoundary: close({
+	path: string & =~"^\\.codex/plugins/[^/]+/.+"
+	role: "projection"
+	generatedPackageAuthority?: false
+})
+
+#DistributionRootContainmentBoundary: close({
+	bundleID: string & !=""
+	distributionRoot: string & =~"^\\.codex/plugins/[^/]+$"
+	pathContained: true
+})
+
+#DeterministicGenerationBoundary: close({
+	generatedAtRuntime?: false
+	nonDeterministicInput?: false
+})
+
+#RuntimeExternalSourceLookupBoundary: close({
+	runtimeRequiresExternalFactoryLookup?: false
+	runtimeRequiresContractCuemodLookup?: false
+})
+
 _negativeFixtures: {
 	generatedPackageAuthorityAccepted: {
 		input: {
@@ -30,8 +52,8 @@ _negativeFixtures: {
 }
 
 _negativeBottomChecks: {
-	generatedPackageAuthorityAccepted:     _negativeFixtures.generatedPackageAuthorityAccepted.input
-	distributionOutsidePluginRootAccepted: _negativeFixtures.distributionOutsidePluginRootAccepted.input
-	nonDeterministicGenerationAccepted:    _negativeFixtures.nonDeterministicGenerationAccepted.input
-	runtimeExternalSourceLookupAccepted:   _negativeFixtures.runtimeExternalSourceLookupAccepted.input
+	generatedPackageAuthorityAccepted:     _negativeFixtures.generatedPackageAuthorityAccepted.input & #GeneratedPackageAuthorityBoundary
+	distributionOutsidePluginRootAccepted: _negativeFixtures.distributionOutsidePluginRootAccepted.input & #DistributionRootContainmentBoundary
+	nonDeterministicGenerationAccepted:    _negativeFixtures.nonDeterministicGenerationAccepted.input & #DeterministicGenerationBoundary
+	runtimeExternalSourceLookupAccepted:   _negativeFixtures.runtimeExternalSourceLookupAccepted.input & #RuntimeExternalSourceLookupBoundary
 }
