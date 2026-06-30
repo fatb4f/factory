@@ -159,4 +159,71 @@ _negativeBottomChecks: {
 			}
 		}
 	}).out.staleLocalCheckReferenceAccepted
+
+	cwdRelativeWriteAccepted!: (impl.#MakeBottomCheckProof & {
+		in: {
+			name: "cwdRelativeWriteAccepted"
+			input: {
+				evidence: "cwd-relative adapter writes are inadmissible"
+				value: {
+					repoRoot:              "/repo"
+					scriptPath:            "/repo/contracts/plugin-bundle/src/adapters/scaffold-plugin-bundle"
+					contractRoot:          "Path(out_arg)"
+					generatedRoot:         "Path(generated_root)"
+					writesAreRepoAnchored: false
+				}
+			}
+			target: {
+				name: "#PluginBundleAdapterRepoRootBoundary"
+				contract: {
+					evidence: "template authority requires adapter writes anchored to the script-derived repo root"
+					value:    tmpl.#PluginBundleAdapterRepoRootBoundary
+				}
+			}
+		}
+	}).out.cwdRelativeWriteAccepted
+
+	uppercaseOrUnderscorePluginNameAccepted!: (impl.#MakeBottomCheckProof & {
+		in: {
+			name: "uppercaseOrUnderscorePluginNameAccepted"
+			input: {
+				evidence: "uppercase and underscore plugin names are inadmissible"
+				value: {
+					pluginName:               "Agent_Context_Resolver"
+					pattern:                  "^[a-z0-9]([a-z0-9-]{0,62}[a-z0-9])?$"
+					maxLength:                64
+					folderEqualsManifestName: true
+				}
+			}
+			target: {
+				name: "#PluginBundlePluginNameRule"
+				contract: {
+					evidence: "template authority requires lowercase hyphen-case plugin names"
+					value:    tmpl.#PluginBundlePluginNameRule
+				}
+			}
+		}
+	}).out.uppercaseOrUnderscorePluginNameAccepted
+
+	numericLeadingCuePackageAccepted!: (impl.#MakeBottomCheckProof & {
+		in: {
+			name: "numericLeadingCuePackageAccepted"
+			input: {
+				evidence: "numeric-leading generated CUE package declarations are inadmissible"
+				value: {
+					bundleID:           "1plugin"
+					cuePackage:         "1pluginpluginbundle"
+					packagePrefix:      "pluginbundle_"
+					validCueIdentifier: true
+				}
+			}
+			target: {
+				name: "#PluginBundleCuePackageNameRule"
+				contract: {
+					evidence: "template authority requires a stable non-numeric CUE package prefix"
+					value:    tmpl.#PluginBundleCuePackageNameRule
+				}
+			}
+		}
+	}).out.numericLeadingCuePackageAccepted
 }

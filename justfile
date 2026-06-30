@@ -42,6 +42,9 @@ contracts-plugin-bundle-src:
 	! cue export ./contracts/plugin-bundle/src/checks -e _negativeBottomChecks.missingRequiredPathAccepted >/dev/null
 	! cue export ./contracts/plugin-bundle/src/checks -e _negativeBottomChecks.bundleLocalOverrideAccepted >/dev/null
 	! cue export ./contracts/plugin-bundle/src/checks -e _negativeBottomChecks.staleLocalCheckReferenceAccepted >/dev/null
+	! cue export ./contracts/plugin-bundle/src/checks -e _negativeBottomChecks.cwdRelativeWriteAccepted >/dev/null
+	! cue export ./contracts/plugin-bundle/src/checks -e _negativeBottomChecks.uppercaseOrUnderscorePluginNameAccepted >/dev/null
+	! cue export ./contracts/plugin-bundle/src/checks -e _negativeBottomChecks.numericLeadingCuePackageAccepted >/dev/null
 
 contracts-plugin-bundle-template: contracts-plugin-bundle-src
 

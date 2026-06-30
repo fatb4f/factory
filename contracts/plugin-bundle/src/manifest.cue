@@ -2,6 +2,7 @@ package pluginbundlesrc
 
 import (
 	impl "github.com/fatb4f/factory/contracts/meta"
+	"strings"
 )
 
 // source: contracts/plugin-bundle/src/manifest.cue
@@ -38,11 +39,35 @@ pluginBundleScaffoldGenerator: impl.#ContractGenerator & {
 }
 
 // source: contracts/plugin-bundle/src/manifest.cue
-#NonEmptyString:       string & !=""
-#RelativeContractPath: string & !="" & !~"^/" & !~"(^|/)\\.\\.(/|$)"
-#RepoPath:             string & !=""
-_staleLocalCheckPath:  "contracts/stale/checks"
-#ValidationCommand:    string & !="" & !~"\(_staleLocalCheckPath)"
+#NonEmptyString:             string & !=""
+#RelativeContractPath:       string & !="" & !~"^/" & !~"(^|/)\\.\\.(/|$)"
+#RepoPath:                   string & !=""
+_staleLocalCheckPath:        "contracts/stale/checks"
+#ValidationCommand:          string & !="" & !~"\(_staleLocalCheckPath)"
+#PluginBundlePluginName:     string & =~"^[a-z0-9]([a-z0-9-]{0,62}[a-z0-9])?$"
+#PluginBundleCuePackageName: string & =~"^[A-Za-z_][0-9A-Za-z_]*$"
+
+#PluginBundleAdapterRepoRootBoundary: close({
+	repoRoot:              string & !="" & =~"^/"
+	scriptPath:            string & !="" & =~"(^|/)contracts/plugin-bundle/src/adapters/scaffold-plugin-bundle$"
+	contractRoot:          string & !="" & !~"^Path\\(out_arg\\)$"
+	generatedRoot:         string & !="" & !~"^Path\\(generated_root\\)$"
+	writesAreRepoAnchored: true
+})
+
+#PluginBundlePluginNameRule: close({
+	pluginName:               #PluginBundlePluginName
+	pattern:                  "^[a-z0-9]([a-z0-9-]{0,62}[a-z0-9])?$"
+	maxLength:                64
+	folderEqualsManifestName: true
+})
+
+#PluginBundleCuePackageNameRule: close({
+	bundleID:           #PluginBundlePluginName
+	cuePackage:         #PluginBundleCuePackageName & =~"^pluginbundle_"
+	packagePrefix:      "pluginbundle_"
+	validCueIdentifier: true
+})
 
 #PluginBundleCuePackage: close({
 	id:   #NonEmptyString
@@ -68,7 +93,7 @@ _staleLocalCheckPath:  "contracts/stale/checks"
 })
 
 #PluginBundleGeneratedProjectionLayout: close({
-	pluginName:    #NonEmptyString
+	pluginName:    #PluginBundlePluginName
 	generatedRoot: "contracts/plugin-bundle/generated/\(pluginName)"
 	manifest:      "\(generatedRoot)/.codex-plugin/plugin.json"
 	skills:        "\(generatedRoot)/skills"
@@ -85,15 +110,18 @@ _staleLocalCheckPath:  "contracts/stale/checks"
 })
 
 #PluginBundleScaffoldRootDerivation: close({
-	bundleID:             #NonEmptyString
+	bundleID:             #PluginBundlePluginName
 	contractRoot:         "contracts/plugin-bundle/\(bundleID)/src"
 	generatedRoot:        "contracts/plugin-bundle/generated/\(bundleID)"
 	contractRootPattern:  "contracts/plugin-bundle/<bundle-id>/src"
 	generatedRootPattern: "contracts/plugin-bundle/generated/<bundle-id>"
+	cuePackage:           #PluginBundleCuePackageName & "pluginbundle_\(strings.Replace(bundleID, "-", "_", -1))"
+	packagePrefix:        "pluginbundle_"
+	validCueIdentifier:   true
 })
 
 #PluginBundleContractProjectionLayout: close({
-	pluginName:   #NonEmptyString
+	pluginName:   #PluginBundlePluginName
 	contractRoot: "contracts/plugin-bundle/\(pluginName)/src"
 	publicExports: [
 		"pluginBundleContract",
@@ -115,7 +143,7 @@ _staleLocalCheckPath:  "contracts/stale/checks"
 })
 
 #PluginBundleShapeManifest: close({
-	bundleID:                          #NonEmptyString
+	bundleID:                          #PluginBundlePluginName
 	shapeVersion:                      "factory.plugin-bundle.src-root-shape.v1"
 	srcRootShapeAuthority:             "contracts/plugin-bundle/src/manifest.cue"
 	generatedArtifactsAreEvidenceOnly: true
@@ -183,6 +211,9 @@ pluginBundleTemplateContract: close({
 	package: "pluginbundlesrc"
 	exports: [
 		"#RelativeContractPath",
+		"#PluginBundleAdapterRepoRootBoundary",
+		"#PluginBundlePluginNameRule",
+		"#PluginBundleCuePackageNameRule",
 		"#PluginBundleSrcRootShape",
 		"#PluginBundleGeneratedProjectionLayout",
 		"#PluginBundleContractProjectionLayout",
@@ -206,6 +237,9 @@ pluginBundleTemplateContract: close({
 		"repo-root plugin installation output is outside this slice",
 		"bundle-local shape overrides are rejected",
 		"relative contract paths reject absolute paths and parent traversal",
+		"plugin names are lowercase hyphen-case and bounded to the plugin manifest name limit",
+		"generated CUE package names are stable valid identifiers with a non-numeric prefix",
+		"adapter writes are anchored to the repo root resolved from the adapter script path",
 		"validation commands do not reference stale local checks",
 	]
 })
@@ -313,6 +347,9 @@ pluginBundleScaffoldValidator: impl.#ContractValidator & {
 		"! cue export ./contracts/plugin-bundle/<bundle-id>/src/checks -e _negativeBottomChecks.parentTraversalAccepted",
 		"! cue export ./contracts/plugin-bundle/<bundle-id>/src/checks -e _negativeBottomChecks.missingRequiredPathAccepted",
 		"! cue export ./contracts/plugin-bundle/<bundle-id>/src/checks -e _negativeBottomChecks.bundleLocalOverrideAccepted",
+		"! cue export ./contracts/plugin-bundle/<bundle-id>/src/checks -e _negativeBottomChecks.cwdRelativeWriteAccepted",
+		"! cue export ./contracts/plugin-bundle/<bundle-id>/src/checks -e _negativeBottomChecks.uppercaseOrUnderscorePluginNameAccepted",
+		"! cue export ./contracts/plugin-bundle/<bundle-id>/src/checks -e _negativeBottomChecks.numericLeadingCuePackageAccepted",
 	]
 	negativeChecks: [
 		"generatedAuthorityAccepted",
@@ -321,6 +358,9 @@ pluginBundleScaffoldValidator: impl.#ContractValidator & {
 		"parentTraversalAccepted",
 		"missingRequiredPathAccepted",
 		"bundleLocalOverrideAccepted",
+		"cwdRelativeWriteAccepted",
+		"uppercaseOrUnderscorePluginNameAccepted",
+		"numericLeadingCuePackageAccepted",
 	]
 	forbiddenPattern: "^/|\\.\\./|external lookup authority"
 	rejects: [
@@ -331,6 +371,9 @@ pluginBundleScaffoldValidator: impl.#ContractValidator & {
 		"parent traversal paths",
 		"missing required contract paths",
 		"bundle-local shape override escapes",
+		"cwd-relative adapter writes",
+		"uppercase or underscore plugin names",
+		"numeric-leading generated CUE package declarations",
 		"contract projection output and generated plugin projection output are separate planes",
 		"repo-root plugin installation output is outside this slice",
 	]

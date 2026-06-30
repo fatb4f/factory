@@ -55,30 +55,26 @@ if [ -z "$src_root" ]; then
 	exit 2
 fi
 
-if [ ! -d "$src_root" ]; then
-	echo "--src-root must point at an existing directory" >&2
-	exit 2
-fi
-
 if [ -z "$out" ]; then
 	echo "--out is required" >&2
 	exit 2
 fi
 
-python3 - "$bundle_id" "$src_root" "$out" "$force" <<'PY'
+python3 - "$0" "$bundle_id" "$src_root" "$out" "$force" <<'PY'
 import json
 import re
 import subprocess
 import sys
 from pathlib import Path, PurePosixPath
 
-bundle_id, src_root_arg, out_arg, force = sys.argv[1:5]
+script_arg, bundle_id, src_root_arg, out_arg, force = sys.argv[1:6]
 
-if not re.fullmatch(r"[0-9A-Za-z][0-9A-Za-z_-]*", bundle_id):
-    raise SystemExit("bundle-id must be alphanumeric with optional '-' or '_' separators")
+if not re.fullmatch(r"[a-z0-9](?:[a-z0-9-]{0,62}[a-z0-9])?", bundle_id):
+    raise SystemExit("bundle-id must be lowercase hyphen-case, 1-64 characters, and start and end with a lowercase letter or digit")
 
-src_root_path = PurePosixPath(src_root_arg)
-out_path = PurePosixPath(out_arg)
+repo_relative_path = PurePosixPath
+src_root_path = repo_relative_path(src_root_arg)
+out_path = repo_relative_path(out_arg)
 contract_parts = ("contracts", "plugin-bundle", bundle_id, "src")
 
 for label, value, path in (("src-root", src_root_arg, src_root_path), ("out", out_arg, out_path)):
@@ -88,15 +84,19 @@ for label, value, path in (("src-root", src_root_arg, src_root_path), ("out", ou
 if out_path.parts != contract_parts:
     raise SystemExit("out must match contracts/plugin-bundle/<bundle-id>/src")
 
-src_root = Path(src_root_arg)
-root = Path(out_arg)
+script_path = Path(script_arg).resolve()
+repo_root = script_path.parents[4]
+src_root = repo_root / src_root_arg
+if not src_root.is_dir():
+    raise SystemExit("--src-root must point at an existing repo-relative directory")
+root = repo_root / out_arg
 manifest = root / "manifest.cue"
 checks_dir = root / "checks"
 checks = checks_dir / "manifest.cue"
 generated_checks_dir = root / "generated" / "checks"
 generated_check_manifest = generated_checks_dir / "check_manifest.json"
 
-bundle_package = re.sub(r"[^0-9A-Za-z_]", "", bundle_id) + "pluginbundle"
+bundle_package = "pluginbundle_" + bundle_id.replace("-", "_")
 checks_package = bundle_package + "checks"
 source_manifest = src_root / "manifest.cue"
 source_text = source_manifest.read_text()
@@ -114,7 +114,7 @@ generated_files = [
     f"{generated_root}/hooks/hooks.json",
     f"{generated_root}/scripts/README.md",
 ]
-plugin_root = Path(generated_root)
+plugin_root = repo_root / generated_root
 plugin_json = plugin_root / ".codex-plugin" / "plugin.json"
 skill_md = plugin_root / "skills" / "SKILL.md"
 hooks_json = plugin_root / "hooks" / "hooks.json"
@@ -289,11 +289,6 @@ hooks_json.write_text(json.dumps({"schema": "codex.plugin.hooks.v1", "hooks": []
 scripts_readme.write_text(f"# {bundle_id} scripts\n\nGenerated placeholder for plugin bundle scripts.\n")
 
 subprocess.run(["cue", "fmt", str(manifest), str(checks)], check=True)
-print(f"created {manifest}")
-print(f"created {checks}")
-print(f"created {generated_check_manifest}")
-print(f"created {plugin_json}")
-print(f"created {skill_md}")
-print(f"created {hooks_json}")
-print(f"created {scripts_readme}")
+for path in (manifest, checks, generated_check_manifest, plugin_json, skill_md, hooks_json, scripts_readme):
+    print(f"created {path.relative_to(repo_root)}")
 PY
