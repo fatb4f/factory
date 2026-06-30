@@ -21,16 +21,19 @@ pluginBundleContract: tmpl.#PluginBundleSrcRootShape & {
 		]
 	}
 	generated: {
-		root:         "contracts/plugin-bundle/agent-context-resolver/src/generated"
+		root:         "contracts/plugin-bundle/generated/agent-context-resolver"
 		evidenceOnly: true
 		artifacts: [
-			{path: "generated/fragment_inventory.json", required: true, evidenceOnly: true},
-			{path: "generated/registry.index.json", required: true, evidenceOnly: true},
-			{path: "generated/route_inventory.json", required: true, evidenceOnly: true},
-			{path: "generated/turn_start_fragments.json", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/agent-context-resolver/.codex-plugin/plugin.json", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/agent-context-resolver/skills/SKILL.md", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/agent-context-resolver/hooks/hooks.json", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/agent-context-resolver/scripts/README.md", required: true, evidenceOnly: true},
 		]
 	}
-	physicalPluginLayout: {
+	contractProjection: {
+		pluginName: "agent-context-resolver"
+	}
+	generatedProjection: {
 		pluginName: "agent-context-resolver"
 	}
 	validation: {

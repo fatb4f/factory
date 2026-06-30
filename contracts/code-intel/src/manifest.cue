@@ -20,17 +20,19 @@ _materializedBundleShape: tmpl.#PluginBundleSrcRootShape & {
 		]
 	}
 	generated: {
-		root:         "contracts/code-intel/src/generated"
+		root:         "contracts/plugin-bundle/generated/code-intel"
 		evidenceOnly: true
 		artifacts: [
-			{path: "generated/mcp/server-manifest.json", required: true, evidenceOnly: true},
-			{path: "generated/mcp/tool-registry.json", required: true, evidenceOnly: true},
-			{path: "generated/lsp/cue-lsp.json", required: true, evidenceOnly: true},
-			{path: "generated/lsp/lua-language-server.json", required: true, evidenceOnly: true},
-			{path: "generated/workflows/lua-first/workflow.json", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/.codex-plugin/plugin.json", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/skills/SKILL.md", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/hooks/hooks.json", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/scripts/README.md", required: true, evidenceOnly: true},
 		]
 	}
-	physicalPluginLayout: {
+	contractProjection: {
+		pluginName: "code-intel"
+	}
+	generatedProjection: {
 		pluginName: "code-intel"
 	}
 	validation: {

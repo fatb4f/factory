@@ -20,15 +20,17 @@ pluginBundleScaffoldGenerator: impl.#ContractGenerator & {
 		"manifest.cue",
 		"checks/manifest.cue",
 		"generated/checks/check_manifest.json",
-		"plugins/<plugin-name>/.codex-plugin/plugin.json",
-		"plugins/<plugin-name>/skills/SKILL.md",
-		"plugins/<plugin-name>/hooks/hooks.json",
-		"plugins/<plugin-name>/scripts/README.md",
-		".agents/plugins/marketplace.json",
+		"contracts/plugin-bundle/generated/<plugin-name>/.codex-plugin/plugin.json",
+		"contracts/plugin-bundle/generated/<plugin-name>/skills/SKILL.md",
+		"contracts/plugin-bundle/generated/<plugin-name>/hooks/hooks.json",
+		"contracts/plugin-bundle/generated/<plugin-name>/scripts/README.md",
 	]
 	invariants: [
 		"contracts/plugin-bundle/src remains parent authority for generated plugin-bundle children",
 		"generated plugin-bundle artifacts are evidence only",
+		"generated plugin files are projection evidence under contracts/plugin-bundle/generated/<plugin-name>",
+		"generated plugin files are not emitted under the contract projection root",
+		"generated plugin files are not emitted as repo-root installation output",
 		"generated child contracts use repo-relative paths only",
 		"generated child checks use #MakeBottomCheckProof",
 		"generated plugin-bundle children materialize the standard physical plugin layout",
@@ -65,21 +67,37 @@ _staleLocalCheckPath:  "contracts/stale/checks"
 	artifacts: [...#PluginBundleGeneratedArtifact] & [_, ...]
 })
 
-#PluginBundlePhysicalPluginTree: close({
-	pluginName:  #NonEmptyString
-	root:        "plugins/\(pluginName)"
-	manifest:    "plugins/\(pluginName)/.codex-plugin/plugin.json"
-	skills:      "plugins/\(pluginName)/skills"
-	hooks:       "plugins/\(pluginName)/hooks"
-	scripts:     "plugins/\(pluginName)/scripts"
-	marketplace: ".agents/plugins/marketplace.json"
+#PluginBundleGeneratedProjectionLayout: close({
+	pluginName:    #NonEmptyString
+	generatedRoot: "contracts/plugin-bundle/generated/\(pluginName)"
+	manifest:      "\(generatedRoot)/.codex-plugin/plugin.json"
+	skills:        "\(generatedRoot)/skills"
+	hooks:         "\(generatedRoot)/hooks"
+	scripts:       "\(generatedRoot)/scripts"
+	evidenceOnly:  true
+	authority:     false
 	requiredPaths: [
 		manifest,
 		skills,
 		hooks,
 		scripts,
-		marketplace,
 	]
+})
+
+#PluginBundleContractProjectionLayout: close({
+	pluginName:   #NonEmptyString
+	contractRoot: "contracts/plugin-bundle/\(pluginName)/src"
+	publicExports: [
+		"pluginBundleContract",
+		"pluginBundleValidationPlan",
+		"pluginBundleCompletionReport",
+	]
+})
+
+#PluginBundleGeneratorAssertion: close({
+	id:     #NonEmptyString
+	target: #NonEmptyString
+	requires: [...#NonEmptyString] & [_, ...]
 })
 
 #PluginBundleValidationShape: close({
@@ -100,7 +118,8 @@ _staleLocalCheckPath:  "contracts/stale/checks"
 	srcRoot:                  #RepoPath
 	contracts:                #PluginBundleContractsShape
 	generated:                #PluginBundleGeneratedShape
-	physicalPluginLayout:     #PluginBundlePhysicalPluginTree
+	contractProjection:       #PluginBundleContractProjectionLayout
+	generatedProjection:      #PluginBundleGeneratedProjectionLayout
 	validation:               #PluginBundleValidationShape
 	manifest:                 #PluginBundleShapeManifest
 	bundleLocalShapeOverride: false
@@ -157,7 +176,9 @@ pluginBundleTemplateContract: close({
 	exports: [
 		"#RelativeContractPath",
 		"#PluginBundleSrcRootShape",
-		"#PluginBundlePhysicalPluginTree",
+		"#PluginBundleGeneratedProjectionLayout",
+		"#PluginBundleContractProjectionLayout",
+		"#PluginBundleGeneratorAssertion",
 		"#PluginBundleTarget",
 		"#PluginBundleGate",
 		"#PluginBundleTargetFile",
@@ -172,11 +193,42 @@ pluginBundleTemplateContract: close({
 	requirements: [
 		"src validates against contracts/meta generated compliance before its own child surfaces are admitted",
 		"generated artifacts are evidence only",
+		"generated plugin projection output is separate from contract projection output",
+		"repo-root plugin installation output is outside this slice",
 		"bundle-local shape overrides are rejected",
 		"relative contract paths reject absolute paths and parent traversal",
 		"validation commands do not reference stale local checks",
 	]
 })
+
+pluginBundleGeneratorAssertions: {
+	generatedProjectionRoot: #PluginBundleGeneratorAssertion & {
+		id:     "generated-projection-root"
+		target: "#PluginBundleGeneratedProjectionLayout"
+		requires: [
+			"generatedRoot is contracts/plugin-bundle/generated/<plugin-name>",
+			"generated plugin files are projection evidence only",
+		]
+	}
+	contractProjectionRoot: #PluginBundleGeneratorAssertion & {
+		id:     "contract-projection-root"
+		target: "#PluginBundleContractProjectionLayout"
+		requires: [
+			"contractRoot is contracts/plugin-bundle/<plugin-name>/src",
+			"public exports include pluginBundleContract",
+			"public exports include pluginBundleValidationPlan",
+			"public exports include pluginBundleCompletionReport",
+		]
+	}
+	outputPlaneSeparation: #PluginBundleGeneratorAssertion & {
+		id:     "output-plane-separation"
+		target: "pluginBundleScaffoldGenerator"
+		requires: [
+			"generated plugin files are not emitted under the contract projection root",
+			"generated plugin files are not emitted as repo-root installation output",
+		]
+	}
+}
 
 pluginBundleTemplateContractMetaCompliance: impl.#GeneratedContractCompliance & {
 	kind:      "generated-contract-compliance"
@@ -270,5 +322,7 @@ pluginBundleScaffoldValidator: impl.#ContractValidator & {
 		"parent traversal paths",
 		"missing required contract paths",
 		"bundle-local shape override escapes",
+		"contract projection output and generated plugin projection output are separate planes",
+		"repo-root plugin installation output is outside this slice",
 	]
 }

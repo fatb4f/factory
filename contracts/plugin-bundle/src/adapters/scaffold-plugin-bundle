@@ -107,20 +107,20 @@ for path in (manifest, checks):
         )
         text = text.replace(
             "\npluginBundleContract: {\n",
-            "\npluginBundlePhysicalPluginTree: tmpl.#PluginBundlePhysicalPluginTree & {\n\tpluginName: _sliceID\n}\n\npluginBundleContract: {\n",
+            "\npluginBundleContractProjection: tmpl.#PluginBundleContractProjectionLayout & {\n\tpluginName: _sliceID\n}\n\npluginBundleGeneratedProjection: tmpl.#PluginBundleGeneratedProjectionLayout & {\n\tpluginName: _sliceID\n}\n\npluginBundleContract: {\n",
         )
         text = text.replace(
             "\tid:       _sliceID\n\ttitle:    _title\n",
-            "\tid:                   _sliceID\n\ttitle:                _title\n\tphysicalPluginLayout: pluginBundlePhysicalPluginTree\n",
+            "\tid:                  _sliceID\n\ttitle:               _title\n\tcontractProjection:  pluginBundleContractProjection\n\tgeneratedProjection: pluginBundleGeneratedProjection\n",
         )
     path.write_text(text)
 
-plugin_root = root / "plugins" / bundle_id
+generated_root = root.parent.parent / "generated" / bundle_id
+plugin_root = generated_root
 (plugin_root / ".codex-plugin").mkdir(parents=True, exist_ok=True)
 (plugin_root / "skills").mkdir(parents=True, exist_ok=True)
 (plugin_root / "hooks").mkdir(parents=True, exist_ok=True)
 (plugin_root / "scripts").mkdir(parents=True, exist_ok=True)
-(root / ".agents" / "plugins").mkdir(parents=True, exist_ok=True)
 
 (plugin_root / ".codex-plugin" / "plugin.json").write_text(json.dumps({
     "schema": "codex.plugin.v1",
@@ -151,15 +151,4 @@ Replace this scaffold skill with the plugin bundle's concrete skill instructions
 
 Generated placeholder for plugin bundle scripts.
 """)
-
-(root / ".agents" / "plugins" / "marketplace.json").write_text(json.dumps({
-    "schema": "codex.plugin.marketplace.v1",
-    "plugins": [
-        {
-            "name": bundle_id,
-            "path": f"plugins/{bundle_id}",
-            "enabled": True
-        }
-    ]
-}, indent=2) + "\n")
 PY

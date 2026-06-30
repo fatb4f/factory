@@ -110,11 +110,14 @@ _negativeBottomChecks: {
 						requiredPaths: ["manifest.cue"]
 					}
 					generated: {
-						root:         "contracts/plugin-bundle/example/src/generated"
+						root:         "contracts/plugin-bundle/generated/example"
 						evidenceOnly: true
-						artifacts: [{path: "generated/example.json", required: true, evidenceOnly: true}]
+						artifacts: [{path: "contracts/plugin-bundle/generated/example/.codex-plugin/plugin.json", required: true, evidenceOnly: true}]
 					}
-					physicalPluginLayout: {
+					contractProjection: {
+						pluginName: "example"
+					}
+					generatedProjection: {
 						pluginName: "example"
 					}
 					validation: {
