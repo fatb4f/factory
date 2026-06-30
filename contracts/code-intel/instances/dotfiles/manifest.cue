@@ -12,7 +12,7 @@ _negativeBottomChecks: {
 
 // source: contracts/code-intel/instances/dotfiles/manifest.cue
 pluginBundleRoot:         ".codex/plugins/code-intel"
-pluginBundleTemplateRoot: "contracts/plugin-bundle/template"
+pluginBundleTemplateRoot: "contracts/plugin-bundle/src"
 pluginBundleContractRoot: "contracts/plugin-bundle/code-intel/instances/dotfiles"
 pluginBundleSourceRoot:   "\(pluginBundleContractRoot)/src"
 pluginBundlePackage:      "codeintelpluginbundle"

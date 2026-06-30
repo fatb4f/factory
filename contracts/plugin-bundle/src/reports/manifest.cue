@@ -1,4 +1,4 @@
-package pluginbundletemplate
+package pluginbundlesrc
 
 import (
 	impl "github.com/fatb4f/factory/contracts/meta"

@@ -1,7 +1,7 @@
 package agentcontextresolver
 
 import (
-	tmpl "github.com/fatb4f/factory/contracts/plugin-bundle/template:pluginbundletemplate"
+	tmpl "github.com/fatb4f/factory/contracts/plugin-bundle/src:pluginbundlesrc"
 	graph "github.com/fatb4f/factory/contracts/plugin-bundle/agent-context-resolver/src/internal/graph:graph"
 	"list"
 	impl "github.com/fatb4f/factory/contracts/meta"
@@ -118,7 +118,7 @@ _materializedBundleShape: tmpl.#PluginBundleSrcRootShape & {
 	manifest: {
 		bundleID:                          "agent-context-resolver"
 		shapeVersion:                      "factory.plugin-bundle.src-root-shape.v1"
-		srcRootShapeAuthority:             "contracts/plugin-bundle/template/manifest.cue"
+		srcRootShapeAuthority:             "contracts/plugin-bundle/src/manifest.cue"
 		generatedArtifactsAreEvidenceOnly: true
 		bundleLocalShapeOverride:          false
 	}
@@ -131,7 +131,7 @@ materializedBundleShapeValidationPlan: close({
 	path:     "contracts/plugin-bundle/agent-context-resolver/src"
 	positive: _materializedBundleShape.validation.commands
 	negative: [
-		"! cue export ./contracts/plugin-bundle/template/checks -e _negativeBottomChecks.staleLocalCheckReferenceAccepted",
+		"! cue export ./contracts/plugin-bundle/src/checks -e _negativeBottomChecks.staleLocalCheckReferenceAccepted",
 	]
 })
 
@@ -1529,6 +1529,8 @@ _pluginBundleRecommendationSlice: {
 	path:              "contracts/plugin-bundle/agent-context-resolver/src/manifest.cue"
 	sourceTemplateRef: "contracts/meta/scripts/scaffold-contract-slice"
 }
+
+_pluginBundleRecommendationIssue: _pluginBundleRecommendationSlice.title
 
 _pluginBundleTargetPaths: [
 	"contracts/plugin-bundle/agent-context-resolver/src/manifest.cue",

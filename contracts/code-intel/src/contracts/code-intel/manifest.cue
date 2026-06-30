@@ -1,6 +1,6 @@
 package codeintel
 
-// source: contracts/code-intel/src/contracts/code-intel/manifest.cue
+// source: contracts/code-intel/src/manifest.cue
 #CodeIntelBoundary: close({
 	generatedAuthority?:              false
 	mcpOutputIsAuthority?:            false
@@ -42,7 +42,7 @@ codeIntelBoundaryReport: {
 	]
 }
 
-// source: contracts/code-intel/src/contracts/code-intel/manifest.cue
+// source: contracts/code-intel/src/manifest.cue
 #NonEmptyString: string & !=""
 #ContainedPath:  string & !="" & !~"^/" & !~"(^|/)\\.\\.(/|$)"
 
@@ -112,7 +112,7 @@ codeIntelLuaFirstWorkflow: #CodeIntelLuaFirstWorkflow & {
 	}
 }
 
-// source: contracts/code-intel/src/contracts/code-intel/manifest.cue
+// source: contracts/code-intel/src/manifest.cue
 #RecommendationTargetPath: #ContainedPath
 
 #CodeIntelRecommendation: close({
@@ -150,7 +150,7 @@ codeIntelLuaFirstWorkflow: #CodeIntelLuaFirstWorkflow & {
 codeIntelImplementationRecommendations: #CodeIntelRecommendationManifest & {
 	schema:         "factory.plugin-bundle.code-intel.recommendations.v1"
 	sourceTemplate: "contracts/meta/scripts/scaffold-contract-slice"
-	targetRoot:     "contracts/plugin-bundle/code-intel/src"
+	targetRoot:     "contracts/code-intel/src"
 	workflow: [
 		{order: 1, id: "#MakeDotfilesPrimitive", instantiateAt: "primitives"},
 		{order: 2, id: "#MakeObservedSurface", instantiateAt: "observedSurfaces"},
@@ -167,7 +167,7 @@ codeIntelImplementationRecommendations: #CodeIntelRecommendationManifest & {
 		{
 			id: "lua-first-workflow-contract-drift"
 			paths: [
-				"contracts/code-intel/manifest.cue",
+				"contracts/code-intel/src/manifest.cue",
 				"generated/workflows/lua-first/workflow.json",
 				"generated/workflows/lua-first/entrypoints.json",
 			]
@@ -176,14 +176,14 @@ codeIntelImplementationRecommendations: #CodeIntelRecommendationManifest & {
 		{
 			id: "negative-bottom-checks-not-proving"
 			paths: [
-				"contracts/code-intel/manifest.cue",
+				"contracts/code-intel/src/manifest.cue",
 			]
 			evidence: "_negativeBottomChecks evaluates to unconstrained values instead of concrete bottom proofs"
 		},
 		{
 			id: "wezterm-overlay-partial-workflow-load"
 			paths: [
-				"contracts/code-intel/manifest.cue",
+				"contracts/code-intel/src/manifest.cue",
 				"generated/workflows/lua-first/workflow.json",
 				"generated/lsp/lua-language-server.json",
 				"generated/types/wezterm/wezterm.lua",
@@ -204,7 +204,7 @@ codeIntelImplementationRecommendations: #CodeIntelRecommendationManifest & {
 			priority: "high"
 			targets: [
 				"generated/workflows/lua-first/workflow.json",
-				"contracts/code-intel/manifest.cue",
+				"contracts/code-intel/src/manifest.cue",
 				"SKILL.md",
 			]
 			observed:       "workflow.json uses top-level stages plus boolean authority under the same schema that the CUE contract defines with entrypoints, providers, steps, and structured authority."
@@ -219,7 +219,7 @@ codeIntelImplementationRecommendations: #CodeIntelRecommendationManifest & {
 			id:       "replace-negative-bottom-placeholders"
 			priority: "high"
 			targets: [
-				"contracts/code-intel/manifest.cue",
+				"contracts/code-intel/src/manifest.cue",
 			]
 			observed:       "_negativeBottomChecks uses defaults unioned with _, so forbidden fixture checks can evaluate to _ instead of proving bottom."
 			recommendation: "Model each forbidden fixture as an attempted admission into the closed boundary and require the validation plan to run commands that fail for those exports."
@@ -239,7 +239,7 @@ codeIntelImplementationRecommendations: #CodeIntelRecommendationManifest & {
 			targets: [
 				"generated/workflows/lua-first/workflow.json",
 				"generated/lsp/lua-language-server.json",
-				"contracts/code-intel/manifest.cue",
+				"contracts/code-intel/src/manifest.cue",
 			]
 			observed:       "the workflow load-type-overlays stage omits events.lua and config-builder.lua, although the provider contract includes them."
 			recommendation: "Keep workflow stage inputs, provider paths, and Lua LSP library paths in lockstep for all WezTerm overlay files."
@@ -253,8 +253,8 @@ codeIntelImplementationRecommendations: #CodeIntelRecommendationManifest & {
 			priority: "medium"
 			targets: [
 				"SKILL.md",
-				"contracts/code-intel/manifest.cue",
-				"contracts/code-intel/manifest.cue",
+				"contracts/code-intel/src/manifest.cue",
+				"contracts/code-intel/src/manifest.cue",
 			]
 			observed:       "the documented validation verifies the CUE package exports but does not verify that materialized generated JSON still conforms to the declared contracts."
 			recommendation: "Extend validation with targeted generated-artifact gates for workflow JSON, entrypoint JSON, and boundary bottom checks."

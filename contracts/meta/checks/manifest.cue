@@ -487,8 +487,8 @@ _malformedConstructorCalls: {
 		kind:       "contract-validator"
 		id:         "badValidator"
 		name:       "badValidator"
-		target:     "contracts/plugin-bundle/template"
-		targetPath: "contracts/plugin-bundle/template"
+		target:     "contracts/plugin-bundle/src"
+		targetPath: "contracts/plugin-bundle/src"
 		commands: ["cue vet ./../outside"]
 		negativeChecks: ["bad"]
 		forbiddenPattern: impl._defaultForbiddenPattern
@@ -499,9 +499,9 @@ _malformedConstructorCalls: {
 		kind:       "contract-validator"
 		id:         "badValidator"
 		name:       "badValidator"
-		target:     "contracts/plugin-bundle/template"
-		targetPath: "contracts/plugin-bundle/template"
-		commands: ["cue export ./contracts/plugin-bundle/template -e external lookup authority"]
+		target:     "contracts/plugin-bundle/src"
+		targetPath: "contracts/plugin-bundle/src"
+		commands: ["cue export ./contracts/plugin-bundle/src -e external lookup authority"]
 		negativeChecks: ["bad"]
 		forbiddenPattern: impl._defaultForbiddenPattern
 		rejects: ["bad external lookup authority command"]
@@ -511,8 +511,8 @@ _malformedConstructorCalls: {
 		kind:       "contract-validator"
 		id:         "badValidator"
 		name:       "badValidator"
-		target:     "contracts/plugin-bundle/template"
-		targetPath: "contracts/plugin-bundle/template"
+		target:     "contracts/plugin-bundle/src"
+		targetPath: "contracts/plugin-bundle/src"
 		commands: ["cue export ./contracts/slices/stale/checks -e _negativeBottomChecks.bad"]
 		negativeChecks: ["bad"]
 		forbiddenPattern: impl._defaultForbiddenPattern

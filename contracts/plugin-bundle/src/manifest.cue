@@ -1,15 +1,15 @@
-package pluginbundletemplate
+package pluginbundlesrc
 
 import (
 	impl "github.com/fatb4f/factory/contracts/meta"
 )
 
-// source: contracts/plugin-bundle/template/manifest.cue
+// source: contracts/plugin-bundle/src/manifest.cue
 pluginBundleScaffoldGenerator: impl.#ContractGenerator & {
 	kind:    "contract-generator"
 	id:      "pluginBundleScaffoldGenerator"
 	name:    "pluginBundleScaffoldGenerator"
-	command: "contracts/plugin-bundle/template/scripts/scaffold-plugin-bundle"
+	command: "contracts/plugin-bundle/src/adapters/scaffold-plugin-bundle"
 	inputs: [
 		"bundle-id",
 		"src-root",
@@ -22,14 +22,14 @@ pluginBundleScaffoldGenerator: impl.#ContractGenerator & {
 		"generated/checks/check_manifest.json",
 	]
 	invariants: [
-		"contracts/plugin-bundle/template remains parent authority for generated plugin-bundle children",
+		"contracts/plugin-bundle/src remains parent authority for generated plugin-bundle children",
 		"generated plugin-bundle artifacts are evidence only",
 		"generated child contracts use repo-relative paths only",
 		"generated child checks use #MakeBottomCheckProof",
 	]
 }
 
-// source: contracts/plugin-bundle/template/manifest.cue
+// source: contracts/plugin-bundle/src/manifest.cue
 #NonEmptyString:       string & !=""
 #RelativeContractPath: string & !="" & !~"^/" & !~"(^|/)\\.\\.(/|$)"
 #RepoPath:             string & !=""
@@ -68,7 +68,7 @@ _staleLocalCheckPath:  "contracts/stale/checks"
 #PluginBundleShapeManifest: close({
 	bundleID:                          #NonEmptyString
 	shapeVersion:                      "factory.plugin-bundle.src-root-shape.v1"
-	srcRootShapeAuthority:             "contracts/plugin-bundle/template/manifest.cue"
+	srcRootShapeAuthority:             "contracts/plugin-bundle/src/manifest.cue"
 	generatedArtifactsAreEvidenceOnly: true
 	bundleLocalShapeOverride:          false
 })
@@ -128,8 +128,8 @@ _staleLocalCheckPath:  "contracts/stale/checks"
 })
 
 pluginBundleTemplateContract: close({
-	schema:  "factory.plugin-bundle.template.contract.v1"
-	package: "pluginbundletemplate"
+	schema:  "factory.plugin-bundle.src.contract.v1"
+	package: "pluginbundlesrc"
 	exports: [
 		"#RelativeContractPath",
 		"#PluginBundleSrcRootShape",
@@ -145,7 +145,7 @@ pluginBundleTemplateContract: close({
 		"pluginBundleTemplateContractMetaCompliance",
 	]
 	requirements: [
-		"template validates against contracts/meta generated compliance before its own child surfaces are admitted",
+		"src validates against contracts/meta generated compliance before its own child surfaces are admitted",
 		"generated artifacts are evidence only",
 		"bundle-local shape overrides are rejected",
 		"relative contract paths reject absolute paths and parent traversal",
@@ -210,7 +210,7 @@ pluginBundleTemplateCompliance: impl.#GeneratedContractCompliance & {
 	}
 }
 
-// source: contracts/plugin-bundle/template/manifest.cue
+// source: contracts/plugin-bundle/src/manifest.cue
 pluginBundleScaffoldValidator: impl.#ContractValidator & {
 	kind:       "contract-validator"
 	id:         "pluginBundleScaffoldValidator"

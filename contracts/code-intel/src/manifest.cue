@@ -1,7 +1,7 @@
 package codeintelsrc
 
 import (
-	tmpl "github.com/fatb4f/factory/contracts/plugin-bundle/template:pluginbundletemplate"
+	tmpl "github.com/fatb4f/factory/contracts/plugin-bundle/src:pluginbundlesrc"
 )
 
 _materializedBundleShape: tmpl.#PluginBundleSrcRootShape & {
@@ -9,10 +9,10 @@ _materializedBundleShape: tmpl.#PluginBundleSrcRootShape & {
 	contracts: {
 		root: "contracts/code-intel/src/contracts/code-intel"
 		cuePackages: [
-			{id: "codeintel", path: "contracts/code-intel/src/contracts/code-intel/manifest.cue"},
+			{id: "codeintel", path: "contracts/code-intel/src/manifest.cue"},
 		]
 		requiredPaths: [
-			"contracts/code-intel/src/contracts/code-intel/manifest.cue",
+			"contracts/code-intel/src/manifest.cue",
 		]
 	}
 	generated: {
@@ -37,7 +37,7 @@ _materializedBundleShape: tmpl.#PluginBundleSrcRootShape & {
 	manifest: {
 		bundleID:                          "code-intel"
 		shapeVersion:                      "factory.plugin-bundle.src-root-shape.v1"
-		srcRootShapeAuthority:             "contracts/plugin-bundle/template/manifest.cue"
+		srcRootShapeAuthority:             "contracts/plugin-bundle/src/manifest.cue"
 		generatedArtifactsAreEvidenceOnly: true
 		bundleLocalShapeOverride:          false
 	}
@@ -50,7 +50,7 @@ materializedBundleShapeValidationPlan: close({
 	path:     "contracts/code-intel/src"
 	positive: _materializedBundleShape.validation.commands
 	negative: [
-		"! cue export ./contracts/plugin-bundle/template/checks -e _negativeBottomChecks.staleLocalCheckReferenceAccepted",
+		"! cue export ./contracts/plugin-bundle/src/checks -e _negativeBottomChecks.staleLocalCheckReferenceAccepted",
 	]
 })
 

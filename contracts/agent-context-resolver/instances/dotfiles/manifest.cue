@@ -74,7 +74,7 @@ _negativeBottomChecks: {
 // source: contracts/agent-context-resolver/instances/dotfiles/manifest.cue
 pluginBundleRoot:         ".codex/plugins/agent-context-resolver"
 pluginBundleSourceRoot:   "contracts/plugin-bundle/agent-context-resolver/src"
-pluginBundleTemplateRoot: "contracts/plugin-bundle/template"
+pluginBundleTemplateRoot: "contracts/plugin-bundle/src"
 pluginBundleContractRoot: "contracts/plugin-bundle/agent-context-resolver/instances/dotfiles"
 pluginBundlePackage:      "dotfilespluginbundle"
 
@@ -743,7 +743,7 @@ dotfilesTemplateApplicationReport: {
 	schema: "factory.plugin-bundle.template-application.v1"
 	template: close({
 		id:               "agent-context-resolver"
-		root:             "contracts/plugin-bundle/template"
+		root:             "contracts/plugin-bundle/src"
 		materializedRoot: ".codex/plugins/agent-context-resolver"
 	})
 	instance: close({

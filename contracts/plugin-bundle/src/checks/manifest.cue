@@ -1,8 +1,8 @@
-package pluginbundletemplatechecks
+package pluginbundlesrc
 
 import (
 	impl "github.com/fatb4f/factory/contracts/meta"
-	tmpl "github.com/fatb4f/factory/contracts/plugin-bundle/template:pluginbundletemplate"
+	tmpl "github.com/fatb4f/factory/contracts/plugin-bundle/src:pluginbundlesrc"
 )
 
 _staleLocalCheckPath: "contracts/stale/checks"
@@ -120,7 +120,7 @@ _negativeBottomChecks: {
 					manifest: {
 						bundleID:                          "example"
 						shapeVersion:                      "factory.plugin-bundle.src-root-shape.v1"
-						srcRootShapeAuthority:             "contracts/plugin-bundle/template/manifest.cue"
+						srcRootShapeAuthority:             "contracts/plugin-bundle/src/manifest.cue"
 						generatedArtifactsAreEvidenceOnly: true
 						bundleLocalShapeOverride:          false
 					}

@@ -1,0 +1,80 @@
+#!/usr/bin/env sh
+set -eu
+
+usage() {
+	cat <<'EOF'
+Usage:
+  contracts/plugin-bundle/src/adapters/scaffold-plugin-bundle --bundle-id ID --src-root DIR --out DIR [--force]
+
+Scaffolds a plugin-bundle contract slice using the shared contracts/meta scaffold.
+EOF
+}
+
+bundle_id=""
+src_root=""
+out=""
+force="false"
+
+while [ "$#" -gt 0 ]; do
+	case "$1" in
+		--bundle-id)
+			bundle_id="${2:-}"
+			shift 2
+			;;
+		--src-root)
+			src_root="${2:-}"
+			shift 2
+			;;
+		--out)
+			out="${2:-}"
+			shift 2
+			;;
+		--force)
+			force="true"
+			shift
+			;;
+		--help|-h)
+			usage
+			exit 0
+			;;
+		*)
+			echo "unknown argument: $1" >&2
+			usage >&2
+			exit 2
+			;;
+	esac
+done
+
+if [ -z "$bundle_id" ]; then
+	echo "--bundle-id is required" >&2
+	exit 2
+fi
+
+if [ -z "$src_root" ]; then
+	echo "--src-root is required" >&2
+	exit 2
+fi
+
+if [ ! -d "$src_root" ]; then
+	echo "--src-root must point at an existing directory" >&2
+	exit 2
+fi
+
+if [ -z "$out" ]; then
+	echo "--out is required" >&2
+	exit 2
+fi
+
+script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+repo_root=$(CDPATH= cd -- "$script_dir/../../../.." && pwd)
+
+set --
+if [ "$force" = "true" ]; then
+	set -- --force
+fi
+
+exec "$repo_root/contracts/meta/scripts/scaffold-contract-slice" \
+	--slice-id "$bundle_id" \
+	--title "$bundle_id plugin bundle" \
+	--out "$out" \
+	"$@"
