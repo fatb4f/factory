@@ -7,12 +7,16 @@ import (
 _materializedBundleShape: tmpl.#PluginBundleSrcRootShape & {
 	srcRoot: "contracts/code-intel/src"
 	contracts: {
-		root: "contracts/code-intel/src/contracts/code-intel"
+		root: "contracts/code-intel/src"
 		cuePackages: [
-			{id: "codeintel", path: "contracts/code-intel/src/manifest.cue"},
+			{id: "codeintelsrc", path: "manifest.cue"},
+			{id: "codeintel", path: "contracts/code-intel/manifest.cue"},
+			{id: "codeintelchecks", path: "contracts/code-intel/checks/manifest.cue"},
 		]
 		requiredPaths: [
-			"contracts/code-intel/src/manifest.cue",
+			"manifest.cue",
+			"contracts/code-intel/manifest.cue",
+			"contracts/code-intel/checks/manifest.cue",
 		]
 	}
 	generated: {
@@ -29,7 +33,17 @@ _materializedBundleShape: tmpl.#PluginBundleSrcRootShape & {
 	validation: {
 		commands: [
 			"cue vet ./contracts/code-intel/src",
+			"cue vet ./contracts/code-intel/src/contracts/code-intel",
+			"cue vet ./contracts/code-intel/src/contracts/code-intel/checks",
 			"cue export ./contracts/code-intel/src -e normalizedMaterializedBundleShapeManifest",
+			"cue export ./contracts/code-intel/src/contracts/code-intel -e codeIntelBoundaryReport",
+			"cue export ./contracts/code-intel/src/contracts/code-intel -e codeIntelImplementationRecommendations",
+			"! cue export ./contracts/code-intel/src/contracts/code-intel/checks -e _negativeBottomChecks.generatedAsAuthority",
+			"! cue export ./contracts/code-intel/src/contracts/code-intel/checks -e _negativeBottomChecks.mcpOutputAsAuthority",
+			"! cue export ./contracts/code-intel/src/contracts/code-intel/checks -e _negativeBottomChecks.lspDiagnosticsAsAuthority",
+			"! cue export ./contracts/code-intel/src/contracts/code-intel/checks -e _negativeBottomChecks.weztermTypesAsAuthority",
+			"! cue export ./contracts/code-intel/src/contracts/code-intel/checks -e _negativeBottomChecks.luaWorkflowGeneratedAsAuthority",
+			"! cue export ./contracts/code-intel/src/contracts/code-intel/checks -e _negativeBottomChecks.resolverContractsLeak",
 		]
 		negativeChecks: ["codeIntelShapeDrift"]
 		forbiddenAttractors: []

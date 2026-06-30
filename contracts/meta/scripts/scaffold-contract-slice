@@ -37,15 +37,18 @@ root = Path(out)
 manifest = root / "manifest.cue"
 checks_dir = root / "checks"
 checks = checks_dir / "manifest.cue"
+generated_checks_dir = root / "generated" / "checks"
+generated_check_manifest = generated_checks_dir / "check_manifest.json"
 package_name = "slice" + re.sub(r"[^0-9A-Za-z_]", "_", slice_id)
 checks_package = package_name + "checks"
 
 if force != "true":
-    for path in (manifest, checks):
+    for path in (manifest, checks, generated_check_manifest):
         if path.exists():
             raise SystemExit(f"{path} exists; pass force=true to overwrite")
 
 checks_dir.mkdir(parents=True, exist_ok=True)
+generated_checks_dir.mkdir(parents=True, exist_ok=True)
 
 cue_expr = "[e]xpression:"
 invalid_flag = "[i]sInvalid: true"
@@ -311,7 +314,24 @@ checks_text = checks_text.replace("__CHECKS_PACKAGE__", checks_package)
 
 manifest.write_text(manifest_text)
 checks.write_text(checks_text)
+generated_check_manifest.write_text(
+    json.dumps(
+        {
+            "schema": "factory.plugin-bundle.check-manifest.v1",
+            "sliceID": slice_id,
+            "title": title,
+            "root": out,
+            "checkSurface": "_negativeBottomChecks",
+            "checkFile": "checks/manifest.cue",
+            "checks": ["generatedAuthorityAccepted"],
+            "evidenceOnly": True,
+        },
+        indent=2,
+    )
+    + "\n"
+)
 subprocess.run(["cue", "fmt", str(manifest), str(checks)], check=True)
 print(f"created {manifest}")
 print(f"created {checks}")
+print(f"created {generated_check_manifest}")
 PY

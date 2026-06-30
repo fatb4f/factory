@@ -31,8 +31,17 @@ Use `generated/lsp/cue-lsp.json` for editor/server configuration and `contracts/
 
 ```sh
 cd contracts/code-intel/src
-cue vet ./contracts/code-intel
-cue export ./contracts/code-intel -e codeIntelLuaFirstWorkflow
-cue export ./contracts/code-intel -e codeIntelBoundaryReport
-cue export ./contracts/code-intel -e codeIntelImplementationRecommendations
+cue vet ./contracts/code-intel/src
+cue vet ./contracts/code-intel/src/contracts/code-intel
+cue vet ./contracts/code-intel/src/contracts/code-intel/checks
+cue export ./contracts/code-intel/src -e normalizedMaterializedBundleShapeManifest
+cue export ./contracts/code-intel/src/contracts/code-intel -e codeIntelLuaFirstWorkflow
+cue export ./contracts/code-intel/src/contracts/code-intel -e codeIntelBoundaryReport
+cue export ./contracts/code-intel/src/contracts/code-intel -e codeIntelImplementationRecommendations
+! cue export ./contracts/code-intel/src/contracts/code-intel/checks -e _negativeBottomChecks.generatedAsAuthority
+! cue export ./contracts/code-intel/src/contracts/code-intel/checks -e _negativeBottomChecks.mcpOutputAsAuthority
+! cue export ./contracts/code-intel/src/contracts/code-intel/checks -e _negativeBottomChecks.lspDiagnosticsAsAuthority
+! cue export ./contracts/code-intel/src/contracts/code-intel/checks -e _negativeBottomChecks.weztermTypesAsAuthority
+! cue export ./contracts/code-intel/src/contracts/code-intel/checks -e _negativeBottomChecks.luaWorkflowGeneratedAsAuthority
+! cue export ./contracts/code-intel/src/contracts/code-intel/checks -e _negativeBottomChecks.resolverContractsLeak
 ```
