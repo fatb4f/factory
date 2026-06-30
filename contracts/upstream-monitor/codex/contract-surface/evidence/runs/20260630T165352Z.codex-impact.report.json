@@ -1,0 +1,106 @@
+{
+  "apiVersion": "factory.upstream-monitor.codex/v0",
+  "kind": "CodexImpactReportEvidence",
+  "loop": "codex-contract-surface",
+  "signal_id": "loop_bootstrap_request",
+  "target_repo": "fatb4f/factory",
+  "entrypoint": "contracts/upstream-monitor/codex/contract-surface/AGENTS.md",
+  "adapter": "github_app",
+  "run_id": "20260630T165352Z",
+  "publication": {
+    "report_run_path": "contracts/upstream-monitor/codex/contract-surface/reports/runs/20260630T165352Z.codex-impact.md",
+    "report_latest_path": "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md",
+    "evidence_run_path": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260630T165352Z.codex-impact.report.json",
+    "evidence_latest_path": "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json",
+    "issue_targets": {},
+    "report_run_commit": "bae7108edcd2fd7f4958c51b4af9d1024c850d66"
+  },
+  "authority_reads": {
+    "agents": [
+      "contracts/upstream-monitor/AGENTS.md",
+      "contracts/upstream-monitor/codex/AGENTS.md",
+      "contracts/upstream-monitor/codex/contract-surface/AGENTS.md"
+    ],
+    "cue": [
+      "contracts/upstream-monitor/codex/contract-surface/publication.cue",
+      "contracts/upstream-monitor/codex/contract-surface/public.cue",
+      "contracts/upstream-monitor/codex/contract-surface/report.cue"
+    ],
+    "publication_admission": {
+      "issueTargets": {},
+      "report_run_pattern": "contracts/upstream-monitor/codex/contract-surface/reports/runs/<run_id>.codex-impact.md",
+      "report_latest_path": "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md",
+      "evidence_run_pattern": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/<run_id>.codex-impact.report.json",
+      "evidence_latest_path": "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json"
+    }
+  },
+  "channels": {
+    "main": {
+      "repo": "openai/codex",
+      "ref": "main",
+      "status": "resolved",
+      "head_commit": "020828170fb2224f0d7a7a243a1f7d21cc3df5ee",
+      "workspace_version": "0.0.0",
+      "previous_recorded_head": "cfead68e5d3984b247cf0758e3e53b19165de848",
+      "change_since_previous_evidence": "ahead-by-1",
+      "changed_files_since_previous_evidence": 2
+    },
+    "latest-alpha-cli": {
+      "repo": "openai/codex",
+      "ref": "latest-alpha-cli",
+      "status": "resolved",
+      "head_commit": "8f86689795ac656373b3291eb38513de8fa2259d",
+      "relation_to_main": "diverged-from-current-main; ahead-by-1; behind-by-2",
+      "changed_files_from_current_main": ["codex-rs/Cargo.toml"],
+      "workspace_version": "0.143.0-alpha.31",
+      "relation": "distinct-channel",
+      "change_since_previous_evidence": "unchanged"
+    }
+  },
+  "upstream_items": {
+    "critical": [],
+    "high": [
+      {
+        "id": "openai/codex#30645",
+        "channels": ["main"],
+        "impact": "safety-access-biological-notice-wording-shortened",
+        "classes": ["ui", "safety-surface", "policy-copy"],
+        "reason": "Main removed the second sentence from the biological safety access block body while leaving Trusted Access/Learn more URLs, Cyber safety copy, and display/raw line structure unchanged.",
+        "evidence": [
+          "commit 020828170fb2224f0d7a7a243a1f7d21cc3df5ee",
+          "codex-rs/tui/src/history_cell/notices.rs",
+          "codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__safety_access_block_event_snapshot.snap"
+        ]
+      }
+    ],
+    "notes": [
+      {
+        "id": "latest-alpha-cli-release-0.143.0-alpha.31",
+        "channels": ["latest-alpha-cli"],
+        "impact": "alpha-channel-unchanged",
+        "classes": ["release", "alpha-channel"],
+        "reason": "latest-alpha-cli remained at workspace version 0.143.0-alpha.31 and remains distinct from main."
+      }
+    ],
+    "noLocalAction": [
+      {
+        "id": "no-issue-targets",
+        "channels": ["main", "latest-alpha-cli"],
+        "impact": "no-issue-update",
+        "reason": "upstreamCodexPublicationPlan.issueTargets is empty."
+      }
+    ]
+  },
+  "baseline_reference": {
+    "previous_latest_evidence_run_id": "20260630T045510Z",
+    "previous_main_head": "cfead68e5d3984b247cf0758e3e53b19165de848",
+    "previous_alpha_workspace_version": "0.143.0-alpha.31"
+  },
+  "validation_notes": {
+    "cue_executed": false,
+    "reason": "GitHub App adapter exposes content read/write operations, not a repo shell.",
+    "issue_updates": "none; public upstreamCodexPublicationPlan.issueTargets is empty",
+    "forbidden_attractor_search": "GitHub code search for configured terms returned no matches.",
+    "caveat": "contract-surface AGENTS initial-gate text still conflicts with the newer admitted publication task prompt; publication admission was taken from prior latest evidence/publication projection."
+  }
+}
