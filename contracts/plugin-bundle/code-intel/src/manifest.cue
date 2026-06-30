@@ -78,6 +78,9 @@ pluginBundleContract: tmpl.#PluginBundleSrcRootShape & {
 			"test -f contracts/plugin-bundle/generated/code-intel/generated/workflows/lua-first/entrypoints.json",
 			"test -f contracts/plugin-bundle/generated/code-intel/generated/workflows/lua-first/diagnostic-map.json",
 			"test -f contracts/plugin-bundle/generated/code-intel/contracts/code-intel/manifest.cue",
+			"! rg -n 'import\\s*\\(|github.com/fatb4f/factory|github.com/fatb4f/contract.cuemod|#MakeBottomCheckProof|impl\\.' contracts/plugin-bundle/generated/code-intel/contracts/code-intel",
+			"jq -e '.contracts | index(\"contracts/code-intel/manifest.cue\")' contracts/plugin-bundle/generated/code-intel/manifest.json",
+			"! jq -e '.contracts[] | select(. == \"contracts/code-intel/lua-first-workflow.cue\" or . == \"contracts/code-intel/checks.cue\" or . == \"contracts/code-intel/recommendations.cue\")' contracts/plugin-bundle/generated/code-intel/manifest.json",
 		]
 		negativeChecks: []
 		forbiddenAttractors: []
