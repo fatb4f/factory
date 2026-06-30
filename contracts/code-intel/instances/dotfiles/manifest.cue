@@ -1,13 +1,107 @@
 package codeintelpluginbundle
 
+import (
+	impl "github.com/fatb4f/factory/contracts/meta"
+)
+
 // source: contracts/code-intel/instances/dotfiles/manifest.cue
 _negativeBottomChecks: {
-	generatedAsAuthority:            *(negativeFixtures.generatedAsAuthority.input & #AdmissibleCodeIntelPluginBundleProjection) | _
-	mcpOutputAsAuthority:            *(negativeFixtures.mcpOutputAsAuthority.input & #AdmissibleCodeIntelPluginBundleProjection) | _
-	lspDiagnosticsAsAuthority:       *(negativeFixtures.lspDiagnosticsAsAuthority.input & #AdmissibleCodeIntelPluginBundleProjection) | _
-	weztermTypesAsAuthority:         *(negativeFixtures.weztermTypesAsAuthority.input & #AdmissibleCodeIntelPluginBundleProjection) | _
-	luaWorkflowGeneratedAsAuthority: *(negativeFixtures.luaWorkflowGeneratedAsAuthority.input & #AdmissibleCodeIntelPluginBundleProjection) | _
-	resolverContractsLeak:           *(negativeFixtures.resolverContractsLeak.input & #AdmissibleCodeIntelPluginBundleProjection) | _
+	generatedAsAuthority!: (impl.#MakeBottomCheckProof & {
+		in: {
+			name: "generatedAsAuthority"
+			input: {
+				evidence: "generated code-intel artifacts are inadmissible as authority"
+				value:    negativeFixtures.generatedAsAuthority.input
+			}
+			target: {
+				name: "#AdmissibleCodeIntelPluginBundleProjection"
+				contract: {
+					evidence: "code-intel plugin bundle projection rejects generated authority"
+					value:    #AdmissibleCodeIntelPluginBundleProjection
+				}
+			}
+		}
+	}).out.generatedAsAuthority
+	mcpOutputAsAuthority!: (impl.#MakeBottomCheckProof & {
+		in: {
+			name: "mcpOutputAsAuthority"
+			input: {
+				evidence: "MCP output is inadmissible as authority"
+				value:    negativeFixtures.mcpOutputAsAuthority.input
+			}
+			target: {
+				name: "#AdmissibleCodeIntelPluginBundleProjection"
+				contract: {
+					evidence: "code-intel plugin bundle projection rejects MCP authority"
+					value:    #AdmissibleCodeIntelPluginBundleProjection
+				}
+			}
+		}
+	}).out.mcpOutputAsAuthority
+	lspDiagnosticsAsAuthority!: (impl.#MakeBottomCheckProof & {
+		in: {
+			name: "lspDiagnosticsAsAuthority"
+			input: {
+				evidence: "LSP diagnostics are inadmissible as authority"
+				value:    negativeFixtures.lspDiagnosticsAsAuthority.input
+			}
+			target: {
+				name: "#AdmissibleCodeIntelPluginBundleProjection"
+				contract: {
+					evidence: "code-intel plugin bundle projection rejects LSP diagnostics authority"
+					value:    #AdmissibleCodeIntelPluginBundleProjection
+				}
+			}
+		}
+	}).out.lspDiagnosticsAsAuthority
+	weztermTypesAsAuthority!: (impl.#MakeBottomCheckProof & {
+		in: {
+			name: "weztermTypesAsAuthority"
+			input: {
+				evidence: "WezTerm types are inadmissible as authority"
+				value:    negativeFixtures.weztermTypesAsAuthority.input
+			}
+			target: {
+				name: "#AdmissibleCodeIntelPluginBundleProjection"
+				contract: {
+					evidence: "code-intel plugin bundle projection rejects WezTerm type authority"
+					value:    #AdmissibleCodeIntelPluginBundleProjection
+				}
+			}
+		}
+	}).out.weztermTypesAsAuthority
+	luaWorkflowGeneratedAsAuthority!: (impl.#MakeBottomCheckProof & {
+		in: {
+			name: "luaWorkflowGeneratedAsAuthority"
+			input: {
+				evidence: "generated Lua workflow artifacts are inadmissible as authority"
+				value:    negativeFixtures.luaWorkflowGeneratedAsAuthority.input
+			}
+			target: {
+				name: "#AdmissibleCodeIntelPluginBundleProjection"
+				contract: {
+					evidence: "code-intel plugin bundle projection rejects generated Lua workflow authority"
+					value:    #AdmissibleCodeIntelPluginBundleProjection
+				}
+			}
+		}
+	}).out.luaWorkflowGeneratedAsAuthority
+	resolverContractsLeak!: (impl.#MakeBottomCheckProof & {
+		in: {
+			name: "resolverContractsLeak"
+			input: {
+				evidence: "resolver contracts are inadmissible as code-intel authority"
+				value:    negativeFixtures.resolverContractsLeak.input
+			}
+			target: {
+				name: "#AdmissibleCodeIntelPluginBundleProjection"
+				contract: {
+					evidence: "code-intel plugin bundle projection rejects resolver contract leakage"
+					value:    #AdmissibleCodeIntelPluginBundleProjection
+				}
+			}
+		}
+	}).out.resolverContractsLeak
 }
 
 // source: contracts/code-intel/instances/dotfiles/manifest.cue
@@ -33,7 +127,6 @@ codeIntelRequiredPaths: [
 	"generated/workflows/lua-first/workflow.json",
 	"generated/workflows/lua-first/entrypoints.json",
 	"generated/workflows/lua-first/diagnostic-map.json",
-	"contracts/code-intel/manifest.cue",
 	"contracts/code-intel/manifest.cue",
 ]
 
@@ -162,7 +255,7 @@ codeIntelLuaFirstWorkflow: #CodeIntelLuaFirstWorkflow & {
 	]
 	steps: [
 		{order: 1, id: "collect-lua-entrypoints", goal: "Resolve Lua entrypoints before generic dotfiles paths.", inputs: ["dotfiles source paths"], outputs: ["ordered Lua entrypoint set"], authority: "dotfiles-source"},
-		{order: 2, id: "load-type-overlays", goal: "Attach Neovim and WezTerm type overlays as read-only evidence.", inputs: ["generated/types/nvim/vim.lua", "generated/types/wezterm/wezterm.lua"], outputs: ["Lua library overlay"], authority: "evidence-only"},
+		{order: 2, id: "load-type-overlays", goal: "Attach Neovim and WezTerm type overlays as read-only evidence.", inputs: ["generated/types/nvim/vim.lua", "generated/types/wezterm/wezterm.lua", "generated/types/wezterm/events.lua", "generated/types/wezterm/config-builder.lua"], outputs: ["Lua library overlay"], authority: "evidence-only"},
 		{order: 3, id: "project-diagnostics", goal: "Project Lua and CUE diagnostics as evidence, not mutation authority.", inputs: ["generated/lsp/lua-language-server.json", "generated/lsp/cue-lsp.json"], outputs: ["diagnostic-map"], authority: "evidence-only"},
 	]
 	generatedArtifacts: codeIntelRequiredPaths

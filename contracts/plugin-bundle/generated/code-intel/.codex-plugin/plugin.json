@@ -1,8 +1,8 @@
 {
   "schema": "codex.plugin.v1",
   "name": "code-intel",
-  "version": "0.0.0",
-  "description": "Generated code-intel plugin bundle scaffold.",
+  "version": "0.1.0",
+  "description": "Generated read-only code-intelligence bundle for dotfiles Lua, CUE, MCP declarations, and WezTerm/Neovim type overlays.",
   "skills": "skills",
   "hooks": "hooks",
   "scripts": "scripts"

@@ -25,23 +25,32 @@ This plugin is a generated, read-only code-intelligence bundle for dotfiles work
 
 ## CUE workflow
 
-Use `generated/lsp/cue-lsp.json` for editor/server configuration and `contracts/code-intel/src/manifest.cue` for local bundle boundary checks.
+Use `generated/lsp/cue-lsp.json` for editor/server configuration and `contracts/code-intel/manifest.cue` for local bundle boundary checks.
 
 ## Validation
 
 ```sh
-cd contracts/code-intel/src
 cue vet ./contracts/code-intel/src
 cue vet ./contracts/code-intel/src/contracts/code-intel
 cue vet ./contracts/code-intel/src/contracts/code-intel/checks
 cue export ./contracts/code-intel/src -e normalizedMaterializedBundleShapeManifest
+cue export ./contracts/code-intel/src -e materializedBundleShapeValidationPlan
 cue export ./contracts/code-intel/src/contracts/code-intel -e codeIntelLuaFirstWorkflow
 cue export ./contracts/code-intel/src/contracts/code-intel -e codeIntelBoundaryReport
 cue export ./contracts/code-intel/src/contracts/code-intel -e codeIntelImplementationRecommendations
+cue vet contracts/code-intel/src/contracts/code-intel/manifest.cue contracts/code-intel/src/generated/workflows/lua-first/workflow.json -d '#CodeIntelLuaFirstWorkflow'
+jq -e '.providers[] | select(.id == "wezterm-types") | .paths | index("generated/types/wezterm/wezterm.lua") and index("generated/types/wezterm/events.lua") and index("generated/types/wezterm/config-builder.lua")' contracts/code-intel/src/generated/workflows/lua-first/workflow.json
+cue vet ./contracts/code-intel/instances/dotfiles
 ! cue export ./contracts/code-intel/src/contracts/code-intel/checks -e _negativeBottomChecks.generatedAsAuthority
 ! cue export ./contracts/code-intel/src/contracts/code-intel/checks -e _negativeBottomChecks.mcpOutputAsAuthority
 ! cue export ./contracts/code-intel/src/contracts/code-intel/checks -e _negativeBottomChecks.lspDiagnosticsAsAuthority
 ! cue export ./contracts/code-intel/src/contracts/code-intel/checks -e _negativeBottomChecks.weztermTypesAsAuthority
 ! cue export ./contracts/code-intel/src/contracts/code-intel/checks -e _negativeBottomChecks.luaWorkflowGeneratedAsAuthority
 ! cue export ./contracts/code-intel/src/contracts/code-intel/checks -e _negativeBottomChecks.resolverContractsLeak
+! cue export ./contracts/code-intel/instances/dotfiles -e _negativeBottomChecks.generatedAsAuthority
+! cue export ./contracts/code-intel/instances/dotfiles -e _negativeBottomChecks.mcpOutputAsAuthority
+! cue export ./contracts/code-intel/instances/dotfiles -e _negativeBottomChecks.lspDiagnosticsAsAuthority
+! cue export ./contracts/code-intel/instances/dotfiles -e _negativeBottomChecks.weztermTypesAsAuthority
+! cue export ./contracts/code-intel/instances/dotfiles -e _negativeBottomChecks.luaWorkflowGeneratedAsAuthority
+! cue export ./contracts/code-intel/instances/dotfiles -e _negativeBottomChecks.resolverContractsLeak
 ```
