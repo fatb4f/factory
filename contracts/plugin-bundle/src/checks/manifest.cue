@@ -114,6 +114,9 @@ _negativeBottomChecks: {
 						evidenceOnly: true
 						artifacts: [{path: "generated/example.json", required: true, evidenceOnly: true}]
 					}
+					physicalPluginLayout: {
+						pluginName: "example"
+					}
 					validation: {
 						commands: ["cue vet ./contracts/plugin-bundle/example/src"]
 					}

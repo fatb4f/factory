@@ -23,6 +23,18 @@ contracts-plugin-bundle-src:
 	cue export ./contracts/plugin-bundle/src -e pluginBundleScaffoldValidator >/dev/null
 	cue export ./contracts/plugin-bundle/src -e pluginBundleTemplateCompliance >/dev/null
 	cue vet ./contracts/plugin-bundle/src/checks
+	cue vet ./contracts/plugin-bundle/code-intel/src
+	cue export ./contracts/plugin-bundle/code-intel/src -e pluginBundleContract >/dev/null
+	cue export ./contracts/plugin-bundle/code-intel/src -e pluginBundleValidationPlan >/dev/null
+	cue export ./contracts/plugin-bundle/code-intel/src -e pluginBundleCompletionReport >/dev/null
+	cue vet ./contracts/plugin-bundle/code-intel/src/checks
+	! cue export ./contracts/plugin-bundle/code-intel/src/checks -e _negativeBottomChecks.generatedAuthorityAccepted >/dev/null
+	cue vet ./contracts/plugin-bundle/agent-context-resolver/src
+	cue export ./contracts/plugin-bundle/agent-context-resolver/src -e pluginBundleContract >/dev/null
+	cue export ./contracts/plugin-bundle/agent-context-resolver/src -e pluginBundleValidationPlan >/dev/null
+	cue export ./contracts/plugin-bundle/agent-context-resolver/src -e pluginBundleCompletionReport >/dev/null
+	cue vet ./contracts/plugin-bundle/agent-context-resolver/src/checks
+	! cue export ./contracts/plugin-bundle/agent-context-resolver/src/checks -e _negativeBottomChecks.generatedAuthorityAccepted >/dev/null
 	! cue export ./contracts/plugin-bundle/src/checks -e _negativeBottomChecks.generatedAuthorityAccepted >/dev/null
 	! cue export ./contracts/plugin-bundle/src/checks -e _negativeBottomChecks.externalLookupAccepted >/dev/null
 	! cue export ./contracts/plugin-bundle/src/checks -e _negativeBottomChecks.absolutePathAccepted >/dev/null
@@ -60,6 +72,6 @@ contracts-consolidation-guards:
 	! rg 'contracts/code-intel/manifest\.cue' ./contracts/code-intel/src
 
 scaffold-smoke:
-	mkdir -p .tmp && tmpdir=$(mktemp -d .tmp/plugin-bundle-smoke.XXXXXX) && contracts/plugin-bundle/src/adapters/scaffold-plugin-bundle --bundle-id smoke --src-root contracts/plugin-bundle/src --out "$tmpdir" --force && cue vet "$tmpdir/manifest.cue" && ! cue export "$tmpdir/checks/manifest.cue" -e _negativeBottomChecks.generatedAuthorityAccepted >/dev/null && cue export "$tmpdir/manifest.cue" -e contractSliceManifest >/dev/null && python3 -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmpdir/generated/checks/check_manifest.json" && test -f "$tmpdir/generated/checks/check_manifest.json" && rm -rf "$tmpdir"
+	mkdir -p .tmp && tmpdir=$(mktemp -d .tmp/plugin-bundle-smoke.XXXXXX) && contracts/plugin-bundle/src/adapters/scaffold-plugin-bundle --bundle-id smoke --src-root contracts/plugin-bundle/src --out "$tmpdir" --force && cue vet "$tmpdir/manifest.cue" && ! cue export "$tmpdir/checks/manifest.cue" -e _negativeBottomChecks.generatedAuthorityAccepted >/dev/null && cue export "$tmpdir/manifest.cue" -e pluginBundleContract >/dev/null && cue export "$tmpdir/manifest.cue" -e pluginBundleValidationPlan >/dev/null && cue export "$tmpdir/manifest.cue" -e pluginBundleCompletionReport >/dev/null && python3 -c 'import json,sys; json.load(open(sys.argv[1]))' "$tmpdir/generated/checks/check_manifest.json" && test -f "$tmpdir/plugins/smoke/.codex-plugin/plugin.json" && test -f "$tmpdir/plugins/smoke/skills/SKILL.md" && test -f "$tmpdir/plugins/smoke/hooks/hooks.json" && test -f "$tmpdir/plugins/smoke/scripts/README.md" && test -f "$tmpdir/.agents/plugins/marketplace.json" && rm -rf "$tmpdir"
 
 validate-all: contracts-meta contracts-plugin-bundle-src contracts-agent-context-resolver-src contracts-code-intel-src contracts-consolidation-guards scaffold-smoke

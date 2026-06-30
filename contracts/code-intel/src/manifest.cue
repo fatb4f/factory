@@ -30,6 +30,9 @@ _materializedBundleShape: tmpl.#PluginBundleSrcRootShape & {
 			{path: "generated/workflows/lua-first/workflow.json", required: true, evidenceOnly: true},
 		]
 	}
+	physicalPluginLayout: {
+		pluginName: "code-intel"
+	}
 	validation: {
 		commands: [
 			"cue vet ./contracts/code-intel/src",

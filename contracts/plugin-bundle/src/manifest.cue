@@ -20,12 +20,18 @@ pluginBundleScaffoldGenerator: impl.#ContractGenerator & {
 		"manifest.cue",
 		"checks/manifest.cue",
 		"generated/checks/check_manifest.json",
+		"plugins/<plugin-name>/.codex-plugin/plugin.json",
+		"plugins/<plugin-name>/skills/SKILL.md",
+		"plugins/<plugin-name>/hooks/hooks.json",
+		"plugins/<plugin-name>/scripts/README.md",
+		".agents/plugins/marketplace.json",
 	]
 	invariants: [
 		"contracts/plugin-bundle/src remains parent authority for generated plugin-bundle children",
 		"generated plugin-bundle artifacts are evidence only",
 		"generated child contracts use repo-relative paths only",
 		"generated child checks use #MakeBottomCheckProof",
+		"generated plugin-bundle children materialize the standard physical plugin layout",
 	]
 }
 
@@ -59,6 +65,23 @@ _staleLocalCheckPath:  "contracts/stale/checks"
 	artifacts: [...#PluginBundleGeneratedArtifact] & [_, ...]
 })
 
+#PluginBundlePhysicalPluginTree: close({
+	pluginName:  #NonEmptyString
+	root:        "plugins/\(pluginName)"
+	manifest:    "plugins/\(pluginName)/.codex-plugin/plugin.json"
+	skills:      "plugins/\(pluginName)/skills"
+	hooks:       "plugins/\(pluginName)/hooks"
+	scripts:     "plugins/\(pluginName)/scripts"
+	marketplace: ".agents/plugins/marketplace.json"
+	requiredPaths: [
+		manifest,
+		skills,
+		hooks,
+		scripts,
+		marketplace,
+	]
+})
+
 #PluginBundleValidationShape: close({
 	commands: [...#ValidationCommand] & [_, ...]
 	negativeChecks: [...#NonEmptyString] | *[]
@@ -77,6 +100,7 @@ _staleLocalCheckPath:  "contracts/stale/checks"
 	srcRoot:                  #RepoPath
 	contracts:                #PluginBundleContractsShape
 	generated:                #PluginBundleGeneratedShape
+	physicalPluginLayout:     #PluginBundlePhysicalPluginTree
 	validation:               #PluginBundleValidationShape
 	manifest:                 #PluginBundleShapeManifest
 	bundleLocalShapeOverride: false
@@ -133,6 +157,7 @@ pluginBundleTemplateContract: close({
 	exports: [
 		"#RelativeContractPath",
 		"#PluginBundleSrcRootShape",
+		"#PluginBundlePhysicalPluginTree",
 		"#PluginBundleTarget",
 		"#PluginBundleGate",
 		"#PluginBundleTargetFile",

@@ -107,6 +107,9 @@ _materializedBundleShape: tmpl.#PluginBundleSrcRootShape & {
 			{path: "generated/turn_start_fragments.json", required: true, evidenceOnly: true},
 		]
 	}
+	physicalPluginLayout: {
+		pluginName: "agent-context-resolver"
+	}
 	validation: {
 		commands: [
 			"cue vet ./contracts/plugin-bundle/agent-context-resolver/src",
