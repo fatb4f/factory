@@ -6,7 +6,7 @@ usage() {
 Usage:
   contracts/plugin-bundle/src/adapters/scaffold-plugin-bundle --bundle-id ID --src-root DIR --out DIR [--force]
 
-Scaffolds a plugin-bundle contract slice using the shared contracts/meta scaffold.
+Scaffolds a plugin-bundle contract projection and evidence-only generated plugin files.
 EOF
 }
 
@@ -65,74 +65,217 @@ if [ -z "$out" ]; then
 	exit 2
 fi
 
-script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
-repo_root=$(CDPATH= cd -- "$script_dir/../../../.." && pwd)
-
-set --
-if [ "$force" = "true" ]; then
-	set -- --force
-fi
-
-"$repo_root/contracts/meta/scripts/scaffold-contract-slice" \
-	--slice-id "$bundle_id" \
-	--title "$bundle_id plugin bundle" \
-	--out "$out" \
-	"$@"
-
-python3 - "$bundle_id" "$out" <<'PY'
+python3 - "$bundle_id" "$src_root" "$out" "$force" <<'PY'
 import json
+import re
+import subprocess
 import sys
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
-bundle_id, out = sys.argv[1:3]
-root = Path(out)
+bundle_id, src_root_arg, out_arg, force = sys.argv[1:5]
 
+if not re.fullmatch(r"[0-9A-Za-z][0-9A-Za-z_-]*", bundle_id):
+    raise SystemExit("bundle-id must be alphanumeric with optional '-' or '_' separators")
+
+src_root_path = PurePosixPath(src_root_arg)
+out_path = PurePosixPath(out_arg)
+contract_parts = ("contracts", "plugin-bundle", bundle_id, "src")
+
+for label, value, path in (("src-root", src_root_arg, src_root_path), ("out", out_arg, out_path)):
+    if value.startswith("/") or ".." in path.parts:
+        raise SystemExit(f"{label} must be a repo-relative path without parent traversal")
+
+if out_path.parts != contract_parts:
+    raise SystemExit("out must match contracts/plugin-bundle/<bundle-id>/src")
+
+src_root = Path(src_root_arg)
+root = Path(out_arg)
 manifest = root / "manifest.cue"
-checks = root / "checks" / "manifest.cue"
+checks_dir = root / "checks"
+checks = checks_dir / "manifest.cue"
+generated_checks_dir = root / "generated" / "checks"
+generated_check_manifest = generated_checks_dir / "check_manifest.json"
 
-replacements = {
-    "contractSliceManifest": "pluginBundleContract",
-    "contractSliceValidationPlan": "pluginBundleValidationPlan",
-    "contractSliceCompletionReport": "pluginBundleCompletionReport",
-}
+bundle_package = re.sub(r"[^0-9A-Za-z_]", "", bundle_id) + "pluginbundle"
+checks_package = bundle_package + "checks"
+source_manifest = src_root / "manifest.cue"
+source_text = source_manifest.read_text()
+package_match = re.search(r"(?m)^package\s+([A-Za-z_][0-9A-Za-z_]*)\s*$", source_text)
+if not package_match:
+    raise SystemExit(f"{source_manifest} must declare a CUE package")
+source_package = package_match.group(1)
+source_import = f"github.com/fatb4f/factory/{src_root_arg}:{source_package}"
 
-for path in (manifest, checks):
-    text = path.read_text()
-    for old, new in replacements.items():
-        text = text.replace(old, new)
-    if path == manifest:
-        text = text.replace(
-            'import impl "github.com/fatb4f/factory/contracts/meta"',
-            'import (\n\timpl "github.com/fatb4f/factory/contracts/meta"\n\ttmpl "github.com/fatb4f/factory/contracts/plugin-bundle/src:pluginbundlesrc"\n)',
-        )
-        text = text.replace(
-            "\npluginBundleContract: {\n",
-            "\npluginBundleContractProjection: tmpl.#PluginBundleContractProjectionLayout & {\n\tpluginName: _sliceID\n}\n\npluginBundleGeneratedProjection: tmpl.#PluginBundleGeneratedProjectionLayout & {\n\tpluginName: _sliceID\n}\n\npluginBundleContract: {\n",
-        )
-        text = text.replace(
-            "\tid:       _sliceID\n\ttitle:    _title\n",
-            "\tid:                  _sliceID\n\ttitle:               _title\n\tcontractProjection:  pluginBundleContractProjection\n\tgeneratedProjection: pluginBundleGeneratedProjection\n",
-        )
-    path.write_text(text)
+contract_root = "/".join(contract_parts)
+generated_root = f"contracts/plugin-bundle/generated/{bundle_id}"
+generated_files = [
+    f"{generated_root}/.codex-plugin/plugin.json",
+    f"{generated_root}/skills/SKILL.md",
+    f"{generated_root}/hooks/hooks.json",
+    f"{generated_root}/scripts/README.md",
+]
+plugin_root = Path(generated_root)
+plugin_json = plugin_root / ".codex-plugin" / "plugin.json"
+skill_md = plugin_root / "skills" / "SKILL.md"
+hooks_json = plugin_root / "hooks" / "hooks.json"
+scripts_readme = plugin_root / "scripts" / "README.md"
 
-generated_root = root.parent.parent / "generated" / bundle_id
-plugin_root = generated_root
+outputs = [manifest, checks, generated_check_manifest, plugin_json, skill_md, hooks_json, scripts_readme]
+if force != "true":
+    for path in outputs:
+        if path.exists():
+            raise SystemExit(f"{path} exists; pass --force to overwrite")
+
+checks_dir.mkdir(parents=True, exist_ok=True)
+generated_checks_dir.mkdir(parents=True, exist_ok=True)
 (plugin_root / ".codex-plugin").mkdir(parents=True, exist_ok=True)
 (plugin_root / "skills").mkdir(parents=True, exist_ok=True)
 (plugin_root / "hooks").mkdir(parents=True, exist_ok=True)
 (plugin_root / "scripts").mkdir(parents=True, exist_ok=True)
 
-(plugin_root / ".codex-plugin" / "plugin.json").write_text(json.dumps({
-    "schema": "codex.plugin.v1",
-    "name": bundle_id,
-    "version": "0.0.0",
-    "description": f"Generated {bundle_id} plugin bundle scaffold.",
-    "skills": "skills",
-    "hooks": "hooks",
-    "scripts": "scripts",
-}, indent=2) + "\n")
+artifact_lines = "\n".join(
+    f'\t\t\t{{path: "{path}", required: true, evidenceOnly: true}},' for path in generated_files
+)
 
-(plugin_root / "skills" / "SKILL.md").write_text(f"""---
+manifest_text = f'''package {bundle_package}
+
+import (
+\tcanonical "{source_import}"
+\ttmpl "github.com/fatb4f/factory/contracts/plugin-bundle/src:pluginbundlesrc"
+)
+
+pluginBundleSourceAuthority: canonical.normalizedMaterializedBundleShapeManifest
+
+pluginBundleScaffoldRootDerivation: tmpl.#PluginBundleScaffoldRootDerivation & {{
+\tbundleID: "{bundle_id}"
+}}
+
+pluginBundleContractProjection: tmpl.#PluginBundleContractProjectionLayout & {{
+\tpluginName: pluginBundleScaffoldRootDerivation.bundleID
+}}
+
+pluginBundleGeneratedProjection: tmpl.#PluginBundleGeneratedProjectionLayout & {{
+\tpluginName: pluginBundleScaffoldRootDerivation.bundleID
+}}
+
+pluginBundleContract: tmpl.#PluginBundleSrcRootShape & {{
+\tsrcRoot: pluginBundleScaffoldRootDerivation.contractRoot
+\tcontracts: {{
+\t\troot: pluginBundleScaffoldRootDerivation.contractRoot
+\t\tcuePackages: [
+\t\t\t{{id: "{bundle_package}", path: "manifest.cue"}},
+\t\t]
+\t\trequiredPaths: [
+\t\t\t"manifest.cue",
+\t\t]
+\t}}
+\tgenerated: {{
+\t\troot:         pluginBundleScaffoldRootDerivation.generatedRoot
+\t\tevidenceOnly: true
+\t\tartifacts: [
+{artifact_lines}
+\t\t]
+\t}}
+\tcontractProjection: pluginBundleContractProjection
+\tgeneratedProjection: pluginBundleGeneratedProjection
+\tvalidation: {{
+\t\tcommands: [
+\t\t\t"cue vet ./{contract_root}",
+\t\t\t"cue export ./{contract_root} -e pluginBundleContract",
+\t\t\t"cue export ./{contract_root} -e pluginBundleValidationPlan",
+\t\t\t"cue export ./{contract_root} -e pluginBundleCompletionReport",
+\t\t]
+\t\tnegativeChecks: []
+\t\tforbiddenAttractors: []
+\t}}
+\tmanifest: {{
+\t\tbundleID:                          "{bundle_id}"
+\t\tshapeVersion:                      "factory.plugin-bundle.src-root-shape.v1"
+\t\tsrcRootShapeAuthority:             "contracts/plugin-bundle/src/manifest.cue"
+\t\tgeneratedArtifactsAreEvidenceOnly: true
+\t\tbundleLocalShapeOverride:          false
+\t}}
+\tbundleLocalShapeOverride: false
+}}
+
+pluginBundleValidationPlan: close({{
+\tpath:     pluginBundleContract.srcRoot
+\tpositive: pluginBundleContract.validation.commands
+\tnegative: []
+\tsourceAuthority: pluginBundleSourceAuthority.srcRoot
+}})
+
+pluginBundleCompletionReport: close({{
+\tbundleID:      pluginBundleContract.manifest.bundleID
+\ttemplateShape: pluginBundleContract.manifest.srcRootShapeAuthority
+\tsrcRoot:       pluginBundleContract.srcRoot
+\tsourceRoot:    pluginBundleSourceAuthority.srcRoot
+\tvalidation:    pluginBundleValidationPlan
+\tfinalResult:   "{bundle_id} projected into standardized plugin-bundle path"
+}})
+'''
+
+checks_text = f'''package {checks_package}
+
+import (
+\timpl "github.com/fatb4f/factory/contracts/meta"
+\ttmpl "github.com/fatb4f/factory/contracts/plugin-bundle/src:pluginbundlesrc"
+)
+
+_negativeBottomChecks: {{
+\tgeneratedAuthorityAccepted!: (impl.#MakeBottomCheckProof & {{
+\t\tin: {{
+\t\t\tname: "generatedAuthorityAccepted"
+\t\t\tinput: {{
+\t\t\t\tevidence: "standardized projection must not promote generated artifacts"
+\t\t\t\tvalue: {{generatedAuthority: true}}
+\t\t\t}}
+\t\t\ttarget: {{
+\t\t\t\tname: "#PluginBundleAuthorityPolicy"
+\t\t\t\tcontract: {{
+\t\t\t\t\tevidence: "plugin-bundle authority rejects generated authority"
+\t\t\t\t\tvalue:    tmpl.#PluginBundleAuthorityPolicy
+\t\t\t\t}}
+\t\t\t}}
+\t\t}}
+\t}}).out.generatedAuthorityAccepted
+}}
+'''
+
+manifest.write_text(manifest_text)
+checks.write_text(checks_text)
+generated_check_manifest.write_text(
+    json.dumps(
+        {
+            "schema": "factory.plugin-bundle.check-manifest.v1",
+            "bundleID": bundle_id,
+            "root": contract_root,
+            "checkSurface": "_negativeBottomChecks",
+            "checkFile": "checks/manifest.cue",
+            "checks": ["generatedAuthorityAccepted"],
+            "evidenceOnly": True,
+        },
+        indent=2,
+    )
+    + "\n"
+)
+plugin_json.write_text(
+    json.dumps(
+        {
+            "schema": "codex.plugin.v1",
+            "name": bundle_id,
+            "version": "0.0.0",
+            "description": f"Generated {bundle_id} plugin bundle scaffold.",
+            "skills": "skills",
+            "hooks": "hooks",
+            "scripts": "scripts",
+        },
+        indent=2,
+    )
+    + "\n"
+)
+skill_md.write_text(
+    f"""---
 name: {bundle_id}
 description: Generated scaffold skill for the {bundle_id} plugin bundle.
 ---
@@ -140,15 +283,17 @@ description: Generated scaffold skill for the {bundle_id} plugin bundle.
 # {bundle_id}
 
 Replace this scaffold skill with the plugin bundle's concrete skill instructions.
-""")
+"""
+)
+hooks_json.write_text(json.dumps({"schema": "codex.plugin.hooks.v1", "hooks": []}, indent=2) + "\n")
+scripts_readme.write_text(f"# {bundle_id} scripts\n\nGenerated placeholder for plugin bundle scripts.\n")
 
-(plugin_root / "hooks" / "hooks.json").write_text(json.dumps({
-    "schema": "codex.plugin.hooks.v1",
-    "hooks": []
-}, indent=2) + "\n")
-
-(plugin_root / "scripts" / "README.md").write_text(f"""# {bundle_id} scripts
-
-Generated placeholder for plugin bundle scripts.
-""")
+subprocess.run(["cue", "fmt", str(manifest), str(checks)], check=True)
+print(f"created {manifest}")
+print(f"created {checks}")
+print(f"created {generated_check_manifest}")
+print(f"created {plugin_json}")
+print(f"created {skill_md}")
+print(f"created {hooks_json}")
+print(f"created {scripts_readme}")
 PY

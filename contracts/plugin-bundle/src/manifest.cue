@@ -84,6 +84,14 @@ _staleLocalCheckPath:  "contracts/stale/checks"
 	]
 })
 
+#PluginBundleScaffoldRootDerivation: close({
+	bundleID:             #NonEmptyString
+	contractRoot:         "contracts/plugin-bundle/\(bundleID)/src"
+	generatedRoot:        "contracts/plugin-bundle/generated/\(bundleID)"
+	contractRootPattern:  "contracts/plugin-bundle/<bundle-id>/src"
+	generatedRootPattern: "contracts/plugin-bundle/generated/<bundle-id>"
+})
+
 #PluginBundleContractProjectionLayout: close({
 	pluginName:   #NonEmptyString
 	contractRoot: "contracts/plugin-bundle/\(pluginName)/src"
@@ -178,6 +186,7 @@ pluginBundleTemplateContract: close({
 		"#PluginBundleSrcRootShape",
 		"#PluginBundleGeneratedProjectionLayout",
 		"#PluginBundleContractProjectionLayout",
+		"#PluginBundleScaffoldRootDerivation",
 		"#PluginBundleGeneratorAssertion",
 		"#PluginBundleTarget",
 		"#PluginBundleGate",
