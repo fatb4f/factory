@@ -1,0 +1,9 @@
+{
+  "schema": "codex.plugin.v1",
+  "name": "agent-context-resolver",
+  "version": "0.0.0",
+  "description": "Generated agent-context-resolver plugin bundle scaffold.",
+  "skills": "skills",
+  "hooks": "hooks",
+  "scripts": "scripts"
+}

@@ -2,7 +2,7 @@ package agentcontextresolver
 
 import (
 	tmpl "github.com/fatb4f/factory/contracts/plugin-bundle/src:pluginbundlesrc"
-	graph "github.com/fatb4f/factory/contracts/plugin-bundle/agent-context-resolver/src/internal/graph:graph"
+	graph "github.com/fatb4f/factory/contracts/agent-context-resolver/src/internal/graph:graph"
 	"list"
 	impl "github.com/fatb4f/factory/contracts/meta"
 )

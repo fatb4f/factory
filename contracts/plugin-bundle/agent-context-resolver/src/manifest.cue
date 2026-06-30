@@ -1,4 +1,4 @@
-package agentcontextresolverpluginbundle
+package pluginbundle_agent_context_resolver
 
 import (
 	canonical "github.com/fatb4f/factory/contracts/agent-context-resolver/src:agentcontextresolver"
@@ -7,21 +7,31 @@ import (
 
 pluginBundleSourceAuthority: canonical.normalizedMaterializedBundleShapeManifest
 
+pluginBundleScaffoldRootDerivation: tmpl.#PluginBundleScaffoldRootDerivation & {
+	bundleID: "agent-context-resolver"
+}
+
+pluginBundleContractProjection: tmpl.#PluginBundleContractProjectionLayout & {
+	pluginName: pluginBundleScaffoldRootDerivation.bundleID
+}
+
+pluginBundleGeneratedProjection: tmpl.#PluginBundleGeneratedProjectionLayout & {
+	pluginName: pluginBundleScaffoldRootDerivation.bundleID
+}
+
 pluginBundleContract: tmpl.#PluginBundleSrcRootShape & {
-	srcRoot: "contracts/plugin-bundle/agent-context-resolver/src"
+	srcRoot: pluginBundleScaffoldRootDerivation.contractRoot
 	contracts: {
-		root: "contracts/plugin-bundle/agent-context-resolver/src"
+		root: pluginBundleScaffoldRootDerivation.contractRoot
 		cuePackages: [
-			{id: "agentcontextresolverpluginbundle", path: "manifest.cue"},
-			{id: "graph", path: "internal/graph/manifest.cue"},
+			{id: "pluginbundle_agent_context_resolver", path: "manifest.cue"},
 		]
 		requiredPaths: [
 			"manifest.cue",
-			"internal/graph/manifest.cue",
 		]
 	}
 	generated: {
-		root:         "contracts/plugin-bundle/generated/agent-context-resolver"
+		root:         pluginBundleScaffoldRootDerivation.generatedRoot
 		evidenceOnly: true
 		artifacts: [
 			{path: "contracts/plugin-bundle/generated/agent-context-resolver/.codex-plugin/plugin.json", required: true, evidenceOnly: true},
@@ -30,12 +40,8 @@ pluginBundleContract: tmpl.#PluginBundleSrcRootShape & {
 			{path: "contracts/plugin-bundle/generated/agent-context-resolver/scripts/README.md", required: true, evidenceOnly: true},
 		]
 	}
-	contractProjection: {
-		pluginName: "agent-context-resolver"
-	}
-	generatedProjection: {
-		pluginName: "agent-context-resolver"
-	}
+	contractProjection:  pluginBundleContractProjection
+	generatedProjection: pluginBundleGeneratedProjection
 	validation: {
 		commands: [
 			"cue vet ./contracts/plugin-bundle/agent-context-resolver/src",

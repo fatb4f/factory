@@ -1,4 +1,4 @@
-package codeintelpluginbundle
+package pluginbundle_code_intel
 
 import (
 	canonical "github.com/fatb4f/factory/contracts/code-intel/src:codeintelsrc"
@@ -7,19 +7,31 @@ import (
 
 pluginBundleSourceAuthority: canonical.normalizedMaterializedBundleShapeManifest
 
+pluginBundleScaffoldRootDerivation: tmpl.#PluginBundleScaffoldRootDerivation & {
+	bundleID: "code-intel"
+}
+
+pluginBundleContractProjection: tmpl.#PluginBundleContractProjectionLayout & {
+	pluginName: pluginBundleScaffoldRootDerivation.bundleID
+}
+
+pluginBundleGeneratedProjection: tmpl.#PluginBundleGeneratedProjectionLayout & {
+	pluginName: pluginBundleScaffoldRootDerivation.bundleID
+}
+
 pluginBundleContract: tmpl.#PluginBundleSrcRootShape & {
-	srcRoot: "contracts/plugin-bundle/code-intel/src"
+	srcRoot: pluginBundleScaffoldRootDerivation.contractRoot
 	contracts: {
-		root: "contracts/plugin-bundle/code-intel/src"
+		root: pluginBundleScaffoldRootDerivation.contractRoot
 		cuePackages: [
-			{id: "codeintelpluginbundle", path: "manifest.cue"},
+			{id: "pluginbundle_code_intel", path: "manifest.cue"},
 		]
 		requiredPaths: [
 			"manifest.cue",
 		]
 	}
 	generated: {
-		root:         "contracts/plugin-bundle/generated/code-intel"
+		root:         pluginBundleScaffoldRootDerivation.generatedRoot
 		evidenceOnly: true
 		artifacts: [
 			{path: "contracts/plugin-bundle/generated/code-intel/.codex-plugin/plugin.json", required: true, evidenceOnly: true},
@@ -28,12 +40,8 @@ pluginBundleContract: tmpl.#PluginBundleSrcRootShape & {
 			{path: "contracts/plugin-bundle/generated/code-intel/scripts/README.md", required: true, evidenceOnly: true},
 		]
 	}
-	contractProjection: {
-		pluginName: "code-intel"
-	}
-	generatedProjection: {
-		pluginName: "code-intel"
-	}
+	contractProjection:  pluginBundleContractProjection
+	generatedProjection: pluginBundleGeneratedProjection
 	validation: {
 		commands: [
 			"cue vet ./contracts/plugin-bundle/code-intel/src",

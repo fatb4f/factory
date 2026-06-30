@@ -1,4 +1,4 @@
-package codeintelpluginbundlechecks
+package pluginbundle_code_intelchecks
 
 import (
 	impl "github.com/fatb4f/factory/contracts/meta"

@@ -1,4 +1,4 @@
-package agentcontextresolverpluginbundlechecks
+package pluginbundle_agent_context_resolverchecks
 
 import (
 	impl "github.com/fatb4f/factory/contracts/meta"

@@ -1,0 +1,9 @@
+{
+  "schema": "codex.plugin.v1",
+  "name": "code-intel",
+  "version": "0.0.0",
+  "description": "Generated code-intel plugin bundle scaffold.",
+  "skills": "skills",
+  "hooks": "hooks",
+  "scripts": "scripts"
+}
