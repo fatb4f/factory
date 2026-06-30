@@ -1,0 +1,130 @@
+{
+  "apiVersion": "factory.upstream-monitor.codex/v0",
+  "kind": "CodexImpactReportEvidence",
+  "loop": "codex-contract-surface",
+  "signal_id": "loop_bootstrap_request",
+  "target_repo": "fatb4f/factory",
+  "entrypoint": "contracts/upstream-monitor/codex/contract-surface/AGENTS.md",
+  "adapter": "github_app",
+  "run_id": "20260630T045510Z",
+  "publication": {
+    "report_run_path": "contracts/upstream-monitor/codex/contract-surface/reports/runs/20260630T045510Z.codex-impact.md",
+    "report_latest_path": "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md",
+    "evidence_run_path": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260630T045510Z.codex-impact.report.json",
+    "evidence_latest_path": "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json",
+    "issue_targets": {},
+    "report_run_commit": "d212180253eb87419905095adf4aa9108f817691"
+  },
+  "authority_reads": {
+    "agents": [
+      "contracts/upstream-monitor/AGENTS.md",
+      "contracts/upstream-monitor/codex/AGENTS.md",
+      "contracts/upstream-monitor/codex/contract-surface/AGENTS.md"
+    ],
+    "cue": [
+      "contracts/upstream-monitor/codex/contract-surface/publication.cue",
+      "contracts/upstream-monitor/codex/contract-surface/public.cue",
+      "contracts/upstream-monitor/codex/contract-surface/report.cue"
+    ],
+    "publication_admission": {
+      "issueTargets": {},
+      "report_run_pattern": "contracts/upstream-monitor/codex/contract-surface/reports/runs/<run_id>.codex-impact.md",
+      "report_latest_path": "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md",
+      "evidence_run_pattern": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/<run_id>.codex-impact.report.json",
+      "evidence_latest_path": "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json"
+    }
+  },
+  "channels": {
+    "main": {
+      "repo": "openai/codex",
+      "ref": "main",
+      "status": "resolved",
+      "head_commit": "cfead68e5d3984b247cf0758e3e53b19165de848",
+      "workspace_version": "0.0.0",
+      "previous_recorded_head": "80f54d1266b4571ef649e7e5ecc382dd4e670937",
+      "change_since_previous_evidence": "ahead-by-3",
+      "changed_files_since_previous_evidence": 9
+    },
+    "latest-alpha-cli": {
+      "repo": "openai/codex",
+      "ref": "latest-alpha-cli",
+      "status": "resolved",
+      "head_commit": "8f86689795ac656373b3291eb38513de8fa2259d",
+      "relation_to_main": "diverged-from-current-main; ahead-by-1; behind-by-1",
+      "changed_files_from_current_main": ["codex-rs/Cargo.toml"],
+      "workspace_version": "0.143.0-alpha.31",
+      "relation": "distinct-channel",
+      "change_since_previous_evidence": "advanced-from-0.143.0-alpha.29-to-0.143.0-alpha.31"
+    }
+  },
+  "upstream_items": {
+    "critical": [],
+    "high": [
+      {
+        "id": "openai/codex#30490/openai/codex#30491",
+        "channels": ["main"],
+        "impact": "safety-buffering-tui-lifecycle-help-action-and-safety-url-copy-update",
+        "classes": ["ui", "safety-surface", "adapter"],
+        "reason": "Main changed safety-buffering prompt lifecycle/copy, added a Learn more action, and refreshed Bio/Cyber safety block copy and Trusted Access URLs.",
+        "evidence": [
+          "commit 850da19dc4e12827b6dbe991d59cffafd4d032ec",
+          "commit 9d13291955e6261e579466b67e48ff2dbe01993a",
+          "codex-rs/tui/src/chatwidget/safety_buffering.rs",
+          "codex-rs/tui/src/history_cell/notices.rs"
+        ]
+      },
+      {
+        "id": "openai/codex#30269",
+        "channels": ["main"],
+        "impact": "exec-server-rendezvous-websocket-disable-nagle",
+        "classes": ["transport", "exec-server", "latency"],
+        "reason": "Main changed Rendezvous WebSocket connection setup to pass disable_nagle=true while preserving signed URL, protocol, and connection flow.",
+        "evidence": [
+          "commit cfead68e5d3984b247cf0758e3e53b19165de848",
+          "codex-rs/exec-server/src/client_transport.rs",
+          "codex-rs/exec-server/src/remote.rs"
+        ]
+      },
+      {
+        "id": "latest-alpha-cli-release-0.143.0-alpha.31",
+        "channels": ["latest-alpha-cli"],
+        "impact": "alpha-release-channel-version-advance",
+        "classes": ["release", "alpha-channel"],
+        "reason": "latest-alpha-cli advanced from previously recorded 0.143.0-alpha.29 to 0.143.0-alpha.31 as a distinct release-only evidence channel.",
+        "evidence": [
+          "commit 8f86689795ac656373b3291eb38513de8fa2259d",
+          "codex-rs/Cargo.toml"
+        ]
+      }
+    ],
+    "notes": [
+      {
+        "id": "openai/codex#30607",
+        "channels": ["main"],
+        "impact": "supporting-evidence-only",
+        "classes": ["repo-automation", "labels"],
+        "reason": "Issue labeler gained AWS Bedrock-specific label behavior; outside immediate runtime contract surface unless local issue automation mirrors upstream labels."
+      }
+    ],
+    "noLocalAction": [
+      {
+        "id": "no-issue-targets",
+        "channels": ["main", "latest-alpha-cli"],
+        "impact": "no-issue-update",
+        "reason": "upstreamCodexPublicationPlan.issueTargets is empty."
+      }
+    ]
+  },
+  "baseline_reference": {
+    "previous_latest_evidence_run_id": "20260629T165258Z",
+    "previous_main_head": "80f54d1266b4571ef649e7e5ecc382dd4e670937",
+    "previous_alpha_workspace_version": "0.143.0-alpha.29"
+  },
+  "validation_notes": {
+    "cue_executed": false,
+    "reason": "GitHub App adapter exposes content read/write operations, not a repo shell.",
+    "issue_updates": "none; public upstreamCodexPublicationPlan.issueTargets is empty",
+    "forbidden_attractor_search": "GitHub code search for configured terms returned no matches.",
+    "caveat": "contract-surface AGENTS initial-gate text still conflicts with the newer admitted publication task prompt."
+  }
+}
