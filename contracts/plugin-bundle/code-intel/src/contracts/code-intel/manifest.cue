@@ -42,9 +42,24 @@ _materializedBundleShape: tmpl.#PluginBundleSrcRootShape & {
 		evidenceOnly: true
 		artifacts: [
 			{path: "contracts/plugin-bundle/generated/code-intel/.codex-plugin/plugin.json", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/manifest.json", required: true, evidenceOnly: true},
 			{path: "contracts/plugin-bundle/generated/code-intel/skills/SKILL.md", required: true, evidenceOnly: true},
 			{path: "contracts/plugin-bundle/generated/code-intel/hooks/hooks.json", required: true, evidenceOnly: true},
 			{path: "contracts/plugin-bundle/generated/code-intel/scripts/README.md", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/contracts/code-intel/manifest.cue", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/generated/mcp/server-manifest.json", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/generated/mcp/tool-registry.json", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/generated/mcp/context-projection.json", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/generated/lsp/cue-lsp.json", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/generated/lsp/lua-language-server.json", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/generated/lsp/provider-routing.json", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/generated/types/wezterm/wezterm.lua", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/generated/types/wezterm/events.lua", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/generated/types/wezterm/config-builder.lua", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/generated/types/nvim/vim.lua", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/generated/workflows/lua-first/workflow.json", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/generated/workflows/lua-first/entrypoints.json", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/generated/workflows/lua-first/diagnostic-map.json", required: true, evidenceOnly: true},
 		]
 	}
 	contractProjection: {
@@ -59,6 +74,10 @@ _materializedBundleShape: tmpl.#PluginBundleSrcRootShape & {
 			"cue vet ./contracts/plugin-bundle/code-intel/src/contracts/code-intel/checks",
 			"cue export ./contracts/plugin-bundle/code-intel/src/contracts/code-intel -e codeIntelBoundaryReport",
 			"cue export ./contracts/plugin-bundle/code-intel/src/contracts/code-intel -e codeIntelImplementationRecommendations",
+			"cue vet ./contracts/plugin-bundle/generated/code-intel/contracts/code-intel",
+			"cue export ./contracts/plugin-bundle/generated/code-intel/contracts/code-intel -e codeIntelRuntimeEvidenceManifest",
+			"cue export ./contracts/plugin-bundle/generated/code-intel/contracts/code-intel -e codeIntelRuntimeEvidenceValidationPlan",
+			"cue export ./contracts/plugin-bundle/generated/code-intel/contracts/code-intel -e codeIntelRuntimeEvidenceCompletionReport",
 		]
 		negativeChecks: ["codeIntelShapeDrift"]
 		forbiddenAttractors: []
@@ -334,29 +353,30 @@ codeIntelImplementationRecommendations: #CodeIntelRecommendationManifest & {
 		{order: 5, id: "#MakeValidationPlan", instantiateAt: "recommendations.validation"},
 	]
 	primitives: [
-		"generated workflow artifacts remain evidence-only and must match their declared schema",
-		"negative boundary checks must bottom for forbidden authority promotion fixtures",
-		"Lua type overlays must be complete and reachable from the materialized plugin root",
+		"generated runtime artifacts remain evidence-only while staying present in the plugin-bundle inventory",
+		"runtime evidence CUE must be vetted and exported after scaffold layout moves",
+		"source validation paths must target the nested code-intel package that owns the materialized bundle shape",
 	]
 	observedSurfaces: [
 		{
-			id: "lua-first-workflow-contract-drift"
+			id: "resolved-lua-first-workflow-contract-drift"
 			paths: [
 				"contracts/plugin-bundle/code-intel/src/contracts/code-intel/manifest.cue",
 				"generated/workflows/lua-first/workflow.json",
 				"generated/workflows/lua-first/entrypoints.json",
 			]
-			evidence: "workflow.json declares lua-first-workflow.v1 but does not satisfy the CUE workflow shape"
+			evidence: "workflow JSON now uses the CUE-owned entrypoints, providers, steps, and structured authority shape"
 		},
 		{
-			id: "negative-bottom-checks-not-proving"
+			id: "resolved-negative-bottom-checks-proving"
 			paths: [
 				"contracts/plugin-bundle/code-intel/src/contracts/code-intel/manifest.cue",
+				"contracts/plugin-bundle/code-intel/src/contracts/code-intel/checks/manifest.cue",
 			]
-			evidence: "_negativeBottomChecks evaluates to unconstrained values instead of concrete bottom proofs"
+			evidence: "negative boundary checks are exported through concrete bottom-proof constructors and validation commands"
 		},
 		{
-			id: "wezterm-overlay-partial-workflow-load"
+			id: "resolved-wezterm-overlay-routing"
 			paths: [
 				"contracts/plugin-bundle/code-intel/src/contracts/code-intel/manifest.cue",
 				"generated/workflows/lua-first/workflow.json",
@@ -365,77 +385,82 @@ codeIntelImplementationRecommendations: #CodeIntelRecommendationManifest & {
 				"generated/types/wezterm/events.lua",
 				"generated/types/wezterm/config-builder.lua",
 			]
-			evidence: "workflow stage input names only the primary WezTerm stub while the provider surface includes three overlay files"
+			evidence: "WezTerm provider and LSP surfaces list the complete overlay set"
+		},
+		{
+			id: "scaffold-move-runtime-gates-restored"
+			paths: [
+				"contracts/plugin-bundle/code-intel/src/manifest.cue",
+				"contracts/plugin-bundle/code-intel/src/contracts/code-intel/manifest.cue",
+				"contracts/plugin-bundle/generated/code-intel/contracts/code-intel/manifest.cue",
+				"justfile",
+			]
+			evidence: "generated runtime evidence CUE and installable payload inventory are explicitly validated after the scaffold-aligned move"
 		},
 	]
 	predicates: [
-		{id: "declared-schema-validates", rule: "each generated JSON artifact that declares a CUE-owned schema must vet against that schema"},
-		{id: "forbidden-authority-bottoms", rule: "fixtures that promote generated, MCP, LSP, or type overlay output to authority must fail validation"},
-		{id: "overlay-provider-complete", rule: "workflow and LSP library surfaces must include every file listed by the provider contract"},
+		{id: "runtime-evidence-validates", rule: "generated runtime evidence CUE must vet and export manifest, validation plan, and completion report"},
+		{id: "generated-payload-inventory-complete", rule: "plugin-bundle source shape must list the full installable runtime payload as evidence-only generated artifacts"},
+		{id: "source-validation-targets-owner-package", rule: "materialized bundle shape exports must be read from the nested code-intel source package"},
 	]
 	recommendations: [
 		{
-			id:       "align-lua-first-workflow-json"
-			priority: "high"
-			targets: [
-				"generated/workflows/lua-first/workflow.json",
-				"contracts/plugin-bundle/code-intel/src/contracts/code-intel/manifest.cue",
-				"SKILL.md",
-			]
-			observed:       "workflow.json uses top-level stages plus boolean authority under the same schema that the CUE contract defines with entrypoints, providers, steps, and structured authority."
-			recommendation: "Generate workflow.json from codeIntelLuaFirstWorkflow, or give the stage-only artifact a separate schema and add a second CUE contract for that shape."
-			validation: [
-				"cue vet ./contracts/code-intel",
-				"cue export ./contracts/code-intel -e codeIntelLuaFirstWorkflow",
-				"cue vet ./contracts/code-intel/*.cue ./generated/workflows/lua-first/workflow.json -d '#CodeIntelLuaFirstWorkflow'",
-			]
-		},
-		{
-			id:       "replace-negative-bottom-placeholders"
-			priority: "high"
-			targets: [
-				"contracts/plugin-bundle/code-intel/src/contracts/code-intel/manifest.cue",
-			]
-			observed:       "_negativeBottomChecks uses defaults unioned with _, so forbidden fixture checks can evaluate to _ instead of proving bottom."
-			recommendation: "Model each forbidden fixture as an attempted admission into the closed boundary and require the validation plan to run commands that fail for those exports."
-			validation: [
-				"cue vet ./contracts/code-intel",
-				"! cue export ./contracts/code-intel -e '_negativeBottomChecks.generatedAsAuthority'",
-				"! cue export ./contracts/code-intel -e '_negativeBottomChecks.mcpOutputAsAuthority'",
-				"! cue export ./contracts/code-intel -e '_negativeBottomChecks.lspDiagnosticsAsAuthority'",
-				"! cue export ./contracts/code-intel -e '_negativeBottomChecks.weztermTypesAsAuthority'",
-				"! cue export ./contracts/code-intel -e '_negativeBottomChecks.luaWorkflowGeneratedAsAuthority'",
-				"! cue export ./contracts/code-intel -e '_negativeBottomChecks.resolverContractsLeak'",
-			]
-		},
-		{
-			id:       "complete-wezterm-overlay-routing"
+			id:       "preserve-runtime-evidence-gates"
 			priority: "medium"
 			targets: [
-				"generated/workflows/lua-first/workflow.json",
-				"generated/lsp/lua-language-server.json",
 				"contracts/plugin-bundle/code-intel/src/contracts/code-intel/manifest.cue",
+				"contracts/plugin-bundle/generated/code-intel/contracts/code-intel/manifest.cue",
+				"justfile",
 			]
-			observed:       "the workflow load-type-overlays stage omits events.lua and config-builder.lua, although the provider contract includes them."
-			recommendation: "Keep workflow stage inputs, provider paths, and Lua LSP library paths in lockstep for all WezTerm overlay files."
+			observed:       "runtime evidence CUE exposes its own manifest, validation plan, and completion report under the generated bundle."
+			recommendation: "Keep these generated runtime evidence exports in the source validation path whenever scaffold roots move."
 			validation: [
-				"cue export ./contracts/code-intel -e codeIntelLuaFirstWorkflow",
-				"jq -e '.stages[] | select(.id == \"load-type-overlays\") | .inputs | index(\"generated/types/wezterm/events.lua\") and index(\"generated/types/wezterm/config-builder.lua\")' generated/workflows/lua-first/workflow.json",
+				"cue vet ./contracts/plugin-bundle/generated/code-intel/contracts/code-intel",
+				"cue export ./contracts/plugin-bundle/generated/code-intel/contracts/code-intel -e codeIntelRuntimeEvidenceManifest",
+				"cue export ./contracts/plugin-bundle/generated/code-intel/contracts/code-intel -e codeIntelRuntimeEvidenceValidationPlan",
+				"cue export ./contracts/plugin-bundle/generated/code-intel/contracts/code-intel -e codeIntelRuntimeEvidenceCompletionReport",
 			]
 		},
 		{
-			id:       "add-generated-artifact-schema-gates"
+			id:       "preserve-generated-payload-inventory"
+			priority: "medium"
+			targets: [
+				"contracts/plugin-bundle/code-intel/src/manifest.cue",
+				"contracts/plugin-bundle/code-intel/src/contracts/code-intel/manifest.cue",
+			]
+			observed:       "the installable code-intel payload includes manifest.json, runtime CUE, MCP JSON, LSP JSON, type overlays, and workflow JSON."
+			recommendation: "List the full runtime payload in the generated artifact inventory as evidence-only artifacts, not only the plugin shell scaffold files."
+			validation: [
+				"cue export ./contracts/plugin-bundle/code-intel/src -e pluginBundleContract",
+				"cue export ./contracts/plugin-bundle/code-intel/src/contracts/code-intel -e normalizedMaterializedBundleShapeManifest",
+			]
+		},
+		{
+			id:       "preserve-import-refusal-command"
+			priority: "medium"
+			targets: [
+				"contracts/plugin-bundle/generated/code-intel/contracts/code-intel/manifest.cue",
+			]
+			observed:       "generated runtime evidence must remain import-free and must not instantiate source-only bottom-check constructors."
+			recommendation: "Keep the executable rg guard in the generated runtime evidence validation plan alongside the descriptive denies."
+			validation: [
+				"cue export ./contracts/plugin-bundle/generated/code-intel/contracts/code-intel -e codeIntelRuntimeEvidenceValidationPlan",
+			]
+		},
+		{
+			id:       "preserve-resolved-workflow-and-bottom-check-gates"
 			priority: "medium"
 			targets: [
 				"SKILL.md",
 				"contracts/plugin-bundle/code-intel/src/contracts/code-intel/manifest.cue",
-				"contracts/plugin-bundle/code-intel/src/contracts/code-intel/manifest.cue",
+				"contracts/plugin-bundle/code-intel/src/contracts/code-intel/checks/manifest.cue",
 			]
-			observed:       "the documented validation verifies the CUE package exports but does not verify that materialized generated JSON still conforms to the declared contracts."
-			recommendation: "Extend validation with targeted generated-artifact gates for workflow JSON, entrypoint JSON, and boundary bottom checks."
+			observed:       "previous workflow-schema and bottom-check drift has been resolved under the scaffold-aligned source root."
+			recommendation: "Keep validation commands pointed at contracts/plugin-bundle/code-intel/src/contracts/code-intel and its checks package."
 			validation: [
-				"cue vet ./contracts/code-intel",
-				"cue export ./contracts/code-intel -e codeIntelImplementationRecommendations",
+				"cue vet ./contracts/plugin-bundle/code-intel/src/contracts/code-intel",
+				"cue vet ./contracts/plugin-bundle/code-intel/src/contracts/code-intel/checks",
+				"! cue export ./contracts/plugin-bundle/code-intel/src/contracts/code-intel/checks -e _negativeBottomChecks.generatedAsAuthority",
 			]
 		},
 	]

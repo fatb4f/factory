@@ -149,7 +149,7 @@ codeIntelSourceInventory: [
 })
 
 codeIntelAuthorityBlock: #CodeIntelAuthorityBlock & {
-	codeIntel: {files: ["manifest.cue", "manifest.cue"]}
+	codeIntel: {files: ["manifest.cue"]}
 }
 
 #CodeIntelBundleContract: close({

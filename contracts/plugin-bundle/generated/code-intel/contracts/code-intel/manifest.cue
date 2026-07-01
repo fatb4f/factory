@@ -121,6 +121,7 @@ codeIntelRuntimeEvidenceValidationPlan: close({
 		"test -f contracts/plugin-bundle/generated/code-intel/contracts/code-intel/manifest.cue",
 		"jq -e '.contracts | index(\"contracts/code-intel/manifest.cue\")' contracts/plugin-bundle/generated/code-intel/manifest.json",
 		"! jq -e '.contracts[] | select(. == \"contracts/code-intel/lua-first-workflow.cue\" or . == \"contracts/code-intel/checks.cue\" or . == \"contracts/code-intel/recommendations.cue\")' contracts/plugin-bundle/generated/code-intel/manifest.json",
+		"! rg -n 'import\\s*\\(|github[.]com/fatb4f/factory|github[.]com/fatb4f/contract[.]cuemod|#MakeBottomCheck[P]roof|impl[.]' contracts/plugin-bundle/generated/code-intel/contracts/code-intel",
 	]
 })
 

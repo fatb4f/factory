@@ -33,11 +33,16 @@ Use `generated/lsp/cue-lsp.json` for editor/server configuration and `contracts/
 cue vet ./contracts/plugin-bundle/code-intel/src
 cue vet ./contracts/plugin-bundle/code-intel/src/contracts/code-intel
 cue vet ./contracts/plugin-bundle/code-intel/src/contracts/code-intel/checks
-cue export ./contracts/plugin-bundle/code-intel/src -e normalizedMaterializedBundleShapeManifest
-cue export ./contracts/plugin-bundle/code-intel/src -e materializedBundleShapeValidationPlan
+cue export ./contracts/plugin-bundle/code-intel/src/contracts/code-intel -e normalizedMaterializedBundleShapeManifest
+cue export ./contracts/plugin-bundle/code-intel/src/contracts/code-intel -e materializedBundleShapeValidationPlan
+cue export ./contracts/plugin-bundle/code-intel/src/contracts/code-intel -e materializedBundleShapeCompletionReportContract
 cue export ./contracts/plugin-bundle/code-intel/src/contracts/code-intel -e codeIntelLuaFirstWorkflow
 cue export ./contracts/plugin-bundle/code-intel/src/contracts/code-intel -e codeIntelBoundaryReport
 cue export ./contracts/plugin-bundle/code-intel/src/contracts/code-intel -e codeIntelImplementationRecommendations
+cue vet ./contracts/plugin-bundle/generated/code-intel/contracts/code-intel
+cue export ./contracts/plugin-bundle/generated/code-intel/contracts/code-intel -e codeIntelRuntimeEvidenceManifest
+cue export ./contracts/plugin-bundle/generated/code-intel/contracts/code-intel -e codeIntelRuntimeEvidenceValidationPlan
+cue export ./contracts/plugin-bundle/generated/code-intel/contracts/code-intel -e codeIntelRuntimeEvidenceCompletionReport
 cue vet contracts/plugin-bundle/code-intel/src/contracts/code-intel/manifest.cue contracts/plugin-bundle/code-intel/src/contracts/code-intel/generated/workflows/lua-first/workflow.json -d '#CodeIntelLuaFirstWorkflow'
 jq -e '.providers[] | select(.id == "wezterm-types") | .paths | index("generated/types/wezterm/wezterm.lua") and index("generated/types/wezterm/events.lua") and index("generated/types/wezterm/config-builder.lua")' contracts/plugin-bundle/code-intel/src/contracts/code-intel/generated/workflows/lua-first/workflow.json
 cue vet ./contracts/plugin-bundle/code-intel/instances/dotfiles
