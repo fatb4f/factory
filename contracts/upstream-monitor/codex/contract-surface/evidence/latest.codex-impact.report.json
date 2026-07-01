@@ -6,16 +6,16 @@
   "target_repo": "fatb4f/factory",
   "entrypoint": "contracts/upstream-monitor/codex/contract-surface/AGENTS.md",
   "adapter": "github_app",
-  "run_id": "20260630T165352Z",
+  "run_id": "20260701T045517Z",
   "publication": {
-    "report_run_path": "contracts/upstream-monitor/codex/contract-surface/reports/runs/20260630T165352Z.codex-impact.md",
+    "report_run_path": "contracts/upstream-monitor/codex/contract-surface/reports/runs/20260701T045517Z.codex-impact.md",
     "report_latest_path": "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md",
-    "evidence_run_path": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260630T165352Z.codex-impact.report.json",
+    "evidence_run_path": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260701T045517Z.codex-impact.report.json",
     "evidence_latest_path": "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json",
     "issue_targets": {},
-    "report_run_commit": "bae7108edcd2fd7f4958c51b4af9d1024c850d66",
-    "evidence_run_commit": "5af621cfa25445abbc7dc696720162d74fb45237",
-    "report_latest_commit": "985fce4615f1f172b7e3645a78a8d7e5e7a5be6f"
+    "report_run_commit": "a7522afcf48362b0dcd842206a538232985ed48a",
+    "evidence_run_commit": "e4fd53447cca804fb32dfe05e0a307b48bbf980b",
+    "report_latest_commit": "7326d15adcf85aca26b17069bdefec27558e5023"
   },
   "authority_reads": {
     "agents": [
@@ -41,47 +41,46 @@
       "repo": "openai/codex",
       "ref": "main",
       "status": "resolved",
-      "head_commit": "020828170fb2224f0d7a7a243a1f7d21cc3df5ee",
+      "head_commit": "db887d03e1f907467e33271572dffb73bceecd6b",
       "workspace_version": "0.0.0",
-      "previous_recorded_head": "cfead68e5d3984b247cf0758e3e53b19165de848",
+      "previous_recorded_head": "020828170fb2224f0d7a7a243a1f7d21cc3df5ee",
       "change_since_previous_evidence": "ahead-by-1",
-      "changed_files_since_previous_evidence": 2
+      "changed_files_since_previous_evidence": 1
     },
     "latest-alpha-cli": {
       "repo": "openai/codex",
       "ref": "latest-alpha-cli",
       "status": "resolved",
-      "head_commit": "8f86689795ac656373b3291eb38513de8fa2259d",
-      "relation_to_main": "diverged-from-current-main; ahead-by-1; behind-by-2",
+      "head_commit": "27e66837feac06197c7ad99dc53b3e27fbccd917",
+      "relation_to_main": "ahead-by-1; behind-by-0",
       "changed_files_from_current_main": ["codex-rs/Cargo.toml"],
-      "workspace_version": "0.143.0-alpha.31",
+      "workspace_version": "0.143.0-alpha.32",
       "relation": "distinct-channel",
-      "change_since_previous_evidence": "unchanged"
+      "change_since_previous_evidence": "advanced-from-0.143.0-alpha.31-to-0.143.0-alpha.32"
     }
   },
   "upstream_items": {
     "critical": [],
     "high": [
       {
-        "id": "openai/codex#30645",
+        "id": "openai/codex#30757",
         "channels": ["main"],
-        "impact": "safety-access-biological-notice-wording-shortened",
-        "classes": ["ui", "safety-surface", "policy-copy"],
-        "reason": "Main removed the second sentence from the biological safety access block body while leaving Trusted Access/Learn more URLs, Cyber safety copy, and display/raw line structure unchanged.",
+        "impact": "websocket-full-request-trace-removed",
+        "classes": ["api", "logging", "privacy-surface", "websocket"],
+        "reason": "Main removed the full request-text websocket trace statement from codex-rs/codex-api/src/endpoint/responses_websocket.rs.",
         "evidence": [
-          "commit 020828170fb2224f0d7a7a243a1f7d21cc3df5ee",
-          "codex-rs/tui/src/history_cell/notices.rs",
-          "codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__safety_access_block_event_snapshot.snap"
+          "commit db887d03e1f907467e33271572dffb73bceecd6b",
+          "codex-rs/codex-api/src/endpoint/responses_websocket.rs"
         ]
       }
     ],
     "notes": [
       {
-        "id": "latest-alpha-cli-release-0.143.0-alpha.31",
+        "id": "latest-alpha-cli-release-0.143.0-alpha.32",
         "channels": ["latest-alpha-cli"],
-        "impact": "alpha-channel-unchanged",
+        "impact": "alpha-channel-advanced",
         "classes": ["release", "alpha-channel"],
-        "reason": "latest-alpha-cli remained at workspace version 0.143.0-alpha.31 and remains distinct from main."
+        "reason": "latest-alpha-cli advanced to workspace version 0.143.0-alpha.32 and remains distinct from main."
       }
     ],
     "noLocalAction": [
@@ -94,8 +93,8 @@
     ]
   },
   "baseline_reference": {
-    "previous_latest_evidence_run_id": "20260630T045510Z",
-    "previous_main_head": "cfead68e5d3984b247cf0758e3e53b19165de848",
+    "previous_latest_evidence_run_id": "20260630T165352Z",
+    "previous_main_head": "020828170fb2224f0d7a7a243a1f7d21cc3df5ee",
     "previous_alpha_workspace_version": "0.143.0-alpha.31"
   },
   "validation_notes": {
