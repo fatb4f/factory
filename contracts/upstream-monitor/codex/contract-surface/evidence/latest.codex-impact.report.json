@@ -6,16 +6,16 @@
   "target_repo": "fatb4f/factory",
   "entrypoint": "contracts/upstream-monitor/codex/contract-surface/AGENTS.md",
   "adapter": "github_app",
-  "run_id": "20260701T045517Z",
+  "run_id": "20260701T165321Z",
   "publication": {
-    "report_run_path": "contracts/upstream-monitor/codex/contract-surface/reports/runs/20260701T045517Z.codex-impact.md",
+    "report_run_path": "contracts/upstream-monitor/codex/contract-surface/reports/runs/20260701T165321Z.codex-impact.md",
     "report_latest_path": "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md",
-    "evidence_run_path": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260701T045517Z.codex-impact.report.json",
+    "evidence_run_path": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260701T165321Z.codex-impact.report.json",
     "evidence_latest_path": "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json",
     "issue_targets": {},
-    "report_run_commit": "a7522afcf48362b0dcd842206a538232985ed48a",
-    "evidence_run_commit": "e4fd53447cca804fb32dfe05e0a307b48bbf980b",
-    "report_latest_commit": "7326d15adcf85aca26b17069bdefec27558e5023"
+    "report_run_commit": "7045a8a12d23eff4ac910e803a88769904c1c2be",
+    "evidence_run_commit": "5eba55789c3697437f55ffed2e6bc4138bb7d744",
+    "report_latest_commit": "d57f175a4db6764acf7146fa7a11788b14594ad9"
   },
   "authority_reads": {
     "agents": [
@@ -43,9 +43,9 @@
       "status": "resolved",
       "head_commit": "db887d03e1f907467e33271572dffb73bceecd6b",
       "workspace_version": "0.0.0",
-      "previous_recorded_head": "020828170fb2224f0d7a7a243a1f7d21cc3df5ee",
-      "change_since_previous_evidence": "ahead-by-1",
-      "changed_files_since_previous_evidence": 1
+      "previous_recorded_head": "db887d03e1f907467e33271572dffb73bceecd6b",
+      "change_since_previous_evidence": "identical",
+      "changed_files_since_previous_evidence": 0
     },
     "latest-alpha-cli": {
       "repo": "openai/codex",
@@ -56,31 +56,19 @@
       "changed_files_from_current_main": ["codex-rs/Cargo.toml"],
       "workspace_version": "0.143.0-alpha.32",
       "relation": "distinct-channel",
-      "change_since_previous_evidence": "advanced-from-0.143.0-alpha.31-to-0.143.0-alpha.32"
+      "change_since_previous_evidence": "identical"
     }
   },
   "upstream_items": {
     "critical": [],
-    "high": [
-      {
-        "id": "openai/codex#30757",
-        "channels": ["main"],
-        "impact": "websocket-full-request-trace-removed",
-        "classes": ["api", "logging", "privacy-surface", "websocket"],
-        "reason": "Main removed the full request-text websocket trace statement from codex-rs/codex-api/src/endpoint/responses_websocket.rs.",
-        "evidence": [
-          "commit db887d03e1f907467e33271572dffb73bceecd6b",
-          "codex-rs/codex-api/src/endpoint/responses_websocket.rs"
-        ]
-      }
-    ],
+    "high": [],
     "notes": [
       {
-        "id": "latest-alpha-cli-release-0.143.0-alpha.32",
-        "channels": ["latest-alpha-cli"],
-        "impact": "alpha-channel-advanced",
-        "classes": ["release", "alpha-channel"],
-        "reason": "latest-alpha-cli advanced to workspace version 0.143.0-alpha.32 and remains distinct from main."
+        "id": "no-new-upstream-impact",
+        "channels": ["main", "latest-alpha-cli"],
+        "impact": "no-new-impact",
+        "classes": ["observation", "no-change"],
+        "reason": "Both upstream channels are unchanged from the previous recorded evidence."
       }
     ],
     "noLocalAction": [
@@ -93,9 +81,9 @@
     ]
   },
   "baseline_reference": {
-    "previous_latest_evidence_run_id": "20260630T165352Z",
-    "previous_main_head": "020828170fb2224f0d7a7a243a1f7d21cc3df5ee",
-    "previous_alpha_workspace_version": "0.143.0-alpha.31"
+    "previous_latest_evidence_run_id": "20260701T045517Z",
+    "previous_main_head": "db887d03e1f907467e33271572dffb73bceecd6b",
+    "previous_alpha_workspace_version": "0.143.0-alpha.32"
   },
   "validation_notes": {
     "cue_executed": false,
