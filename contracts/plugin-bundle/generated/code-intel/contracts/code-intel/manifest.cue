@@ -131,7 +131,7 @@ codeIntelRuntimeEvidenceCompletionReport: close({
 	validation: codeIntelRuntimeEvidenceValidationPlan
 	evidence: [
 		"bundled runtime CUE is an evidence-only manifest with no external imports",
-		"source authority and bottom-check construction remain under contracts/code-intel/src",
+		"source authority and bottom-check construction remain under contracts/plugin-bundle/code-intel/src",
 		"generated manifest.json contracts inventory matches actual materialized files",
 	]
 })

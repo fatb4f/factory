@@ -1,7 +1,7 @@
 package pluginbundle_agent_context_resolver
 
 import (
-	canonical "github.com/fatb4f/factory/contracts/agent-context-resolver/src:agentcontextresolver"
+	canonical "github.com/fatb4f/factory/contracts/plugin-bundle/agent-context-resolver/src/contracts/agent-context-resolver:agentcontextresolver"
 	tmpl "github.com/fatb4f/factory/contracts/plugin-bundle/src:pluginbundlesrc"
 )
 

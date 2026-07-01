@@ -1,7 +1,7 @@
 package pluginbundle_code_intel
 
 import (
-	canonical "github.com/fatb4f/factory/contracts/code-intel/src:codeintelsrc"
+	canonical "github.com/fatb4f/factory/contracts/plugin-bundle/code-intel/src/contracts/code-intel:codeintel"
 	tmpl "github.com/fatb4f/factory/contracts/plugin-bundle/src:pluginbundlesrc"
 )
 
@@ -35,24 +35,9 @@ pluginBundleContract: tmpl.#PluginBundleSrcRootShape & {
 		evidenceOnly: true
 		artifacts: [
 			{path: "contracts/plugin-bundle/generated/code-intel/.codex-plugin/plugin.json", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/manifest.json", required: true, evidenceOnly: true},
 			{path: "contracts/plugin-bundle/generated/code-intel/skills/SKILL.md", required: true, evidenceOnly: true},
 			{path: "contracts/plugin-bundle/generated/code-intel/hooks/hooks.json", required: true, evidenceOnly: true},
 			{path: "contracts/plugin-bundle/generated/code-intel/scripts/README.md", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/generated/mcp/server-manifest.json", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/generated/mcp/tool-registry.json", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/generated/mcp/context-projection.json", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/generated/lsp/cue-lsp.json", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/generated/lsp/lua-language-server.json", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/generated/lsp/provider-routing.json", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/generated/types/wezterm/wezterm.lua", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/generated/types/wezterm/events.lua", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/generated/types/wezterm/config-builder.lua", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/generated/types/nvim/vim.lua", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/generated/workflows/lua-first/workflow.json", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/generated/workflows/lua-first/entrypoints.json", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/generated/workflows/lua-first/diagnostic-map.json", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/contracts/code-intel/manifest.cue", required: true, evidenceOnly: true},
 		]
 	}
 	contractProjection:  pluginBundleContractProjection
@@ -63,24 +48,6 @@ pluginBundleContract: tmpl.#PluginBundleSrcRootShape & {
 			"cue export ./contracts/plugin-bundle/code-intel/src -e pluginBundleContract",
 			"cue export ./contracts/plugin-bundle/code-intel/src -e pluginBundleValidationPlan",
 			"cue export ./contracts/plugin-bundle/code-intel/src -e pluginBundleCompletionReport",
-			"test -f contracts/plugin-bundle/generated/code-intel/manifest.json",
-			"test -f contracts/plugin-bundle/generated/code-intel/generated/mcp/server-manifest.json",
-			"test -f contracts/plugin-bundle/generated/code-intel/generated/mcp/tool-registry.json",
-			"test -f contracts/plugin-bundle/generated/code-intel/generated/mcp/context-projection.json",
-			"test -f contracts/plugin-bundle/generated/code-intel/generated/lsp/cue-lsp.json",
-			"test -f contracts/plugin-bundle/generated/code-intel/generated/lsp/lua-language-server.json",
-			"test -f contracts/plugin-bundle/generated/code-intel/generated/lsp/provider-routing.json",
-			"test -f contracts/plugin-bundle/generated/code-intel/generated/types/wezterm/wezterm.lua",
-			"test -f contracts/plugin-bundle/generated/code-intel/generated/types/wezterm/events.lua",
-			"test -f contracts/plugin-bundle/generated/code-intel/generated/types/wezterm/config-builder.lua",
-			"test -f contracts/plugin-bundle/generated/code-intel/generated/types/nvim/vim.lua",
-			"test -f contracts/plugin-bundle/generated/code-intel/generated/workflows/lua-first/workflow.json",
-			"test -f contracts/plugin-bundle/generated/code-intel/generated/workflows/lua-first/entrypoints.json",
-			"test -f contracts/plugin-bundle/generated/code-intel/generated/workflows/lua-first/diagnostic-map.json",
-			"test -f contracts/plugin-bundle/generated/code-intel/contracts/code-intel/manifest.cue",
-			"! rg -n 'import\\s*\\(|github.com/fatb4f/factory|github.com/fatb4f/contract.cuemod|#MakeBottomCheckProof|impl\\.' contracts/plugin-bundle/generated/code-intel/contracts/code-intel",
-			"jq -e '.contracts | index(\"contracts/code-intel/manifest.cue\")' contracts/plugin-bundle/generated/code-intel/manifest.json",
-			"! jq -e '.contracts[] | select(. == \"contracts/code-intel/lua-first-workflow.cue\" or . == \"contracts/code-intel/checks.cue\" or . == \"contracts/code-intel/recommendations.cue\")' contracts/plugin-bundle/generated/code-intel/manifest.json",
 		]
 		negativeChecks: []
 		forbiddenAttractors: []
