@@ -8,9 +8,9 @@ signal_id: loop_bootstrap_request
 target_repo: fatb4f/factory
 entrypoint: contracts/upstream-monitor/codex/contract-surface/AGENTS.md
 adapter: github_app
-run_result: terminal_success_new_main_upstream_impact_alpha_unchanged_with_validation_caveats
+run_result: terminal_success_new_main_and_alpha_upstream_impact_with_validation_caveats
 channels: main, latest-alpha-cli
-run_id: 20260630T165352Z
+run_id: 20260701T045517Z
 ```
 
 ## Channel resolution
@@ -21,11 +21,11 @@ run_id: 20260630T165352Z
 status: resolved
 repo: openai/codex
 ref: main
-head_commit: 020828170fb2224f0d7a7a243a1f7d21cc3df5ee
+head_commit: db887d03e1f907467e33271572dffb73bceecd6b
 workspace_version: 0.0.0
-previous_recorded_head: cfead68e5d3984b247cf0758e3e53b19165de848
+previous_recorded_head: 020828170fb2224f0d7a7a243a1f7d21cc3df5ee
 change_since_previous_evidence: ahead-by-1
-changed_files_since_previous_evidence: 2
+changed_files_since_previous_evidence: 1
 ```
 
 ### latest-alpha-cli
@@ -34,12 +34,12 @@ changed_files_since_previous_evidence: 2
 status: resolved
 repo: openai/codex
 ref: latest-alpha-cli
-head_commit: 8f86689795ac656373b3291eb38513de8fa2259d
-relation_to_main: diverged-from-current-main; ahead-by-1; behind-by-2
+head_commit: 27e66837feac06197c7ad99dc53b3e27fbccd917
+relation_to_main: ahead-by-1; behind-by-0
 changed_files_from_current_main: codex-rs/Cargo.toml
-workspace_version: 0.143.0-alpha.31
+workspace_version: 0.143.0-alpha.32
 channel_relation: distinct-from-main
-change_since_previous_evidence: unchanged
+change_since_previous_evidence: advanced-from-0.143.0-alpha.31-to-0.143.0-alpha.32
 ```
 
 `latest-alpha-cli` remains a separate upstream evidence channel and is not collapsed into `main`.
@@ -50,24 +50,24 @@ No critical impacts admitted in this run.
 
 ## High
 
-### main: safety access biological notice wording shortened
+### main: websocket full request trace removed
 
 ```text
-id: openai/codex#30645
+id: openai/codex#30757
 upstream_repo: openai/codex
 kind: commit/merged-pr-evidence
 status: admitted
 severity: high
-classes: ui, safety-surface, policy-copy
+classes: api, logging, privacy-surface, websocket
 channels: main
 refs:
-- 020828170fb2224f0d7a7a243a1f7d21cc3df5ee
-- openai/codex#30645
+- db887d03e1f907467e33271572dffb73bceecd6b
+- openai/codex#30757
 ```
 
-Impact: upstream changed the biological safety access block body text by removing the second sentence about researchers at approved organizations. The Trusted Access URL, Learn more URL, Cyber safety block body, and display/raw line structure remain unchanged.
+Impact: upstream removed a `trace!("websocket request: {request_text}")` statement and the corresponding `tracing::trace` import from `codex-rs/codex-api/src/endpoint/responses_websocket.rs`.
 
-Local reason: this intersects the declared contract surface because safety access block copy is a user-facing policy projection in the TUI history cell surface. Local report, UI snapshot, or adapter contracts that encode exact safety block text may be stale.
+Local reason: this intersects the declared contract surface because websocket request logging is an adapter-observable protocol/runtime surface. Local evidence, report, privacy, logging, or trace expectations that assume full websocket request text can appear in traces may be stale.
 
 Suggested local targets:
 
@@ -79,10 +79,10 @@ contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md
 
 ## Notes
 
-### latest-alpha-cli: alpha channel unchanged
+### latest-alpha-cli: alpha channel advanced to 0.143.0-alpha.32
 
 ```text
-id: latest-alpha-cli-release-0.143.0-alpha.31
+id: latest-alpha-cli-release-0.143.0-alpha.32
 upstream_repo: openai/codex
 kind: branch/ref-evidence
 status: admitted
@@ -90,10 +90,10 @@ severity: note
 classes: release, alpha-channel
 channels: latest-alpha-cli
 refs:
-- 8f86689795ac656373b3291eb38513de8fa2259d
+- 27e66837feac06197c7ad99dc53b3e27fbccd917
 ```
 
-Impact: `latest-alpha-cli` remains at workspace version `0.143.0-alpha.31`. Its delta from current `main` is still limited to `codex-rs/Cargo.toml` workspace version metadata.
+Impact: `latest-alpha-cli` advanced to workspace version `0.143.0-alpha.32`. Its delta from current `main` is limited to `codex-rs/Cargo.toml` workspace version metadata.
 
 Local reason: this is a distinct channel/version observation only. Alpha evidence must not be used as main evidence.
 
@@ -135,9 +135,9 @@ contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.r
 Publication admission observed from the previous latest evidence/publication projection:
 
 ```text
-report run path: contracts/upstream-monitor/codex/contract-surface/reports/runs/20260630T165352Z.codex-impact.md
+report run path: contracts/upstream-monitor/codex/contract-surface/reports/runs/20260701T045517Z.codex-impact.md
 report latest path: contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md
-evidence run path: contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260630T165352Z.codex-impact.report.json
+evidence run path: contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260701T045517Z.codex-impact.report.json
 evidence latest path: contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json
 issueTargets: {}
 ```
@@ -153,7 +153,7 @@ Caveat: the loop entrypoint still contains older initial-gate text forbidding up
 ## Control action
 
 ```text
-action: publish-contract-local-new-main-impact-run-and-latest-report
-reason: upstream main advanced by 1 commit with a safety access block wording change; latest-alpha-cli remained unchanged as a distinct alpha evidence channel
+action: publish-contract-local-new-main-and-alpha-impact-run-and-latest-report
+reason: upstream main advanced by 1 commit removing websocket full-request trace logging; latest-alpha-cli advanced to 0.143.0-alpha.32 as a distinct alpha evidence channel
 next_state: continue scheduled observation; keep main and latest-alpha-cli evidence channels distinct
 ```
