@@ -1,0 +1,93 @@
+{
+  "apiVersion": "factory.upstream-monitor.codex/v0",
+  "kind": "CodexImpactReportEvidence",
+  "loop": "codex-contract-surface",
+  "signal_id": "loop_bootstrap_request",
+  "target_repo": "fatb4f/factory",
+  "entrypoint": "contracts/upstream-monitor/codex/contract-surface/AGENTS.md",
+  "adapter": "github_app",
+  "run_id": "20260701T165321Z",
+  "publication": {
+    "report_run_path": "contracts/upstream-monitor/codex/contract-surface/reports/runs/20260701T165321Z.codex-impact.md",
+    "report_latest_path": "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md",
+    "evidence_run_path": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260701T165321Z.codex-impact.report.json",
+    "evidence_latest_path": "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json",
+    "issue_targets": {},
+    "report_run_commit": "7045a8a12d23eff4ac910e803a88769904c1c2be"
+  },
+  "authority_reads": {
+    "agents": [
+      "contracts/upstream-monitor/AGENTS.md",
+      "contracts/upstream-monitor/codex/AGENTS.md",
+      "contracts/upstream-monitor/codex/contract-surface/AGENTS.md"
+    ],
+    "cue": [
+      "contracts/upstream-monitor/codex/contract-surface/publication.cue",
+      "contracts/upstream-monitor/codex/contract-surface/public.cue",
+      "contracts/upstream-monitor/codex/contract-surface/report.cue"
+    ],
+    "publication_admission": {
+      "issueTargets": {},
+      "report_run_pattern": "contracts/upstream-monitor/codex/contract-surface/reports/runs/<run_id>.codex-impact.md",
+      "report_latest_path": "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md",
+      "evidence_run_pattern": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/<run_id>.codex-impact.report.json",
+      "evidence_latest_path": "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json"
+    }
+  },
+  "channels": {
+    "main": {
+      "repo": "openai/codex",
+      "ref": "main",
+      "status": "resolved",
+      "head_commit": "db887d03e1f907467e33271572dffb73bceecd6b",
+      "workspace_version": "0.0.0",
+      "previous_recorded_head": "db887d03e1f907467e33271572dffb73bceecd6b",
+      "change_since_previous_evidence": "identical",
+      "changed_files_since_previous_evidence": 0
+    },
+    "latest-alpha-cli": {
+      "repo": "openai/codex",
+      "ref": "latest-alpha-cli",
+      "status": "resolved",
+      "head_commit": "27e66837feac06197c7ad99dc53b3e27fbccd917",
+      "relation_to_main": "ahead-by-1; behind-by-0",
+      "changed_files_from_current_main": ["codex-rs/Cargo.toml"],
+      "workspace_version": "0.143.0-alpha.32",
+      "relation": "distinct-channel",
+      "change_since_previous_evidence": "identical"
+    }
+  },
+  "upstream_items": {
+    "critical": [],
+    "high": [],
+    "notes": [
+      {
+        "id": "no-new-upstream-impact",
+        "channels": ["main", "latest-alpha-cli"],
+        "impact": "no-new-impact",
+        "classes": ["observation", "no-change"],
+        "reason": "Both upstream channels are unchanged from the previous recorded evidence."
+      }
+    ],
+    "noLocalAction": [
+      {
+        "id": "no-issue-targets",
+        "channels": ["main", "latest-alpha-cli"],
+        "impact": "no-issue-update",
+        "reason": "upstreamCodexPublicationPlan.issueTargets is empty."
+      }
+    ]
+  },
+  "baseline_reference": {
+    "previous_latest_evidence_run_id": "20260701T045517Z",
+    "previous_main_head": "db887d03e1f907467e33271572dffb73bceecd6b",
+    "previous_alpha_workspace_version": "0.143.0-alpha.32"
+  },
+  "validation_notes": {
+    "cue_executed": false,
+    "reason": "GitHub App adapter exposes content read/write operations, not a repo shell.",
+    "issue_updates": "none; public upstreamCodexPublicationPlan.issueTargets is empty",
+    "forbidden_attractor_search": "GitHub code search for configured terms returned no matches.",
+    "caveat": "contract-surface AGENTS initial-gate text still conflicts with the newer admitted publication task prompt; publication admission was taken from prior latest evidence/publication projection."
+  }
+}
