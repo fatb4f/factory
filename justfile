@@ -70,10 +70,6 @@ contracts-code-intel-src:
 	cue export ./contracts/plugin-bundle/code-intel/src/contracts/code-intel -e materializedBundleShapeCompletionReportContract >/dev/null
 	cue export ./contracts/plugin-bundle/code-intel/src/contracts/code-intel -e codeIntelBoundaryReport >/dev/null
 	cue export ./contracts/plugin-bundle/code-intel/src/contracts/code-intel -e codeIntelImplementationRecommendations >/dev/null
-	cue vet ./contracts/plugin-bundle/generated/code-intel/contracts/code-intel
-	cue export ./contracts/plugin-bundle/generated/code-intel/contracts/code-intel -e codeIntelRuntimeEvidenceManifest >/dev/null
-	cue export ./contracts/plugin-bundle/generated/code-intel/contracts/code-intel -e codeIntelRuntimeEvidenceValidationPlan >/dev/null
-	cue export ./contracts/plugin-bundle/generated/code-intel/contracts/code-intel -e codeIntelRuntimeEvidenceCompletionReport >/dev/null
 	! cue export ./contracts/plugin-bundle/code-intel/src/contracts/code-intel/checks -e _negativeBottomChecks.generatedAsAuthority >/dev/null
 	! cue export ./contracts/plugin-bundle/code-intel/src/contracts/code-intel/checks -e _negativeBottomChecks.mcpOutputAsAuthority >/dev/null
 	! cue export ./contracts/plugin-bundle/code-intel/src/contracts/code-intel/checks -e _negativeBottomChecks.lspDiagnosticsAsAuthority >/dev/null
@@ -84,6 +80,43 @@ contracts-code-intel-src:
 contracts-consolidation-guards:
 	test ! -e ./contracts/code-intel
 	test ! -e ./contracts/agent-context-resolver
+	test -f contracts/plugin-bundle/agent-context-resolver/manifest.cue
+	test -f contracts/plugin-bundle/code-intel/manifest.cue
+	test -f contracts/plugin-bundle/agent-context-resolver/checks/manifest.cue
+	test -f contracts/plugin-bundle/code-intel/checks/manifest.cue
+	test -d contracts/plugin-bundle/agent-context-resolver/checks
+	test -d contracts/plugin-bundle/code-intel/checks
+	test -d contracts/plugin-bundle/agent-context-resolver/instances/dotfiles
+	test -d contracts/plugin-bundle/code-intel/instances
+	test -d contracts/plugin-bundle/code-intel/instances/dotfiles
+	test -d contracts/plugin-bundle/agent-context-resolver/src/checks
+	test -d contracts/plugin-bundle/code-intel/src/checks
+	test -d contracts/plugin-bundle/agent-context-resolver/src/contracts
+	test -d contracts/plugin-bundle/code-intel/src/contracts
+	test -d contracts/plugin-bundle/agent-context-resolver/src/generated
+	test -d contracts/plugin-bundle/code-intel/src/generated
+	test -d contracts/plugin-bundle/code-intel/src
+	test -d contracts/plugin-bundle/generated/agent-context-resolver/.codex-plugin
+	test -d contracts/plugin-bundle/generated/code-intel/.codex-plugin
+	test -d contracts/plugin-bundle/generated/agent-context-resolver/hooks
+	test -d contracts/plugin-bundle/generated/code-intel/hooks
+	test -d contracts/plugin-bundle/generated/agent-context-resolver/scripts
+	test -d contracts/plugin-bundle/generated/code-intel/scripts
+	test -d contracts/plugin-bundle/generated/agent-context-resolver/skills
+	test -d contracts/plugin-bundle/generated/code-intel/skills
+	test ! -e contracts/plugin-bundle/code-intel/generated
+	test ! -e contracts/plugin-bundle/generated/code-intel/manifest.json
+	test ! -e contracts/plugin-bundle/generated/code-intel/contracts
+	test ! -e contracts/plugin-bundle/generated/code-intel/generated
+	test -z "$(find ./contracts/plugin-bundle/generated/agent-context-resolver ./contracts/plugin-bundle/generated/code-intel -mindepth 1 -maxdepth 1 ! -name .codex-plugin ! -name hooks ! -name scripts ! -name skills -print)"
+	cue vet ./contracts/plugin-bundle/code-intel
+	cue vet ./contracts/plugin-bundle/code-intel/checks
+	cue vet ./contracts/plugin-bundle/agent-context-resolver
+	cue vet ./contracts/plugin-bundle/agent-context-resolver/checks
+	cue export ./contracts/plugin-bundle/code-intel -e codeIntelPluginBundleSourceRoot >/dev/null
+	cue export ./contracts/plugin-bundle/code-intel -e codeIntelPluginBundleDistributionLock >/dev/null
+	cue export ./contracts/plugin-bundle/code-intel -e codeIntelSiblingRootShape >/dev/null
+	cue export ./contracts/plugin-bundle/agent-context-resolver -e agentContextResolverSiblingRootShape >/dev/null
 	test -z "$(find ./contracts/plugin-bundle/code-intel/src ./contracts/plugin-bundle/agent-context-resolver/src -mindepth 1 -maxdepth 1 ! -name manifest.cue ! -name checks ! -name generated ! -name contracts -print)"
 	test -z "$(find ./contracts/plugin-bundle/code-intel/src/generated ./contracts/plugin-bundle/agent-context-resolver/src/generated -mindepth 1 -maxdepth 1 ! -name checks -print)"
 	! rg 'contracts/(code-intel|agent-context-resolver)/src' ./contracts ./.github ./cue.mod

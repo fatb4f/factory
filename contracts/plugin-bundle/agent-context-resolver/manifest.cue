@@ -1,5 +1,7 @@
 package agentcontextresolverpluginbundle
 
+import tmpl "github.com/fatb4f/factory/contracts/plugin-bundle/src:pluginbundlesrc"
+
 #NonEmptyString:       string & !=""
 #RelativeContractPath: string & !="" & !~"^/" & !~"(^|/)\\.\\.(/|$)"
 
@@ -40,6 +42,8 @@ agentContextResolverPluginBundleSourceRoot: #PluginBundleSourceRoot & {
 	]
 }
 
+agentContextResolverPluginBundleInstanceRoot: #PluginBundleInstanceRoot
+
 agentContextResolverPluginBundleDistributionLock: #PluginBundleDistributionLock & {
 	fileInventory: [
 		"contracts/agent-context-resolver/implementation_slice_materializer.cue",
@@ -60,4 +64,16 @@ agentContextResolverPluginBundleDistributionLock: #PluginBundleDistributionLock 
 		"contracts/meta/manifest.cue",
 	]
 	checks: ["cue-vet", "bundle-contract-export", "materialization-export", "lock-export", "negative-bottom"]
+}
+
+agentContextResolverSiblingRootShape: tmpl.#PluginBundleSiblingRootShape & {
+	bundleID: "agent-context-resolver"
+	forbiddenRootEntries: [
+		"generated",
+	]
+	forbiddenGeneratedEntries: [
+		"manifest.json",
+		"contracts",
+		"generated",
+	]
 }

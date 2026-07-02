@@ -42,24 +42,9 @@ _materializedBundleShape: tmpl.#PluginBundleSrcRootShape & {
 		evidenceOnly: true
 		artifacts: [
 			{path: "contracts/plugin-bundle/generated/code-intel/.codex-plugin/plugin.json", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/manifest.json", required: true, evidenceOnly: true},
 			{path: "contracts/plugin-bundle/generated/code-intel/skills/SKILL.md", required: true, evidenceOnly: true},
 			{path: "contracts/plugin-bundle/generated/code-intel/hooks/hooks.json", required: true, evidenceOnly: true},
 			{path: "contracts/plugin-bundle/generated/code-intel/scripts/README.md", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/contracts/code-intel/manifest.cue", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/generated/mcp/server-manifest.json", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/generated/mcp/tool-registry.json", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/generated/mcp/context-projection.json", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/generated/lsp/cue-lsp.json", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/generated/lsp/lua-language-server.json", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/generated/lsp/provider-routing.json", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/generated/types/wezterm/wezterm.lua", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/generated/types/wezterm/events.lua", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/generated/types/wezterm/config-builder.lua", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/generated/types/nvim/vim.lua", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/generated/workflows/lua-first/workflow.json", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/generated/workflows/lua-first/entrypoints.json", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/generated/workflows/lua-first/diagnostic-map.json", required: true, evidenceOnly: true},
 		]
 	}
 	contractProjection: {
@@ -74,10 +59,6 @@ _materializedBundleShape: tmpl.#PluginBundleSrcRootShape & {
 			"cue vet ./contracts/plugin-bundle/code-intel/src/contracts/code-intel/checks",
 			"cue export ./contracts/plugin-bundle/code-intel/src/contracts/code-intel -e codeIntelBoundaryReport",
 			"cue export ./contracts/plugin-bundle/code-intel/src/contracts/code-intel -e codeIntelImplementationRecommendations",
-			"cue vet ./contracts/plugin-bundle/generated/code-intel/contracts/code-intel",
-			"cue export ./contracts/plugin-bundle/generated/code-intel/contracts/code-intel -e codeIntelRuntimeEvidenceManifest",
-			"cue export ./contracts/plugin-bundle/generated/code-intel/contracts/code-intel -e codeIntelRuntimeEvidenceValidationPlan",
-			"cue export ./contracts/plugin-bundle/generated/code-intel/contracts/code-intel -e codeIntelRuntimeEvidenceCompletionReport",
 		]
 		negativeChecks: ["codeIntelShapeDrift"]
 		forbiddenAttractors: []
@@ -353,8 +334,8 @@ codeIntelImplementationRecommendations: #CodeIntelRecommendationManifest & {
 		{order: 5, id: "#MakeValidationPlan", instantiateAt: "recommendations.validation"},
 	]
 	primitives: [
-		"generated runtime artifacts remain evidence-only while staying present in the plugin-bundle inventory",
-		"runtime evidence CUE must be vetted and exported after scaffold layout moves",
+		"generated runtime artifacts remain evidence-only under the source contract surfaces",
+		"installable generated bundle roots must keep the template projection shape",
 		"source validation paths must target the nested code-intel package that owns the materialized bundle shape",
 	]
 	observedSurfaces: [
@@ -388,37 +369,35 @@ codeIntelImplementationRecommendations: #CodeIntelRecommendationManifest & {
 			evidence: "WezTerm provider and LSP surfaces list the complete overlay set"
 		},
 		{
-			id: "scaffold-move-runtime-gates-restored"
+			id: "generated-root-parity-restored"
 			paths: [
 				"contracts/plugin-bundle/code-intel/src/manifest.cue",
 				"contracts/plugin-bundle/code-intel/src/contracts/code-intel/manifest.cue",
-				"contracts/plugin-bundle/generated/code-intel/contracts/code-intel/manifest.cue",
 				"justfile",
 			]
-			evidence: "generated runtime evidence CUE and installable payload inventory are explicitly validated after the scaffold-aligned move"
+			evidence: "installable generated payload inventory is limited to the scaffold projection shared with agent-context-resolver"
 		},
 	]
 	predicates: [
-		{id: "runtime-evidence-validates", rule: "generated runtime evidence CUE must vet and export manifest, validation plan, and completion report"},
-		{id: "generated-payload-inventory-complete", rule: "plugin-bundle source shape must list the full installable runtime payload as evidence-only generated artifacts"},
+		{id: "generated-root-parity-validates", rule: "code-intel generated root must not contain contracts, generated runtime evidence, or manifest.json"},
+		{id: "generated-payload-inventory-complete", rule: "plugin-bundle source shape must list the scaffold installable payload as evidence-only generated artifacts"},
 		{id: "source-validation-targets-owner-package", rule: "materialized bundle shape exports must be read from the nested code-intel source package"},
 	]
 	recommendations: [
 		{
-			id:       "preserve-runtime-evidence-gates"
+			id:       "preserve-generated-root-parity"
 			priority: "medium"
 			targets: [
+				"contracts/plugin-bundle/code-intel/src/manifest.cue",
 				"contracts/plugin-bundle/code-intel/src/contracts/code-intel/manifest.cue",
-				"contracts/plugin-bundle/generated/code-intel/contracts/code-intel/manifest.cue",
 				"justfile",
 			]
-			observed:       "runtime evidence CUE exposes its own manifest, validation plan, and completion report under the generated bundle."
-			recommendation: "Keep these generated runtime evidence exports in the source validation path whenever scaffold roots move."
+			observed:       "the code-intel generated root now has the same scaffold projection directories as agent-context-resolver."
+			recommendation: "Keep generated-root validation focused on .codex-plugin, skills, hooks, and scripts; do not reintroduce installable-root contracts, generated, or manifest.json payloads."
 			validation: [
-				"cue vet ./contracts/plugin-bundle/generated/code-intel/contracts/code-intel",
-				"cue export ./contracts/plugin-bundle/generated/code-intel/contracts/code-intel -e codeIntelRuntimeEvidenceManifest",
-				"cue export ./contracts/plugin-bundle/generated/code-intel/contracts/code-intel -e codeIntelRuntimeEvidenceValidationPlan",
-				"cue export ./contracts/plugin-bundle/generated/code-intel/contracts/code-intel -e codeIntelRuntimeEvidenceCompletionReport",
+				"test ! -e contracts/plugin-bundle/generated/code-intel/manifest.json",
+				"test ! -e contracts/plugin-bundle/generated/code-intel/contracts",
+				"test ! -e contracts/plugin-bundle/generated/code-intel/generated",
 			]
 		},
 		{
@@ -428,23 +407,11 @@ codeIntelImplementationRecommendations: #CodeIntelRecommendationManifest & {
 				"contracts/plugin-bundle/code-intel/src/manifest.cue",
 				"contracts/plugin-bundle/code-intel/src/contracts/code-intel/manifest.cue",
 			]
-			observed:       "the installable code-intel payload includes manifest.json, runtime CUE, MCP JSON, LSP JSON, type overlays, and workflow JSON."
-			recommendation: "List the full runtime payload in the generated artifact inventory as evidence-only artifacts, not only the plugin shell scaffold files."
+			observed:       "the installable code-intel payload includes only the scaffold projection files."
+			recommendation: "List only the scaffold projection files in the generated artifact inventory."
 			validation: [
 				"cue export ./contracts/plugin-bundle/code-intel/src -e pluginBundleContract",
 				"cue export ./contracts/plugin-bundle/code-intel/src/contracts/code-intel -e normalizedMaterializedBundleShapeManifest",
-			]
-		},
-		{
-			id:       "preserve-import-refusal-command"
-			priority: "medium"
-			targets: [
-				"contracts/plugin-bundle/generated/code-intel/contracts/code-intel/manifest.cue",
-			]
-			observed:       "generated runtime evidence must remain import-free and must not instantiate source-only bottom-check constructors."
-			recommendation: "Keep the executable rg guard in the generated runtime evidence validation plan alongside the descriptive denies."
-			validation: [
-				"cue export ./contracts/plugin-bundle/generated/code-intel/contracts/code-intel -e codeIntelRuntimeEvidenceValidationPlan",
 			]
 		},
 		{

@@ -120,6 +120,39 @@ _staleLocalCheckPath:        "contracts/stale/checks"
 	validCueIdentifier:   true
 })
 
+#PluginBundleSiblingRootShape: close({
+	bundleID: #PluginBundlePluginName
+
+	root: "contracts/plugin-bundle/\(bundleID)"
+
+	requiredRootEntries: [
+		"checks",
+		"instances",
+		"src",
+		"manifest.cue",
+	]
+
+	requiredSrcEntries: [
+		"checks",
+		"contracts",
+		"generated",
+		"manifest.cue",
+	]
+
+	requiredGeneratedEntries: [
+		".codex-plugin",
+		"hooks",
+		"scripts",
+		"skills",
+	]
+
+	forbiddenRootEntries?: [...#RelativeContractPath]
+	forbiddenGeneratedEntries?: [...#RelativeContractPath]
+
+	sourceAuthorityRoot:     "\(root)/src"
+	generatedProjectionRoot: "contracts/plugin-bundle/generated/\(bundleID)"
+})
+
 #PluginBundleContractProjectionLayout: close({
 	pluginName:   #PluginBundlePluginName
 	contractRoot: "contracts/plugin-bundle/\(pluginName)/src"
