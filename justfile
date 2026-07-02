@@ -101,14 +101,25 @@ contracts-consolidation-guards:
 	test -d contracts/plugin-bundle/generated/agent-context-resolver/hooks
 	test -d contracts/plugin-bundle/generated/code-intel/hooks
 	test -d contracts/plugin-bundle/generated/agent-context-resolver/scripts
-	test -d contracts/plugin-bundle/generated/code-intel/scripts
 	test -d contracts/plugin-bundle/generated/agent-context-resolver/skills
-	test -d contracts/plugin-bundle/generated/code-intel/skills
+	test -f contracts/plugin-bundle/generated/code-intel/SKILL.md
+	test -d contracts/plugin-bundle/generated/code-intel/reference
+	test -f contracts/plugin-bundle/generated/code-intel/reference/lsp/lua-language-server.json
+	test -f contracts/plugin-bundle/generated/code-intel/reference/tools/stylua.json
+	test -f contracts/plugin-bundle/generated/code-intel/reference/tools/selene.json
+	test -f contracts/plugin-bundle/generated/code-intel/reference/tools/luacheck.json
+	test -f contracts/plugin-bundle/generated/code-intel/reference/types/nvim/vim.lua
+	test -f contracts/plugin-bundle/generated/code-intel/reference/types/wezterm/wezterm.lua
+	test -f contracts/plugin-bundle/generated/code-intel/reference/types/wezterm/events.lua
+	test -f contracts/plugin-bundle/generated/code-intel/reference/types/wezterm/config-builder.lua
 	test ! -e contracts/plugin-bundle/code-intel/generated
 	test ! -e contracts/plugin-bundle/generated/code-intel/manifest.json
 	test ! -e contracts/plugin-bundle/generated/code-intel/contracts
 	test ! -e contracts/plugin-bundle/generated/code-intel/generated
-	test -z "$(find ./contracts/plugin-bundle/generated/agent-context-resolver ./contracts/plugin-bundle/generated/code-intel -mindepth 1 -maxdepth 1 ! -name .codex-plugin ! -name hooks ! -name scripts ! -name skills -print)"
+	test ! -e contracts/plugin-bundle/generated/code-intel/scripts
+	test ! -e contracts/plugin-bundle/generated/code-intel/skills
+	test -z "$(find ./contracts/plugin-bundle/generated/agent-context-resolver -mindepth 1 -maxdepth 1 ! -name .codex-plugin ! -name hooks ! -name scripts ! -name skills -print)"
+	test -z "$(find ./contracts/plugin-bundle/generated/code-intel -mindepth 1 -maxdepth 1 ! -name .codex-plugin ! -name hooks ! -name reference ! -name SKILL.md -print)"
 	cue vet ./contracts/plugin-bundle/code-intel
 	cue vet ./contracts/plugin-bundle/code-intel/checks
 	cue vet ./contracts/plugin-bundle/agent-context-resolver

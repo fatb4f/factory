@@ -35,9 +35,22 @@ pluginBundleContract: tmpl.#PluginBundleSrcRootShape & {
 		evidenceOnly: true
 		artifacts: [
 			{path: "contracts/plugin-bundle/generated/code-intel/.codex-plugin/plugin.json", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/skills/SKILL.md", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/SKILL.md", required: true, evidenceOnly: true},
 			{path: "contracts/plugin-bundle/generated/code-intel/hooks/hooks.json", required: true, evidenceOnly: true},
-			{path: "contracts/plugin-bundle/generated/code-intel/scripts/README.md", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/reference/lsp/cue-lsp.json", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/reference/lsp/lua-language-server.json", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/reference/lsp/provider-routing.json", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/reference/tools/lua-ls.json", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/reference/tools/stylua.json", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/reference/tools/selene.json", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/reference/tools/luacheck.json", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/reference/types/nvim/vim.lua", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/reference/types/wezterm/wezterm.lua", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/reference/types/wezterm/events.lua", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/reference/types/wezterm/config-builder.lua", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/reference/workflows/lua-first/workflow.json", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/reference/workflows/lua-first/entrypoints.json", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/reference/workflows/lua-first/diagnostic-map.json", required: true, evidenceOnly: true},
 		]
 	}
 	contractProjection:  pluginBundleContractProjection

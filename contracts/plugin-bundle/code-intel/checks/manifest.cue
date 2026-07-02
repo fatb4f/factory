@@ -7,7 +7,7 @@ import (
 
 codeIntelBundleRootShapeChecks: close({
 	requiredFiles: {
-		rootManifest: "manifest.cue"
+		rootManifest:   "manifest.cue"
 		checksManifest: "checks/manifest.cue"
 	}
 	requiredDirectories: {
@@ -33,17 +33,17 @@ codeIntelBundleRootShapeChecks: close({
 		codeIntelSiblingRootEntries: codeintel.codeIntelSiblingRootShape.requiredRootEntries
 		resolverSiblingRootEntries:  resolver.agentContextResolverSiblingRootShape.requiredRootEntries
 		codeIntelSiblingRootEntries: ["checks", "instances", "src", "manifest.cue"]
-		resolverSiblingRootEntries:  ["checks", "instances", "src", "manifest.cue"]
+		resolverSiblingRootEntries: ["checks", "instances", "src", "manifest.cue"]
 
 		codeIntelSrcEntries: codeintel.codeIntelSiblingRootShape.requiredSrcEntries
 		resolverSrcEntries:  resolver.agentContextResolverSiblingRootShape.requiredSrcEntries
 		codeIntelSrcEntries: ["checks", "contracts", "generated", "manifest.cue"]
-		resolverSrcEntries:  ["checks", "contracts", "generated", "manifest.cue"]
+		resolverSrcEntries: ["checks", "contracts", "generated", "manifest.cue"]
 
 		codeIntelGeneratedEntries: codeintel.codeIntelSiblingRootShape.requiredGeneratedEntries
 		resolverGeneratedEntries:  resolver.agentContextResolverSiblingRootShape.requiredGeneratedEntries
-		codeIntelGeneratedEntries: [".codex-plugin", "hooks", "scripts", "skills"]
-		resolverGeneratedEntries:  [".codex-plugin", "hooks", "scripts", "skills"]
+		codeIntelGeneratedEntries: [".codex-plugin", "hooks", "reference", "SKILL.md"]
+		resolverGeneratedEntries: [".codex-plugin", "hooks", "scripts", "skills"]
 	})
 	noTopLevelGeneratedPayloadUnderCodeIntelRoot: close({
 		codeIntelRoot:          codeintel.codeIntelPluginBundleRootShape.root
@@ -63,12 +63,22 @@ codeIntelBundleRootShapeChecks: close({
 		"test -d contracts/plugin-bundle/code-intel/src/generated",
 		"test -d contracts/plugin-bundle/generated/code-intel/.codex-plugin",
 		"test -d contracts/plugin-bundle/generated/code-intel/hooks",
-		"test -d contracts/plugin-bundle/generated/code-intel/scripts",
-		"test -d contracts/plugin-bundle/generated/code-intel/skills",
+		"test -f contracts/plugin-bundle/generated/code-intel/SKILL.md",
+		"test -d contracts/plugin-bundle/generated/code-intel/reference",
+		"test -f contracts/plugin-bundle/generated/code-intel/reference/lsp/lua-language-server.json",
+		"test -f contracts/plugin-bundle/generated/code-intel/reference/tools/stylua.json",
+		"test -f contracts/plugin-bundle/generated/code-intel/reference/tools/selene.json",
+		"test -f contracts/plugin-bundle/generated/code-intel/reference/tools/luacheck.json",
+		"test -f contracts/plugin-bundle/generated/code-intel/reference/types/nvim/vim.lua",
+		"test -f contracts/plugin-bundle/generated/code-intel/reference/types/wezterm/wezterm.lua",
+		"test -f contracts/plugin-bundle/generated/code-intel/reference/types/wezterm/events.lua",
+		"test -f contracts/plugin-bundle/generated/code-intel/reference/types/wezterm/config-builder.lua",
 		"test ! -e contracts/plugin-bundle/code-intel/generated",
 		"test ! -e contracts/plugin-bundle/generated/code-intel/manifest.json",
 		"test ! -e contracts/plugin-bundle/generated/code-intel/contracts",
 		"test ! -e contracts/plugin-bundle/generated/code-intel/generated",
+		"test ! -e contracts/plugin-bundle/generated/code-intel/skills",
+		"test ! -e contracts/plugin-bundle/generated/code-intel/scripts",
 		"cue vet ./contracts/plugin-bundle/code-intel",
 		"cue vet ./contracts/plugin-bundle/code-intel/checks",
 		"cue export ./contracts/plugin-bundle/code-intel -e codeIntelPluginBundleSourceRoot",

@@ -1,7 +1,5 @@
 package codeintelpluginbundle
 
-import tmpl "github.com/fatb4f/factory/contracts/plugin-bundle/src:pluginbundlesrc"
-
 #NonEmptyString:       string & !=""
 #RelativeContractPath: string & !="" & !~"^/" & !~"(^|/)\\.\\.(/|$)"
 
@@ -45,7 +43,7 @@ import tmpl "github.com/fatb4f/factory/contracts/plugin-bundle/src:pluginbundles
 		"instances/dotfiles",
 		"src",
 	]
-	generatedPayloadRoot: "contracts/plugin-bundle/generated/code-intel"
+	generatedPayloadRoot:              "contracts/plugin-bundle/generated/code-intel"
 	topLevelGeneratedPayloadUnderRoot: false
 })
 
@@ -79,8 +77,27 @@ codeIntelPluginBundleDistributionLock: #PluginBundleDistributionLock & {
 
 codeIntelPluginBundleRootShape: #PluginBundleRootShape
 
-codeIntelSiblingRootShape: tmpl.#PluginBundleSiblingRootShape & {
+codeIntelSiblingRootShape: close({
 	bundleID: "code-intel"
+	root:     "contracts/plugin-bundle/code-intel"
+	requiredRootEntries: [
+		"checks",
+		"instances",
+		"src",
+		"manifest.cue",
+	]
+	requiredSrcEntries: [
+		"checks",
+		"contracts",
+		"generated",
+		"manifest.cue",
+	]
+	requiredGeneratedEntries: [
+		".codex-plugin",
+		"hooks",
+		"reference",
+		"SKILL.md",
+	]
 	forbiddenRootEntries: [
 		"generated",
 	]
@@ -88,5 +105,9 @@ codeIntelSiblingRootShape: tmpl.#PluginBundleSiblingRootShape & {
 		"manifest.json",
 		"contracts",
 		"generated",
+		"scripts",
+		"skills",
 	]
-}
+	sourceAuthorityRoot:     "contracts/plugin-bundle/code-intel/src"
+	generatedProjectionRoot: "contracts/plugin-bundle/generated/code-intel"
+})
