@@ -242,9 +242,9 @@ codeIntelLuaFirstWorkflow: #CodeIntelLuaFirstWorkflow & {
 	id:     "dotfiles-code-intel-lua-first"
 	intent: "Bundle read-only code intelligence for dotfiles Lua work without merging it into the agent-context-resolver bundle."
 	entrypoints: [
-		{id: "nvim-init", language: "lua", path: ".config/nvim/init.lua", domain: "nvim", authority: "dotfiles-source", lspProvider: "lua-language-server", typeOverlay: "nvim-vim-types"},
-		{id: "nvim-lua-modules", language: "lua", path: ".config/nvim/lua", domain: "nvim", authority: "dotfiles-source", lspProvider: "lua-language-server", typeOverlay: "nvim-vim-types"},
-		{id: "wezterm-config", language: "lua", path: ".config/wezterm/wezterm.lua", domain: "wezterm", authority: "dotfiles-source", lspProvider: "lua-language-server", typeOverlay: "wezterm-types"},
+		{id: "nvim-init", language: "lua", path: "chezmoi/private_dot_config/nvim/init.lua", domain: "nvim", authority: "dotfiles-source", lspProvider: "lua-language-server", typeOverlay: "nvim-vim-types"},
+		{id: "nvim-lua-modules", language: "lua", path: "chezmoi/private_dot_config/nvim/lua", domain: "nvim", authority: "dotfiles-source", lspProvider: "lua-language-server", typeOverlay: "nvim-vim-types"},
+		{id: "wezterm-config", language: "lua", path: "chezmoi/private_dot_config/wezterm/wezterm.lua", domain: "wezterm", authority: "dotfiles-source", lspProvider: "lua-language-server", typeOverlay: "wezterm-types"},
 	]
 	providers: [
 		{id: "mcp-tool-registry", kind: "mcp", paths: ["generated/mcp/tool-registry.json", "generated/mcp/context-projection.json"], authority: false, evidenceOnly: true, defaultReadOnly: true},
