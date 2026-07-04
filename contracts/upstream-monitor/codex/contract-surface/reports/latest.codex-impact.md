@@ -8,9 +8,9 @@ signal_id: loop_bootstrap_request
 target_repo: fatb4f/factory
 entrypoint: contracts/upstream-monitor/codex/contract-surface/AGENTS.md
 adapter: github_app
-run_result: terminal_success_new_main_impact_with_validation_caveats
+run_result: terminal_success_no_new_upstream_impact_with_validation_caveats
 channels: main, latest-alpha-cli
-run_id: 20260704T045454Z
+run_id: 20260704T205258Z
 ```
 
 ## Channel resolution
@@ -23,9 +23,9 @@ repo: openai/codex
 ref: main
 head_commit: 98d28aab54ed86714901b6619400598598876dd0
 workspace_version: 0.0.0
-previous_recorded_head: da4c8ca57d40b074bdc1b5b1218851100150c56b
-change_since_previous_evidence: ahead-by-4
-changed_files_since_previous_evidence: 26
+previous_recorded_head: 98d28aab54ed86714901b6619400598598876dd0
+change_since_previous_evidence: identical
+changed_files_since_previous_evidence: 0
 ```
 
 ### latest-alpha-cli
@@ -50,64 +50,31 @@ No critical impacts admitted in this run.
 
 ## High
 
-### openai/codex main: plugin availability protocol field
-
-```text
-impact: contract-update
-class: app-server-protocol-schema
-severity: high
-channel: main
-```
-
-`PluginSummary` now includes an `availability` field backed by the `PluginAvailability` enum. The enum exposes `AVAILABLE` and `DISABLED_BY_ADMIN`, with `ENABLED` accepted as an alias for backend compatibility. This changes the app-server v2 plugin list/read/share response contract surface and generated JSON/TypeScript schemas.
-
-Evidence paths observed in the `main` delta include:
-
-```text
-codex-rs/app-server-protocol/src/protocol/v2/plugin.rs
-codex-rs/app-server-protocol/schema/json/codex_app_server_protocol.schemas.json
-codex-rs/app-server-protocol/schema/json/codex_app_server_protocol.v2.schemas.json
-codex-rs/app-server-protocol/schema/json/v2/PluginInstalledResponse.json
-codex-rs/app-server-protocol/schema/json/v2/PluginListResponse.json
-codex-rs/app-server-protocol/schema/json/v2/PluginReadResponse.json
-codex-rs/app-server-protocol/schema/json/v2/PluginShareListResponse.json
-codex-rs/app-server-protocol/schema/typescript/v2/PluginSummary.ts
-```
+No high impacts admitted in this run.
 
 ## Notes
 
-### Feedback request/auth tag expansion
+### No new main impact
 
 ```text
-impact: telemetry-surface-update
-class: feedback-diagnostics
+impact: no-new-upstream-impact
+class: observation
 severity: note
 channel: main
 ```
 
-The feedback crate now declares structured request/auth feedback tag fields and emits them through a dedicated `feedback_tags` tracing target, including auth header attachment/name, auth mode, retry/recovery flags, request IDs, Cloudflare Ray, auth errors, follow-up status, and auth environment buckets. This is observability-facing and does not mutate local contract authority.
+`main` is identical to the previous recorded evidence head.
 
-### Release-note generator cleanup
-
-```text
-impact: release-process-documentation-cleanup
-class: non-contract-cleanup
-severity: note
-channel: main
-```
-
-`cliff.toml` was removed because upstream release notes are now built from tagged commit messages and the old TypeScript CLI changelog tooling is no longer referenced.
-
-### Installer script/test changes
+### No new alpha impact
 
 ```text
-impact: installer-surface-update
-class: install-script-maintenance
+impact: no-new-upstream-impact
+class: observation
 severity: note
-channel: main
+channel: latest-alpha-cli
 ```
 
-Install script changes and a new `scripts/install/test_install_sh.py` were observed. No local contract mutation was admitted from this evidence.
+`latest-alpha-cli` is identical to the previous recorded evidence head. The branch still diverges from current `main` with only `codex-rs/Cargo.toml` changed, keeping the alpha evidence channel distinct.
 
 ## No local action
 
@@ -147,9 +114,9 @@ contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.r
 Publication admission observed from the previous latest evidence/publication projection:
 
 ```text
-report run path: contracts/upstream-monitor/codex/contract-surface/reports/runs/20260704T045454Z.codex-impact.md
+report run path: contracts/upstream-monitor/codex/contract-surface/reports/runs/20260704T205258Z.codex-impact.md
 report latest path: contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md
-evidence run path: contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260704T045454Z.codex-impact.report.json
+evidence run path: contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260704T205258Z.codex-impact.report.json
 evidence latest path: contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json
 issueTargets: {}
 ```
@@ -167,7 +134,7 @@ Caveat: the loop entrypoint still contains older initial-gate text forbidding up
 ## Control action
 
 ```text
-action: publish-contract-local-main-impact-run-and-latest-report
-reason: upstream main advanced by 4 commits; latest-alpha-cli unchanged but diverged from current main
+action: publish-contract-local-no-impact-run-and-latest-report
+reason: upstream main and latest-alpha-cli are unchanged from previous evidence
 next_state: continue scheduled observation; keep main and latest-alpha-cli evidence channels distinct
 ```
