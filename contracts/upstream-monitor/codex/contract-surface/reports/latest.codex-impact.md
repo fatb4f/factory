@@ -8,9 +8,9 @@ signal_id: loop_bootstrap_request
 target_repo: fatb4f/factory
 entrypoint: contracts/upstream-monitor/codex/contract-surface/AGENTS.md
 adapter: github_app
-run_result: terminal_success_no_new_upstream_impact_with_validation_caveats
+run_result: terminal_success_new_main_impact_with_validation_caveats
 channels: main, latest-alpha-cli
-run_id: 20260703T165521Z
+run_id: 20260704T045454Z
 ```
 
 ## Channel resolution
@@ -21,11 +21,11 @@ run_id: 20260703T165521Z
 status: resolved
 repo: openai/codex
 ref: main
-head_commit: da4c8ca57d40b074bdc1b5b1218851100150c56b
+head_commit: 98d28aab54ed86714901b6619400598598876dd0
 workspace_version: 0.0.0
 previous_recorded_head: da4c8ca57d40b074bdc1b5b1218851100150c56b
-change_since_previous_evidence: identical
-changed_files_since_previous_evidence: 0
+change_since_previous_evidence: ahead-by-4
+changed_files_since_previous_evidence: 26
 ```
 
 ### latest-alpha-cli
@@ -35,8 +35,8 @@ status: resolved
 repo: openai/codex
 ref: latest-alpha-cli
 head_commit: 5969673277a19410d0dd84fc607d65095703b90d
-relation_to_main: not recomputed in this no-new-impact run; prior relation was ahead-by-1; behind-by-0
-changed_files_from_current_main: not recomputed in this no-new-impact run; prior relation changed only codex-rs/Cargo.toml
+relation_to_main: diverged; ahead-by-1; behind-by-4
+changed_files_from_current_main: codex-rs/Cargo.toml
 workspace_version: 0.143.0-alpha.35
 channel_relation: distinct-from-main
 change_since_previous_evidence: identical
@@ -50,15 +50,64 @@ No critical impacts admitted in this run.
 
 ## High
 
-No high impacts admitted in this run.
+### openai/codex main: plugin availability protocol field
+
+```text
+impact: contract-update
+class: app-server-protocol-schema
+severity: high
+channel: main
+```
+
+`PluginSummary` now includes an `availability` field backed by the `PluginAvailability` enum. The enum exposes `AVAILABLE` and `DISABLED_BY_ADMIN`, with `ENABLED` accepted as an alias for backend compatibility. This changes the app-server v2 plugin list/read/share response contract surface and generated JSON/TypeScript schemas.
+
+Evidence paths observed in the `main` delta include:
+
+```text
+codex-rs/app-server-protocol/src/protocol/v2/plugin.rs
+codex-rs/app-server-protocol/schema/json/codex_app_server_protocol.schemas.json
+codex-rs/app-server-protocol/schema/json/codex_app_server_protocol.v2.schemas.json
+codex-rs/app-server-protocol/schema/json/v2/PluginInstalledResponse.json
+codex-rs/app-server-protocol/schema/json/v2/PluginListResponse.json
+codex-rs/app-server-protocol/schema/json/v2/PluginReadResponse.json
+codex-rs/app-server-protocol/schema/json/v2/PluginShareListResponse.json
+codex-rs/app-server-protocol/schema/typescript/v2/PluginSummary.ts
+```
 
 ## Notes
 
-No new upstream changes were observed relative to the previous latest evidence snapshot.
+### Feedback request/auth tag expansion
 
-The `main` channel remains at `da4c8ca57d40b074bdc1b5b1218851100150c56b`.
+```text
+impact: telemetry-surface-update
+class: feedback-diagnostics
+severity: note
+channel: main
+```
 
-The `latest-alpha-cli` channel remains at `5969673277a19410d0dd84fc607d65095703b90d`, with workspace version `0.143.0-alpha.35`.
+The feedback crate now declares structured request/auth feedback tag fields and emits them through a dedicated `feedback_tags` tracing target, including auth header attachment/name, auth mode, retry/recovery flags, request IDs, Cloudflare Ray, auth errors, follow-up status, and auth environment buckets. This is observability-facing and does not mutate local contract authority.
+
+### Release-note generator cleanup
+
+```text
+impact: release-process-documentation-cleanup
+class: non-contract-cleanup
+severity: note
+channel: main
+```
+
+`cliff.toml` was removed because upstream release notes are now built from tagged commit messages and the old TypeScript CLI changelog tooling is no longer referenced.
+
+### Installer script/test changes
+
+```text
+impact: installer-surface-update
+class: install-script-maintenance
+severity: note
+channel: main
+```
+
+Install script changes and a new `scripts/install/test_install_sh.py` were observed. No local contract mutation was admitted from this evidence.
 
 ## No local action
 
@@ -98,9 +147,9 @@ contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.r
 Publication admission observed from the previous latest evidence/publication projection:
 
 ```text
-report run path: contracts/upstream-monitor/codex/contract-surface/reports/runs/20260703T165521Z.codex-impact.md
+report run path: contracts/upstream-monitor/codex/contract-surface/reports/runs/20260704T045454Z.codex-impact.md
 report latest path: contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md
-evidence run path: contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260703T165521Z.codex-impact.report.json
+evidence run path: contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260704T045454Z.codex-impact.report.json
 evidence latest path: contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json
 issueTargets: {}
 ```
@@ -111,14 +160,14 @@ Expected local validation remains: vet the upstream-monitor CUE package, export 
 
 Forbidden-attractor GitHub code search for the configured terms returned no matches in `fatb4f/factory` during this run.
 
-Caveat: direct GitHub content reads for `contracts/upstream-monitor/codex/contract-surface/publication.cue`, `public.cue`, and `report.cue` were previously unresolved via the GitHub content API. This report therefore relies on the prior latest evidence/publication projection for admitted paths and issue target shape.
+Caveat: direct GitHub content reads for `contracts/upstream-monitor/codex/contract-surface/publication.cue`, `public.cue`, and `report.cue` remain unresolved via the GitHub content API. This report therefore relies on the prior latest evidence/publication projection for admitted paths and issue target shape.
 
 Caveat: the loop entrypoint still contains older initial-gate text forbidding upstream inspection/report creation before transition closure proof. This run proceeded under the loop-local public CUE scheduled task and publication surface recorded by prior latest evidence.
 
 ## Control action
 
 ```text
-action: publish-contract-local-no-new-impact-run-and-latest-report
-reason: upstream main and latest-alpha-cli are unchanged from the previous recorded evidence
+action: publish-contract-local-main-impact-run-and-latest-report
+reason: upstream main advanced by 4 commits; latest-alpha-cli unchanged but diverged from current main
 next_state: continue scheduled observation; keep main and latest-alpha-cli evidence channels distinct
 ```
