@@ -6,16 +6,15 @@
   "target_repo": "fatb4f/factory",
   "entrypoint": "contracts/upstream-monitor/codex/contract-surface/AGENTS.md",
   "adapter": "github_app",
-  "run_id": "20260704T045454Z",
+  "run_id": "20260704T205258Z",
   "publication": {
-    "report_run_path": "contracts/upstream-monitor/codex/contract-surface/reports/runs/20260704T045454Z.codex-impact.md",
+    "report_run_path": "contracts/upstream-monitor/codex/contract-surface/reports/runs/20260704T205258Z.codex-impact.md",
     "report_latest_path": "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md",
-    "evidence_run_path": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260704T045454Z.codex-impact.report.json",
+    "evidence_run_path": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260704T205258Z.codex-impact.report.json",
     "evidence_latest_path": "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json",
     "issue_targets": {},
-    "report_run_commit": "ba165b23b007c31add732fb79ab0353868b894d5",
-    "evidence_run_commit": "ef2cd6da71d88a41fa97e5ccf9d2cc2a1d8ed1de",
-    "report_latest_commit": "551c59f0f7b2e84b286a97f4c732ea014b08448e"
+    "evidence_run_commit": "39fb60d8479ad8ccf4b393f4edc1b1adcb24c0d6",
+    "report_run_commit": "61959b36d6189d3e4fc8af0a88173dcaaea58b4e"
   },
   "authority_reads": {
     "agents": [
@@ -48,11 +47,11 @@
       "status": "resolved",
       "head_commit": "98d28aab54ed86714901b6619400598598876dd0",
       "workspace_version": "0.0.0",
-      "previous_recorded_head": "da4c8ca57d40b074bdc1b5b1218851100150c56b",
-      "change_since_previous_evidence": "ahead-by-4",
-      "changed_files_since_previous_evidence": 26,
-      "compare_status": "ahead",
-      "ahead_by": 4,
+      "previous_recorded_head": "98d28aab54ed86714901b6619400598598876dd0",
+      "change_since_previous_evidence": "identical",
+      "changed_files_since_previous_evidence": 0,
+      "compare_status": "identical",
+      "ahead_by": 0,
       "behind_by": 0
     },
     "latest-alpha-cli": {
@@ -64,58 +63,20 @@
       "changed_files_from_current_main": ["codex-rs/Cargo.toml"],
       "workspace_version": "0.143.0-alpha.35",
       "relation": "distinct-channel",
+      "previous_recorded_head": "5969673277a19410d0dd84fc607d65095703b90d",
       "change_since_previous_evidence": "identical"
     }
   },
   "upstream_items": {
     "critical": [],
-    "high": [
-      {
-        "id": "openai-codex-main-plugin-availability-protocol-field",
-        "channels": ["main"],
-        "impact": "contract-update",
-        "classes": ["app-server-protocol-schema", "plugin-summary", "generated-schema"],
-        "severity": "high",
-        "reason": "PluginSummary now exposes availability state via PluginAvailability, changing app-server v2 plugin response schemas and TypeScript projections.",
-        "evidence": {
-          "head_commit": "98d28aab54ed86714901b6619400598598876dd0",
-          "files": [
-            "codex-rs/app-server-protocol/src/protocol/v2/plugin.rs",
-            "codex-rs/app-server-protocol/schema/json/codex_app_server_protocol.schemas.json",
-            "codex-rs/app-server-protocol/schema/json/codex_app_server_protocol.v2.schemas.json",
-            "codex-rs/app-server-protocol/schema/json/v2/PluginInstalledResponse.json",
-            "codex-rs/app-server-protocol/schema/json/v2/PluginListResponse.json",
-            "codex-rs/app-server-protocol/schema/json/v2/PluginReadResponse.json",
-            "codex-rs/app-server-protocol/schema/json/v2/PluginShareListResponse.json",
-            "codex-rs/app-server-protocol/schema/typescript/v2/PluginSummary.ts"
-          ]
-        }
-      }
-    ],
+    "high": [],
     "notes": [
       {
-        "id": "openai-codex-main-feedback-request-auth-tags",
+        "id": "no-new-main-impact",
         "channels": ["main"],
-        "impact": "telemetry-surface-update",
-        "classes": ["feedback-diagnostics", "auth-telemetry"],
-        "severity": "note",
-        "reason": "Feedback request/auth/environment tags are emitted through a dedicated feedback_tags tracing target."
-      },
-      {
-        "id": "openai-codex-main-release-note-generator-cleanup",
-        "channels": ["main"],
-        "impact": "release-process-documentation-cleanup",
-        "classes": ["non-contract-cleanup"],
-        "severity": "note",
-        "reason": "cliff.toml was removed because it no longer represents the upstream release-note process."
-      },
-      {
-        "id": "openai-codex-main-installer-script-tests",
-        "channels": ["main"],
-        "impact": "installer-surface-update",
-        "classes": ["install-script-maintenance"],
-        "severity": "note",
-        "reason": "Install script changes and a new shell installer test were observed but no local contract mutation was admitted."
+        "impact": "no-new-upstream-impact",
+        "classes": ["observation", "unchanged"],
+        "reason": "main is identical to the previous recorded evidence head."
       },
       {
         "id": "no-new-alpha-impact",
@@ -135,8 +96,8 @@
     ]
   },
   "baseline_reference": {
-    "previous_latest_evidence_run_id": "20260703T165521Z",
-    "previous_main_head": "da4c8ca57d40b074bdc1b5b1218851100150c56b",
+    "previous_latest_evidence_run_id": "20260704T045454Z",
+    "previous_main_head": "98d28aab54ed86714901b6619400598598876dd0",
     "previous_alpha_head": "5969673277a19410d0dd84fc607d65095703b90d",
     "previous_alpha_workspace_version": "0.143.0-alpha.35"
   },
