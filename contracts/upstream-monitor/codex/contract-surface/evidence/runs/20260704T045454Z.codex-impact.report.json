@@ -1,0 +1,148 @@
+{
+  "apiVersion": "factory.upstream-monitor.codex/v0",
+  "kind": "CodexImpactReportEvidence",
+  "loop": "codex-contract-surface",
+  "signal_id": "loop_bootstrap_request",
+  "target_repo": "fatb4f/factory",
+  "entrypoint": "contracts/upstream-monitor/codex/contract-surface/AGENTS.md",
+  "adapter": "github_app",
+  "run_id": "20260704T045454Z",
+  "publication": {
+    "report_run_path": "contracts/upstream-monitor/codex/contract-surface/reports/runs/20260704T045454Z.codex-impact.md",
+    "report_latest_path": "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md",
+    "evidence_run_path": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260704T045454Z.codex-impact.report.json",
+    "evidence_latest_path": "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json",
+    "issue_targets": {},
+    "report_run_commit": "ba165b23b007c31add732fb79ab0353868b894d5"
+  },
+  "authority_reads": {
+    "agents": [
+      "contracts/upstream-monitor/AGENTS.md",
+      "contracts/upstream-monitor/codex/AGENTS.md",
+      "contracts/upstream-monitor/codex/contract-surface/AGENTS.md"
+    ],
+    "cue": [
+      "contracts/upstream-monitor/codex/contract-surface/publication.cue",
+      "contracts/upstream-monitor/codex/contract-surface/public.cue",
+      "contracts/upstream-monitor/codex/contract-surface/report.cue"
+    ],
+    "publication_admission": {
+      "issueTargets": {},
+      "report_run_pattern": "contracts/upstream-monitor/codex/contract-surface/reports/runs/<run_id>.codex-impact.md",
+      "report_latest_path": "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md",
+      "evidence_run_pattern": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/<run_id>.codex-impact.report.json",
+      "evidence_latest_path": "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json"
+    },
+    "cue_fetch_status": {
+      "publication.cue": "unresolved through GitHub content API in current/prior runs",
+      "public.cue": "unresolved through GitHub content API in current/prior runs",
+      "report.cue": "unresolved through GitHub content API in current/prior runs"
+    }
+  },
+  "channels": {
+    "main": {
+      "repo": "openai/codex",
+      "ref": "main",
+      "status": "resolved",
+      "head_commit": "98d28aab54ed86714901b6619400598598876dd0",
+      "workspace_version": "0.0.0",
+      "previous_recorded_head": "da4c8ca57d40b074bdc1b5b1218851100150c56b",
+      "change_since_previous_evidence": "ahead-by-4",
+      "changed_files_since_previous_evidence": 26,
+      "compare_status": "ahead",
+      "ahead_by": 4,
+      "behind_by": 0
+    },
+    "latest-alpha-cli": {
+      "repo": "openai/codex",
+      "ref": "latest-alpha-cli",
+      "status": "resolved",
+      "head_commit": "5969673277a19410d0dd84fc607d65095703b90d",
+      "relation_to_main": "diverged; ahead-by-1; behind-by-4",
+      "changed_files_from_current_main": ["codex-rs/Cargo.toml"],
+      "workspace_version": "0.143.0-alpha.35",
+      "relation": "distinct-channel",
+      "change_since_previous_evidence": "identical"
+    }
+  },
+  "upstream_items": {
+    "critical": [],
+    "high": [
+      {
+        "id": "openai-codex-main-plugin-availability-protocol-field",
+        "channels": ["main"],
+        "impact": "contract-update",
+        "classes": ["app-server-protocol-schema", "plugin-summary", "generated-schema"],
+        "severity": "high",
+        "reason": "PluginSummary now exposes availability state via PluginAvailability, changing app-server v2 plugin response schemas and TypeScript projections.",
+        "evidence": {
+          "head_commit": "98d28aab54ed86714901b6619400598598876dd0",
+          "files": [
+            "codex-rs/app-server-protocol/src/protocol/v2/plugin.rs",
+            "codex-rs/app-server-protocol/schema/json/codex_app_server_protocol.schemas.json",
+            "codex-rs/app-server-protocol/schema/json/codex_app_server_protocol.v2.schemas.json",
+            "codex-rs/app-server-protocol/schema/json/v2/PluginInstalledResponse.json",
+            "codex-rs/app-server-protocol/schema/json/v2/PluginListResponse.json",
+            "codex-rs/app-server-protocol/schema/json/v2/PluginReadResponse.json",
+            "codex-rs/app-server-protocol/schema/json/v2/PluginShareListResponse.json",
+            "codex-rs/app-server-protocol/schema/typescript/v2/PluginSummary.ts"
+          ]
+        }
+      }
+    ],
+    "notes": [
+      {
+        "id": "openai-codex-main-feedback-request-auth-tags",
+        "channels": ["main"],
+        "impact": "telemetry-surface-update",
+        "classes": ["feedback-diagnostics", "auth-telemetry"],
+        "severity": "note",
+        "reason": "Feedback request/auth/environment tags are emitted through a dedicated feedback_tags tracing target."
+      },
+      {
+        "id": "openai-codex-main-release-note-generator-cleanup",
+        "channels": ["main"],
+        "impact": "release-process-documentation-cleanup",
+        "classes": ["non-contract-cleanup"],
+        "severity": "note",
+        "reason": "cliff.toml was removed because it no longer represents the upstream release-note process."
+      },
+      {
+        "id": "openai-codex-main-installer-script-tests",
+        "channels": ["main"],
+        "impact": "installer-surface-update",
+        "classes": ["install-script-maintenance"],
+        "severity": "note",
+        "reason": "Install script changes and a new shell installer test were observed but no local contract mutation was admitted."
+      },
+      {
+        "id": "no-new-alpha-impact",
+        "channels": ["latest-alpha-cli"],
+        "impact": "no-new-upstream-impact",
+        "classes": ["observation", "distinct-evidence-channel", "unchanged"],
+        "reason": "latest-alpha-cli is identical to the previous recorded evidence head and remains a distinct release channel."
+      }
+    ],
+    "noLocalAction": [
+      {
+        "id": "no-issue-targets",
+        "channels": ["main", "latest-alpha-cli"],
+        "impact": "no-issue-update",
+        "reason": "upstreamCodexPublicationPlan.issueTargets is empty."
+      }
+    ]
+  },
+  "baseline_reference": {
+    "previous_latest_evidence_run_id": "20260703T165521Z",
+    "previous_main_head": "da4c8ca57d40b074bdc1b5b1218851100150c56b",
+    "previous_alpha_head": "5969673277a19410d0dd84fc607d65095703b90d",
+    "previous_alpha_workspace_version": "0.143.0-alpha.35"
+  },
+  "validation_notes": {
+    "cue_executed": false,
+    "reason": "GitHub App adapter exposes content read/write operations, not a repo shell.",
+    "issue_updates": "none; public upstreamCodexPublicationPlan.issueTargets is empty",
+    "forbidden_attractor_search": "GitHub code search for configured terms returned no matches.",
+    "caveat": "contract-surface AGENTS initial-gate text still conflicts with the newer admitted publication task prompt; publication admission was taken from prior latest evidence/publication projection. Direct reads for publication.cue, public.cue, and report.cue remain unresolved through the GitHub content API."
+  }
+}
