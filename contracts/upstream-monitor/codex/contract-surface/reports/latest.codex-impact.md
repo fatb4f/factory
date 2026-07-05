@@ -8,9 +8,9 @@ signal_id: loop_bootstrap_request
 target_repo: fatb4f/factory
 entrypoint: contracts/upstream-monitor/codex/contract-surface/AGENTS.md
 adapter: github_app
-run_result: terminal_success_new_admitted_upstream_impact_with_validation_caveats
+run_result: terminal_success_no_new_upstream_impact_with_validation_caveats
 channels: main, latest-alpha-cli
-run_id: 20260705T045440Z
+run_id: 20260705T165501Z
 ```
 
 ## Channel resolution
@@ -23,9 +23,8 @@ repo: openai/codex
 ref: main
 head_commit: be33f80bc65159c094ecd06bf155afa3061ce23d
 workspace_version: 0.0.0
-previous_recorded_head: 98d28aab54ed86714901b6619400598598876dd0
-change_since_previous_evidence: ahead
-changed_files_since_previous_evidence: 5
+previous_recorded_head: be33f80bc65159c094ecd06bf155afa3061ce23d
+change_since_previous_evidence: unchanged
 ```
 
 ### latest-alpha-cli
@@ -35,11 +34,11 @@ status: resolved-content; exact head sha unresolved through connector response
 repo: openai/codex
 ref: latest-alpha-cli
 head_commit: unresolved
-relation_to_main: ahead-by-1; behind-by-0 from current main by connector compare
+relation_to_main: ahead-by-1; behind-by-0 from prior/latest projection
 changed_files_from_current_main: codex-rs/Cargo.toml
 workspace_version: 0.143.0-alpha.36
 channel_relation: distinct-from-main
-change_since_previous_evidence: advanced by branch content/version evidence; exact ref sha unresolved
+change_since_previous_evidence: unchanged by concrete branch-content version evidence; exact ref sha unresolved
 ```
 
 `latest-alpha-cli` remains a separate upstream evidence channel and is not collapsed into `main`.
@@ -50,43 +49,7 @@ No critical impacts admitted in this run.
 
 ## High
 
-### Safety-buffering response-event contract changed
-
-```text
-impact: safety-buffering response-event contract changed
-class: contract-update, stream-event, safety-buffering, ui-routing
-severity: high
-channel: main, latest-alpha-cli
-evidence: openai/codex@be33f80bc65159c094ecd06bf155afa3061ce23d
-upstream: [codex] Read buffering metadata from response events (#31064)
-```
-
-`SafetyBuffering.faster_model` is no longer skipped during serialization. Response-event `safety_buffering` payloads now control buffering UI visibility and faster-model selection before header fallback. Header metadata remains a compatibility fallback when the event omits `faster_model`.
-
-Changed surfaces:
-
-```text
-codex-rs/codex-api/src/common.rs
-codex-rs/codex-api/src/endpoint/responses_websocket.rs
-codex-rs/codex-api/src/safety_buffering.rs
-codex-rs/codex-api/src/sse/responses.rs
-codex-rs/core/tests/suite/safety_buffering.rs
-```
-
-Local contract implication: any contract/projection that models `SafetyBuffering`, stream event payloads, or buffering UI/faster-model routing should treat event payload fields as primary and response headers as fallback metadata.
-
-### Alpha release version advanced
-
-```text
-impact: alpha release version advanced
-class: release-channel, distinct-evidence-channel
-severity: high
-channel: latest-alpha-cli
-evidence: latest-alpha-cli content at codex-rs/Cargo.toml
-workspace_version: 0.143.0-alpha.36
-```
-
-`latest-alpha-cli` advanced from `0.143.0-alpha.35` to `0.143.0-alpha.36`. It remains distinct from `main`, with only `codex-rs/Cargo.toml` changed relative to current `main`. The exact branch head SHA was not exposed by the connector response and is recorded as unresolved rather than inferred.
+No high impacts admitted in this run.
 
 ## Notes
 
@@ -102,12 +65,7 @@ No local contract mutation was performed; only admitted report/evidence projecti
 
 ## Suggested local targets
 
-```text
-contracts/upstream-monitor/codex/contract-surface/report.cue
-contracts/upstream-monitor/codex/contract-surface/publication.cue
-contracts/upstream-monitor/codex/contract-surface/public.cue
-contracts/upstream-monitor/codex/contract-surface/AGENTS.md
-```
+No new local contract targets were suggested because there was no new admitted upstream impact.
 
 ## Issue updates
 
@@ -130,9 +88,9 @@ contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.r
 Publication admission observed from the previous latest evidence/publication projection:
 
 ```text
-report run path: contracts/upstream-monitor/codex/contract-surface/reports/runs/20260705T045440Z.codex-impact.md
+report run path: contracts/upstream-monitor/codex/contract-surface/reports/runs/20260705T165501Z.codex-impact.md
 report latest path: contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md
-evidence run path: contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260705T045440Z.codex-impact.report.json
+evidence run path: contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260705T165501Z.codex-impact.report.json
 evidence latest path: contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json
 issueTargets: {}
 ```
@@ -141,7 +99,7 @@ CUE commands were not executed in-repo by this run because the GitHub App adapte
 
 Expected local validation remains: vet the upstream-monitor CUE package, export `upstreamCodexImpactReportTemplate`, export `upstreamCodexPublicationPlan`, export `upstreamCodexScheduledTaskPrompt`, and run the configured forbidden-attractor text guard.
 
-Forbidden-attractor GitHub code search for the configured terms returned no matches in `fatb4f/factory` during this run.
+Forbidden-attractor GitHub code search for configured/known terms returned no matches in `fatb4f/factory` during this run.
 
 Caveat: direct GitHub content reads for `contracts/upstream-monitor/codex/contract-surface/publication.cue`, `public.cue`, and `report.cue` remain unresolved via the GitHub content API. This report therefore relies on the prior latest evidence/publication projection for admitted paths and issue target shape.
 
@@ -153,6 +111,6 @@ Caveat: `latest-alpha-cli` exact branch head SHA was not exposed by connector re
 
 ```text
 action: publish-contract-local-impact-run-and-latest-report
-reason: upstream main advanced and latest-alpha-cli version advanced while remaining a distinct evidence channel
+reason: no new upstream impact; recurring observation run still admitted report/evidence publication
 next_state: continue scheduled observation; keep main and latest-alpha-cli evidence channels distinct
 ```
