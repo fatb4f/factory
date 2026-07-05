@@ -14,7 +14,7 @@
     "evidence_latest_path": "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json",
     "issue_targets": {},
     "evidence_run_commit": "65bc9f9cdbb0e81a5abd48312ecba279a6a00fe1",
-    "report_run_commit": null
+    "report_run_commit": "fc3630bc17d47f0899fb8584ac0ed0fe9379f0ce"
   },
   "authority_reads": {
     "agents": [
