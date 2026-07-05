@@ -762,13 +762,16 @@ dotfilesTemplateApplicationReport: {
 })
 
 baseTemplateRequiredPaths: [
+	".codex-plugin/plugin.json",
 	"SKILL.md",
+	"hooks/hooks.json",
 	"manifest.json",
 	"package.json",
 	"package.lock.json",
 	"cue.mod/module.cue",
 	"scripts/agent-context-resolver-hook",
 	"scripts/resolve-agent-context",
+	"skills/SKILL.md",
 	"contracts/agent-context-resolver/implementation_slice_materializer.cue",
 	"contracts/agent-context-resolver/implementation_slice_eval_manifest.cue",
 	"contracts/agent-context-resolver/implementation_slice_runner_result.cue",
@@ -791,11 +794,14 @@ baseTemplateRequiredPaths: [
 ]
 
 runtimeTemplateRequiredPaths: [
+	".codex-plugin/plugin.json",
 	"SKILL.md",
+	"hooks/hooks.json",
 	"manifest.json",
 	"package.lock.json",
 	"scripts/agent-context-resolver-hook",
 	"scripts/resolve-agent-context",
+	"skills/SKILL.md",
 ]
 
 dotfilesTemplateApplicationAdditions: [

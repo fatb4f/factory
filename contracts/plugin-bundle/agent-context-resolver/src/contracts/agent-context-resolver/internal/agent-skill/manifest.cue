@@ -6,6 +6,8 @@ package agentskill
 #SkillName: string & =~"^[a-z0-9]+(?:-[a-z0-9]+)*$"
 
 #RelativePath: string & !="" & !~"^/" & !~"(^|/)\\.\\.(/|$)"
+#SkillInstallRoot: ".codex/skills/\(#SkillName)" | ".codex/plugins/agent-context-resolver/skills"
+#ScriptInstallPath: string & =~"^\\.codex/(skills/[a-z0-9-]+|plugins/agent-context-resolver)/scripts/[a-z0-9-]+$"
 
 #ProjectionProvenance: close({
 	projection_id: #ProjectionID
@@ -16,13 +18,13 @@ package agentskill
 #SkillMetadata: close({
 	name:        #SkillName
 	description: string & !=""
-	path:        ".codex/skills/\(name)/SKILL.md"
+	path:        #RelativePath & ("\(#SkillInstallRoot)/SKILL.md")
 	provenance:  #ProjectionProvenance
 })
 
 #HookCommand: close({
 	type:          "command"
-	command:       #RelativePath & =~"^\\.codex/skills/[a-z0-9-]+/scripts/[a-z0-9-]+$"
+	command:       #RelativePath & #ScriptInstallPath
 	timeout:       int & >0
 	statusMessage: string & !=""
 })
@@ -36,7 +38,7 @@ package agentskill
 })
 
 #ScriptAsset: close({
-	path:       #RelativePath & =~"^\\.codex/skills/[a-z0-9-]+/scripts/[a-z0-9-]+$" & !~"(^|/)bin/"
+	path:       #RelativePath & #ScriptInstallPath & !~"(^|/)bin/"
 	content:    string & =~"^#!/bin/sh\n" & !~"/home/_404/src/contract\\.cuemod" & !~"/[^ \t\n]*/dotfiles/bin"
 	executable: true
 	provenance: #ProjectionProvenance

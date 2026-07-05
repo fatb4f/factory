@@ -108,26 +108,31 @@ _negativeBottomChecks: {
 pluginBundleRoot:         ".codex/plugins/code-intel"
 pluginBundleTemplateRoot: "contracts/plugin-bundle/src"
 pluginBundleContractRoot: "contracts/plugin-bundle/code-intel/instances/dotfiles"
-pluginBundleSourceRoot:   "\(pluginBundleContractRoot)/src"
+pluginBundleSourceRoot:   "contracts/plugin-bundle/code-intel/src"
 pluginBundlePackage:      "codeintelpluginbundle"
 
 codeIntelRequiredPaths: [
+	".codex-plugin/plugin.json",
 	"SKILL.md",
-	"manifest.json",
-	"generated/mcp/server-manifest.json",
-	"generated/mcp/tool-registry.json",
-	"generated/mcp/context-projection.json",
-	"generated/lsp/cue-lsp.json",
-	"generated/lsp/lua-language-server.json",
-	"generated/lsp/provider-routing.json",
-	"generated/types/wezterm/wezterm.lua",
-	"generated/types/wezterm/events.lua",
-	"generated/types/wezterm/config-builder.lua",
-	"generated/types/nvim/vim.lua",
-	"generated/workflows/lua-first/workflow.json",
-	"generated/workflows/lua-first/entrypoints.json",
-	"generated/workflows/lua-first/diagnostic-map.json",
-	"contracts/code-intel/manifest.cue",
+	"hooks/hooks.json",
+	"reference/mcp/server-manifest.json",
+	"reference/mcp/tool-registry.json",
+	"reference/mcp/context-projection.json",
+	"reference/lsp/cue-lsp.json",
+	"reference/lsp/lua-language-server.json",
+	"reference/lsp/provider-routing.json",
+	"reference/tools/lua-ls.json",
+	"reference/tools/stylua.json",
+	"reference/tools/selene.json",
+	"reference/tools/luacheck.json",
+	"reference/types/wezterm/wezterm.lua",
+	"reference/types/wezterm/events.lua",
+	"reference/types/wezterm/config-builder.lua",
+	"reference/types/nvim/vim.lua",
+	"reference/workflows/lua-first/workflow.json",
+	"reference/workflows/lua-first/entrypoints.json",
+	"reference/workflows/lua-first/diagnostic-map.json",
+	"skills/SKILL.md",
 ]
 
 codeIntelSourceInventory: [
@@ -247,16 +252,16 @@ codeIntelLuaFirstWorkflow: #CodeIntelLuaFirstWorkflow & {
 		{id: "wezterm-config", language: "lua", path: "chezmoi/private_dot_config/wezterm/wezterm.lua", domain: "wezterm", authority: "dotfiles-source", lspProvider: "lua-language-server", typeOverlay: "wezterm-types"},
 	]
 	providers: [
-		{id: "mcp-tool-registry", kind: "mcp", paths: ["generated/mcp/tool-registry.json", "generated/mcp/context-projection.json"], authority: false, evidenceOnly: true, defaultReadOnly: true},
-		{id: "cue-lsp", kind: "lsp", paths: ["generated/lsp/cue-lsp.json"], authority: false, evidenceOnly: true, defaultReadOnly: true},
-		{id: "lua-language-server", kind: "lsp", paths: ["generated/lsp/lua-language-server.json", "generated/lsp/provider-routing.json"], authority: false, evidenceOnly: true, defaultReadOnly: true},
-		{id: "wezterm-types", kind: "types", paths: ["generated/types/wezterm/wezterm.lua", "generated/types/wezterm/events.lua", "generated/types/wezterm/config-builder.lua"], authority: false, evidenceOnly: true, defaultReadOnly: true},
-		{id: "nvim-vim-types", kind: "types", paths: ["generated/types/nvim/vim.lua"], authority: false, evidenceOnly: true, defaultReadOnly: true},
+		{id: "mcp-tool-registry", kind: "mcp", paths: ["reference/mcp/tool-registry.json", "reference/mcp/context-projection.json"], authority: false, evidenceOnly: true, defaultReadOnly: true},
+		{id: "cue-lsp", kind: "lsp", paths: ["reference/lsp/cue-lsp.json"], authority: false, evidenceOnly: true, defaultReadOnly: true},
+		{id: "lua-language-server", kind: "lsp", paths: ["reference/lsp/lua-language-server.json", "reference/lsp/provider-routing.json"], authority: false, evidenceOnly: true, defaultReadOnly: true},
+		{id: "wezterm-types", kind: "types", paths: ["reference/types/wezterm/wezterm.lua", "reference/types/wezterm/events.lua", "reference/types/wezterm/config-builder.lua"], authority: false, evidenceOnly: true, defaultReadOnly: true},
+		{id: "nvim-vim-types", kind: "types", paths: ["reference/types/nvim/vim.lua"], authority: false, evidenceOnly: true, defaultReadOnly: true},
 	]
 	steps: [
 		{order: 1, id: "collect-lua-entrypoints", goal: "Resolve Lua entrypoints before generic dotfiles paths.", inputs: ["dotfiles source paths"], outputs: ["ordered Lua entrypoint set"], authority: "dotfiles-source"},
-		{order: 2, id: "load-type-overlays", goal: "Attach Neovim and WezTerm type overlays as read-only evidence.", inputs: ["generated/types/nvim/vim.lua", "generated/types/wezterm/wezterm.lua", "generated/types/wezterm/events.lua", "generated/types/wezterm/config-builder.lua"], outputs: ["Lua library overlay"], authority: "evidence-only"},
-		{order: 3, id: "project-diagnostics", goal: "Project Lua and CUE diagnostics as evidence, not mutation authority.", inputs: ["generated/lsp/lua-language-server.json", "generated/lsp/cue-lsp.json"], outputs: ["diagnostic-map"], authority: "evidence-only"},
+		{order: 2, id: "load-type-overlays", goal: "Attach Neovim and WezTerm type overlays as read-only evidence.", inputs: ["reference/types/nvim/vim.lua", "reference/types/wezterm/wezterm.lua", "reference/types/wezterm/events.lua", "reference/types/wezterm/config-builder.lua"], outputs: ["Lua library overlay"], authority: "evidence-only"},
+		{order: 3, id: "project-diagnostics", goal: "Project Lua and CUE diagnostics as evidence, not mutation authority.", inputs: ["reference/lsp/lua-language-server.json", "reference/lsp/cue-lsp.json"], outputs: ["diagnostic-map"], authority: "evidence-only"},
 	]
 	generatedArtifacts: codeIntelRequiredPaths
 	authority: {
@@ -306,11 +311,12 @@ projectionComponents: [
 	{id: "code-intel-source-tree", path: pluginBundleSourceRoot, role: "package-source", authority: true},
 	{id: "plugin-bundle-template", path: pluginBundleTemplateRoot, role: "contract", authority: true},
 	{id: "code-intel-materialized-root", path: pluginBundleRoot, role: "generated-package", generated: true, authority: false},
-	{id: "bundled-mcp-surfaces", path: "\(pluginBundleRoot)/generated/mcp", role: "package-content", generated: true, authority: false},
-	{id: "bundled-lsp-surfaces", path: "\(pluginBundleRoot)/generated/lsp", role: "package-content", generated: true, authority: false},
-	{id: "bundled-wezterm-types", path: "\(pluginBundleRoot)/generated/types/wezterm", role: "package-content", generated: true, authority: false},
-	{id: "bundled-nvim-types", path: "\(pluginBundleRoot)/generated/types/nvim", role: "package-content", generated: true, authority: false},
-	{id: "lua-first-workflow", path: "\(pluginBundleRoot)/generated/workflows/lua-first", role: "package-content", generated: true, authority: false},
+	{id: "bundled-mcp-surfaces", path: "\(pluginBundleRoot)/reference/mcp", role: "package-content", generated: true, authority: false},
+	{id: "bundled-lsp-surfaces", path: "\(pluginBundleRoot)/reference/lsp", role: "package-content", generated: true, authority: false},
+	{id: "bundled-tool-surfaces", path: "\(pluginBundleRoot)/reference/tools", role: "package-content", generated: true, authority: false},
+	{id: "bundled-wezterm-types", path: "\(pluginBundleRoot)/reference/types/wezterm", role: "package-content", generated: true, authority: false},
+	{id: "bundled-nvim-types", path: "\(pluginBundleRoot)/reference/types/nvim", role: "package-content", generated: true, authority: false},
+	{id: "lua-first-workflow", path: "\(pluginBundleRoot)/reference/workflows/lua-first", role: "package-content", generated: true, authority: false},
 ]
 
 projectionGates: [

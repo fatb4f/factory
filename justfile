@@ -117,9 +117,9 @@ contracts-consolidation-guards:
 	test ! -e contracts/plugin-bundle/generated/code-intel/contracts
 	test ! -e contracts/plugin-bundle/generated/code-intel/generated
 	test ! -e contracts/plugin-bundle/generated/code-intel/scripts
-	test ! -e contracts/plugin-bundle/generated/code-intel/skills
+	test -d contracts/plugin-bundle/generated/code-intel/skills
 	test -z "$(find ./contracts/plugin-bundle/generated/agent-context-resolver -mindepth 1 -maxdepth 1 ! -name .codex-plugin ! -name hooks ! -name scripts ! -name skills -print)"
-	test -z "$(find ./contracts/plugin-bundle/generated/code-intel -mindepth 1 -maxdepth 1 ! -name .codex-plugin ! -name hooks ! -name reference ! -name SKILL.md -print)"
+	test -z "$(find ./contracts/plugin-bundle/generated/code-intel -mindepth 1 -maxdepth 1 ! -name .codex-plugin ! -name hooks ! -name reference ! -name SKILL.md ! -name skills -print)"
 	cue vet ./contracts/plugin-bundle/code-intel
 	cue vet ./contracts/plugin-bundle/code-intel/checks
 	cue vet ./contracts/plugin-bundle/agent-context-resolver

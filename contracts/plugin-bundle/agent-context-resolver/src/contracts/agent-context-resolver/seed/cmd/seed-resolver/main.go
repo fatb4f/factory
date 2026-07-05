@@ -32,14 +32,16 @@ type contractAuthority struct {
 }
 
 type fragmentDeclaration struct {
-	ID             string `json:"id"`
-	SourceContract string `json:"sourceContract"`
-	SourcePath     string `json:"sourcePath"`
-	Role           string `json:"role"`
-	Surface        string `json:"surface"`
-	Summary        string `json:"summary"`
-	AuthorityRoot  string `json:"authorityRoot,omitempty"`
-	ContractPath   string `json:"contractPath,omitempty"`
+	ID                  string `json:"id"`
+	SourceContract      string `json:"sourceContract"`
+	SourcePath          string `json:"sourcePath"`
+	SourceAuthorityPath string `json:"sourceAuthorityPath,omitempty"`
+	PathLocality        string `json:"pathLocality,omitempty"`
+	Role                string `json:"role"`
+	Surface             string `json:"surface"`
+	Summary             string `json:"summary"`
+	AuthorityRoot       string `json:"authorityRoot,omitempty"`
+	ContractPath        string `json:"contractPath,omitempty"`
 }
 
 type fragmentInventory struct {

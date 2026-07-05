@@ -37,6 +37,7 @@ pluginBundleContract: tmpl.#PluginBundleSrcRootShape & {
 			{path: "contracts/plugin-bundle/generated/code-intel/.codex-plugin/plugin.json", required: true, evidenceOnly: true},
 			{path: "contracts/plugin-bundle/generated/code-intel/SKILL.md", required: true, evidenceOnly: true},
 			{path: "contracts/plugin-bundle/generated/code-intel/hooks/hooks.json", required: true, evidenceOnly: true},
+			{path: "contracts/plugin-bundle/generated/code-intel/skills/SKILL.md", required: true, evidenceOnly: true},
 			{path: "contracts/plugin-bundle/generated/code-intel/reference/lsp/cue-lsp.json", required: true, evidenceOnly: true},
 			{path: "contracts/plugin-bundle/generated/code-intel/reference/lsp/lua-language-server.json", required: true, evidenceOnly: true},
 			{path: "contracts/plugin-bundle/generated/code-intel/reference/lsp/provider-routing.json", required: true, evidenceOnly: true},

@@ -97,6 +97,7 @@ codeIntelSiblingRootShape: close({
 		"hooks",
 		"reference",
 		"SKILL.md",
+		"skills",
 	]
 	forbiddenRootEntries: [
 		"generated",
@@ -106,7 +107,6 @@ codeIntelSiblingRootShape: close({
 		"contracts",
 		"generated",
 		"scripts",
-		"skills",
 	]
 	sourceAuthorityRoot:     "contracts/plugin-bundle/code-intel/src"
 	generatedProjectionRoot: "contracts/plugin-bundle/generated/code-intel"

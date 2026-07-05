@@ -42,7 +42,7 @@ codeIntelBundleRootShapeChecks: close({
 
 		codeIntelGeneratedEntries: codeintel.codeIntelSiblingRootShape.requiredGeneratedEntries
 		resolverGeneratedEntries:  resolver.agentContextResolverSiblingRootShape.requiredGeneratedEntries
-		codeIntelGeneratedEntries: [".codex-plugin", "hooks", "reference", "SKILL.md"]
+		codeIntelGeneratedEntries: [".codex-plugin", "hooks", "reference", "SKILL.md", "skills"]
 		resolverGeneratedEntries: [".codex-plugin", "hooks", "scripts", "skills"]
 	})
 	noTopLevelGeneratedPayloadUnderCodeIntelRoot: close({
@@ -64,6 +64,7 @@ codeIntelBundleRootShapeChecks: close({
 		"test -d contracts/plugin-bundle/generated/code-intel/.codex-plugin",
 		"test -d contracts/plugin-bundle/generated/code-intel/hooks",
 		"test -f contracts/plugin-bundle/generated/code-intel/SKILL.md",
+		"test -d contracts/plugin-bundle/generated/code-intel/skills",
 		"test -d contracts/plugin-bundle/generated/code-intel/reference",
 		"test -f contracts/plugin-bundle/generated/code-intel/reference/lsp/lua-language-server.json",
 		"test -f contracts/plugin-bundle/generated/code-intel/reference/tools/stylua.json",
@@ -77,7 +78,6 @@ codeIntelBundleRootShapeChecks: close({
 		"test ! -e contracts/plugin-bundle/generated/code-intel/manifest.json",
 		"test ! -e contracts/plugin-bundle/generated/code-intel/contracts",
 		"test ! -e contracts/plugin-bundle/generated/code-intel/generated",
-		"test ! -e contracts/plugin-bundle/generated/code-intel/skills",
 		"test ! -e contracts/plugin-bundle/generated/code-intel/scripts",
 		"cue vet ./contracts/plugin-bundle/code-intel",
 		"cue vet ./contracts/plugin-bundle/code-intel/checks",

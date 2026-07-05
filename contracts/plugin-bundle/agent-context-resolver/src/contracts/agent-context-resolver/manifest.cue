@@ -1836,6 +1836,8 @@ pluginBundleRecommendationCompletionReportContract: _pluginBundleCompletion.out
 	id:             string
 	sourceContract: string
 	sourcePath:     string
+	sourceAuthorityPath?: string
+	pathLocality?:        "installed-plugin"
 	role:           "authority" | "orientation" | "workflow" | "constraint" | "evidence"
 	surface:        "turn_start" | "prompt" | "subagent"
 	summary:        string
@@ -1856,6 +1858,12 @@ fragmentInventory: #FragmentInventory & {
 			id:             fragment.id
 			sourceContract: fragment.sourceContract
 			sourcePath:     fragment.sourcePath
+			if fragment.sourceAuthorityPath != _|_ {
+				sourceAuthorityPath: fragment.sourceAuthorityPath
+			}
+			if fragment.pathLocality != _|_ {
+				pathLocality: fragment.pathLocality
+			}
 			role:           fragment.role
 			surface:        fragment.surface
 			summary:        fragment.summary
@@ -2546,9 +2554,22 @@ routeEnvelopeProtocolProof: {
 	id:             string
 	sourceContract: string
 	sourcePath:     string
+	sourceAuthorityPath?: string
+	pathLocality?:        "installed-plugin"
 	role:           "authority" | "orientation" | "workflow" | "constraint" | "evidence"
 	surface:        "turn_start" | "prompt" | "subagent"
 	summary:        string
+}
+
+pluginLocalResolverRoot: ".codex/plugins/agent-context-resolver"
+
+pluginLocalSourcePaths: {
+	resolverSkill:      "\(pluginLocalResolverRoot)/SKILL.md"
+	resolverManifest:   "\(pluginLocalResolverRoot)/manifest.json"
+	resolverSkillSpec:  "\(pluginLocalResolverRoot)/skills/SKILL.md"
+	fragmentInventory: "\(pluginLocalResolverRoot)/generated/fragment_inventory.json"
+	promptRoutes:      "\(pluginLocalResolverRoot)/generated/prompt_routes.json"
+	routeInventory:    "\(pluginLocalResolverRoot)/generated/route_inventory.json"
 }
 
 repoRegistry: #RepoContractRegistry & {
@@ -2560,8 +2581,8 @@ repoRegistry: #RepoContractRegistry & {
 	contracts: [
 		{
 			id:            "agent-context-resolver"
-			authorityRoot: "contracts/plugin-bundle/agent-context-resolver/src"
-			contractPath:  "contracts/plugin-bundle/agent-context-resolver/src/contracts/agent-context-resolver/manifest.cue"
+			authorityRoot: pluginLocalResolverRoot
+			contractPath:  pluginLocalSourcePaths.resolverSkill
 			hooks: {
 				turnStart:        true
 				userPromptSubmit: true
@@ -2570,7 +2591,9 @@ repoRegistry: #RepoContractRegistry & {
 				{
 					id:             "agent-context-resolver.authority"
 					sourceContract: "agent-context-resolver"
-					sourcePath:     "contracts/plugin-bundle/agent-context-resolver/src/contracts/agent-context-resolver/manifest.cue"
+					sourcePath:     pluginLocalSourcePaths.resolverSkill
+					sourceAuthorityPath: "contracts/plugin-bundle/agent-context-resolver/src/contracts/agent-context-resolver/manifest.cue"
+					pathLocality:   "installed-plugin"
 					role:           "authority"
 					surface:        "turn_start"
 					summary:        "Authoritative resolver lifecycle and context selection boundary."
@@ -2578,7 +2601,9 @@ repoRegistry: #RepoContractRegistry & {
 				{
 					id:             "agent-context-resolver.prompt-routing"
 					sourceContract: "agent-context-resolver"
-					sourcePath:     "contracts/plugin-bundle/agent-context-resolver/src/contracts/agent-context-resolver/manifest.cue"
+					sourcePath:     pluginLocalSourcePaths.promptRoutes
+					sourceAuthorityPath: "contracts/plugin-bundle/agent-context-resolver/src/contracts/agent-context-resolver/manifest.cue"
+					pathLocality:   "installed-plugin"
 					role:           "workflow"
 					surface:        "prompt"
 					summary:        "Prompt classifier route hints and declared fragment selection rules."
@@ -2587,12 +2612,14 @@ repoRegistry: #RepoContractRegistry & {
 		},
 		{
 			id:            "agent-runtime"
-			authorityRoot: "contracts/agent-runtime"
-			contractPath:  "contracts/agent-runtime/manifest.cue"
+			authorityRoot: pluginLocalResolverRoot
+			contractPath:  pluginLocalSourcePaths.routeInventory
 			fragments: [{
 				id:             "agent-runtime.authority"
 				sourceContract: "agent-runtime"
-				sourcePath:     "contracts/agent-runtime/manifest.cue"
+				sourcePath:     pluginLocalSourcePaths.routeInventory
+				sourceAuthorityPath: "contracts/agent-runtime/manifest.cue"
+				pathLocality:   "installed-plugin"
 				role:           "authority"
 				surface:        "turn_start"
 				summary:        "Registered worker, route invocation, budget, lifecycle, adapter, and structured-result boundary."
@@ -2600,12 +2627,14 @@ repoRegistry: #RepoContractRegistry & {
 		},
 		{
 			id:            "agent-skill"
-			authorityRoot: "contracts/agent-skill"
-			contractPath:  "contracts/agent-skill/manifest.cue"
+			authorityRoot: pluginLocalResolverRoot
+			contractPath:  pluginLocalSourcePaths.resolverSkillSpec
 			fragments: [{
 				id:             "agent-skill.projection"
 				sourceContract: "agent-skill"
-				sourcePath:     "contracts/agent-skill/manifest.cue"
+				sourcePath:     pluginLocalSourcePaths.resolverSkillSpec
+				sourceAuthorityPath: "contracts/agent-skill/manifest.cue"
+				pathLocality:   "installed-plugin"
 				role:           "constraint"
 				surface:        "turn_start"
 				summary:        "Generated agent skill, hook, and script projection constraints."
@@ -2613,12 +2642,14 @@ repoRegistry: #RepoContractRegistry & {
 		},
 		{
 			id:            "mcp"
-			authorityRoot: "contracts/protocols/mcp"
-			contractPath:  "contracts/protocols/mcp/mcp.cue"
+			authorityRoot: pluginLocalResolverRoot
+			contractPath:  pluginLocalSourcePaths.fragmentInventory
 			fragments: [{
 				id:             "mcp.evidence-plane"
 				sourceContract: "mcp"
-				sourcePath:     "contracts/protocols/mcp/mcp.cue"
+				sourcePath:     pluginLocalSourcePaths.fragmentInventory
+				sourceAuthorityPath: "contracts/protocols/mcp/mcp.cue"
+				pathLocality:   "installed-plugin"
 				role:           "constraint"
 				surface:        "turn_start"
 				summary:        "MCP provider, result, and evidence-plane constraints."
@@ -2626,12 +2657,14 @@ repoRegistry: #RepoContractRegistry & {
 		},
 		{
 			id:            "resolver"
-			authorityRoot: "contracts/context/packet"
-			contractPath:  "contracts/context/packet/manifest.cue"
+			authorityRoot: pluginLocalResolverRoot
+			contractPath:  pluginLocalSourcePaths.promptRoutes
 			fragments: [{
 				id:             "resolver.context-packet"
 				sourceContract: "resolver"
-				sourcePath:     "contracts/context/packet/manifest.cue"
+				sourcePath:     pluginLocalSourcePaths.promptRoutes
+				sourceAuthorityPath: "contracts/context/packet/manifest.cue"
+				pathLocality:   "installed-plugin"
 				role:           "workflow"
 				surface:        "turn_start"
 				summary:        "Context packet selection and dependency projection workflow."
@@ -2639,13 +2672,15 @@ repoRegistry: #RepoContractRegistry & {
 		},
 		{
 			id:            "repo"
-			authorityRoot: "contracts/repo"
-			contractPath:  "contracts/repo/lifecycle.cue"
+			authorityRoot: pluginLocalResolverRoot
+			contractPath:  pluginLocalSourcePaths.resolverManifest
 			fragments: [
 				{
 					id:             "repo.lifecycle"
 					sourceContract: "repo"
-					sourcePath:     "contracts/repo/lifecycle.cue"
+					sourcePath:     pluginLocalSourcePaths.resolverManifest
+					sourceAuthorityPath: "contracts/repo/lifecycle.cue"
+					pathLocality:   "installed-plugin"
 					role:           "constraint"
 					surface:        "turn_start"
 					summary:        "Repository source, generated, fixture, and lifecycle boundaries."
@@ -2653,7 +2688,9 @@ repoRegistry: #RepoContractRegistry & {
 				{
 					id:             "repo.contract-seed"
 					sourceContract: "repo"
-					sourcePath:     "contracts/repo/contract_seed.cue"
+					sourcePath:     pluginLocalSourcePaths.fragmentInventory
+					sourceAuthorityPath: "contracts/repo/contract_seed.cue"
+					pathLocality:   "installed-plugin"
 					role:           "authority"
 					surface:        "turn_start"
 					summary:        "Temporary shared contract atom seed for later vb-contract rebasing."
@@ -2662,12 +2699,14 @@ repoRegistry: #RepoContractRegistry & {
 		},
 		{
 			id:            "vcs"
-			authorityRoot: "contracts/vcs"
-			contractPath:  "contracts/vcs/patch_stack_manifest.cue"
+			authorityRoot: pluginLocalResolverRoot
+			contractPath:  pluginLocalSourcePaths.fragmentInventory
 			fragments: [{
 				id:             "vcs.patch-stack"
 				sourceContract: "vcs"
-				sourcePath:     "contracts/vcs/patch_stack_manifest.cue"
+				sourcePath:     pluginLocalSourcePaths.fragmentInventory
+				sourceAuthorityPath: "contracts/vcs/patch_stack_manifest.cue"
+				pathLocality:   "installed-plugin"
 				role:           "workflow"
 				surface:        "turn_start"
 				summary:        "Patch stack ownership, ordering, and validation workflow."
@@ -2675,13 +2714,15 @@ repoRegistry: #RepoContractRegistry & {
 		},
 		{
 			id:            "vb-contract"
-			authorityRoot: "contracts/repo"
-			contractPath:  "contracts/repo/manifest.cue"
+			authorityRoot: pluginLocalResolverRoot
+			contractPath:  pluginLocalSourcePaths.fragmentInventory
 			fragments: [
 				{
 					id:             "vb-contract.authority"
 					sourceContract: "vb-contract"
-					sourcePath:     "contracts/repo/manifest.cue"
+					sourcePath:     pluginLocalSourcePaths.fragmentInventory
+					sourceAuthorityPath: "contracts/repo/manifest.cue"
+					pathLocality:   "installed-plugin"
 					role:           "authority"
 					surface:        "turn_start"
 					summary:        "Temporary virtual-branch contract root and registry contribution."
@@ -2689,7 +2730,9 @@ repoRegistry: #RepoContractRegistry & {
 				{
 					id:             "vb-contract.contract-seed"
 					sourceContract: "vb-contract"
-					sourcePath:     "contracts/repo/contract_seed.cue"
+					sourcePath:     pluginLocalSourcePaths.fragmentInventory
+					sourceAuthorityPath: "contracts/repo/contract_seed.cue"
+					pathLocality:   "installed-plugin"
 					role:           "constraint"
 					surface:        "turn_start"
 					summary:        "Temporary contract, template, instance, and projection bootstrap seed."
@@ -2697,7 +2740,9 @@ repoRegistry: #RepoContractRegistry & {
 				{
 					id:             "vb-contract.component-seed"
 					sourceContract: "vb-contract"
-					sourcePath:     "contracts/repo/component_seed.cue"
+					sourcePath:     pluginLocalSourcePaths.fragmentInventory
+					sourceAuthorityPath: "contracts/repo/component_seed.cue"
+					pathLocality:   "installed-plugin"
 					role:           "constraint"
 					surface:        "turn_start"
 					summary:        "Shared reusable component ownership, dependency, glue, and gate schema."
@@ -2705,7 +2750,9 @@ repoRegistry: #RepoContractRegistry & {
 				{
 					id:             "vb-contract.virtual-branch"
 					sourceContract: "vb-contract"
-					sourcePath:     "contracts/repo/virtual_branch.cue"
+					sourcePath:     pluginLocalSourcePaths.fragmentInventory
+					sourceAuthorityPath: "contracts/repo/virtual_branch.cue"
+					pathLocality:   "installed-plugin"
 					role:           "constraint"
 					surface:        "turn_start"
 					summary:        "Shared reusable virtual-branch schema with separate temporary bootstrap instances."
