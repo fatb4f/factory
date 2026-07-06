@@ -8,9 +8,9 @@ signal_id: loop_bootstrap_request
 target_repo: fatb4f/factory
 entrypoint: contracts/upstream-monitor/codex/contract-surface/AGENTS.md
 adapter: github_app
-run_result: terminal_success_no_new_upstream_impact_with_validation_caveats
+run_result: terminal_success_new_admitted_upstream_impact_with_validation_caveats
 channels: main, latest-alpha-cli
-run_id: 20260706T045418Z
+run_id: 20260706T165617Z
 ```
 
 ## Channel resolution
@@ -21,12 +21,12 @@ run_id: 20260706T045418Z
 status: resolved
 repo: openai/codex
 ref: main
-head_commit: be33f80bc65159c094ecd06bf155afa3061ce23d
+head_commit: 8917244f7dcc1a945f3d5eba3dea53f6dbb16349
 workspace_version: 0.0.0
 previous_recorded_head: be33f80bc65159c094ecd06bf155afa3061ce23d
-change_since_previous_evidence: unchanged
-compare_status: identical
-ahead_by: 0
+change_since_previous_evidence: advanced
+compare_status: ahead
+ahead_by: 3
 behind_by: 0
 ```
 
@@ -37,10 +37,11 @@ status: resolved-content; exact head sha unresolved through connector response
 repo: openai/codex
 ref: latest-alpha-cli
 head_commit: unresolved
-relation_to_main: ahead-by-1; behind-by-0 from current main
+relation_to_main: diverged; ahead-by-1; behind-by-3 from current main
 changed_files_from_current_main: codex-rs/Cargo.toml
 workspace_version: 0.143.0-alpha.36
 channel_relation: distinct-from-main
+previous_recorded_workspace_version: 0.143.0-alpha.36
 change_since_previous_evidence: unchanged by concrete branch-content version evidence; exact ref sha unresolved
 ```
 
@@ -52,7 +53,63 @@ No critical impacts admitted in this run.
 
 ## High
 
-No high impacts admitted in this run.
+### main: interleaved response-item and reasoning-summary lifecycle
+
+```text
+id: openai-codex-main-8917244-interleaved-response-items
+channel: main
+commit: 8917244f7dcc1a945f3d5eba3dea53f6dbb16349
+upstream_pr: openai/codex#30876
+impact: high
+surface: response event mapping, reasoning summary streaming, TUI/event replay, turn-item lifecycle
+```
+
+Upstream `main` now preserves reasoning-summary `item_id` on `response.reasoning_summary_part.added` and `response.reasoning_summary_text.delta`, tracks streamed response items by ID, and supports reasoning summaries continuing after later items begin. This changes the local contract-relevant assumptions for response-item identity, interleaved stream ordering, and reasoning-summary event projection.
+
+Evidence anchors:
+
+```text
+- codex-rs/codex-api/src/sse/responses.rs: ResponseEvent::ReasoningSummaryDelta and ReasoningSummaryPartAdded now carry item_id.
+- codex-rs/core/src/session/turn.rs: reasoning summary deltas/section breaks are emitted by explicit streamed item_id rather than the prior active-item assumption.
+- codex-rs/core/tests/suite/items.rs: upstream tests now exercise interleaved reasoning summary, function-call, and assistant-message items.
+```
+
+Local contract targets to review:
+
+```text
+- any response-event schema that models reasoning summary delta or reasoning section-break events
+- event replay assumptions that bind reasoning deltas to the single current active item
+- context/reasoning UI projections that assume non-interleaved reasoning and assistant output
+- test fixtures for streamed item identity and interleaved output ordering
+```
+
+### main: plugin instructions move into world-state diff section
+
+```text
+id: openai-codex-main-8917244-plugin-instructions-world-state
+channel: main
+commit: 8917244f7dcc1a945f3d5eba3dea53f6dbb16349
+impact: high
+surface: plugin instructions, context fragments, world-state retained-fragment matching
+```
+
+Upstream `main` adds a `plugins_instructions` world-state section. Generic plugin usage guidance is now controlled as world-state diff/retained-fragment state, rather than only as an available-plugin instruction fragment. This intersects the local plugin/context-fragment contract surface because availability, retained-fragment matching, and previous-state snapshots now influence whether plugin instructions are re-rendered.
+
+Evidence anchors:
+
+```text
+- codex-rs/core/src/context/world_state/mod.rs imports and exports PluginsInstructionsState.
+- codex-rs/core/src/context/world_state/plugins_instructions.rs defines ID = "plugins_instructions", bool snapshots, legacy/retained fragment matching, and diff rendering through AvailablePluginsInstructions.
+```
+
+Local contract targets to review:
+
+```text
+- plugin instruction rendering contracts
+- world-state section catalogues and generated schema/type surfaces
+- retained-fragment/legacy-fragment matching fixtures
+- no-widening tests around plugin availability and instruction rendering
+```
 
 ## Notes
 
@@ -68,7 +125,12 @@ No local contract mutation was performed; only admitted report/evidence projecti
 
 ## Suggested local targets
 
-No new local contract targets were suggested because there was no new admitted upstream impact.
+```text
+- Add/adjust CUE fixtures for response.reasoning_summary_* events carrying item_id.
+- Add interleaving negative fixtures: reasoning summary delta for an unstreamed item_id must remain invalid/unhandled.
+- Model plugin instructions as a world-state section, distinct from raw available-plugin instruction text.
+- Add retained-fragment matcher expectations for plugin instructions.
+```
 
 ## Issue updates
 
@@ -91,9 +153,9 @@ contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.r
 Publication admission observed from the previous latest evidence/publication projection:
 
 ```text
-report run path: contracts/upstream-monitor/codex/contract-surface/reports/runs/20260706T045418Z.codex-impact.md
+report run path: contracts/upstream-monitor/codex/contract-surface/reports/runs/20260706T165617Z.codex-impact.md
 report latest path: contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md
-evidence run path: contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260706T045418Z.codex-impact.report.json
+evidence run path: contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260706T165617Z.codex-impact.report.json
 evidence latest path: contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json
 issueTargets: {}
 ```
@@ -114,6 +176,6 @@ Caveat: `latest-alpha-cli` exact branch head SHA was not exposed by connector re
 
 ```text
 action: publish-contract-local-impact-run-and-latest-report
-reason: no new upstream impact; recurring observation run still admitted report/evidence publication
+reason: new admitted upstream impact on main; recurring observation run still admitted report/evidence publication
 next_state: continue scheduled observation; keep main and latest-alpha-cli evidence channels distinct
 ```
