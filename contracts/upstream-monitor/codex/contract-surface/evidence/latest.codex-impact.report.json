@@ -6,14 +6,16 @@
   "target_repo": "fatb4f/factory",
   "entrypoint": "contracts/upstream-monitor/codex/contract-surface/AGENTS.md",
   "adapter": "github_app",
-  "run_id": "20260705T165501Z",
+  "run_id": "20260706T045418Z",
   "publication": {
-    "report_run_path": "contracts/upstream-monitor/codex/contract-surface/reports/runs/20260705T165501Z.codex-impact.md",
+    "report_run_path": "contracts/upstream-monitor/codex/contract-surface/reports/runs/20260706T045418Z.codex-impact.md",
     "report_latest_path": "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md",
-    "evidence_run_path": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260705T165501Z.codex-impact.report.json",
+    "evidence_run_path": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260706T045418Z.codex-impact.report.json",
     "evidence_latest_path": "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json",
     "issue_targets": {},
-    "evidence_run_commit": "ee6e93746e2f66851e7b8a8c385f9b85de8bd867"
+    "report_run_commit": "7c8283fdb6ee31eaa959ee3a5529cb9ae9b37bca",
+    "report_latest_commit": "fdd9fa80a159e29eed3eeba6c050ce1d2dc6747a",
+    "evidence_run_commit": "633fab858f730d7b08545c4614933d4f100a67f5"
   },
   "authority_reads": {
     "agents": [
@@ -48,7 +50,7 @@
       "workspace_version": "0.0.0",
       "previous_recorded_head": "be33f80bc65159c094ecd06bf155afa3061ce23d",
       "change_since_previous_evidence": "unchanged",
-      "compare_status": "same",
+      "compare_status": "identical",
       "ahead_by": 0,
       "behind_by": 0
     },
@@ -57,7 +59,7 @@
       "ref": "latest-alpha-cli",
       "status": "resolved-content; exact head sha unresolved through connector response",
       "head_commit": null,
-      "relation_to_main": "ahead-by-1; behind-by-0 from current main by connector compare from prior/latest projection; current concrete content check still shows only Cargo.toml version delta",
+      "relation_to_main": "ahead-by-1; behind-by-0 from current main by connector compare; concrete content check still shows only Cargo.toml version delta",
       "changed_files_from_current_main": ["codex-rs/Cargo.toml"],
       "workspace_version": "0.143.0-alpha.36",
       "relation": "distinct-channel",
@@ -86,7 +88,7 @@
     ]
   },
   "baseline_reference": {
-    "previous_latest_evidence_run_id": "20260705T045440Z",
+    "previous_latest_evidence_run_id": "20260705T165501Z",
     "previous_main_head": "be33f80bc65159c094ecd06bf155afa3061ce23d",
     "previous_alpha_head": null,
     "previous_alpha_workspace_version": "0.143.0-alpha.36"
