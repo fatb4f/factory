@@ -10,7 +10,7 @@ entrypoint: contracts/upstream-monitor/codex/contract-surface/AGENTS.md
 adapter: github_app
 run_result: terminal_success_no_new_upstream_impact_with_validation_caveats
 channels: main, latest-alpha-cli
-run_id: 20260705T165501Z
+run_id: 20260706T045418Z
 ```
 
 ## Channel resolution
@@ -25,6 +25,9 @@ head_commit: be33f80bc65159c094ecd06bf155afa3061ce23d
 workspace_version: 0.0.0
 previous_recorded_head: be33f80bc65159c094ecd06bf155afa3061ce23d
 change_since_previous_evidence: unchanged
+compare_status: identical
+ahead_by: 0
+behind_by: 0
 ```
 
 ### latest-alpha-cli
@@ -34,7 +37,7 @@ status: resolved-content; exact head sha unresolved through connector response
 repo: openai/codex
 ref: latest-alpha-cli
 head_commit: unresolved
-relation_to_main: ahead-by-1; behind-by-0 from prior/latest projection
+relation_to_main: ahead-by-1; behind-by-0 from current main
 changed_files_from_current_main: codex-rs/Cargo.toml
 workspace_version: 0.143.0-alpha.36
 channel_relation: distinct-from-main
@@ -88,9 +91,9 @@ contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.r
 Publication admission observed from the previous latest evidence/publication projection:
 
 ```text
-report run path: contracts/upstream-monitor/codex/contract-surface/reports/runs/20260705T165501Z.codex-impact.md
+report run path: contracts/upstream-monitor/codex/contract-surface/reports/runs/20260706T045418Z.codex-impact.md
 report latest path: contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md
-evidence run path: contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260705T165501Z.codex-impact.report.json
+evidence run path: contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260706T045418Z.codex-impact.report.json
 evidence latest path: contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json
 issueTargets: {}
 ```
