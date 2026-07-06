@@ -6,16 +6,16 @@
   "target_repo": "fatb4f/factory",
   "entrypoint": "contracts/upstream-monitor/codex/contract-surface/AGENTS.md",
   "adapter": "github_app",
-  "run_id": "20260706T045418Z",
+  "run_id": "20260706T165617Z",
   "publication": {
-    "report_run_path": "contracts/upstream-monitor/codex/contract-surface/reports/runs/20260706T045418Z.codex-impact.md",
+    "report_run_path": "contracts/upstream-monitor/codex/contract-surface/reports/runs/20260706T165617Z.codex-impact.md",
     "report_latest_path": "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md",
-    "evidence_run_path": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260706T045418Z.codex-impact.report.json",
+    "evidence_run_path": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260706T165617Z.codex-impact.report.json",
     "evidence_latest_path": "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json",
     "issue_targets": {},
-    "report_run_commit": "7c8283fdb6ee31eaa959ee3a5529cb9ae9b37bca",
-    "report_latest_commit": "fdd9fa80a159e29eed3eeba6c050ce1d2dc6747a",
-    "evidence_run_commit": "633fab858f730d7b08545c4614933d4f100a67f5"
+    "report_run_commit": "88638f71bda73474091baa523045f8e5e559a2fa",
+    "report_latest_commit": "9da6530d03eec6cf8f6ad4bf63bd8db0b2c3c4e5",
+    "evidence_run_commit": "6141e94aa8cce2ba101e65a41de63f94827dfd38"
   },
   "authority_reads": {
     "agents": [
@@ -46,20 +46,38 @@
       "repo": "openai/codex",
       "ref": "main",
       "status": "resolved",
-      "head_commit": "be33f80bc65159c094ecd06bf155afa3061ce23d",
+      "head_commit": "8917244f7dcc1a945f3d5eba3dea53f6dbb16349",
       "workspace_version": "0.0.0",
       "previous_recorded_head": "be33f80bc65159c094ecd06bf155afa3061ce23d",
-      "change_since_previous_evidence": "unchanged",
-      "compare_status": "identical",
-      "ahead_by": 0,
-      "behind_by": 0
+      "change_since_previous_evidence": "advanced",
+      "compare_status": "ahead",
+      "ahead_by": 3,
+      "behind_by": 0,
+      "changed_files": [
+        "codex-rs/app-server/tests/suite/v2/selected_capability_stack.rs",
+        "codex-rs/codex-api/src/common.rs",
+        "codex-rs/codex-api/src/sse/responses.rs",
+        "codex-rs/core/src/codex_delegate.rs",
+        "codex-rs/core/src/codex_delegate_tests.rs",
+        "codex-rs/core/src/config/mod.rs",
+        "codex-rs/core/src/context/available_plugins_instructions.rs",
+        "codex-rs/core/src/context/world_state/mod.rs",
+        "codex-rs/core/src/context/world_state/plugins_instructions.rs",
+        "codex-rs/core/src/context/world_state/plugins_instructions_tests.rs",
+        "codex-rs/core/src/session/turn.rs",
+        "codex-rs/core/tests/suite/items.rs",
+        "codex-rs/core/tests/suite/review.rs",
+        "codex-rs/ext/mcp/src/executor_plugin.rs",
+        "codex-rs/ext/mcp/tests/executor_plugin_mcp.rs",
+        "codex-rs/tui/src/chatwidget/tests/history_replay.rs"
+      ]
     },
     "latest-alpha-cli": {
       "repo": "openai/codex",
       "ref": "latest-alpha-cli",
       "status": "resolved-content; exact head sha unresolved through connector response",
       "head_commit": null,
-      "relation_to_main": "ahead-by-1; behind-by-0 from current main by connector compare; concrete content check still shows only Cargo.toml version delta",
+      "relation_to_main": "diverged; ahead-by-1; behind-by-3 from current main by connector compare; concrete content check still shows only Cargo.toml version delta",
       "changed_files_from_current_main": ["codex-rs/Cargo.toml"],
       "workspace_version": "0.143.0-alpha.36",
       "relation": "distinct-channel",
@@ -70,25 +88,73 @@
   },
   "upstream_items": {
     "critical": [],
-    "high": [],
+    "high": [
+      {
+        "id": "openai-codex-main-8917244-interleaved-response-items",
+        "channels": ["main"],
+        "commit": "8917244f7dcc1a945f3d5eba3dea53f6dbb16349",
+        "upstream_pr": "openai/codex#30876",
+        "impact": "high",
+        "surface": [
+          "response event mapping",
+          "reasoning summary streaming",
+          "TUI/event replay",
+          "turn-item lifecycle"
+        ],
+        "summary": "Reasoning-summary part/delta events now preserve item_id and streamed response items are tracked by ID, allowing reasoning summaries to continue while later response items interleave.",
+        "evidence": [
+          "openai/codex codex-rs/codex-api/src/sse/responses.rs ResponseEvent::ReasoningSummaryDelta/ReasoningSummaryPartAdded item_id fields",
+          "openai/codex codex-rs/core/src/session/turn.rs streamed_items keyed by item_id for reasoning summary emission",
+          "openai/codex commit 8917244f7dcc1a945f3d5eba3dea53f6dbb16349 message: [core] Support interleaved response items (#30876)"
+        ],
+        "local_targets": [
+          "response-event schemas for response.reasoning_summary_* events",
+          "streamed item identity fixtures",
+          "interleaved output/reasoning replay assumptions",
+          "negative fixtures for unstreamed reasoning item_id deltas"
+        ]
+      },
+      {
+        "id": "openai-codex-main-8917244-plugin-instructions-world-state",
+        "channels": ["main"],
+        "commit": "8917244f7dcc1a945f3d5eba3dea53f6dbb16349",
+        "impact": "high",
+        "surface": [
+          "plugin instructions",
+          "context fragments",
+          "world-state retained-fragment matching"
+        ],
+        "summary": "Plugin instructions are now represented as a plugins_instructions world-state section with bool snapshots, legacy/retained fragment matching, and diff rendering through AvailablePluginsInstructions.",
+        "evidence": [
+          "openai/codex codex-rs/core/src/context/world_state/mod.rs imports/exports PluginsInstructionsState",
+          "openai/codex codex-rs/core/src/context/world_state/plugins_instructions.rs defines ID plugins_instructions and retained fragment matching"
+        ],
+        "local_targets": [
+          "plugin instruction rendering contracts",
+          "world-state section catalogues",
+          "retained-fragment matcher fixtures",
+          "no-widening tests around plugin availability"
+        ]
+      }
+    ],
     "notes": [],
     "noLocalAction": [
-      {
-        "id": "no-new-upstream-impact",
-        "channels": ["main", "latest-alpha-cli"],
-        "impact": "no-new-impact",
-        "reason": "Current observed main head and alpha workspace version match the previous latest evidence. Channels remain distinct."
-      },
       {
         "id": "no-issue-targets",
         "channels": ["main", "latest-alpha-cli"],
         "impact": "no-issue-update",
         "reason": "upstreamCodexPublicationPlan.issueTargets is empty."
+      },
+      {
+        "id": "alpha-unchanged-distinct-channel",
+        "channels": ["latest-alpha-cli"],
+        "impact": "no-new-alpha-impact",
+        "reason": "latest-alpha-cli workspace version remains 0.143.0-alpha.36. Connector compare shows it diverged from current main but the only concrete content delta is codex-rs/Cargo.toml."
       }
     ]
   },
   "baseline_reference": {
-    "previous_latest_evidence_run_id": "20260705T165501Z",
+    "previous_latest_evidence_run_id": "20260706T045418Z",
     "previous_main_head": "be33f80bc65159c094ecd06bf155afa3061ce23d",
     "previous_alpha_head": null,
     "previous_alpha_workspace_version": "0.143.0-alpha.36"
