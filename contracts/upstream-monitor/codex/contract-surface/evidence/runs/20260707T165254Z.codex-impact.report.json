@@ -1,0 +1,195 @@
+{
+  "apiVersion": "factory.upstream-monitor.codex/v0",
+  "kind": "CodexImpactReportEvidence",
+  "loop": "codex-contract-surface",
+  "signal_id": "loop_bootstrap_request",
+  "target_repo": "fatb4f/factory",
+  "entrypoint": "contracts/upstream-monitor/codex/contract-surface/AGENTS.md",
+  "adapter": "github_app",
+  "run_id": "20260707T165254Z",
+  "publication": {
+    "report_run_path": "contracts/upstream-monitor/codex/contract-surface/reports/runs/20260707T165254Z.codex-impact.md",
+    "report_latest_path": "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md",
+    "evidence_run_path": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260707T165254Z.codex-impact.report.json",
+    "evidence_latest_path": "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json",
+    "issue_targets": {},
+    "report_run_commit": "5bdf394d917b80cde1f2ec0cf12b2c2bfb851c2e"
+  },
+  "authority_reads": {
+    "agents": [
+      "contracts/upstream-monitor/AGENTS.md",
+      "contracts/upstream-monitor/codex/AGENTS.md",
+      "contracts/upstream-monitor/codex/contract-surface/AGENTS.md"
+    ],
+    "cue": [
+      "contracts/upstream-monitor/codex/contract-surface/publication.cue",
+      "contracts/upstream-monitor/codex/contract-surface/public.cue",
+      "contracts/upstream-monitor/codex/contract-surface/report.cue"
+    ],
+    "publication_admission": {
+      "issueTargets": {},
+      "report_run_pattern": "contracts/upstream-monitor/codex/contract-surface/reports/runs/<run_id>.codex-impact.md",
+      "report_latest_path": "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md",
+      "evidence_run_pattern": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/<run_id>.codex-impact.report.json",
+      "evidence_latest_path": "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json"
+    },
+    "cue_fetch_status": {
+      "publication.cue": "previously recorded as 404 through GitHub content API",
+      "public.cue": "previously recorded as 404 through GitHub content API",
+      "report.cue": "previously recorded as 404 through GitHub content API"
+    }
+  },
+  "channels": {
+    "main": {
+      "repo": "openai/codex",
+      "ref": "main",
+      "status": "resolved",
+      "head_commit": "a3f8b0b33284054133474e7b1cc5fa7600221d97",
+      "workspace_version": "0.0.0",
+      "previous_recorded_head": "cca16a10878202cb2f6e9666b6b4330329ea7e65",
+      "change_since_previous_evidence": "advanced",
+      "compare_status": "ahead",
+      "ahead_by": 4,
+      "behind_by": 0,
+      "changed_files_count": 15,
+      "changed_files_sample": [
+        ".github/scripts/macos-signing/codex-app-server.entitlements.plist",
+        ".github/scripts/macos-signing/codex-code-mode-host.entitlements.plist",
+        ".github/scripts/macos-signing/codex-responses-api-proxy.entitlements.plist",
+        ".github/scripts/macos-signing/codex.entitlements.plist",
+        ".github/workflows/rust-release.yml",
+        "codex-rs/app-server/src/bespoke_event_handling.rs",
+        "codex-rs/core-skills/src/loader_tests.rs",
+        "codex-rs/core/src/tools/handlers/dynamic.rs",
+        "codex-rs/login/src/auth/external_bearer.rs",
+        "codex-rs/login/src/auth/manager.rs"
+      ]
+    },
+    "latest-alpha-cli": {
+      "repo": "openai/codex",
+      "ref": "latest-alpha-cli",
+      "status": "resolved-content; exact head sha unresolved through connector response",
+      "head_commit": null,
+      "relation_to_main": "diverged; ahead-by-1; behind-by-7 from current main by connector compare; concrete content delta is codex-rs/Cargo.toml workspace package version",
+      "changed_files_from_current_main": ["codex-rs/Cargo.toml"],
+      "workspace_version": "0.143.0-alpha.38",
+      "relation": "distinct-channel",
+      "previous_recorded_head": null,
+      "previous_recorded_workspace_version": "0.143.0-alpha.38",
+      "change_since_previous_evidence": "unchanged by concrete branch-content version evidence; exact ref sha unresolved"
+    }
+  },
+  "upstream_items": {
+    "critical": [],
+    "high": [
+      {
+        "id": "openai-codex-main-f659eb1-canonical-dynamic-tool-call-items",
+        "channels": ["main"],
+        "commit": "f659eb12bc8cecb976d92db192d9b2983c8053ff",
+        "upstream_pr": "openai/codex#31298",
+        "impact": "high",
+        "surface": [
+          "dynamic tool lifecycle",
+          "app-server v2 item stream",
+          "client dynamic-tool request dispatch",
+          "legacy event compatibility"
+        ],
+        "summary": "Dynamic tools now emit canonical TurnItem::DynamicToolCall lifecycle, while app-server v2 dispatches client DynamicToolCall requests from canonical item starts and ignores mapped legacy request/response events.",
+        "evidence": [
+          "openai/codex commit f659eb12bc8cecb976d92db192d9b2983c8053ff message: feat(core): emit canonical dynamic tool call items (#31298)",
+          "codex-rs/app-server/src/bespoke_event_handling.rs ignores deprecated DynamicToolCallRequest/Response for app-server v2 and dispatches client request from canonical item starts",
+          "codex-rs/core/src/tools/handlers/dynamic.rs emits DynamicToolCallItem started/completed lifecycle with status, content_items, success, error, and duration"
+        ],
+        "local_targets": [
+          "dynamic tool item schema/type generation",
+          "app-server v2 DynamicToolCall request dispatch invariants",
+          "duplicate dynamic-tool request negative fixtures",
+          "legacy DynamicToolCallRequest/Response compatibility projections"
+        ]
+      },
+      {
+        "id": "openai-codex-main-f363ed7-intel-v8-signing-entitlements",
+        "channels": ["main"],
+        "commit": "f363ed70cc1c6e2cae15fc1b8711f7e0d7b96cf1",
+        "upstream_pr": "openai/codex#30953",
+        "impact": "high",
+        "surface": [
+          "release workflow",
+          "macOS signing entitlements",
+          "V8 Code Mode startup",
+          "binary verification"
+        ],
+        "summary": "Release signing now uses per-binary macOS entitlement profiles; Intel V8-linked binaries receive allow-jit plus allow-unsigned-executable-memory while the Responses API proxy keeps the narrower entitlement set.",
+        "evidence": [
+          "openai/codex commit f363ed70cc1c6e2cae15fc1b8711f7e0d7b96cf1 message: fix(release): add missing Intel V8 signing entitlement (#30953)",
+          ".github/scripts/macos-signing adds per-binary entitlement files",
+          ".github/workflows/rust-release.yml signs and verifies binaries against per-binary entitlement files and Mach-O architecture"
+        ],
+        "local_targets": [
+          "release artifact signing policy projections",
+          "platform/architecture-specific entitlement fixtures",
+          "fail-closed binary selector constraints for generated release adapters"
+        ]
+      },
+      {
+        "id": "openai-codex-main-a3f8b0b-external-auth-codexauth",
+        "channels": ["main"],
+        "commit": "a3f8b0b33284054133474e7b1cc5fa7600221d97",
+        "upstream_pr": "openai/codex#31355",
+        "impact": "high",
+        "surface": [
+          "auth manager contracts",
+          "external bearer flow",
+          "ChatGPT token refresh",
+          "app-server auth refresh bridge"
+        ],
+        "summary": "ExternalAuth now resolves and refreshes CodexAuth directly instead of returning the removed ExternalAuthTokens wrapper, changing local type projections for external API-key and ChatGPT auth flows.",
+        "evidence": [
+          "openai/codex commit a3f8b0b33284054133474e7b1cc5fa7600221d97 message: refactor: make ExternalAuth return CodexAuth (#31355)",
+          "codex-login auth trait signatures change from ExternalAuthTokens to CodexAuth",
+          "AuthManager validates external ChatGPT auth mode/account state during refresh and ignores non-API-key auth from external API-key providers"
+        ],
+        "local_targets": [
+          "auth adapter type projections that still model ExternalAuthTokens",
+          "external bearer and ChatGPT refresh fixtures",
+          "account/workspace validation constraints for externally supplied ChatGPT auth"
+        ]
+      }
+    ],
+    "notes": [
+      {
+        "id": "openai-codex-main-42156ba-plugin-namespace-loading-coverage",
+        "channels": ["main"],
+        "commit": "42156ba007278d9068f1518ac1f627b56c136ef6",
+        "impact": "note",
+        "surface": [
+          "skill/plugin namespace loading tests",
+          "nested plugin manifests",
+          "symlink behavior"
+        ],
+        "summary": "Upstream added tests for plugin skill namespace inheritance, nested manifest precedence, invalid nested manifest fallback, and symlink scan-root behavior. No implementation behavior changed in this commit."
+      }
+    ],
+    "noLocalAction": [
+      {
+        "id": "no-issue-targets",
+        "channels": ["main", "latest-alpha-cli"],
+        "impact": "no-issue-update",
+        "reason": "upstreamCodexPublicationPlan.issueTargets is empty."
+      }
+    ]
+  },
+  "baseline_reference": {
+    "previous_latest_evidence_run_id": "20260707T045606Z",
+    "previous_main_head": "cca16a10878202cb2f6e9666b6b4330329ea7e65",
+    "previous_alpha_head": null,
+    "previous_alpha_workspace_version": "0.143.0-alpha.38"
+  },
+  "validation_notes": {
+    "cue_executed": false,
+    "reason": "GitHub App adapter exposes content read/write operations, not a repo shell.",
+    "issue_updates": "none; public upstreamCodexPublicationPlan.issueTargets is empty",
+    "forbidden_attractor_search": "GitHub code search for configured/known forbidden-attractor terms returned no matches in this run.",
+    "caveat": "contract-surface AGENTS initial-gate text still conflicts with the newer admitted publication task prompt; publication admission was taken from prior latest evidence/publication projection. Direct reads for publication.cue, public.cue, and report.cue were previously recorded as 404 through the GitHub content API. latest-alpha-cli exact branch head SHA was not exposed by connector responses and is recorded as unresolved rather than inferred."
+  }
+}
