@@ -10,7 +10,7 @@ entrypoint: contracts/upstream-monitor/codex/contract-surface/AGENTS.md
 adapter: github_app
 run_result: terminal_success_new_admitted_upstream_impact_with_validation_caveats
 channels: main, latest-alpha-cli
-run_id: 20260707T045606Z
+run_id: 20260707T165254Z
 ```
 
 ## Channel resolution
@@ -21,13 +21,14 @@ run_id: 20260707T045606Z
 status: resolved
 repo: openai/codex
 ref: main
-head_commit: cca16a10878202cb2f6e9666b6b4330329ea7e65
+head_commit: a3f8b0b33284054133474e7b1cc5fa7600221d97
 workspace_version: 0.0.0
-previous_recorded_head: 8917244f7dcc1a945f3d5eba3dea53f6dbb16349
+previous_recorded_head: cca16a10878202cb2f6e9666b6b4330329ea7e65
 change_since_previous_evidence: advanced
 compare_status: ahead
-ahead_by: 35
+ahead_by: 4
 behind_by: 0
+changed_files_count: 15
 ```
 
 ### latest-alpha-cli
@@ -37,11 +38,11 @@ status: resolved-content; exact head sha unresolved through connector response
 repo: openai/codex
 ref: latest-alpha-cli
 head_commit: unresolved
-relation_to_main: diverged; ahead-by-1; behind-by-3 from current main
+relation_to_main: diverged; ahead-by-1; behind-by-7 from current main
 changed_files_from_current_main: codex-rs/Cargo.toml
 workspace_version: 0.143.0-alpha.38
-previous_recorded_workspace_version: 0.143.0-alpha.36
-change_since_previous_evidence: advanced by concrete branch-content version evidence; exact ref sha unresolved
+previous_recorded_workspace_version: 0.143.0-alpha.38
+change_since_previous_evidence: unchanged by concrete branch-content version evidence; exact ref sha unresolved
 ```
 
 `latest-alpha-cli` remains a separate upstream evidence channel and is not collapsed into `main`.
@@ -52,155 +53,107 @@ No critical impacts admitted in this run.
 
 ## High
 
-### main: canonical tool item compatibility layer
+### main: canonical dynamic tool call item producer
 
 ```text
-id: openai-codex-main-b9b934e-canonical-tool-items-legacy-mapping
+id: openai-codex-main-f659eb1-canonical-dynamic-tool-call-items
 channel: main
-commit: b9b934e99b57aa1908a7cd83adee9faf6d0b8f7d
-upstream_pr: openai/codex#31296
+commit: f659eb12bc8cecb976d92db192d9b2983c8053ff
+upstream_pr: openai/codex#31298
 impact: high
-surface: protocol items, legacy event mapping, rollout trace, dynamic tools, multi-agent events
+surface: dynamic tool lifecycle, app-server v2 item stream, client dynamic-tool request dispatch, legacy event compatibility
 ```
 
-Upstream `main` adds `TurnItem` to legacy `EventMsg` mappings for `CommandExecution`, `DynamicToolCall`, `CollabAgentToolCall`, and `SubAgentActivity`. The canonical item lifecycle is now the source of truth while raw-event consumers continue to receive begin/end-style compatibility events. This intersects local protocol/event-shape contracts and any fixtures that assume legacy events are the only runtime event form.
+Dynamic tools now emit canonical `TurnItem::DynamicToolCall` lifecycle instead of direct `DynamicToolCallRequest` / `DynamicToolCallResponse` events. App-server v2 dispatches the client dynamic-tool request from the canonical item start and ignores mapped legacy request/response events, preserving exactly-one request behavior while moving the authority surface to canonical item lifecycle.
 
 Evidence anchors:
 
 ```text
-- protocol/src/legacy_events.rs adds mappings from canonical TurnItem variants to legacy EventMsg forms.
-- core/src/codex_thread.rs records mapped legacy events in rollout trace while emitting legacy compatibility events.
-- commit b9b934e99b57aa1908a7cd83adee9faf6d0b8f7d message: refactor(protocol): map canonical tool items to legacy events (#31296)
+- commit f659eb12bc8cecb976d92db192d9b2983c8053ff message: feat(core): emit canonical dynamic tool call items (#31298)
+- app-server bespoke event handling ignores deprecated DynamicToolCallRequest/Response for v2 and dispatches requests from canonical DynamicToolCall ItemStarted events.
+- core dynamic tool handler emits DynamicToolCallItem started/completed lifecycle with status, content_items, success, error, and duration.
 ```
 
 Local contract targets to review:
 
 ```text
-- generated protocol item schemas and legacy-event compatibility projections
-- fixtures that bind command/dynamic/multi-agent tool behavior only to legacy begin/end events
-- rollout trace assertions for tool-runtime events
+- dynamic tool item schema/type generation
+- app-server v2 DynamicToolCall request dispatch invariants
+- duplicate dynamic-tool request negative fixtures
+- legacy DynamicToolCallRequest/Response compatibility projections
 ```
 
-### main: canonical command execution item producer
+### main: Intel macOS V8 signing entitlement split
 
 ```text
-id: openai-codex-main-cca16a1-canonical-command-execution-items
+id: openai-codex-main-f363ed7-intel-v8-signing-entitlements
 channel: main
-commit: cca16a10878202cb2f6e9666b6b4330329ea7e65
-upstream_pr: openai/codex#31297
+commit: f363ed70cc1c6e2cae15fc1b8711f7e0d7b96cf1
+upstream_pr: openai/codex#30953
 impact: high
-surface: command execution lifecycle, app-server v2 item stream, shell tool events, user shell commands
+surface: release workflow, macOS signing entitlements, V8 Code Mode startup, binary verification
 ```
 
-Command execution now emits canonical `TurnItem::CommandExecution` lifecycle from shell tool and user `/shell` paths. App-server v2 consumes canonical command items directly and suppresses duplicate legacy command begin/end notifications while preserving a unified-exec carveout through `TerminalInteraction`.
+The release workflow now selects per-binary macOS entitlement profiles. Intel V8-linked binaries (`codex`, `codex-app-server`, and `codex-code-mode-host`) receive both `allow-jit` and `allow-unsigned-executable-memory`, while `codex-responses-api-proxy` stays on the narrower `allow-jit` profile. Verification now checks Mach-O architecture and exact entitlement dictionaries across signed binary copies and packages.
 
 Evidence anchors:
 
 ```text
-- app-server bespoke event handling now processes ItemStarted/ItemCompleted command items and suppresses deprecated ExecCommandBegin/ExecCommandEnd for v2.
-- core user-shell and shell runtime paths emit TurnItem::CommandExecution started/completed items.
-- commit cca16a10878202cb2f6e9666b6b4330329ea7e65 message: feat(core): emit canonical command execution items (#31297)
+- commit f363ed70cc1c6e2cae15fc1b8711f7e0d7b96cf1 message: fix(release): add missing Intel V8 signing entitlement (#30953)
+- .github/scripts/macos-signing adds per-binary entitlement files.
+- .github/workflows/rust-release.yml signs and verifies binaries against the per-binary entitlement file.
 ```
 
 Local contract targets to review:
 
 ```text
-- command execution item schema/type generation
-- app-server v2 item lifecycle contracts
-- negative fixtures for duplicate command lifecycle emission
-- unified-exec exception handling
+- release artifact signing policy projections
+- platform/architecture-specific entitlement fixtures
+- fail-closed binary selector constraints for generated release adapters
 ```
 
-### main: sequential cutoff reasoning summaries
+### main: ExternalAuth returns CodexAuth directly
 
 ```text
-id: openai-codex-main-775ef7d-sequential-cutoff-reasoning-summaries
+id: openai-codex-main-a3f8b0b-external-auth-codexauth
 channel: main
-commit: 775ef7dcc7d50069e759f3e11454f412a3e39d95
-upstream_pr: openai/codex#31306
+commit: a3f8b0b33284054133474e7b1cc5fa7600221d97
+upstream_pr: openai/codex#31355
 impact: high
-surface: response stream options, reasoning summary events, feature flags, websocket/http request shape
+surface: auth manager contracts, external bearer flow, ChatGPT token refresh, app-server auth refresh bridge
 ```
 
-OpenAI-provider requests can now send `stream_options.reasoning_summary_delivery = sequential_cutoff`, including WebSocket request conversion, and response parsing now admits `response.reasoning_summary_text.done` as `ReasoningSummaryDone` with `item_id`, `text`, and `summary_index`. This extends the prior reasoning-summary item-id surface into summary completion/cutoff semantics.
+`ExternalAuth` now resolves and refreshes `CodexAuth` directly instead of returning the removed `ExternalAuthTokens` wrapper. Bearer-only external auth is represented as API-key `CodexAuth`; ChatGPT external refresh returns `CodexAuth::from_external_chatgpt_tokens`, and refresh validation now asserts concrete auth mode/account state rather than wrapper metadata.
 
 Evidence anchors:
 
 ```text
-- codex-api common request types add StreamOptions and ReasoningSummaryDelivery::SequentialCutoff.
-- SSE response parsing adds ResponseEvent::ReasoningSummaryDone for response.reasoning_summary_text.done.
-- core ModelClient sends stream_options when the concurrent reasoning summaries feature is enabled for OpenAI.
-- commit 775ef7dcc7d50069e759f3e11454f412a3e39d95 message: [codex] Support sequential cutoff reasoning summaries (#31306)
+- commit a3f8b0b33284054133474e7b1cc5fa7600221d97 message: refactor: make ExternalAuth return CodexAuth (#31355)
+- codex-login auth trait signatures change from ExternalAuthTokens to CodexAuth.
+- AuthManager ignores non-API-key auth from external API-key providers and validates external ChatGPT auth token state/account id during refresh.
 ```
 
 Local contract targets to review:
 
 ```text
-- response-event schemas for response.reasoning_summary_text.done
-- stream_options request schemas for HTTP and WebSocket
-- reasoning summary completion/cancellation fixtures
-- feature-gated provider-specific request-shape constraints
-```
-
-### main: Responses API system-proxy routing
-
-```text
-id: openai-codex-main-6afcf26-responses-api-system-proxy-routing
-channel: main
-commit: 6afcf26d5d76c2f88b9096caa758931ffa673745
-upstream_pr: openai/codex#31335
-impact: high
-surface: HTTP client factory, proxy policy, Responses API transport, config feature resolution
-```
-
-Responses and remote-compaction HTTP calls now route through a required `HttpClientFactory` resolved from effective config, with `OutboundProxyPolicy::{ReqwestDefault, RespectSystemProxy}` and `ClientRouteClass::Api`. This changes transport construction from optional/fallback behavior to an explicit config-derived invariant.
-
-Evidence anchors:
-
-```text
-- core ModelClient now requires an HttpClientFactory and builds Responses transports from route-aware policy.
-- Config exposes http_client_factory() from effective respect_system_proxy state.
-- commit 6afcf26d5d76c2f88b9096caa758931ffa673745 message: core: route Responses API through system proxy (#31335)
-```
-
-Local contract targets to review:
-
-```text
-- config/schema surfaces for respect_system_proxy and transport factory invariants
-- request adapter contracts that assume default reqwest proxy behavior
-- no-implicit-default tests for outbound proxy policy resolution
-```
-
-### alpha: release-channel version advance
-
-```text
-id: openai-codex-alpha-0.143.0-alpha.38-release-channel-version
-channel: latest-alpha-cli
-commit: unresolved
-impact: high
-surface: release channel tracking, alpha evidence channel, workspace package version
-```
-
-`latest-alpha-cli` advanced by concrete branch-content evidence from `0.143.0-alpha.36` to `0.143.0-alpha.38`. The branch remains distinct from `main`; connector compare reports it one commit ahead and three behind current `main`, with only `codex-rs/Cargo.toml` changed from current `main`.
-
-Evidence anchors:
-
-```text
-- latest-alpha-cli codex-rs/Cargo.toml [workspace.package] version = "0.143.0-alpha.38".
-- compare main..latest-alpha-cli: diverged; ahead_by=1; behind_by=3; changed file codex-rs/Cargo.toml.
-```
-
-Local contract targets to review:
-
-```text
-- release-channel state tracking for alpha versions
-- unresolved exact-head SHA handling for latest-alpha-cli
-- no-collapse invariant between alpha and main evidence channels
+- auth adapter type projections that still model ExternalAuthTokens
+- external bearer and ChatGPT refresh fixtures
+- account/workspace validation constraints for externally supplied ChatGPT auth
 ```
 
 ## Notes
 
-No note-only impacts admitted in this run.
+### main: plugin namespace loading test coverage
+
+```text
+id: openai-codex-main-42156ba-plugin-namespace-loading-coverage
+channel: main
+commit: 42156ba007278d9068f1518ac1f627b56c136ef6
+impact: note
+surface: skill/plugin namespace loading tests, nested plugin manifests, symlink behavior
+```
+
+Upstream added coverage for nested plugin skill namespace inheritance/override behavior and symlink scan-root edge cases. No implementation behavior changed in this commit, but the tests clarify expected namespace precedence and are useful fixture evidence for local plugin-skill contracts.
 
 ## No local action
 
@@ -213,11 +166,11 @@ No local contract mutation was performed; only admitted report/evidence projecti
 ## Suggested local targets
 
 ```text
-- Add canonical TurnItem to legacy EventMsg compatibility fixtures for command, dynamic tool, collab-agent, and sub-agent activity items.
-- Model command execution as canonical app-server v2 item lifecycle, with duplicate legacy begin/end suppression as a no-widening expectation.
-- Add response.reasoning_summary_text.done schema/fixture coverage, including item_id + summary_index constraints.
-- Model stream_options.reasoning_summary_delivery = sequential_cutoff as feature/provider-gated request shape.
-- Add config-derived HttpClientFactory/proxy policy invariants for Responses API transports.
+- Add canonical DynamicToolCall item lifecycle and request-dispatch fixtures.
+- Add a no-duplicate dynamic-tool request negative fixture for mapped legacy events.
+- Model macOS release signing as per-binary entitlement selection with architecture-specific verification.
+- Replace any ExternalAuthTokens local projection with direct CodexAuth-mode projections.
+- Add plugin namespace precedence/symlink cases as fixture references, if the local surface models plugin skills.
 ```
 
 ## Issue updates
@@ -241,9 +194,9 @@ contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.r
 Publication admission observed from the previous latest evidence/publication projection:
 
 ```text
-report run path: contracts/upstream-monitor/codex/contract-surface/reports/runs/20260707T045606Z.codex-impact.md
+report run path: contracts/upstream-monitor/codex/contract-surface/reports/runs/20260707T165254Z.codex-impact.md
 report latest path: contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md
-evidence run path: contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260707T045606Z.codex-impact.report.json
+evidence run path: contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260707T165254Z.codex-impact.report.json
 evidence latest path: contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json
 issueTargets: {}
 ```
@@ -254,7 +207,7 @@ Expected local validation remains: vet the upstream-monitor CUE package, export 
 
 Forbidden-attractor GitHub code search for configured/known terms returned no matches in `fatb4f/factory` during this run.
 
-Caveat: direct GitHub content reads for `contracts/upstream-monitor/codex/contract-surface/publication.cue`, `public.cue`, and `report.cue` still return 404 via the GitHub content API. This report therefore relies on the prior latest evidence/publication projection for admitted paths and issue target shape.
+Caveat: direct GitHub content reads for `contracts/upstream-monitor/codex/contract-surface/publication.cue`, `public.cue`, and `report.cue` were previously recorded as 404 through the GitHub content API. This report therefore relies on the prior latest evidence/publication projection for admitted paths and issue target shape.
 
 Caveat: the loop entrypoint still contains older initial-gate text forbidding upstream inspection/report creation before transition closure proof. This run proceeded under the loop-local public CUE scheduled task and publication surface recorded by prior latest evidence.
 
@@ -264,6 +217,6 @@ Caveat: `latest-alpha-cli` exact branch head SHA was not exposed by connector re
 
 ```text
 action: publish-contract-local-impact-run-and-latest-report
-reason: new admitted upstream impact on main and latest-alpha-cli; recurring observation run still admitted report/evidence publication
+reason: new admitted upstream impact on main; recurring observation run still admitted report/evidence publication
 next_state: continue scheduled observation; keep main and latest-alpha-cli evidence channels distinct
 ```
