@@ -8,9 +8,9 @@ signal_id: loop_bootstrap_request
 target_repo: fatb4f/factory
 entrypoint: contracts/upstream-monitor/codex/contract-surface/AGENTS.md
 adapter: github_app
-run_result: terminal_success_new_admitted_upstream_impact_with_validation_caveats
+run_result: terminal_success_new_admitted_main_upstream_impact_with_validation_caveats
 channels: main, latest-alpha-cli
-run_id: 20260708T045308Z
+run_id: 20260708T165446Z
 ```
 
 ## Channel resolution
@@ -21,14 +21,14 @@ run_id: 20260708T045308Z
 status: resolved
 repo: openai/codex
 ref: main
-head_commit: f1affbac5e5164b2bae825e9b39e9868bc4e0be2
+head_commit: a219b6fdb4e9f9655968adf20984916abc8b2290
 workspace_version: 0.0.0
-previous_recorded_head: a3f8b0b33284054133474e7b1cc5fa7600221d97
+previous_recorded_head: f1affbac5e5164b2bae825e9b39e9868bc4e0be2
 change_since_previous_evidence: advanced
 compare_status: ahead
-ahead_by: 28
+ahead_by: 8
 behind_by: 0
-changed_files_count: unresolved-from-connector-total; broad app-server/core/schema/workflow set observed
+changed_files_count: 51 observed from connector compare file list
 ```
 
 ### latest-alpha-cli
@@ -38,11 +38,11 @@ status: resolved-content; exact head sha unresolved through connector response
 repo: openai/codex
 ref: latest-alpha-cli
 head_commit: unresolved
-relation_to_main: diverged; ahead-by-1; behind-by-35 from current main
+relation_to_main: diverged; ahead-by-1; behind-by-43 from current main
 changed_files_from_current_main: codex-rs/Cargo.toml
 workspace_version: 0.143.0
-previous_recorded_workspace_version: 0.143.0-alpha.38
-change_since_previous_evidence: advanced by concrete branch-content version evidence; exact ref sha unresolved
+previous_recorded_workspace_version: 0.143.0
+change_since_previous_evidence: unchanged by concrete branch-content version evidence; exact ref sha unresolved
 ```
 
 `latest-alpha-cli` remains a separate upstream evidence channel and is not collapsed into `main`.
@@ -53,188 +53,118 @@ No critical impacts admitted in this run.
 
 ## High
 
-### main: extension-owned image-generation item surface
+### main: extension-owned web-search item surface
 
 ```text
-id: openai-codex-main-f1affba-image-generation-extension-item
+id: openai-codex-main-a219b6f-web-search-extension-item
 channel: main
-commit: f1affbac5e5164b2bae825e9b39e9868bc4e0be2
+commit: a219b6fdb4e9f9655968adf20984916abc8b2290
 impact: high
-surface: extension item schema, app-server thread history projection, image-generation persistence envelope
+surface: extension item schema, app-server v2 ThreadItem, web-search action projection
 ```
 
-Upstream now exposes a standalone `ImageGenerationItem` owned by the image extension and imported into app-server thread-history projection. The item carries `id`, `status`, `revised_prompt`, `result`, and optional `saved_path`, while core/rollout persistence carry it inside an extension envelope.
+Upstream now exposes a standalone extension-owned `WebSearchItem` with `id`, `query`, and optional `action`. The action is a tagged app-server-facing enum with `search`, `openPage`, `findInPage`, and `other` variants. App-server v2 re-exports `WebSearchItem` and `WebSearchAction`, and `ThreadItem` now has a `WebSearch(WebSearchItem)` variant whose id is read from the extension item.
 
 Evidence anchors:
 
 ```text
-- codex-rs/ext/items/src/image_generation.rs defines the serialized/TS/JSON-schema ImageGenerationItem contract.
-- codex-rs/app-server-protocol/src/protocol/thread_history.rs imports codex_extension_items::image_generation::ImageGenerationItem into thread-history projection.
+- codex-rs/ext/items/src/web_search.rs defines WebSearchItem and WebSearchAction with TS/JSON-schema derivations.
+- codex-rs/app-server-protocol/src/protocol/v2/item.rs re-exports web-search extension item types.
+- codex-rs/app-server-protocol/src/protocol/v2/item.rs includes ThreadItem::WebSearch(WebSearchItem) and id dispatch for WebSearch.
 ```
 
 Local contract targets to review:
 
 ```text
-- extension item schema/type generation
-- app-server v2 ThreadItem / thread-history projection fixtures
-- saved_path optionality and persistence-envelope invariants
+- extension-owned WebSearchItem schema/type generation
+- app-server v2 ThreadItem discriminant/projection fixtures
+- web-search action optionality for query/queries/url/pattern
 ```
 
-### main: app-server account login brand and external auth bridge
+### main: extension tool TurnItem emission bridge
 
 ```text
-id: openai-codex-main-f1affba-app-server-login-auth-bridge
+id: openai-codex-main-a219b6f-extension-turnitem-emission-bridge
 channel: main
-commit: f1affbac5e5164b2bae825e9b39e9868bc4e0be2
+commit: a219b6fdb4e9f9655968adf20984916abc8b2290
 impact: high
-surface: account/login/start params, ChatGPT hosted login, external auth refresh bridge, app-server auth state
+surface: extension tool lifecycle, canonical TurnItem emission, legacy EventMsg compatibility
 ```
 
-`LoginAccountParams.Chatgpt` now admits `app_brand` in addition to streamlined/hosted login flags, with `LoginAppBrand` values `codex` and `chatgpt`. App-server also has an `ExternalAuthBridge` that stores `CodexAuth`, issues `chatgptAuthTokensRefresh` server requests, times out refresh after 10s, and writes refreshed `CodexAuth` back into bridge state.
+Extension tools now emit canonical extension `TurnItem` lifecycle events through a `TurnItemEmitter`, then forward supplied legacy `EventMsg` values for compatibility. The adapter passes conversation history, environment/sandbox context, model/truncation metadata, and a turn item emitter into extension tool calls.
 
 Evidence anchors:
 
 ```text
-- codex-rs/app-server-protocol/src/protocol/v2/account.rs defines LoginAccountParams.Chatgpt.app_brand and LoginAppBrand.
-- codex-rs/app-server/src/external_auth.rs implements ExternalAuthBridge around CodexAuth and chatgptAuthTokensRefresh.
+- codex-rs/core/src/tools/handlers/extension_tools.rs defines CoreTurnItemEmitter and emits TurnItem::Extension on start/completion.
+- extension tool calls receive ConversationHistory, ToolEnvironment values, model/truncation metadata, payload, and turn_item_emitter.
 ```
 
 Local contract targets to review:
 
 ```text
-- account/login/start request schema and TypeScript generation
-- hosted login success-page/client-brand fixtures
-- external ChatGPT auth refresh timeout and account-id validation constraints
+- canonical extension item lifecycle events
+- legacy EventMsg compatibility sequencing
+- extension tool environment/sandbox-context projection invariants
 ```
 
-### main: remote compaction request and fallback telemetry split
+### main: remote plugin bundle install constraints
 
 ```text
-id: openai-codex-main-f1affba-remote-compaction-request-fallback
+id: openai-codex-main-a219b6f-remote-plugin-bundle-install-constraints
 channel: main
-commit: f1affbac5e5164b2bae825e9b39e9868bc4e0be2
+commit: a219b6fdb4e9f9655968adf20984916abc8b2290
 impact: high
-surface: remote compaction request assembly, responses metadata, model fallback telemetry, active-context token accounting
+surface: remote plugin bundle validation, plugin cache/data roots, install metadata, download/extract limits
 ```
 
-Remote compaction now has a separated request-attempt module that trims function-call history before compaction, adjusts active-context token accounting, builds model-visible tools and responses metadata, and submits compaction with auth-mode-sensitive service-tier selection. A dedicated fallback helper emits `codex.compaction.model_fallback` telemetry tagged by reason, implementation, and outcome.
+Remote plugin bundles now have explicit validation and install constraints: backend release version and download URL validation, HTTPS-only download admission except debug loopback HTTP, bounded download/error-body/extracted-size limits, redirect final-URL scheme checks, staging install behavior, and remote install metadata. PluginStore also separates cache and data roots and tracks active remote/local versions.
 
 Evidence anchors:
 
 ```text
-- codex-rs/core/src/compact_remote_request.rs defines RemoteCompactAttempt and run_remote_compact_attempt.
-- codex-rs/core/src/compact_model_fallback.rs records fallback telemetry and logs model fallback outcomes.
+- codex-rs/core-plugins/src/remote_bundle.rs defines bundle download timeout, max download bytes, max extracted bytes, scheme validation, final URL validation, and install/extract paths.
+- codex-rs/core-plugins/src/store.rs defines plugin cache/data roots, remote install metadata, plugin version roots, data roots, and active version discovery.
 ```
 
 Local contract targets to review:
 
 ```text
-- compaction request projection and trace-input fixtures
-- service-tier omission for API-key auth mode
-- compaction telemetry tag constraints
+- plugin-bundle source constraints for URL scheme, redirects, size limits, and staging
+- remote plugin install metadata schema/version
+- plugin cache/data root separation and active-version selection
 ```
 
-### main: MCP tool metadata, policy, and elicitation context
+### main: install context package-layout resources
 
 ```text
-id: openai-codex-main-f1affba-mcp-tool-metadata-policy
+id: openai-codex-main-a219b6f-install-context-package-layout
 channel: main
-commit: f1affbac5e5164b2bae825e9b39e9868bc4e0be2
+commit: a219b6fdb4e9f9655968adf20984916abc8b2290
 impact: high
-surface: MCP tool-call lifecycle, app-tool policy evaluation, approval metadata, elicitation flow, turn metadata
+surface: managed package layout, resource/path resolution, standalone install context
 ```
 
-MCP tool-call handling now threads richer metadata and policy state through the tool-call lifecycle: approval metadata constants, connector/tool descriptors, app-tool policy evaluation for the Codex Apps MCP server, auth elicitation helpers, and turn metadata context are all in the path before lifecycle dispatch.
+Install context now models a package layout with package root, `bin`, optional `codex-resources`, and optional `codex-path` directories. Runtime resolution prefers bundled tools/resources from package-layout paths before legacy standalone resources, affecting managed helper binaries such as `rg` and bundled shell resources.
 
 Evidence anchors:
 
 ```text
-- codex-rs/core/src/mcp_tool_call.rs imports McpTurnMetadataContext, auth elicitation helpers, approval metadata keys, and AppToolPolicyEvaluator.
-- handle_mcp_tool_call builds invocation metadata and app-tool policy before dispatching MCP tool-call item lifecycle events.
+- codex-rs/install-context/src/lib.rs defines CodexPackageLayout with package_dir, bin_dir, resources_dir, and path_dir.
+- InstallContext::rg_command and bundled_resource prefer package-layout paths before legacy standalone resource directories.
 ```
 
 Local contract targets to review:
 
 ```text
-- MCP approval metadata schema/type generation
-- app-tool policy evaluator fixtures for selected/plugin connector tools
-- auth elicitation and server-user-flow telemetry invariants
-```
-
-### main: skill namespace resolver implementation
-
-```text
-id: openai-codex-main-f1affba-skill-namespace-resolver
-channel: main
-commit: f1affbac5e5164b2bae825e9b39e9868bc4e0be2
-impact: high
-surface: plugin skill namespace resolution, nested manifests, symlink root precedence, skill loader naming
-```
-
-Upstream now implements a scan-local `SkillNamespaceResolver` with explicit precedence: provided plugin namespace, deepest canonical symlink or nested plugin root, then scan-root inherited namespace. Skill names are qualified as `namespace:skill` when a plugin namespace applies.
-
-Evidence anchors:
-
-```text
-- codex-rs/core-skills/src/loader/namespace.rs defines SkillNamespaceResolver and its namespace precedence.
-- ResolvedSkillNamespace::qualify emits namespace-qualified skill names.
-```
-
-Local contract targets to review:
-
-```text
-- plugin skill namespace resolver contract
-- nested manifest and symlink-root precedence fixtures
-- generated skill-name collision/qualification constraints
-```
-
-### main: delivered managed config layers model
-
-```text
-id: openai-codex-main-f1affba-delivered-managed-layers
-channel: main
-commit: f1affbac5e5164b2bae825e9b39e9868bc4e0be2
-impact: high
-surface: backend OpenAPI models, delivered managed layers, config TOML fragment layering
-```
-
-The generated backend model surface now includes `DeliveredManagedLayers` with explicit `baseline` and `system_overlay` TOML fragment vectors. Local managed-config projections should avoid collapsing these layers into a single delivered TOML fragment list.
-
-Evidence anchors:
-
-```text
-- codex-rs/codex-backend-openapi-models/src/models/delivered_managed_layers.rs defines baseline and system_overlay fields.
-```
-
-Local contract targets to review:
-
-```text
-- managed config layer schema
-- baseline vs system_overlay ordering/merge semantics
-- generated backend OpenAPI type projections
+- managed package layout schema and resource-directory invariants
+- PATH helper resolution order for codex-path versus legacy resources
+- standalone/npm/bun/pnpm install-method projections
 ```
 
 ## Alpha channel impact
 
-### latest-alpha-cli: version channel advanced to 0.143.0
-
-```text
-id: openai-codex-alpha-0.143.0-version-channel
-channel: latest-alpha-cli
-commit: unresolved
-impact: high
-surface: alpha CLI version channel, release/package version tracking
-```
-
-`latest-alpha-cli` content now reports `workspace.package.version = "0.143.0"`, replacing the previously recorded `0.143.0-alpha.38`. The exact branch head SHA remains unresolved through this connector response and is intentionally not inferred.
-
-Local contract targets to review:
-
-```text
-- alpha/stable release-channel distinction
-- version evidence schema that allows concrete content evidence with unresolved head SHA
-- downstream package/version gate fixtures
-```
+No new `latest-alpha-cli` impact admitted in this run. Concrete branch-content evidence still reports `workspace.package.version = "0.143.0"`; exact branch head SHA remains unresolved through connector responses and is not inferred.
 
 ## No local action
 
@@ -247,13 +177,12 @@ No local contract mutation was performed; only admitted report/evidence projecti
 ## Suggested local targets
 
 ```text
-- Add extension-owned ImageGenerationItem schema/type fixtures.
-- Add app-server account/login app_brand and external-auth refresh bridge fixtures.
-- Model remote compaction request attempts and model fallback telemetry tags.
-- Add MCP app-tool policy/approval metadata/auth elicitation fixtures.
-- Promote skill namespace resolver precedence from note-level coverage to contract fixtures.
-- Preserve delivered managed config baseline and system_overlay layers separately.
-- Allow alpha-channel version evidence to advance even when exact branch head is unresolved.
+- Add extension-owned WebSearchItem and WebSearchAction schema/type fixtures.
+- Model extension-tool canonical TurnItem emission plus legacy EventMsg compatibility sequencing.
+- Add remote plugin bundle validation constraints for URL scheme, redirects, size limits, extracted-size limits, and staging.
+- Add plugin install metadata/version/data-root fixtures.
+- Model CodexPackageLayout resource/path resolution before legacy standalone resources.
+- Keep latest-alpha-cli version evidence distinct even when only Cargo.toml differs from main.
 ```
 
 ## Issue updates
@@ -277,9 +206,9 @@ contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.r
 Publication admission observed from the previous latest evidence/publication projection:
 
 ```text
-report run path: contracts/upstream-monitor/codex/contract-surface/reports/runs/20260708T045308Z.codex-impact.md
+report run path: contracts/upstream-monitor/codex/contract-surface/reports/runs/20260708T165446Z.codex-impact.md
 report latest path: contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md
-evidence run path: contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260708T045308Z.codex-impact.report.json
+evidence run path: contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260708T165446Z.codex-impact.report.json
 evidence latest path: contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json
 issueTargets: {}
 ```
@@ -300,6 +229,6 @@ Caveat: `latest-alpha-cli` exact branch head SHA was not exposed by connector re
 
 ```text
 action: publish-contract-local-impact-run-and-latest-report
-reason: new admitted upstream impact on main and concrete latest-alpha-cli version evidence changed
+reason: new admitted upstream impact on main; latest-alpha-cli concrete version evidence unchanged
 next_state: continue scheduled observation; keep main and latest-alpha-cli evidence channels distinct
 ```
