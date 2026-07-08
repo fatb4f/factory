@@ -10,7 +10,7 @@ entrypoint: contracts/upstream-monitor/codex/contract-surface/AGENTS.md
 adapter: github_app
 run_result: terminal_success_new_admitted_upstream_impact_with_validation_caveats
 channels: main, latest-alpha-cli
-run_id: 20260707T165254Z
+run_id: 20260708T045308Z
 ```
 
 ## Channel resolution
@@ -21,14 +21,14 @@ run_id: 20260707T165254Z
 status: resolved
 repo: openai/codex
 ref: main
-head_commit: a3f8b0b33284054133474e7b1cc5fa7600221d97
+head_commit: f1affbac5e5164b2bae825e9b39e9868bc4e0be2
 workspace_version: 0.0.0
-previous_recorded_head: cca16a10878202cb2f6e9666b6b4330329ea7e65
+previous_recorded_head: a3f8b0b33284054133474e7b1cc5fa7600221d97
 change_since_previous_evidence: advanced
 compare_status: ahead
-ahead_by: 4
+ahead_by: 28
 behind_by: 0
-changed_files_count: 15
+changed_files_count: unresolved-from-connector-total; broad app-server/core/schema/workflow set observed
 ```
 
 ### latest-alpha-cli
@@ -38,11 +38,11 @@ status: resolved-content; exact head sha unresolved through connector response
 repo: openai/codex
 ref: latest-alpha-cli
 head_commit: unresolved
-relation_to_main: diverged; ahead-by-1; behind-by-7 from current main
+relation_to_main: diverged; ahead-by-1; behind-by-35 from current main
 changed_files_from_current_main: codex-rs/Cargo.toml
-workspace_version: 0.143.0-alpha.38
+workspace_version: 0.143.0
 previous_recorded_workspace_version: 0.143.0-alpha.38
-change_since_previous_evidence: unchanged by concrete branch-content version evidence; exact ref sha unresolved
+change_since_previous_evidence: advanced by concrete branch-content version evidence; exact ref sha unresolved
 ```
 
 `latest-alpha-cli` remains a separate upstream evidence channel and is not collapsed into `main`.
@@ -53,107 +53,188 @@ No critical impacts admitted in this run.
 
 ## High
 
-### main: canonical dynamic tool call item producer
+### main: extension-owned image-generation item surface
 
 ```text
-id: openai-codex-main-f659eb1-canonical-dynamic-tool-call-items
+id: openai-codex-main-f1affba-image-generation-extension-item
 channel: main
-commit: f659eb12bc8cecb976d92db192d9b2983c8053ff
-upstream_pr: openai/codex#31298
+commit: f1affbac5e5164b2bae825e9b39e9868bc4e0be2
 impact: high
-surface: dynamic tool lifecycle, app-server v2 item stream, client dynamic-tool request dispatch, legacy event compatibility
+surface: extension item schema, app-server thread history projection, image-generation persistence envelope
 ```
 
-Dynamic tools now emit canonical `TurnItem::DynamicToolCall` lifecycle instead of direct `DynamicToolCallRequest` / `DynamicToolCallResponse` events. App-server v2 dispatches the client dynamic-tool request from the canonical item start and ignores mapped legacy request/response events, preserving exactly-one request behavior while moving the authority surface to canonical item lifecycle.
+Upstream now exposes a standalone `ImageGenerationItem` owned by the image extension and imported into app-server thread-history projection. The item carries `id`, `status`, `revised_prompt`, `result`, and optional `saved_path`, while core/rollout persistence carry it inside an extension envelope.
 
 Evidence anchors:
 
 ```text
-- commit f659eb12bc8cecb976d92db192d9b2983c8053ff message: feat(core): emit canonical dynamic tool call items (#31298)
-- app-server bespoke event handling ignores deprecated DynamicToolCallRequest/Response for v2 and dispatches requests from canonical DynamicToolCall ItemStarted events.
-- core dynamic tool handler emits DynamicToolCallItem started/completed lifecycle with status, content_items, success, error, and duration.
+- codex-rs/ext/items/src/image_generation.rs defines the serialized/TS/JSON-schema ImageGenerationItem contract.
+- codex-rs/app-server-protocol/src/protocol/thread_history.rs imports codex_extension_items::image_generation::ImageGenerationItem into thread-history projection.
 ```
 
 Local contract targets to review:
 
 ```text
-- dynamic tool item schema/type generation
-- app-server v2 DynamicToolCall request dispatch invariants
-- duplicate dynamic-tool request negative fixtures
-- legacy DynamicToolCallRequest/Response compatibility projections
+- extension item schema/type generation
+- app-server v2 ThreadItem / thread-history projection fixtures
+- saved_path optionality and persistence-envelope invariants
 ```
 
-### main: Intel macOS V8 signing entitlement split
+### main: app-server account login brand and external auth bridge
 
 ```text
-id: openai-codex-main-f363ed7-intel-v8-signing-entitlements
+id: openai-codex-main-f1affba-app-server-login-auth-bridge
 channel: main
-commit: f363ed70cc1c6e2cae15fc1b8711f7e0d7b96cf1
-upstream_pr: openai/codex#30953
+commit: f1affbac5e5164b2bae825e9b39e9868bc4e0be2
 impact: high
-surface: release workflow, macOS signing entitlements, V8 Code Mode startup, binary verification
+surface: account/login/start params, ChatGPT hosted login, external auth refresh bridge, app-server auth state
 ```
 
-The release workflow now selects per-binary macOS entitlement profiles. Intel V8-linked binaries (`codex`, `codex-app-server`, and `codex-code-mode-host`) receive both `allow-jit` and `allow-unsigned-executable-memory`, while `codex-responses-api-proxy` stays on the narrower `allow-jit` profile. Verification now checks Mach-O architecture and exact entitlement dictionaries across signed binary copies and packages.
+`LoginAccountParams.Chatgpt` now admits `app_brand` in addition to streamlined/hosted login flags, with `LoginAppBrand` values `codex` and `chatgpt`. App-server also has an `ExternalAuthBridge` that stores `CodexAuth`, issues `chatgptAuthTokensRefresh` server requests, times out refresh after 10s, and writes refreshed `CodexAuth` back into bridge state.
 
 Evidence anchors:
 
 ```text
-- commit f363ed70cc1c6e2cae15fc1b8711f7e0d7b96cf1 message: fix(release): add missing Intel V8 signing entitlement (#30953)
-- .github/scripts/macos-signing adds per-binary entitlement files.
-- .github/workflows/rust-release.yml signs and verifies binaries against the per-binary entitlement file.
+- codex-rs/app-server-protocol/src/protocol/v2/account.rs defines LoginAccountParams.Chatgpt.app_brand and LoginAppBrand.
+- codex-rs/app-server/src/external_auth.rs implements ExternalAuthBridge around CodexAuth and chatgptAuthTokensRefresh.
 ```
 
 Local contract targets to review:
 
 ```text
-- release artifact signing policy projections
-- platform/architecture-specific entitlement fixtures
-- fail-closed binary selector constraints for generated release adapters
+- account/login/start request schema and TypeScript generation
+- hosted login success-page/client-brand fixtures
+- external ChatGPT auth refresh timeout and account-id validation constraints
 ```
 
-### main: ExternalAuth returns CodexAuth directly
+### main: remote compaction request and fallback telemetry split
 
 ```text
-id: openai-codex-main-a3f8b0b-external-auth-codexauth
+id: openai-codex-main-f1affba-remote-compaction-request-fallback
 channel: main
-commit: a3f8b0b33284054133474e7b1cc5fa7600221d97
-upstream_pr: openai/codex#31355
+commit: f1affbac5e5164b2bae825e9b39e9868bc4e0be2
 impact: high
-surface: auth manager contracts, external bearer flow, ChatGPT token refresh, app-server auth refresh bridge
+surface: remote compaction request assembly, responses metadata, model fallback telemetry, active-context token accounting
 ```
 
-`ExternalAuth` now resolves and refreshes `CodexAuth` directly instead of returning the removed `ExternalAuthTokens` wrapper. Bearer-only external auth is represented as API-key `CodexAuth`; ChatGPT external refresh returns `CodexAuth::from_external_chatgpt_tokens`, and refresh validation now asserts concrete auth mode/account state rather than wrapper metadata.
+Remote compaction now has a separated request-attempt module that trims function-call history before compaction, adjusts active-context token accounting, builds model-visible tools and responses metadata, and submits compaction with auth-mode-sensitive service-tier selection. A dedicated fallback helper emits `codex.compaction.model_fallback` telemetry tagged by reason, implementation, and outcome.
 
 Evidence anchors:
 
 ```text
-- commit a3f8b0b33284054133474e7b1cc5fa7600221d97 message: refactor: make ExternalAuth return CodexAuth (#31355)
-- codex-login auth trait signatures change from ExternalAuthTokens to CodexAuth.
-- AuthManager ignores non-API-key auth from external API-key providers and validates external ChatGPT auth token state/account id during refresh.
+- codex-rs/core/src/compact_remote_request.rs defines RemoteCompactAttempt and run_remote_compact_attempt.
+- codex-rs/core/src/compact_model_fallback.rs records fallback telemetry and logs model fallback outcomes.
 ```
 
 Local contract targets to review:
 
 ```text
-- auth adapter type projections that still model ExternalAuthTokens
-- external bearer and ChatGPT refresh fixtures
-- account/workspace validation constraints for externally supplied ChatGPT auth
+- compaction request projection and trace-input fixtures
+- service-tier omission for API-key auth mode
+- compaction telemetry tag constraints
 ```
 
-## Notes
-
-### main: plugin namespace loading test coverage
+### main: MCP tool metadata, policy, and elicitation context
 
 ```text
-id: openai-codex-main-42156ba-plugin-namespace-loading-coverage
+id: openai-codex-main-f1affba-mcp-tool-metadata-policy
 channel: main
-commit: 42156ba007278d9068f1518ac1f627b56c136ef6
-impact: note
-surface: skill/plugin namespace loading tests, nested plugin manifests, symlink behavior
+commit: f1affbac5e5164b2bae825e9b39e9868bc4e0be2
+impact: high
+surface: MCP tool-call lifecycle, app-tool policy evaluation, approval metadata, elicitation flow, turn metadata
 ```
 
-Upstream added coverage for nested plugin skill namespace inheritance/override behavior and symlink scan-root edge cases. No implementation behavior changed in this commit, but the tests clarify expected namespace precedence and are useful fixture evidence for local plugin-skill contracts.
+MCP tool-call handling now threads richer metadata and policy state through the tool-call lifecycle: approval metadata constants, connector/tool descriptors, app-tool policy evaluation for the Codex Apps MCP server, auth elicitation helpers, and turn metadata context are all in the path before lifecycle dispatch.
+
+Evidence anchors:
+
+```text
+- codex-rs/core/src/mcp_tool_call.rs imports McpTurnMetadataContext, auth elicitation helpers, approval metadata keys, and AppToolPolicyEvaluator.
+- handle_mcp_tool_call builds invocation metadata and app-tool policy before dispatching MCP tool-call item lifecycle events.
+```
+
+Local contract targets to review:
+
+```text
+- MCP approval metadata schema/type generation
+- app-tool policy evaluator fixtures for selected/plugin connector tools
+- auth elicitation and server-user-flow telemetry invariants
+```
+
+### main: skill namespace resolver implementation
+
+```text
+id: openai-codex-main-f1affba-skill-namespace-resolver
+channel: main
+commit: f1affbac5e5164b2bae825e9b39e9868bc4e0be2
+impact: high
+surface: plugin skill namespace resolution, nested manifests, symlink root precedence, skill loader naming
+```
+
+Upstream now implements a scan-local `SkillNamespaceResolver` with explicit precedence: provided plugin namespace, deepest canonical symlink or nested plugin root, then scan-root inherited namespace. Skill names are qualified as `namespace:skill` when a plugin namespace applies.
+
+Evidence anchors:
+
+```text
+- codex-rs/core-skills/src/loader/namespace.rs defines SkillNamespaceResolver and its namespace precedence.
+- ResolvedSkillNamespace::qualify emits namespace-qualified skill names.
+```
+
+Local contract targets to review:
+
+```text
+- plugin skill namespace resolver contract
+- nested manifest and symlink-root precedence fixtures
+- generated skill-name collision/qualification constraints
+```
+
+### main: delivered managed config layers model
+
+```text
+id: openai-codex-main-f1affba-delivered-managed-layers
+channel: main
+commit: f1affbac5e5164b2bae825e9b39e9868bc4e0be2
+impact: high
+surface: backend OpenAPI models, delivered managed layers, config TOML fragment layering
+```
+
+The generated backend model surface now includes `DeliveredManagedLayers` with explicit `baseline` and `system_overlay` TOML fragment vectors. Local managed-config projections should avoid collapsing these layers into a single delivered TOML fragment list.
+
+Evidence anchors:
+
+```text
+- codex-rs/codex-backend-openapi-models/src/models/delivered_managed_layers.rs defines baseline and system_overlay fields.
+```
+
+Local contract targets to review:
+
+```text
+- managed config layer schema
+- baseline vs system_overlay ordering/merge semantics
+- generated backend OpenAPI type projections
+```
+
+## Alpha channel impact
+
+### latest-alpha-cli: version channel advanced to 0.143.0
+
+```text
+id: openai-codex-alpha-0.143.0-version-channel
+channel: latest-alpha-cli
+commit: unresolved
+impact: high
+surface: alpha CLI version channel, release/package version tracking
+```
+
+`latest-alpha-cli` content now reports `workspace.package.version = "0.143.0"`, replacing the previously recorded `0.143.0-alpha.38`. The exact branch head SHA remains unresolved through this connector response and is intentionally not inferred.
+
+Local contract targets to review:
+
+```text
+- alpha/stable release-channel distinction
+- version evidence schema that allows concrete content evidence with unresolved head SHA
+- downstream package/version gate fixtures
+```
 
 ## No local action
 
@@ -166,11 +247,13 @@ No local contract mutation was performed; only admitted report/evidence projecti
 ## Suggested local targets
 
 ```text
-- Add canonical DynamicToolCall item lifecycle and request-dispatch fixtures.
-- Add a no-duplicate dynamic-tool request negative fixture for mapped legacy events.
-- Model macOS release signing as per-binary entitlement selection with architecture-specific verification.
-- Replace any ExternalAuthTokens local projection with direct CodexAuth-mode projections.
-- Add plugin namespace precedence/symlink cases as fixture references, if the local surface models plugin skills.
+- Add extension-owned ImageGenerationItem schema/type fixtures.
+- Add app-server account/login app_brand and external-auth refresh bridge fixtures.
+- Model remote compaction request attempts and model fallback telemetry tags.
+- Add MCP app-tool policy/approval metadata/auth elicitation fixtures.
+- Promote skill namespace resolver precedence from note-level coverage to contract fixtures.
+- Preserve delivered managed config baseline and system_overlay layers separately.
+- Allow alpha-channel version evidence to advance even when exact branch head is unresolved.
 ```
 
 ## Issue updates
@@ -194,9 +277,9 @@ contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.r
 Publication admission observed from the previous latest evidence/publication projection:
 
 ```text
-report run path: contracts/upstream-monitor/codex/contract-surface/reports/runs/20260707T165254Z.codex-impact.md
+report run path: contracts/upstream-monitor/codex/contract-surface/reports/runs/20260708T045308Z.codex-impact.md
 report latest path: contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md
-evidence run path: contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260707T165254Z.codex-impact.report.json
+evidence run path: contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260708T045308Z.codex-impact.report.json
 evidence latest path: contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json
 issueTargets: {}
 ```
@@ -211,12 +294,12 @@ Caveat: direct GitHub content reads for `contracts/upstream-monitor/codex/contra
 
 Caveat: the loop entrypoint still contains older initial-gate text forbidding upstream inspection/report creation before transition closure proof. This run proceeded under the loop-local public CUE scheduled task and publication surface recorded by prior latest evidence.
 
-Caveat: `latest-alpha-cli` exact branch head SHA was not exposed by connector responses. It is kept unresolved; only concrete branch-content evidence and the `0.143.0-alpha.38` version are recorded.
+Caveat: `latest-alpha-cli` exact branch head SHA was not exposed by connector responses. It is kept unresolved; only concrete branch-content version evidence is recorded.
 
 ## Control action
 
 ```text
 action: publish-contract-local-impact-run-and-latest-report
-reason: new admitted upstream impact on main; recurring observation run still admitted report/evidence publication
+reason: new admitted upstream impact on main and concrete latest-alpha-cli version evidence changed
 next_state: continue scheduled observation; keep main and latest-alpha-cli evidence channels distinct
 ```
