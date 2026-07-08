@@ -1,0 +1,202 @@
+{
+  "apiVersion": "factory.upstream-monitor.codex/v0",
+  "kind": "CodexImpactReportEvidence",
+  "loop": "codex-contract-surface",
+  "signal_id": "loop_bootstrap_request",
+  "target_repo": "fatb4f/factory",
+  "entrypoint": "contracts/upstream-monitor/codex/contract-surface/AGENTS.md",
+  "adapter": "github_app",
+  "run_id": "20260708T165446Z",
+  "publication": {
+    "report_run_path": "contracts/upstream-monitor/codex/contract-surface/reports/runs/20260708T165446Z.codex-impact.md",
+    "report_latest_path": "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md",
+    "evidence_run_path": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260708T165446Z.codex-impact.report.json",
+    "evidence_latest_path": "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json",
+    "issue_targets": {},
+    "report_run_commit": "1faab2585dc2b6b0e6f0ffe9fe5fcd2de7849c2e"
+  },
+  "authority_reads": {
+    "agents": [
+      "contracts/upstream-monitor/AGENTS.md",
+      "contracts/upstream-monitor/codex/AGENTS.md",
+      "contracts/upstream-monitor/codex/contract-surface/AGENTS.md"
+    ],
+    "cue": [
+      "contracts/upstream-monitor/codex/contract-surface/publication.cue",
+      "contracts/upstream-monitor/codex/contract-surface/public.cue",
+      "contracts/upstream-monitor/codex/contract-surface/report.cue"
+    ],
+    "publication_admission": {
+      "issueTargets": {},
+      "report_run_pattern": "contracts/upstream-monitor/codex/contract-surface/reports/runs/<run_id>.codex-impact.md",
+      "report_latest_path": "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md",
+      "evidence_run_pattern": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/<run_id>.codex-impact.report.json",
+      "evidence_latest_path": "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json"
+    },
+    "cue_fetch_status": {
+      "publication.cue": "previously recorded as 404 through GitHub content API",
+      "public.cue": "previously recorded as 404 through GitHub content API",
+      "report.cue": "previously recorded as 404 through GitHub content API"
+    }
+  },
+  "channels": {
+    "main": {
+      "repo": "openai/codex",
+      "ref": "main",
+      "status": "resolved",
+      "head_commit": "a219b6fdb4e9f9655968adf20984916abc8b2290",
+      "workspace_version": "0.0.0",
+      "previous_recorded_head": "f1affbac5e5164b2bae825e9b39e9868bc4e0be2",
+      "change_since_previous_evidence": "advanced",
+      "compare_status": "ahead",
+      "ahead_by": 8,
+      "behind_by": 0,
+      "changed_files_count": 51,
+      "changed_files_sample": [
+        "codex-rs/ext/items/src/web_search.rs",
+        "codex-rs/app-server-protocol/src/protocol/v2/item.rs",
+        "codex-rs/app-server-protocol/schema/typescript/WebSearchItem.ts",
+        "codex-rs/core/src/tools/handlers/extension_tools.rs",
+        "codex-rs/core-plugins/src/remote_bundle.rs",
+        "codex-rs/core-plugins/src/store.rs",
+        "codex-rs/install-context/src/lib.rs",
+        "codex-cli/bin/codex.js"
+      ]
+    },
+    "latest-alpha-cli": {
+      "repo": "openai/codex",
+      "ref": "latest-alpha-cli",
+      "status": "resolved-content; exact head sha unresolved through connector response",
+      "head_commit": null,
+      "relation_to_main": "diverged; ahead-by-1; behind-by-43 from current main by connector compare; concrete content delta is codex-rs/Cargo.toml workspace package version",
+      "changed_files_from_current_main": ["codex-rs/Cargo.toml"],
+      "workspace_version": "0.143.0",
+      "relation": "distinct-channel",
+      "previous_recorded_head": null,
+      "previous_recorded_workspace_version": "0.143.0",
+      "change_since_previous_evidence": "unchanged by concrete branch-content version evidence; exact ref sha unresolved"
+    }
+  },
+  "upstream_items": {
+    "critical": [],
+    "high": [
+      {
+        "id": "openai-codex-main-a219b6f-web-search-extension-item",
+        "channels": ["main"],
+        "commit": "a219b6fdb4e9f9655968adf20984916abc8b2290",
+        "upstream_pr": null,
+        "impact": "high",
+        "surface": [
+          "extension item schema",
+          "app-server v2 ThreadItem",
+          "web-search action projection"
+        ],
+        "summary": "Upstream now exposes a standalone extension-owned WebSearchItem with id/query/action and app-server-facing WebSearchAction variants, re-exported into app-server v2 ThreadItem projection.",
+        "evidence": [
+          "codex-rs/ext/items/src/web_search.rs defines WebSearchItem and WebSearchAction with TS/JSON-schema derivations",
+          "codex-rs/app-server-protocol/src/protocol/v2/item.rs re-exports WebSearchItem/WebSearchAction and adds ThreadItem::WebSearch(WebSearchItem)"
+        ],
+        "local_targets": [
+          "extension-owned WebSearchItem schema/type generation",
+          "app-server v2 ThreadItem discriminant/projection fixtures",
+          "web-search action optionality constraints"
+        ]
+      },
+      {
+        "id": "openai-codex-main-a219b6f-extension-turnitem-emission-bridge",
+        "channels": ["main"],
+        "commit": "a219b6fdb4e9f9655968adf20984916abc8b2290",
+        "upstream_pr": null,
+        "impact": "high",
+        "surface": [
+          "extension tool lifecycle",
+          "canonical TurnItem emission",
+          "legacy EventMsg compatibility"
+        ],
+        "summary": "Extension tools now emit canonical TurnItem::Extension lifecycle events through TurnItemEmitter and then forward supplied legacy EventMsg values for compatibility.",
+        "evidence": [
+          "codex-rs/core/src/tools/handlers/extension_tools.rs defines CoreTurnItemEmitter and emits TurnItem::Extension on start/completion",
+          "extension tool calls receive ConversationHistory, ToolEnvironment values, model/truncation metadata, payload, and turn_item_emitter"
+        ],
+        "local_targets": [
+          "canonical extension item lifecycle events",
+          "legacy EventMsg compatibility sequencing",
+          "extension tool environment/sandbox-context projection invariants"
+        ]
+      },
+      {
+        "id": "openai-codex-main-a219b6f-remote-plugin-bundle-install-constraints",
+        "channels": ["main"],
+        "commit": "a219b6fdb4e9f9655968adf20984916abc8b2290",
+        "upstream_pr": null,
+        "impact": "high",
+        "surface": [
+          "remote plugin bundle validation",
+          "plugin cache/data roots",
+          "install metadata",
+          "download/extract limits"
+        ],
+        "summary": "Remote plugin bundles now have explicit backend release/download validation, HTTPS/debug-loopback admission, bounded download/error/extract limits, redirect final-URL scheme checks, staging install behavior, and remote install metadata.",
+        "evidence": [
+          "codex-rs/core-plugins/src/remote_bundle.rs defines bundle download timeout, max download bytes, max extracted bytes, scheme validation, final URL validation, and install/extract paths",
+          "codex-rs/core-plugins/src/store.rs defines plugin cache/data roots, remote install metadata, plugin version roots, data roots, and active version discovery"
+        ],
+        "local_targets": [
+          "plugin-bundle source constraints for URL scheme, redirects, size limits, extracted-size limits, and staging",
+          "remote plugin install metadata schema/version",
+          "plugin cache/data root separation and active-version selection"
+        ]
+      },
+      {
+        "id": "openai-codex-main-a219b6f-install-context-package-layout",
+        "channels": ["main"],
+        "commit": "a219b6fdb4e9f9655968adf20984916abc8b2290",
+        "upstream_pr": null,
+        "impact": "high",
+        "surface": [
+          "managed package layout",
+          "resource/path resolution",
+          "standalone install context"
+        ],
+        "summary": "Install context now models package root/bin/codex-resources/codex-path layout and prefers package-layout helper/resource paths before legacy standalone resources.",
+        "evidence": [
+          "codex-rs/install-context/src/lib.rs defines CodexPackageLayout with package_dir, bin_dir, resources_dir, and path_dir",
+          "InstallContext::rg_command and bundled_resource prefer package-layout paths before legacy standalone resource directories"
+        ],
+        "local_targets": [
+          "managed package layout schema and resource-directory invariants",
+          "PATH helper resolution order for codex-path versus legacy resources",
+          "standalone/npm/bun/pnpm install-method projections"
+        ]
+      }
+    ],
+    "notes": [],
+    "noLocalAction": [
+      {
+        "id": "no-issue-targets",
+        "channels": ["main", "latest-alpha-cli"],
+        "impact": "no-issue-update",
+        "reason": "upstreamCodexPublicationPlan.issueTargets is empty."
+      },
+      {
+        "id": "alpha-unchanged-version-evidence",
+        "channels": ["latest-alpha-cli"],
+        "impact": "no-new-alpha-impact",
+        "reason": "Concrete Cargo.toml workspace.package.version remains 0.143.0; exact branch head SHA remains unresolved and is not inferred."
+      }
+    ]
+  },
+  "baseline_reference": {
+    "previous_latest_evidence_run_id": "20260708T045308Z",
+    "previous_main_head": "f1affbac5e5164b2bae825e9b39e9868bc4e0be2",
+    "previous_alpha_head": null,
+    "previous_alpha_workspace_version": "0.143.0"
+  },
+  "validation_notes": {
+    "cue_executed": false,
+    "reason": "GitHub App adapter exposes content read/write operations, not a repo shell.",
+    "issue_updates": "none; public upstreamCodexPublicationPlan.issueTargets is empty",
+    "forbidden_attractor_search": "GitHub code search for configured/known forbidden-attractor terms returned no matches in this run.",
+    "caveat": "contract-surface AGENTS initial-gate text still conflicts with the newer admitted publication task prompt; publication admission was taken from prior latest evidence/publication projection. Direct reads for publication.cue, public.cue, and report.cue were previously recorded as 404 through the GitHub content API. latest-alpha-cli exact branch head SHA was not exposed by connector responses and is recorded as unresolved rather than inferred."
+  }
+}
