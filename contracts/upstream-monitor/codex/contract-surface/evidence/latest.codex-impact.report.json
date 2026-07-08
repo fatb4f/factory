@@ -6,16 +6,16 @@
   "target_repo": "fatb4f/factory",
   "entrypoint": "contracts/upstream-monitor/codex/contract-surface/AGENTS.md",
   "adapter": "github_app",
-  "run_id": "20260707T165254Z",
+  "run_id": "20260708T045308Z",
   "publication": {
-    "report_run_path": "contracts/upstream-monitor/codex/contract-surface/reports/runs/20260707T165254Z.codex-impact.md",
+    "report_run_path": "contracts/upstream-monitor/codex/contract-surface/reports/runs/20260708T045308Z.codex-impact.md",
     "report_latest_path": "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md",
-    "evidence_run_path": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260707T165254Z.codex-impact.report.json",
+    "evidence_run_path": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260708T045308Z.codex-impact.report.json",
     "evidence_latest_path": "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json",
     "issue_targets": {},
-    "report_run_commit": "5bdf394d917b80cde1f2ec0cf12b2c2bfb851c2e",
-    "evidence_run_commit": "43da93a18271b8d56a52d7d8a9bd1a2f86d27a73",
-    "report_latest_commit": "e61e73963e9acb60cd0b7425cfe8194004caf395"
+    "report_run_commit": "2c50a274bff66a3473b5bbfd6e416686602e21b1",
+    "evidence_run_commit": "a1ef8cf97140722ab82a9001cf8dc499ec908594",
+    "report_latest_commit": "f0cacb780a91e1fcb3bf770b7c97c145d5f73af4"
   },
   "authority_reads": {
     "agents": [
@@ -46,25 +46,25 @@
       "repo": "openai/codex",
       "ref": "main",
       "status": "resolved",
-      "head_commit": "a3f8b0b33284054133474e7b1cc5fa7600221d97",
+      "head_commit": "f1affbac5e5164b2bae825e9b39e9868bc4e0be2",
       "workspace_version": "0.0.0",
-      "previous_recorded_head": "cca16a10878202cb2f6e9666b6b4330329ea7e65",
+      "previous_recorded_head": "a3f8b0b33284054133474e7b1cc5fa7600221d97",
       "change_since_previous_evidence": "advanced",
       "compare_status": "ahead",
-      "ahead_by": 4,
+      "ahead_by": 28,
       "behind_by": 0,
-      "changed_files_count": 15,
+      "changed_files_count": null,
+      "changed_files_note": "connector compare returned a broad file list but not a stable total-files field in the compact response shape",
       "changed_files_sample": [
-        ".github/scripts/macos-signing/codex-app-server.entitlements.plist",
-        ".github/scripts/macos-signing/codex-code-mode-host.entitlements.plist",
-        ".github/scripts/macos-signing/codex-responses-api-proxy.entitlements.plist",
-        ".github/scripts/macos-signing/codex.entitlements.plist",
-        ".github/workflows/rust-release.yml",
-        "codex-rs/app-server/src/bespoke_event_handling.rs",
-        "codex-rs/core-skills/src/loader_tests.rs",
-        "codex-rs/core/src/tools/handlers/dynamic.rs",
-        "codex-rs/login/src/auth/external_bearer.rs",
-        "codex-rs/login/src/auth/manager.rs"
+        "codex-rs/app-server-protocol/src/protocol/thread_history.rs",
+        "codex-rs/ext/items/src/image_generation.rs",
+        "codex-rs/app-server-protocol/src/protocol/v2/account.rs",
+        "codex-rs/app-server/src/external_auth.rs",
+        "codex-rs/core/src/compact_remote_request.rs",
+        "codex-rs/core/src/compact_model_fallback.rs",
+        "codex-rs/core/src/mcp_tool_call.rs",
+        "codex-rs/core-skills/src/loader/namespace.rs",
+        "codex-rs/codex-backend-openapi-models/src/models/delivered_managed_layers.rs"
       ]
     },
     "latest-alpha-cli": {
@@ -72,106 +72,177 @@
       "ref": "latest-alpha-cli",
       "status": "resolved-content; exact head sha unresolved through connector response",
       "head_commit": null,
-      "relation_to_main": "diverged; ahead-by-1; behind-by-7 from current main by connector compare; concrete content delta is codex-rs/Cargo.toml workspace package version",
+      "relation_to_main": "diverged; ahead-by-1; behind-by-35 from current main by connector compare; concrete content delta is codex-rs/Cargo.toml workspace package version",
       "changed_files_from_current_main": ["codex-rs/Cargo.toml"],
-      "workspace_version": "0.143.0-alpha.38",
+      "workspace_version": "0.143.0",
       "relation": "distinct-channel",
       "previous_recorded_head": null,
       "previous_recorded_workspace_version": "0.143.0-alpha.38",
-      "change_since_previous_evidence": "unchanged by concrete branch-content version evidence; exact ref sha unresolved"
+      "change_since_previous_evidence": "advanced by concrete branch-content version evidence; exact ref sha unresolved"
     }
   },
   "upstream_items": {
     "critical": [],
     "high": [
       {
-        "id": "openai-codex-main-f659eb1-canonical-dynamic-tool-call-items",
+        "id": "openai-codex-main-f1affba-image-generation-extension-item",
         "channels": ["main"],
-        "commit": "f659eb12bc8cecb976d92db192d9b2983c8053ff",
-        "upstream_pr": "openai/codex#31298",
+        "commit": "f1affbac5e5164b2bae825e9b39e9868bc4e0be2",
+        "upstream_pr": null,
         "impact": "high",
         "surface": [
-          "dynamic tool lifecycle",
-          "app-server v2 item stream",
-          "client dynamic-tool request dispatch",
-          "legacy event compatibility"
+          "extension item schema",
+          "app-server thread history projection",
+          "image-generation persistence envelope"
         ],
-        "summary": "Dynamic tools now emit canonical TurnItem::DynamicToolCall lifecycle, while app-server v2 dispatches client DynamicToolCall requests from canonical item starts and ignores mapped legacy request/response events.",
+        "summary": "Upstream now exposes a standalone ImageGenerationItem owned by the image extension and imported into app-server thread-history projection, with id/status/revised_prompt/result/saved_path fields.",
         "evidence": [
-          "openai/codex commit f659eb12bc8cecb976d92db192d9b2983c8053ff message: feat(core): emit canonical dynamic tool call items (#31298)",
-          "codex-rs/app-server/src/bespoke_event_handling.rs ignores deprecated DynamicToolCallRequest/Response for app-server v2 and dispatches client request from canonical item starts",
-          "codex-rs/core/src/tools/handlers/dynamic.rs emits DynamicToolCallItem started/completed lifecycle with status, content_items, success, error, and duration"
+          "codex-rs/ext/items/src/image_generation.rs defines serialized TS/JSON-schema ImageGenerationItem fields",
+          "codex-rs/app-server-protocol/src/protocol/thread_history.rs imports ImageGenerationItem into thread-history projection"
         ],
         "local_targets": [
-          "dynamic tool item schema/type generation",
-          "app-server v2 DynamicToolCall request dispatch invariants",
-          "duplicate dynamic-tool request negative fixtures",
-          "legacy DynamicToolCallRequest/Response compatibility projections"
+          "extension item schema/type generation",
+          "app-server v2 ThreadItem / thread-history projection fixtures",
+          "saved_path optionality and persistence-envelope invariants"
         ]
       },
       {
-        "id": "openai-codex-main-f363ed7-intel-v8-signing-entitlements",
+        "id": "openai-codex-main-f1affba-app-server-login-auth-bridge",
         "channels": ["main"],
-        "commit": "f363ed70cc1c6e2cae15fc1b8711f7e0d7b96cf1",
-        "upstream_pr": "openai/codex#30953",
+        "commit": "f1affbac5e5164b2bae825e9b39e9868bc4e0be2",
+        "upstream_pr": null,
         "impact": "high",
         "surface": [
-          "release workflow",
-          "macOS signing entitlements",
-          "V8 Code Mode startup",
-          "binary verification"
+          "account/login/start params",
+          "ChatGPT hosted login",
+          "external auth refresh bridge",
+          "app-server auth state"
         ],
-        "summary": "Release signing now uses per-binary macOS entitlement profiles; Intel V8-linked binaries receive allow-jit plus allow-unsigned-executable-memory while the Responses API proxy keeps the narrower entitlement set.",
+        "summary": "LoginAccountParams.Chatgpt now admits app_brand and app-server has an ExternalAuthBridge that stores/refeshes CodexAuth through chatgptAuthTokensRefresh with a bounded timeout.",
         "evidence": [
-          "openai/codex commit f363ed70cc1c6e2cae15fc1b8711f7e0d7b96cf1 message: fix(release): add missing Intel V8 signing entitlement (#30953)",
-          ".github/scripts/macos-signing adds per-binary entitlement files",
-          ".github/workflows/rust-release.yml signs and verifies binaries against per-binary entitlement files and Mach-O architecture"
+          "codex-rs/app-server-protocol/src/protocol/v2/account.rs defines app_brand and LoginAppBrand",
+          "codex-rs/app-server/src/external_auth.rs implements ExternalAuthBridge around CodexAuth and chatgptAuthTokensRefresh"
         ],
         "local_targets": [
-          "release artifact signing policy projections",
-          "platform/architecture-specific entitlement fixtures",
-          "fail-closed binary selector constraints for generated release adapters"
+          "account/login/start request schema and TypeScript generation",
+          "hosted login success-page/client-brand fixtures",
+          "external ChatGPT auth refresh timeout and account-id validation constraints"
         ]
       },
       {
-        "id": "openai-codex-main-a3f8b0b-external-auth-codexauth",
+        "id": "openai-codex-main-f1affba-remote-compaction-request-fallback",
         "channels": ["main"],
-        "commit": "a3f8b0b33284054133474e7b1cc5fa7600221d97",
-        "upstream_pr": "openai/codex#31355",
+        "commit": "f1affbac5e5164b2bae825e9b39e9868bc4e0be2",
+        "upstream_pr": null,
         "impact": "high",
         "surface": [
-          "auth manager contracts",
-          "external bearer flow",
-          "ChatGPT token refresh",
-          "app-server auth refresh bridge"
+          "remote compaction request assembly",
+          "responses metadata",
+          "model fallback telemetry",
+          "active-context token accounting"
         ],
-        "summary": "ExternalAuth now resolves and refreshes CodexAuth directly instead of returning the removed ExternalAuthTokens wrapper, changing local type projections for external API-key and ChatGPT auth flows.",
+        "summary": "Remote compaction request assembly was split into request-attempt logic with pre-trim/token accounting/responses metadata and a model fallback helper emitting codex.compaction.model_fallback telemetry.",
         "evidence": [
-          "openai/codex commit a3f8b0b33284054133474e7b1cc5fa7600221d97 message: refactor: make ExternalAuth return CodexAuth (#31355)",
-          "codex-login auth trait signatures change from ExternalAuthTokens to CodexAuth",
-          "AuthManager validates external ChatGPT auth mode/account state during refresh and ignores non-API-key auth from external API-key providers"
+          "codex-rs/core/src/compact_remote_request.rs defines RemoteCompactAttempt and run_remote_compact_attempt",
+          "codex-rs/core/src/compact_model_fallback.rs records fallback telemetry and outcome logging"
         ],
         "local_targets": [
-          "auth adapter type projections that still model ExternalAuthTokens",
-          "external bearer and ChatGPT refresh fixtures",
-          "account/workspace validation constraints for externally supplied ChatGPT auth"
+          "compaction request projection and trace-input fixtures",
+          "service-tier omission for API-key auth mode",
+          "compaction telemetry tag constraints"
+        ]
+      },
+      {
+        "id": "openai-codex-main-f1affba-mcp-tool-metadata-policy",
+        "channels": ["main"],
+        "commit": "f1affbac5e5164b2bae825e9b39e9868bc4e0be2",
+        "upstream_pr": null,
+        "impact": "high",
+        "surface": [
+          "MCP tool-call lifecycle",
+          "app-tool policy evaluation",
+          "approval metadata",
+          "elicitation flow",
+          "turn metadata"
+        ],
+        "summary": "MCP tool-call handling now threads richer metadata and policy state, including approval metadata constants, connector/tool descriptors, app-tool policy evaluation, auth elicitation helpers, and turn metadata context.",
+        "evidence": [
+          "codex-rs/core/src/mcp_tool_call.rs imports McpTurnMetadataContext, auth elicitation helpers, approval metadata keys, and AppToolPolicyEvaluator",
+          "handle_mcp_tool_call builds invocation metadata and app-tool policy before dispatching MCP tool-call lifecycle events"
+        ],
+        "local_targets": [
+          "MCP approval metadata schema/type generation",
+          "app-tool policy evaluator fixtures for selected/plugin connector tools",
+          "auth elicitation and server-user-flow telemetry invariants"
+        ]
+      },
+      {
+        "id": "openai-codex-main-f1affba-skill-namespace-resolver",
+        "channels": ["main"],
+        "commit": "f1affbac5e5164b2bae825e9b39e9868bc4e0be2",
+        "upstream_pr": null,
+        "impact": "high",
+        "surface": [
+          "plugin skill namespace resolution",
+          "nested manifests",
+          "symlink root precedence",
+          "skill loader naming"
+        ],
+        "summary": "Upstream now implements a scan-local SkillNamespaceResolver with explicit precedence and namespace-qualified skill names.",
+        "evidence": [
+          "codex-rs/core-skills/src/loader/namespace.rs defines SkillNamespaceResolver and namespace precedence",
+          "ResolvedSkillNamespace::qualify emits namespace-qualified skill names"
+        ],
+        "local_targets": [
+          "plugin skill namespace resolver contract",
+          "nested manifest and symlink-root precedence fixtures",
+          "generated skill-name collision/qualification constraints"
+        ]
+      },
+      {
+        "id": "openai-codex-main-f1affba-delivered-managed-layers",
+        "channels": ["main"],
+        "commit": "f1affbac5e5164b2bae825e9b39e9868bc4e0be2",
+        "upstream_pr": null,
+        "impact": "high",
+        "surface": [
+          "backend OpenAPI models",
+          "delivered managed layers",
+          "config TOML fragment layering"
+        ],
+        "summary": "The generated backend model surface now includes DeliveredManagedLayers with explicit baseline and system_overlay TOML fragment vectors.",
+        "evidence": [
+          "codex-rs/codex-backend-openapi-models/src/models/delivered_managed_layers.rs defines baseline and system_overlay fields"
+        ],
+        "local_targets": [
+          "managed config layer schema",
+          "baseline vs system_overlay ordering/merge semantics",
+          "generated backend OpenAPI type projections"
+        ]
+      },
+      {
+        "id": "openai-codex-alpha-0.143.0-version-channel",
+        "channels": ["latest-alpha-cli"],
+        "commit": null,
+        "upstream_pr": null,
+        "impact": "high",
+        "surface": [
+          "alpha CLI version channel",
+          "release/package version tracking"
+        ],
+        "summary": "latest-alpha-cli content now reports workspace.package.version = 0.143.0, replacing previously recorded 0.143.0-alpha.38; exact branch head SHA remains unresolved and was not inferred.",
+        "evidence": [
+          "codex-rs/Cargo.toml on latest-alpha-cli reports workspace.package.version = 0.143.0",
+          "connector compare main..latest-alpha-cli reports only codex-rs/Cargo.toml changed"
+        ],
+        "local_targets": [
+          "alpha/stable release-channel distinction",
+          "version evidence schema that allows concrete content evidence with unresolved head SHA",
+          "downstream package/version gate fixtures"
         ]
       }
     ],
-    "notes": [
-      {
-        "id": "openai-codex-main-42156ba-plugin-namespace-loading-coverage",
-        "channels": ["main"],
-        "commit": "42156ba007278d9068f1518ac1f627b56c136ef6",
-        "impact": "note",
-        "surface": [
-          "skill/plugin namespace loading tests",
-          "nested plugin manifests",
-          "symlink behavior"
-        ],
-        "summary": "Upstream added tests for plugin skill namespace inheritance, nested manifest precedence, invalid nested manifest fallback, and symlink scan-root behavior. No implementation behavior changed in this commit."
-      }
-    ],
+    "notes": [],
     "noLocalAction": [
       {
         "id": "no-issue-targets",
@@ -182,8 +253,8 @@
     ]
   },
   "baseline_reference": {
-    "previous_latest_evidence_run_id": "20260707T045606Z",
-    "previous_main_head": "cca16a10878202cb2f6e9666b6b4330329ea7e65",
+    "previous_latest_evidence_run_id": "20260707T165254Z",
+    "previous_main_head": "a3f8b0b33284054133474e7b1cc5fa7600221d97",
     "previous_alpha_head": null,
     "previous_alpha_workspace_version": "0.143.0-alpha.38"
   },
