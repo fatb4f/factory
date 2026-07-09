@@ -1,0 +1,130 @@
+{
+  "apiVersion": "factory.upstream-monitor.codex/v0",
+  "kind": "CodexImpactReportEvidence",
+  "loop": "codex-contract-surface",
+  "signal_id": "loop_bootstrap_request",
+  "target_repo": "fatb4f/factory",
+  "entrypoint": "contracts/upstream-monitor/codex/contract-surface/AGENTS.md",
+  "adapter": "github_app",
+  "run_id": "20260709T165422Z",
+  "publication": {
+    "report_run_path": "contracts/upstream-monitor/codex/contract-surface/reports/runs/20260709T165422Z.codex-impact.md",
+    "report_latest_path": "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md",
+    "evidence_run_path": "contracts/upstream-monitor/codex/contract-surface/evidence/runs/20260709T165422Z.codex-impact.report.json",
+    "evidence_latest_path": "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json",
+    "issue_targets": {}
+  },
+  "channels": {
+    "main": {
+      "repo": "openai/codex",
+      "ref": "main",
+      "status": "resolved",
+      "head_commit": "b58952b0fa889f7958af37d057b521f3fdab4d3c",
+      "workspace_version": "0.0.0",
+      "previous_recorded_head": "3380969a29134630d56feb6218e8e8dcc5e8196d",
+      "change_since_previous_evidence": "advanced",
+      "compare_status": "ahead",
+      "ahead_by": 17,
+      "behind_by": 0,
+      "changed_files_count": 86,
+      "changed_files_sample": [
+        "codex-rs/exec-server/src/environment.rs",
+        "codex-rs/exec-server/src/resolved_capability.rs",
+        "codex-rs/app-server/src/config/external_agent_config.rs",
+        "codex-rs/core-skills/src/loader/discovery.rs",
+        "codex-rs/code-mode-protocol/src/description.rs",
+        "codex-rs/network-proxy/src/config.rs"
+      ]
+    },
+    "latest-alpha-cli": {
+      "repo": "openai/codex",
+      "ref": "latest-alpha-cli",
+      "status": "resolved-content; exact head sha unresolved through connector response",
+      "head_commit": null,
+      "relation_to_main": "diverged; ahead_by=1; behind_by=17; concrete content delta codex-rs/Cargo.toml",
+      "changed_files_from_current_main": [
+        "codex-rs/Cargo.toml"
+      ],
+      "workspace_version": "0.144.0",
+      "previous_recorded_workspace_version": "0.144.0-alpha.4",
+      "change_since_previous_evidence": "advanced by concrete branch-content version evidence; exact ref sha unresolved"
+    }
+  },
+  "upstream_items": {
+    "critical": [],
+    "high": [
+      {
+        "id": "openai-codex-main-b58952b-exec-environment-capability-roots",
+        "channels": [
+          "main"
+        ],
+        "commit": "b58952b0fa889f7958af37d057b521f3fdab4d3c",
+        "impact": "high",
+        "summary": "EnvironmentManager now models default/disabled/local/remote/Noise environments; selected capability roots resolve only against ready stable environment identities."
+      },
+      {
+        "id": "openai-codex-main-b58952b-external-agent-config-import-outcome",
+        "channels": [
+          "main"
+        ],
+        "commit": "b58952b0fa889f7958af37d057b521f3fdab4d3c",
+        "impact": "high",
+        "summary": "Import outcome now has typed item results, successes, raw errors, and pending_plugin_imports for remote plugin details."
+      },
+      {
+        "id": "openai-codex-main-b58952b-skill-discovery-inventory-contract",
+        "channels": [
+          "main"
+        ],
+        "commit": "b58952b0fa889f7958af37d057b521f3fdab4d3c",
+        "impact": "high",
+        "summary": "Discovery now has walk limits, symlink/hidden policies, plugin/namespace roots, warnings, and metadata present/absent/probe classification."
+      },
+      {
+        "id": "openai-codex-main-b58952b-code-mode-exec-pragma",
+        "channels": [
+          "main"
+        ],
+        "commit": "b58952b0fa889f7958af37d057b521f3fdab4d3c",
+        "impact": "high",
+        "summary": "Code-mode exec accepts first-line // @exec JSON pragma for yield_time_ms and max_output_tokens with parser/admission errors."
+      },
+      {
+        "id": "openai-codex-main-b58952b-network-proxy-permissions",
+        "channels": [
+          "main"
+        ],
+        "commit": "b58952b0fa889f7958af37d057b521f3fdab4d3c",
+        "impact": "high",
+        "summary": "Network proxy config now has explicit domain permission precedence none<allow<deny, Unix socket permissions, MITM/credential broker knobs."
+      },
+      {
+        "id": "openai-codex-alpha-0.144.0-version-advance",
+        "channels": [
+          "latest-alpha-cli"
+        ],
+        "commit": null,
+        "impact": "high",
+        "summary": "latest-alpha-cli advanced to workspace.package.version 0.144.0 as a distinct evidence channel."
+      }
+    ],
+    "noLocalAction": [
+      {
+        "id": "no-issue-targets",
+        "reason": "upstreamCodexPublicationPlan.issueTargets is empty."
+      }
+    ]
+  },
+  "baseline_reference": {
+    "previous_latest_evidence_run_id": "20260709T045358Z",
+    "previous_main_head": "3380969a29134630d56feb6218e8e8dcc5e8196d",
+    "previous_alpha_workspace_version": "0.144.0-alpha.4"
+  },
+  "validation_notes": {
+    "cue_executed": false,
+    "reason": "GitHub App adapter exposes content read/write operations, not a repo shell.",
+    "issue_updates": "none; issueTargets is empty",
+    "forbidden_attractor_search": "no matches",
+    "caveat": "publication admission relies on prior latest evidence projection; latest-alpha-cli exact branch head SHA unresolved."
+  }
+}
