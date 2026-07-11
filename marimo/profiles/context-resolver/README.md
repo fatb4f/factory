@@ -26,28 +26,50 @@ marimo/profiles/context-resolver/
 
 The only Python file is the Marimo workbook. It owns:
 
-- prompt normalization;
-- nested `.kb` loading;
-- context graph construction and filtering;
-- fragment and implementation-plan projection;
-- check and gate evaluation;
+- prompt normalization and scoring;
+- loading validated nested `.kb` projections;
+- reactive subgraph selection and budgeting;
+- source-fragment materialization;
+- packet, check, and gate projection;
 - Codex `UserPromptSubmit` envelope transport.
 
 There is no standalone Python runtime or adapter layer. The repository-level `.codex/hooks.json` file only declares the Codex lifecycle binding and invokes this workbook directly.
 
 ## Authority
 
-The parent `.kb/context.cue` file owns the admitted nested boundaries. Each child `.kb` module exports its own fragments, plan steps, checks, and gates. The workbook loads those projections, constructs the available graph, and reactively filters it from the submitted prompt.
+Each `.kb` boundary adapts its local fragments and workflow steps into `apercue.ca/patterns.#Graph`. CUE/Apercue owns:
 
-The workbook-generated graph and packet are transient. They do not become knowledge authority.
+- dependency-reference validation;
+- graph depth and ancestry;
+- inverse dependents;
+- roots, leaves, and topology;
+- cross-reference validation for fragments, checks, and gates.
+
+The workbook consumes only exported, validated graph projections. It does not reconstruct the graph or calculate a second topology. Marimo remains the reactive filtering primitive: it ranks prompt matches, selects Apercue-provided ancestor/dependent closure, federates boundary projections, applies budgets, and emits a transient packet.
+
+The packet is generated context, not source authority.
+
+## Relation to quicue-kg
+
+These `.kb` modules are context-boundary modules and do not claim conformance to the quicue-kg specification's root-level `.kg/`, `package kg` layout. They follow the applicable processing rules:
+
+- CUE remains the source of truth;
+- processors validate before consuming;
+- contradictions fail during CUE evaluation;
+- computed graph views are derived, never hand-maintained;
+- external packets are one-way projections and do not become authority.
+
+Architectural decisions, validated insights, rejected approaches, and reusable patterns belong in a conforming quicue-kg graph when that knowledge surface is introduced. They should not be encoded as transient context fragments.
 
 ## Reactive stages
 
 1. Normalize the prompt and retrieval budget.
 2. Export the parent and admitted child `.kb` outputs.
-3. Construct the available context graph.
-4. Select matching seeds and close their declared relationships.
-5. Materialize source-backed fragments and project the implementation plan, checks, and gates.
+3. Reject missing or invalid Apercue graph projections.
+4. Score fragment and workflow resources against the prompt.
+5. Select exported ancestor/dependent closure and cross-project fragment usage.
+6. Order implementation steps through exported workflow topology.
+7. Materialize source-backed fragments and evaluate packet checks and gates.
 
 ## Validation
 
