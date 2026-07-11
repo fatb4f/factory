@@ -4,13 +4,16 @@ The context resolver is the single runtime path from a Codex prompt to a bounded
 
 ```text
 UserPromptSubmit
-  -> .kg/hooks/codex/user-prompt-submit
+  -> .codex/hooks.json
+  -> hooks/codex/user-prompt-submit
   -> adapters/codex_hook.py
   -> context_resolver.app.run(defs={"workbook_request": ...})
   -> reactive Marimo DAG
   -> filtered context graph
   -> fragments + implementation plan + checks + gates
 ```
+
+The executable hook, bridge, workbook, validation script, and knowledge boundary all remain inside `marimo/profiles/context-resolver/`. The root `.codex/hooks.json` file is only the Codex-required project registration surface.
 
 ## Authority
 
@@ -29,7 +32,7 @@ The workbook-generated graph and packet are transient. They do not become knowle
 ## Validation
 
 ```bash
-bash scripts/validate-context-resolver-hook.sh
+bash marimo/profiles/context-resolver/scripts/validate-hook.sh
 ```
 
 The hook requires `uv`, `cue`, and `jq`. The bridge uses an inline `marimo` dependency through `uv run --script`.
