@@ -92,11 +92,21 @@ _contextInput: {
 
 contextGraph: aperpatterns.#Graph & {Input: _contextInput}
 _contextGraphValid: true & contextGraph.valid
+_contextExport: aperpatterns.#ExportGraph & {Graph: contextGraph}
+_contextAnalysis: {
+	for resource in _contextExport.resources {
+		(resource.name): resource
+	}
+}
 _contextResources: {
-	for id, resource in contextGraph.resources {
+	for id, resource in _contextInput {
 		(id): resource & {
-			depth:     resource._depth
-			ancestors: resource._ancestors
+			depth: _contextAnalysis[id].depth
+			ancestors: {
+				for ancestor in _contextAnalysis[id].ancestors {
+					(ancestor): true
+				}
+			}
 		}
 	}
 }
@@ -137,11 +147,21 @@ _workflowInput: {
 
 workflowGraph: aperpatterns.#Graph & {Input: _workflowInput}
 _workflowGraphValid: true & workflowGraph.valid
+_workflowExport: aperpatterns.#ExportGraph & {Graph: workflowGraph}
+_workflowAnalysis: {
+	for resource in _workflowExport.resources {
+		(resource.name): resource
+	}
+}
 _workflowResources: {
-	for id, resource in workflowGraph.resources {
+	for id, resource in _workflowInput {
 		(id): resource & {
-			depth:     resource._depth
-			ancestors: resource._ancestors
+			depth: _workflowAnalysis[id].depth
+			ancestors: {
+				for ancestor in _workflowAnalysis[id].ancestors {
+					(ancestor): true
+				}
+			}
 		}
 	}
 }
@@ -176,11 +196,18 @@ workflow: {
 	dependents: workflowGraph.dependents
 }
 
+let OutputFragments = fragments
+let OutputSteps = steps
+let OutputChecks = checks
+let OutputGates = _validatedGates
+let OutputContext = context
+let OutputWorkflow = workflow
+
 output: close({
-	fragments: fragments
-	steps:     steps
-	checks:    checks
-	gates:     _validatedGates
-	context:   context
-	workflow:  workflow
+	fragments: OutputFragments
+	steps:     OutputSteps
+	checks:    OutputChecks
+	gates:     OutputGates
+	context:   OutputContext
+	workflow:  OutputWorkflow
 })

@@ -81,6 +81,7 @@ def _():
 
     def load(request: dict[str, Any]):
         root = Path(request["repo_root"]) / "marimo/profiles/context-resolver/.kb"
+        allowed = set((request.get("scope") or {}).get("boundaries") or [])
         try:
             parent = cue_export(root)
         except Exception as exc:
@@ -90,6 +91,8 @@ def _():
         errors: list[dict[str, str]] = []
         for spec in parent.get("boundaries", {}).values():
             identity = spec["id"]
+            if allowed and identity != "context-resolver" and identity not in allowed:
+                continue
             path = (root / spec["path"]).resolve()
             try:
                 output = parent if identity == "context-resolver" else cue_export(path)
@@ -145,7 +148,11 @@ def _():
         candidates: list[dict[str, Any]] = []
 
         for boundary, item in boundaries.items():
-            if allowed and boundary not in allowed:
+            if (
+                allowed
+                and boundary != "context-resolver"
+                and boundary not in allowed
+            ):
                 continue
             output = item["output"]
             for kind, field, prefix in (
@@ -386,7 +393,8 @@ def _():
             path = (Path(boundaries[boundary]["path"]) / resource["source"]["path"]).resolve()
             try:
                 path.relative_to(repo_root)
-                content = path.read_text(encoding="utf-8", errors="replace")
+                with path.open(encoding="utf-8", errors="replace") as source:
+                    content = source.read(max_chars)
             except Exception as exc:
                 content = str(resource.get("description", ""))
                 source_errors.append({"fragment": identity, "reason": str(exc)})
@@ -395,7 +403,7 @@ def _():
                     "id": identity,
                     "boundary": boundary,
                     "source": resource["source"],
-                    "content": content[:max_chars],
+                    "content": content,
                     "reason": ", ".join(score_map.get(identity, {}).get("matched", []))
                     or "Apercue graph closure",
                 }
@@ -484,14 +492,12 @@ def _():
             for item in gates
             if item["id"].startswith("context-resolver.gate.")
         ]
-        return {
+        result = {
             "schema": "factory.context-packet.v0",
             "authority": False,
             "generated": True,
             "transient": True,
-            "admitted": bool(fragments)
-            and bool(self_gates)
-            and all(item["satisfied"] for item in self_gates),
+            "admitted": False,
             "request": request,
             "context_graph": {
                 "seeds": selected["seeds"],
@@ -504,7 +510,72 @@ def _():
             "checks": checks,
             "gates": gates,
             "unresolved_context": unresolved,
+            "metrics": {
+                "estimatedTokens": 0,
+                "budgetRemaining": 0,
+                "truncationReasons": [],
+            },
         }
+
+        # Cap each source before serialization, then reduce all remaining source
+        # bodies proportionally in one pass. Runtime is linear in packet size;
+        # it never performs fixed-size trim-and-reserialize loops.
+        budget_chars = request["budget"]["maxTokens"] * 4
+        content_budget_chars = max(0, budget_chars - 256)
+        serialized = json.dumps(
+            result,
+            ensure_ascii=False,
+            separators=(",", ":"),
+        )
+        content_truncated = False
+        if len(serialized) > content_budget_chars:
+            content_chars = sum(len(item["content"]) for item in fragments)
+            allowed_content = max(
+                0,
+                content_chars - (len(serialized) - content_budget_chars),
+            )
+            if allowed_content < content_chars and content_chars:
+                remaining = allowed_content
+                for index, item in enumerate(fragments):
+                    if index == len(fragments) - 1:
+                        limit = remaining
+                    else:
+                        limit = min(
+                            len(item["content"]),
+                            len(item["content"])
+                            * allowed_content
+                            // content_chars,
+                        )
+                    item["content"] = item["content"][:limit]
+                    remaining -= limit
+                content_truncated = True
+                serialized = json.dumps(
+                    result,
+                    ensure_ascii=False,
+                    separators=(",", ":"),
+                )
+
+        estimated_tokens = (len(serialized) + 3) // 4
+        result["metrics"] = {
+            "estimatedTokens": estimated_tokens,
+            "budgetRemaining": request["budget"]["maxTokens"]
+            - estimated_tokens,
+            "truncationReasons": ["maxTokens"] if content_truncated else [],
+        }
+        serialized = json.dumps(
+            result,
+            ensure_ascii=False,
+            separators=(",", ":"),
+        )
+        within_budget = len(serialized) <= budget_chars
+        result["admitted"] = (
+            bool(fragments)
+            and not unresolved
+            and bool(self_gates)
+            and all(item["satisfied"] for item in self_gates)
+            and within_budget
+        )
+        return result
 
     return load, mo, normalize, project, select
 

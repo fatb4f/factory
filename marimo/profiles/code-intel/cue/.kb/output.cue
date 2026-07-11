@@ -18,12 +18,19 @@ package kb
 	unresolved_context: [...{description: string, reason: string}]
 }
 
+let OutputFragments = fragments
+let OutputSteps = steps
+let OutputChecks = checks
+let OutputGates = _validatedGates
+let OutputContext = context
+let OutputWorkflow = workflow
+
 output: {
-	fragments: fragments
-	steps:     steps
-	checks:    checks
-	gates:     _validatedGates
-	context:   context
-	workflow:  workflow
-	topology:  workflow.topology
+	fragments: OutputFragments
+	steps:     OutputSteps
+	checks:    OutputChecks
+	gates:     OutputGates
+	context:   OutputContext
+	workflow:  OutputWorkflow
+	topology:  OutputWorkflow.topology
 }
