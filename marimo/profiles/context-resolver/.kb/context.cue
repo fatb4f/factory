@@ -168,11 +168,18 @@ gates: packet_admitted: #Gate & {
 	unresolved_context: [..._]
 })
 
-output: close({
-	boundary:   boundary
-	boundaries: boundaries
-	fragments:  fragments
-	steps:      steps
-	checks:     checks
-	gates:      gates
-})
+let OutputBoundary = boundary
+let OutputBoundaries = boundaries
+let OutputFragments = fragments
+let OutputSteps = steps
+let OutputChecks = checks
+let OutputGates = gates
+
+output: {
+	boundary:   OutputBoundary
+	boundaries: OutputBoundaries
+	fragments:  OutputFragments
+	steps:      OutputSteps
+	checks:     OutputChecks
+	gates:      OutputGates
+}

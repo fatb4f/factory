@@ -82,7 +82,23 @@ def main() -> int:
     if not isinstance(result, dict):
         raise RuntimeError("workbook did not define workbook_result")
     if not result.get("admitted"):
-        raise RuntimeError("workbook context packet was not admitted")
+        details = {
+            "checks": result.get("checks", []),
+            "gates": result.get("gates", []),
+            "unresolved_context": result.get("unresolved_context", []),
+            "selected_fragment_ids": [
+                item.get("id")
+                for item in result.get("selected_fragments", [])
+            ],
+        }
+        raise RuntimeError(
+            "workbook context packet was not admitted: "
+            + json.dumps(
+                details,
+                ensure_ascii=False,
+                separators=(",", ":"),
+            )
+        )
 
     json.dump(
         {

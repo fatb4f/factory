@@ -62,9 +62,14 @@ gates: execution_admitted: #Gate & {
 	requires: {references_admitted: true}
 }
 
-output: close({
-	fragments: fragments
-	steps:     steps
-	checks:    checks
-	gates:     gates
-})
+let OutputFragments = fragments
+let OutputSteps = steps
+let OutputChecks = checks
+let OutputGates = gates
+
+output: {
+	fragments: OutputFragments
+	steps:     OutputSteps
+	checks:    OutputChecks
+	gates:     OutputGates
+}
