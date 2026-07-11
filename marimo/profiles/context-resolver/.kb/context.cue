@@ -46,24 +46,10 @@ boundaries: {
 fragments: {
 	workbook: #ContextFragment & {
 		id:          "workbook"
-		description: "Reactive Marimo DAG that filters the available context graph"
+		description: "Reactive Marimo DAG, context graph runtime, and Codex hook ingress"
 		source: path: "../context_resolver.py"
-		selectors: ["marimo", "reactive", "dag", "context", "filter"]
+		selectors: ["marimo", "reactive", "dag", "context", "filter", "codex", "hook"]
 		priority: 100
-	}
-	runtime: #ContextFragment & {
-		id:          "runtime"
-		description: "Pure graph loading, filtering, and packet projection helpers"
-		source: path: "../runtime.py"
-		selectors: ["graph", "filter", "projection", "packet"]
-		priority: 90
-	}
-	hook_bridge: #ContextFragment & {
-		id:          "hook_bridge"
-		description: "Codex UserPromptSubmit bridge into the Marimo workbook"
-		source: path: "../adapters/codex_hook.py"
-		selectors: ["codex", "hook", "bridge", "prompt"]
-		priority: 90
 	}
 	boundary_manifest: #ContextFragment & {
 		id:          "boundary_manifest"
@@ -87,7 +73,7 @@ steps: {
 	normalize_prompt: #PlanStep & {
 		id:          "normalize_prompt"
 		description: "Normalize the submitted prompt into bounded retrieval inputs"
-		fragments: {hook_bridge: true}
+		fragments: {workbook: true}
 	}
 	load_boundaries: #PlanStep & {
 		id:          "load_boundaries"
@@ -99,7 +85,7 @@ steps: {
 		id:          "filter_context_graph"
 		description: "Filter and close the context graph around relevant seeds"
 		depends_on: {load_boundaries: true}
-		fragments: {workbook: true, runtime: true}
+		fragments: {workbook: true}
 	}
 	project_packet: #PlanStep & {
 		id:          "project_packet"
