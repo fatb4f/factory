@@ -12,7 +12,15 @@ def normalize_request(value: dict[str, Any]) -> dict[str, Any]:
     prompt = value.get("prompt")
     if not isinstance(prompt, str) or not prompt.strip():
         raise ValueError("prompt must be a non-empty string")
-    budget = value.get("budget") or {}
+
+    raw_budget = value.get("budget") or {}
+
+    def bounded(name: str, default: int, low: int, high: int) -> int:
+        result = raw_budget.get(name, default)
+        if not isinstance(result, int):
+            raise TypeError(f"budget.{name} must be an integer")
+        return max(low, min(high, result))
+
     return {
         "schema": "factory.context-request.v0",
         "event": str(value.get("event", "interactive")),
@@ -21,10 +29,10 @@ def normalize_request(value: dict[str, Any]) -> dict[str, Any]:
         "tokens": sorted(set(re.findall(r"[a-z0-9_./-]+", prompt.lower()))),
         "scope": value.get("scope") or {},
         "budget": {
-            "maxFragments": int(budget.get("maxFragments", 12)),
-            "maxSteps": int(budget.get("maxSteps", 8)),
-            "maxNodes": int(budget.get("maxNodes", 48)),
-            "maxTokens": int(budget.get("maxTokens", 6000)),
+            "maxFragments": bounded("maxFragments", 12, 1, 32),
+            "maxSteps": bounded("maxSteps", 8, 1, 32),
+            "maxNodes": bounded("maxNodes", 48, 4, 128),
+            "maxTokens": bounded("maxTokens", 6000, 256, 20000),
         },
     }
 
@@ -38,10 +46,10 @@ def cue_export(path: Path) -> dict[str, Any]:
         text=True,
         timeout=10,
     )
-    value = json.loads(run.stdout)
-    if not isinstance(value, dict):
+    output = json.loads(run.stdout)
+    if not isinstance(output, dict):
         raise TypeError(f"{path}: output must be an object")
-    return value
+    return output
 
 
 def load_boundaries(
@@ -78,9 +86,12 @@ def build_graph(boundaries: dict[str, Any]) -> dict[str, Any]:
     def q(boundary: str, kind: str, local_id: str) -> str:
         return f"{boundary}:{kind}:{local_id}"
 
+    def edge(source: str, target: str, kind: str) -> None:
+        edges.append({"source": source, "target": target, "kind": kind})
+
     for boundary_id, boundary in boundaries.items():
         output = boundary["output"]
-        selectors = boundary["selectors"]
+        boundary_selectors = list(boundary["selectors"])
 
         for local_id, fragment in output.get("fragments", {}).items():
             node_id = q(boundary_id, "fragment", local_id)
@@ -90,7 +101,8 @@ def build_graph(boundaries: dict[str, Any]) -> dict[str, Any]:
                 "local_id": local_id,
                 "kind": "fragment",
                 "description": fragment["description"],
-                "selectors": selectors + list(fragment.get("selectors") or []),
+                "selectors": boundary_selectors
+                + list(fragment.get("selectors") or []),
                 "priority": int(fragment.get("priority", 0)),
                 "source": fragment["source"],
                 "boundary_path": boundary["path"],
@@ -109,6 +121,7 @@ def build_graph(boundaries: dict[str, Any]) -> dict[str, Any]:
                     "local_id": local_id,
                     "kind": kind,
                     "description": declaration["description"],
+                    "selectors": boundary_selectors,
                     "requires": list(
                         (declaration.get("requires") or {}).keys()
                     ),
@@ -118,46 +131,24 @@ def build_graph(boundaries: dict[str, Any]) -> dict[str, Any]:
         for local_id, step in output.get("steps", {}).items():
             source = q(boundary_id, "step", local_id)
             for target in step.get("depends_on", {}):
-                edges.append(
-                    {
-                        "source": source,
-                        "target": q(boundary_id, "step", target),
-                        "kind": "depends-on",
-                    }
-                )
+                edge(source, q(boundary_id, "step", target), "depends-on")
             for target in step.get("fragments", {}):
-                edges.append(
-                    {
-                        "source": source,
-                        "target": q(boundary_id, "fragment", target),
-                        "kind": "uses-fragment",
-                    }
+                edge(
+                    source,
+                    q(boundary_id, "fragment", target),
+                    "uses-fragment",
                 )
             for target in step.get("checks", {}):
-                edges.append(
-                    {
-                        "source": source,
-                        "target": q(boundary_id, "check", target),
-                        "kind": "checked-by",
-                    }
-                )
+                edge(source, q(boundary_id, "check", target), "checked-by")
             for target in step.get("gates", {}):
-                edges.append(
-                    {
-                        "source": source,
-                        "target": q(boundary_id, "gate", target),
-                        "kind": "gated-by",
-                    }
-                )
+                edge(source, q(boundary_id, "gate", target), "gated-by")
 
         for local_id, gate in output.get("gates", {}).items():
             for target in gate.get("requires", {}):
-                edges.append(
-                    {
-                        "source": q(boundary_id, "gate", local_id),
-                        "target": q(boundary_id, "check", target),
-                        "kind": "requires",
-                    }
+                edge(
+                    q(boundary_id, "gate", local_id),
+                    q(boundary_id, "check", target),
+                    "requires",
                 )
 
     return {"nodes": nodes, "edges": edges}
@@ -167,41 +158,65 @@ def filter_graph(
     graph: dict[str, Any], request: dict[str, Any]
 ) -> dict[str, Any]:
     tokens = set(request["tokens"])
-    candidates = []
+    scope = request.get("scope") or {}
+    allowed_boundaries = set(scope.get("boundaries") or [])
+    candidates: list[dict[str, Any]] = []
+
     for node in graph["nodes"].values():
         if node["kind"] not in {"fragment", "step"}:
             continue
+        if allowed_boundaries and node["boundary"] not in allowed_boundaries:
+            continue
         text = " ".join(
-            [
+            (
                 node["id"],
                 node["description"],
                 " ".join(node.get("selectors", [])),
-            ]
+            )
         ).lower()
         matched = sorted(token for token in tokens if token in text)
-        score = len(matched) * 10 + int(node.get("priority", 0))
         candidates.append(
-            {"id": node["id"], "score": score, "matched": matched}
+            {
+                "id": node["id"],
+                "score": len(matched) * 10,
+                "priority": int(node.get("priority", 0)),
+                "matched": matched,
+            }
         )
 
-    candidates.sort(key=lambda item: (-item["score"], item["id"]))
+    candidates.sort(
+        key=lambda item: (-item["score"], -item["priority"], item["id"])
+    )
     seeds = [item for item in candidates if item["score"] > 0]
+    control_id = "context-resolver:fragment:workbook"
+    if control_id in graph["nodes"] and all(
+        item["id"] != control_id for item in seeds
+    ):
+        seeds.append(
+            {
+                "id": control_id,
+                "score": 0,
+                "priority": 100,
+                "matched": [],
+            }
+        )
     if not seeds:
         seeds = [
             item
             for item in candidates
             if item["id"].startswith("context-resolver:")
         ]
-    seeds = seeds[
-        : request["budget"]["maxFragments"]
-        + request["budget"]["maxSteps"]
-    ]
+
+    seed_limit = (
+        request["budget"]["maxFragments"] + request["budget"]["maxSteps"]
+    )
+    seeds = seeds[:seed_limit]
 
     outgoing: dict[str, list[dict[str, str]]] = defaultdict(list)
     incoming: dict[str, list[dict[str, str]]] = defaultdict(list)
-    for edge in graph["edges"]:
-        outgoing[edge["source"]].append(edge)
-        incoming[edge["target"]].append(edge)
+    for item in graph["edges"]:
+        outgoing[item["source"]].append(item)
+        incoming[item["target"]].append(item)
 
     queue = deque(item["id"] for item in seeds)
     included: set[str] = set()
@@ -210,11 +225,11 @@ def filter_graph(
         if node_id in included or node_id not in graph["nodes"]:
             continue
         included.add(node_id)
-        queue.extend(edge["target"] for edge in outgoing[node_id])
+        queue.extend(item["target"] for item in outgoing[node_id])
         queue.extend(
-            edge["source"]
-            for edge in incoming[node_id]
-            if edge["kind"] == "uses-fragment"
+            item["source"]
+            for item in incoming[node_id]
+            if item["kind"] in {"uses-fragment", "depends-on"}
         )
 
     return {
@@ -224,13 +239,45 @@ def filter_graph(
             for node_id in sorted(included)
         },
         "edges": [
-            edge
-            for edge in graph["edges"]
-            if edge["source"] in included and edge["target"] in included
+            item
+            for item in graph["edges"]
+            if item["source"] in included and item["target"] in included
         ],
         "scores": {item["id"]: item for item in candidates},
         "truncated": bool(queue),
     }
+
+
+def _ordered_steps(selected: dict[str, Any]) -> list[str]:
+    steps = {
+        node_id
+        for node_id, node in selected["nodes"].items()
+        if node["kind"] == "step"
+    }
+    dependencies = {node_id: set() for node_id in steps}
+    for item in selected["edges"]:
+        if (
+            item["kind"] == "depends-on"
+            and item["source"] in steps
+            and item["target"] in steps
+        ):
+            dependencies[item["source"]].add(item["target"])
+
+    ordered: list[str] = []
+    while dependencies:
+        ready = sorted(
+            node_id
+            for node_id, values in dependencies.items()
+            if not values
+        )
+        if not ready:
+            ready = [sorted(dependencies)[0]]
+        for node_id in ready:
+            ordered.append(node_id)
+            dependencies.pop(node_id)
+            for values in dependencies.values():
+                values.discard(node_id)
+    return ordered
 
 
 def project_result(
@@ -255,18 +302,24 @@ def project_result(
         if node["kind"] == "fragment"
     ]
     fragment_nodes.sort(
-        key=lambda node: -selected["scores"]
-        .get(node["id"], {})
-        .get("score", 0)
+        key=lambda node: (
+            -selected["scores"].get(node["id"], {}).get("score", 0),
+            -int(node.get("priority", 0)),
+            node["id"],
+        )
     )
     for node in fragment_nodes[: request["budget"]["maxFragments"]]:
-        path = (Path(node["boundary_path"]) / node["source"]["path"]).resolve()
+        path = (
+            Path(node["boundary_path"]) / node["source"]["path"]
+        ).resolve()
         try:
             path.relative_to(repo_root)
             content = path.read_text(encoding="utf-8", errors="replace")
         except Exception as exc:
             content = node["description"]
-            source_errors.append({"fragment": node["id"], "reason": str(exc)})
+            source_errors.append(
+                {"fragment": node["id"], "reason": str(exc)}
+            )
         fragments.append(
             {
                 "id": node["id"],
@@ -282,53 +335,51 @@ def project_result(
         )
 
     plan = []
-    for node in selected["nodes"].values():
-        if node["kind"] != "step" or len(plan) >= request["budget"]["maxSteps"]:
-            continue
+    for node_id in _ordered_steps(selected)[: request["budget"]["maxSteps"]]:
+        node = selected["nodes"][node_id]
         outgoing = [
-            edge for edge in selected["edges"] if edge["source"] == node["id"]
+            item for item in selected["edges"] if item["source"] == node_id
         ]
         plan.append(
             {
-                "id": node["id"],
+                "id": node_id,
                 "description": node["description"],
                 "depends_on": [
-                    edge["target"]
-                    for edge in outgoing
-                    if edge["kind"] == "depends-on"
+                    item["target"]
+                    for item in outgoing
+                    if item["kind"] == "depends-on"
                 ],
                 "fragments": [
-                    edge["target"]
-                    for edge in outgoing
-                    if edge["kind"] == "uses-fragment"
+                    item["target"]
+                    for item in outgoing
+                    if item["kind"] == "uses-fragment"
                 ],
                 "checks": [
-                    edge["target"]
-                    for edge in outgoing
-                    if edge["kind"] == "checked-by"
+                    item["target"]
+                    for item in outgoing
+                    if item["kind"] == "checked-by"
                 ],
                 "gates": [
-                    edge["target"]
-                    for edge in outgoing
-                    if edge["kind"] == "gated-by"
+                    item["target"]
+                    for item in outgoing
+                    if item["kind"] == "gated-by"
                 ],
             }
         )
 
     references_admitted = all(
-        edge["source"] in graph["nodes"] and edge["target"] in graph["nodes"]
-        for edge in selected["edges"]
+        item["source"] in graph["nodes"]
+        and item["target"] in graph["nodes"]
+        for item in selected["edges"]
     )
     checks = []
     for node in selected["nodes"].values():
         if node["kind"] != "check":
             continue
-        status = (
-            "pass"
-            if node["local_id"] == "references_admitted" and references_admitted
-            else "pending"
-        )
-        if node["local_id"] == "sources_bounded":
+        status = "pending"
+        if node["local_id"] == "references_admitted":
+            status = "pass" if references_admitted else "fail"
+        elif node["local_id"] == "sources_bounded":
             status = "pass" if not source_errors else "fail"
         checks.append(
             {
@@ -364,7 +415,9 @@ def project_result(
         unresolved.append({"kind": "budget", "reason": "maxNodes reached"})
 
     self_gates = [
-        item for item in gates if item["id"].startswith("context-resolver:")
+        item
+        for item in gates
+        if item["id"].startswith("context-resolver:")
     ]
     return {
         "schema": "factory.context-packet.v0",
