@@ -1,8 +1,0 @@
-#!/usr/bin/env sh
-set -eu
-
-repo_root=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
-
-exec uv run --script \
-  "$repo_root/marimo/profiles/context-resolver/adapters/codex_hook.py" \
-  --repo-root "$repo_root"
