@@ -16,11 +16,14 @@ package kb
 	checks: [...#CheckResult]
 	gates:  [...#GateResult]
 	unresolved_context: [...{description: string, reason: string}]
-
-	_fragmentRefs: {for item in selected_fragments {(item.id): fragments[item.id].id}}
-	_stepRefs: {for item in implementation_plan {(item.id): steps[item.id].id}}
-	_checkRefs: {for item in checks {(item.id): checks[item.id].id}}
-	_gateRefs: {for item in gates {(item.id): gates[item.id].id}}
 }
 
-output: {fragments: fragments, steps: steps, checks: checks, gates: gates, topology: topology}
+output: {
+	fragments: fragments
+	steps:     steps
+	checks:    checks
+	gates:     _validatedGates
+	context:   context
+	workflow:  workflow
+	topology:  workflow.topology
+}
