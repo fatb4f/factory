@@ -48,9 +48,9 @@ boundaries: {
 fragments: {
 	workbook: #ContextFragment & {
 		id:          "workbook"
-		description: "Reactive Marimo DAG and Codex hook ingress"
+		description: "Reactive Marimo DAG, strict packet contracts, property tests, and Codex hook ingress"
 		source: path: "../context_resolver.py"
-		selectors: ["marimo", "reactive", "dag", "context", "filter", "codex", "hook"]
+		selectors: ["marimo", "reactive", "dag", "context", "filter", "codex", "hook", "pydantic", "hypothesis", "validation"]
 		priority: 100
 	}
 	boundary_manifest: #ContextFragment & {
@@ -74,12 +74,12 @@ fragments: {
 steps: {
 	normalize_prompt: #PlanStep & {
 		id:          "normalize_prompt"
-		description: "Normalize the submitted prompt into bounded retrieval inputs"
+		description: "Validate and normalize the submitted prompt into bounded retrieval inputs"
 		fragments: {workbook: true}
 	}
 	load_boundaries: #PlanStep & {
 		id:          "load_boundaries"
-		description: "Load validated parent and child .kb graph projections"
+		description: "Load validated parent and admitted child .kb graph projections"
 		depends_on: {normalize_prompt: true}
 		fragments: {boundary_manifest: true}
 	}
@@ -91,7 +91,7 @@ steps: {
 	}
 	project_packet: #PlanStep & {
 		id:          "project_packet"
-		description: "Project context fragments, implementation steps, checks, and gates"
+		description: "Project and validate context fragments, implementation steps, checks, gates, and packet metrics"
 		depends_on: {filter_context_graph: true}
 		checks: {references_admitted: true, sources_bounded: true}
 		gates: {packet_admitted: true}
@@ -269,17 +269,31 @@ workflow: #GraphProjection & {
 	dependents: workflowGraph.dependents
 }
 
+#WorkbookScope: close({
+	boundaries: [...string & !=""] | *[]
+})
+
+#WorkbookBudget: close({
+	maxFragments: int & >=1 & <=32
+	maxSteps:     int & >=1 & <=32
+	maxNodes:     int & >=4 & <=128
+	maxTokens:    int & >=256 & <=20000
+})
+
 #WorkbookRequest: close({
-	schema: "factory.context-request.v0"
-	event:  string & !=""
-	prompt: string & !=""
+	schema:    "factory.context-request.v0"
+	event:     string & !=""
+	prompt:    string & !=""
 	repo_root: string & !=""
-	budget: close({
-		maxFragments: int & >=1
-		maxSteps:     int & >=1
-		maxNodes:     int & >=1
-		maxTokens:    int & >=1
-	})
+	tokens:    [...string]
+	scope:     #WorkbookScope
+	budget:    #WorkbookBudget
+})
+
+#PacketMetrics: close({
+	estimatedTokens:   int & >=0
+	budgetRemaining:   int
+	truncationReasons: [...string & !=""]
 })
 
 #WorkbookResult: close({
@@ -295,15 +309,7 @@ workflow: #GraphProjection & {
 	checks: [..._]
 	gates: [..._]
 	unresolved_context: [..._]
-})
-
-// This operator-only declaration keeps architecture validation out of the
-// UserPromptSubmit packet path.
-validation: operator: close({
-	id:       "architecture-validation"
-	kind:     "marimo"
-	trigger:  "on-demand"
-	validates: ["cue", "pydantic", "hypothesis"]
+	metrics: #PacketMetrics
 })
 
 let OutputBoundary = boundary
@@ -312,7 +318,6 @@ let OutputFragments = fragments
 let OutputSteps = steps
 let OutputChecks = checks
 let OutputGates = _validatedGates
-let OutputValidation = validation
 let OutputContext = context
 let OutputWorkflow = workflow
 
@@ -325,5 +330,4 @@ output: close({
 	gates:      OutputGates
 	context:    OutputContext
 	workflow:   OutputWorkflow
-	validation: OutputValidation
 })

@@ -8,7 +8,9 @@ UserPromptSubmit
   -> context_resolver.py --codex-hook
   -> context_resolver.app.run(defs={"workbook_request": ...})
   -> reactive Marimo DAG
+  -> Pydantic-validated request and boundary projections
   -> filtered context graph
+  -> Pydantic-validated packet
   -> fragments + implementation plan + checks + gates
 ```
 
@@ -21,24 +23,21 @@ marimo/profiles/context-resolver/
 ├── .kb/
 │   └── context.cue
 ├── README.md
-├── architecture_validation.py
 └── context_resolver.py
 ```
 
-Both Python files are Marimo workbooks. `context_resolver.py` owns:
+The only Python file is the Marimo workbook. It owns:
 
-- prompt normalization and scoring;
+- strict request, hook-envelope, graph-projection, packet, and validation-report models through Pydantic;
+- prompt normalization and exact-token scoring;
 - loading validated nested `.kb` projections;
 - reactive subgraph selection and budgeting;
 - source-fragment materialization;
-- packet, check, and gate projection;
+- packet, check, gate, and metric projection;
+- embedded deterministic and Hypothesis property validation;
 - Codex `UserPromptSubmit` envelope transport.
 
-There is no standalone Python runtime or adapter layer. The repository-level `.codex/hooks.json` file only declares the Codex lifecycle binding and invokes this workbook directly.
-
-`architecture_validation.py` is an operator-only workbook. It validates CUE
-exports with Pydantic contracts and runs deterministic Hypothesis properties;
-it is not registered as a Codex hook and never contributes prompt context.
+There is no standalone Python runtime, adapter, or test module. The repository-level `.codex/hooks.json` file only declares the Codex lifecycle binding and invokes this workbook directly.
 
 ## Authority
 
@@ -50,35 +49,61 @@ Each `.kb` boundary adapts its local fragments and workflow steps into `apercue.
 - roots, leaves, and topology;
 - cross-reference validation for fragments, checks, and gates.
 
-The workbook consumes only exported, validated graph projections. It does not reconstruct the graph or calculate a second topology. Marimo remains the reactive filtering primitive: it ranks prompt matches, selects Apercue-provided ancestor/dependent closure, federates boundary projections, applies budgets, and emits a transient packet.
+The workbook consumes only exported, validated graph projections. It does not reconstruct the graph or calculate a second topology. Pydantic validates the transport contract and verifies that exported references remain closed when projected. Marimo remains the reactive filtering primitive: it ranks prompt matches, selects Apercue-provided ancestor/dependent closure, federates boundary projections, applies budgets, and emits a transient packet.
 
 The packet is generated context, not source authority.
 
-## Relation to quicue-kg
+## Runtime contracts
 
-These `.kb` modules are context-boundary modules and do not claim conformance to the quicue-kg specification's root-level `.kg/`, `package kg` layout. They follow the applicable processing rules:
+The workbook rejects unknown fields and malformed values at every external boundary.
 
-- CUE remains the source of truth;
-- processors validate before consuming;
-- contradictions fail during CUE evaluation;
-- computed graph views are derived, never hand-maintained;
-- external packets are one-way projections and do not become authority.
+- `HookEvent` admits only `UserPromptSubmit` envelopes with a non-empty prompt.
+- `RequestInput` accepts requested budgets, which normalization clamps into the bounded `ContextRequest` contract.
+- `BoundaryOutput` requires valid context and workflow projections and closed declaration references.
+- `ContextPacket` requires unique nodes, resolved edges, exact budget accounting, repository-bounded sources, and satisfied resolver gates before admission.
+- `ValidationReport` is the machine-readable exit result for embedded validation mode.
 
-Architectural decisions, validated insights, rejected approaches, and reusable patterns belong in a conforming quicue-kg graph when that knowledge surface is introduced. They should not be encoded as transient context fragments.
+The corresponding CUE `#WorkbookRequest`, `#PacketMetrics`, and `#WorkbookResult` definitions describe the same projected wire contract.
 
 ## Reactive stages
 
-1. Normalize the prompt and retrieval budget.
-2. Export the parent and admitted child `.kb` outputs.
-3. Reject missing or invalid Apercue graph projections.
-4. Score fragment and workflow resources against the prompt.
-5. Select exported ancestor/dependent closure and cross-project fragment usage.
-6. Order implementation steps through exported workflow topology.
-7. Materialize source-backed fragments and evaluate packet checks and gates.
+1. Validate and normalize the prompt, scope, and retrieval budget.
+2. Export the parent `.kb` boundary.
+3. Apply the boundary allowlist before exporting children.
+4. Reject missing or invalid Apercue graph projections.
+5. Score fragment and workflow resources using exact token intersections.
+6. Select exported ancestor/dependent closure and cross-project fragment usage.
+7. Order implementation steps through exported workflow topology.
+8. Materialize repository-bounded sources.
+9. Enforce `maxFragments`, `maxSteps`, `maxNodes`, and final serialized `maxTokens`.
+10. Validate the final packet before hook transport.
 
-## Validation
+## Embedded validation
 
-The hook requires `uv`, `cue`, and `jq`.
+Validation mode executes deterministic scenarios and Hypothesis properties from inside the workbook. The suite covers:
+
+- request normalization and budget bounds across generated inputs;
+- scoped-boundary success without exporting excluded children;
+- unresolved-boundary rejection;
+- repository source-escape rejection;
+- strict `maxNodes` truncation and rejection;
+- final-packet `maxTokens` measurement and rejection;
+- malformed hook-envelope rejection;
+- exact token matching without substring matches;
+- live CUE-to-workbook integration on the context-resolver boundary.
+
+Run the complete profile-local suite:
+
+```bash
+uv run --script marimo/profiles/context-resolver/context_resolver.py \
+  --validate \
+  --repo-root "$PWD" |
+  jq -e '.passed == true and ([.cases[].status] | all(. == "pass"))'
+```
+
+The command exits non-zero when any deterministic case, Hypothesis property, Pydantic contract, or live CUE integration check fails.
+
+## Hook validation
 
 ```bash
 payload='{"hook_event_name":"UserPromptSubmit","prompt":"inspect the CUE and Python code-intel context profiles"}'
@@ -96,11 +121,4 @@ printf '%s\n' "$payload" |
       and (.implementation_plan | length > 0)
       and (.context_graph.nodes | length > 0))
   '
-```
-
-Run the operator validation on demand:
-
-```bash
-uv run --script marimo/profiles/context-resolver/architecture_validation.py \
-  --validate --repo-root "$PWD"
 ```
