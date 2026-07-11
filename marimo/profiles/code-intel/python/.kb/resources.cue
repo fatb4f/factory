@@ -1,6 +1,9 @@
 package code_intel_python
 
-import "quicue.ca/vocab"
+import "quicue.ca/vocab@v0"
 
-// Populate with profile resources constrained by the shared vocabulary.
-resources: [Name=string]: vocab.#Resource & {name: Name}
+resources: profile: vocab.#Resource & {
+	name: "code-intel-python"
+	"@type": {CodeIntelPythonProfile: true}
+	entrypoint: "code_intel_python.py"
+}

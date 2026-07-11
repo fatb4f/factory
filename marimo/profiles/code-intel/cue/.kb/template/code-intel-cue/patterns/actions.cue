@@ -1,0 +1,23 @@
+package patterns
+
+import "quicue.ca/vocab@v0"
+
+#CodeIntelCue: {
+	ENTRYPOINT: string
+	run: vocab.#Action & {
+		name:        "Run"
+		description: "Run the CUE code-intelligence profile"
+		command:     "uv run marimo run \(ENTRYPOINT)"
+		category:    "admin"
+	}
+}
+
+#CodeIntelCueRegistry: {
+	run: vocab.#ActionDef & {
+		name:        "run"
+		description: "Run the CUE code-intelligence profile"
+		category:    "admin"
+		params: entrypoint: {from_field: "entrypoint"}
+		command_template: "uv run marimo run {entrypoint}"
+	}
+}

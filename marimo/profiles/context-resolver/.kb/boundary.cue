@@ -1,6 +1,6 @@
 package context_resolver
 
-import "quicue.ca/patterns"
+import "quicue.ca/patterns@v0"
 
 execution: patterns.#ExecutionPlan & {
 	resources: resources
@@ -8,7 +8,7 @@ execution: patterns.#ExecutionPlan & {
 }
 
 output: {
-	summary:  execution.graph.metrics
+	summary:  resources: len(resources)
 	topology: execution.graph.topology
 	plan:     execution.plan
 }

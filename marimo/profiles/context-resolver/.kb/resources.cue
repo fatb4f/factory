@@ -1,9 +1,9 @@
 package context_resolver
 
-import "quicue.ca/vocab"
+import "quicue.ca/vocab@v0"
 
-// Populate with profile resources. Each entry must satisfy the shared
-// quicue resource vocabulary.
-resources: [Name=string]: vocab.#Resource & {
-	name: Name
+resources: profile: vocab.#Resource & {
+	name: "context-resolver"
+	"@type": {ContextResolverProfile: true}
+	entrypoint: "context_resolver.py"
 }
