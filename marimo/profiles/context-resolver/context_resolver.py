@@ -22,11 +22,21 @@ def _():
     import json
     import re
     import subprocess
-    from collections import defaultdict, deque
     from pathlib import Path
     from typing import Any
 
     import marimo as mo
+
+    def qualify(boundary: str, kind: str, local_id: str) -> str:
+        return f"{boundary}.{kind}.{local_id}"
+
+    def local_id(resource: dict[str, Any], prefix: str) -> str:
+        value = resource.get("local_id")
+        if isinstance(value, str) and value:
+            return value
+        name = str(resource["name"])
+        marker = f"{prefix}."
+        return name[len(marker) :] if name.startswith(marker) else name
 
     def normalize(value: dict[str, Any]) -> dict[str, Any]:
         prompt = value.get("prompt")
@@ -62,7 +72,7 @@ def _():
             check=True,
             capture_output=True,
             text=True,
-            timeout=10,
+            timeout=15,
         )
         output = json.loads(completed.stdout)
         if not isinstance(output, dict):
@@ -75,12 +85,20 @@ def _():
             parent = cue_export(root)
         except Exception as exc:
             return {}, [{"boundary": "context-resolver", "reason": str(exc)}]
-        boundaries, errors = {}, []
+
+        boundaries: dict[str, dict[str, Any]] = {}
+        errors: list[dict[str, str]] = []
         for spec in parent.get("boundaries", {}).values():
             identity = spec["id"]
             path = (root / spec["path"]).resolve()
             try:
                 output = parent if identity == "context-resolver" else cue_export(path)
+                context = output.get("context")
+                workflow = output.get("workflow")
+                if not isinstance(context, dict) or context.get("valid") is not True:
+                    raise ValueError("context graph projection is missing or invalid")
+                if not isinstance(workflow, dict) or workflow.get("valid") is not True:
+                    raise ValueError("workflow graph projection is missing or invalid")
             except Exception as exc:
                 errors.append({"boundary": identity, "reason": str(exc)})
                 continue
@@ -91,209 +109,404 @@ def _():
             }
         return boundaries, errors
 
-    def build(boundaries: dict[str, Any]) -> dict[str, Any]:
-        nodes, edges = {}, []
+    def topology_order(projection: dict[str, Any]) -> list[str]:
+        def layer_key(name: str) -> tuple[int, str]:
+            try:
+                return int(name.rsplit("_", 1)[1]), name
+            except (IndexError, ValueError):
+                return 0, name
 
-        def q(boundary: str, kind: str, local: str) -> str:
-            return f"{boundary}:{kind}:{local}"
+        ordered: list[str] = []
+        for layer in sorted(projection.get("topology", {}), key=layer_key):
+            ordered.extend(sorted(projection["topology"][layer]))
+        known = set(ordered)
+        ordered.extend(
+            sorted(
+                resource_id
+                for resource_id in projection.get("resources", {})
+                if resource_id not in known
+            )
+        )
+        return ordered
 
-        def edge(source: str, target: str, kind: str):
-            edges.append({"source": source, "target": target, "kind": kind})
+    def closure(projection: dict[str, Any], resource_id: str) -> set[str]:
+        resources = projection.get("resources", {})
+        if resource_id not in resources:
+            return set()
+        resource = resources[resource_id]
+        result = {resource_id}
+        result.update(resource.get("ancestors", {}))
+        result.update(projection.get("dependents", {}).get(resource_id, {}))
+        return {item for item in result if item in resources}
 
-        for boundary, item in boundaries.items():
-            output, selectors = item["output"], list(item["selectors"])
-            for local, fragment in output.get("fragments", {}).items():
-                identity = q(boundary, "fragment", local)
-                nodes[identity] = {
-                    "id": identity,
-                    "boundary": boundary,
-                    "local_id": local,
-                    "kind": "fragment",
-                    "description": fragment["description"],
-                    "selectors": selectors + list(fragment.get("selectors") or []),
-                    "priority": int(fragment.get("priority", 0)),
-                    "source": fragment["source"],
-                    "boundary_path": item["path"],
-                }
-            for kind, field in (("step", "steps"), ("check", "checks"), ("gate", "gates")):
-                for local, declaration in output.get(field, {}).items():
-                    identity = q(boundary, kind, local)
-                    nodes[identity] = {
-                        "id": identity,
-                        "boundary": boundary,
-                        "local_id": local,
-                        "kind": kind,
-                        "description": declaration["description"],
-                        "selectors": selectors,
-                        "requires": list((declaration.get("requires") or {}).keys()),
-                        "command": declaration.get("command"),
-                    }
-            for local, step in output.get("steps", {}).items():
-                source = q(boundary, "step", local)
-                for field, target_kind, relation in (
-                    ("depends_on", "step", "depends-on"),
-                    ("fragments", "fragment", "uses-fragment"),
-                    ("checks", "check", "checked-by"),
-                    ("gates", "gate", "gated-by"),
-                ):
-                    for target in step.get(field, {}):
-                        edge(source, q(boundary, target_kind, target), relation)
-            for local, gate in output.get("gates", {}).items():
-                for target in gate.get("requires", {}):
-                    edge(q(boundary, "gate", local), q(boundary, "check", target), "requires")
-        return {"nodes": nodes, "edges": edges}
-
-    def select(graph: dict[str, Any], request: dict[str, Any]) -> dict[str, Any]:
+    def select(boundaries: dict[str, Any], request: dict[str, Any]):
         tokens = set(request["tokens"])
         allowed = set((request.get("scope") or {}).get("boundaries") or [])
-        candidates = []
-        for node in graph["nodes"].values():
-            if node["kind"] not in {"fragment", "step"}:
+        candidates: list[dict[str, Any]] = []
+
+        for boundary, item in boundaries.items():
+            if allowed and boundary not in allowed:
                 continue
-            if allowed and node["boundary"] not in allowed:
-                continue
-            text = " ".join((node["id"], node["description"], " ".join(node.get("selectors", [])))).lower()
-            matched = sorted(token for token in tokens if token in text)
-            candidates.append({
-                "id": node["id"],
-                "score": len(matched) * 10,
-                "priority": int(node.get("priority", 0)),
-                "matched": matched,
-            })
-        candidates.sort(key=lambda item: (-item["score"], -item["priority"], item["id"]))
+            output = item["output"]
+            for kind, field, prefix in (
+                ("fragment", "context", "fragment"),
+                ("step", "workflow", "step"),
+            ):
+                for graph_id, resource in output[field].get("resources", {}).items():
+                    local = local_id(resource, prefix)
+                    packet_id = qualify(boundary, kind, local)
+                    selectors = list(item["selectors"]) + list(
+                        resource.get("selectors") or []
+                    )
+                    text = " ".join(
+                        (
+                            packet_id,
+                            str(resource.get("description", "")),
+                            " ".join(selectors),
+                        )
+                    ).lower()
+                    matched = sorted(token for token in tokens if token in text)
+                    candidates.append(
+                        {
+                            "id": packet_id,
+                            "boundary": boundary,
+                            "kind": kind,
+                            "graph_id": graph_id,
+                            "score": len(matched) * 10,
+                            "priority": int(resource.get("priority", 0)),
+                            "matched": matched,
+                        }
+                    )
+
+        candidates.sort(
+            key=lambda item: (-item["score"], -item["priority"], item["id"])
+        )
         seeds = [item for item in candidates if item["score"] > 0]
-        control = "context-resolver:fragment:workbook"
-        if control in graph["nodes"] and all(item["id"] != control for item in seeds):
-            seeds.append({"id": control, "score": 0, "priority": 100, "matched": []})
+        control_id = qualify("context-resolver", "fragment", "workbook")
+        control = next((item for item in candidates if item["id"] == control_id), None)
+        if control is not None and all(item["id"] != control_id for item in seeds):
+            seeds.append(control)
         if not seeds:
-            seeds = [item for item in candidates if item["id"].startswith("context-resolver:")]
+            seeds = [
+                item for item in candidates if item["boundary"] == "context-resolver"
+            ]
         seeds = seeds[: request["budget"]["maxFragments"] + request["budget"]["maxSteps"]]
 
-        outgoing, incoming = defaultdict(list), defaultdict(list)
-        for item in graph["edges"]:
-            outgoing[item["source"]].append(item)
-            incoming[item["target"]].append(item)
-        queue, included = deque(item["id"] for item in seeds), set()
-        while queue and len(included) < request["budget"]["maxNodes"]:
-            identity = queue.popleft()
-            if identity in included or identity not in graph["nodes"]:
-                continue
-            included.add(identity)
-            queue.extend(edge["target"] for edge in outgoing[identity])
-            queue.extend(
-                edge["source"]
-                for edge in incoming[identity]
-                if edge["kind"] in {"uses-fragment", "depends-on"}
-            )
-        return {
-            "seeds": seeds,
-            "nodes": {identity: graph["nodes"][identity] for identity in sorted(included)},
-            "edges": [edge for edge in graph["edges"] if edge["source"] in included and edge["target"] in included],
-            "scores": {item["id"]: item for item in candidates},
-            "truncated": bool(queue),
+        selected: dict[str, dict[str, set[str]]] = {
+            boundary: {"context": set(), "workflow": set()}
+            for boundary in boundaries
         }
 
-    def project(request, graph, selected, boundary_errors):
+        def include(boundary: str, field: str, graph_id: str) -> bool:
+            projection = boundaries[boundary]["output"][field]
+            expanded = closure(projection, graph_id)
+            before = len(selected[boundary][field])
+            selected[boundary][field].update(expanded)
+            return len(selected[boundary][field]) != before
+
+        for seed in seeds:
+            field = "context" if seed["kind"] == "fragment" else "workflow"
+            include(seed["boundary"], field, seed["graph_id"])
+
+        changed = True
+        while changed:
+            changed = False
+            for boundary, fields in selected.items():
+                output = boundaries[boundary]["output"]
+                fragment_locals = {
+                    local_id(output["context"]["resources"][graph_id], "fragment")
+                    for graph_id in fields["context"]
+                }
+                for graph_id, step in output["workflow"].get("resources", {}).items():
+                    if fragment_locals.intersection(step.get("fragments", {})):
+                        changed = include(boundary, "workflow", graph_id) or changed
+                for graph_id in tuple(fields["workflow"]):
+                    step = output["workflow"]["resources"][graph_id]
+                    for fragment in step.get("fragments", {}):
+                        changed = (
+                            include(boundary, "context", f"fragment.{fragment}")
+                            or changed
+                        )
+
+        ordered_refs: list[tuple[str, str, str]] = []
+        for boundary in sorted(selected):
+            output = boundaries[boundary]["output"]
+            for graph_id in topology_order(output["context"]):
+                if graph_id in selected[boundary]["context"]:
+                    ordered_refs.append((boundary, "context", graph_id))
+            for graph_id in topology_order(output["workflow"]):
+                if graph_id in selected[boundary]["workflow"]:
+                    ordered_refs.append((boundary, "workflow", graph_id))
+
+        truncated = len(ordered_refs) > request["budget"]["maxNodes"]
+        retained = set(ordered_refs[: request["budget"]["maxNodes"]])
+        for boundary in selected:
+            selected[boundary]["context"] = {
+                graph_id
+                for candidate_boundary, field, graph_id in retained
+                if candidate_boundary == boundary and field == "context"
+            }
+            selected[boundary]["workflow"] = {
+                graph_id
+                for candidate_boundary, field, graph_id in retained
+                if candidate_boundary == boundary and field == "workflow"
+            }
+
+        return {
+            "seeds": [{key: item[key] for key in ("id", "score", "matched")} for item in seeds],
+            "selected": selected,
+            "scores": {item["id"]: item for item in candidates},
+            "truncated": truncated,
+        }
+
+    def project(request, boundaries, selected, boundary_errors):
         repo_root = Path(request["repo_root"]).resolve()
-        max_chars = max(256, request["budget"]["maxTokens"] * 4 // request["budget"]["maxFragments"])
-        source_errors, fragments = [], []
-        fragment_nodes = [node for node in selected["nodes"].values() if node["kind"] == "fragment"]
-        fragment_nodes.sort(key=lambda node: (
-            -selected["scores"].get(node["id"], {}).get("score", 0),
-            -int(node.get("priority", 0)),
-            node["id"],
-        ))
-        for node in fragment_nodes[: request["budget"]["maxFragments"]]:
-            path = (Path(node["boundary_path"]) / node["source"]["path"]).resolve()
+        max_chars = max(
+            256,
+            request["budget"]["maxTokens"]
+            * 4
+            // request["budget"]["maxFragments"],
+        )
+        nodes: list[dict[str, Any]] = []
+        edges: list[dict[str, str]] = []
+        source_errors: list[dict[str, str]] = []
+        fragment_candidates: list[tuple[str, str, dict[str, Any]]] = []
+        plan: list[dict[str, Any]] = []
+        selected_checks: dict[str, set[str]] = {}
+        selected_gates: dict[str, set[str]] = {}
+
+        for boundary in sorted(boundaries):
+            output = boundaries[boundary]["output"]
+            chosen = selected["selected"].get(boundary, {"context": set(), "workflow": set()})
+            selected_checks[boundary] = set()
+            selected_gates[boundary] = set()
+
+            for graph_id in sorted(chosen["context"]):
+                resource = output["context"]["resources"][graph_id]
+                local = local_id(resource, "fragment")
+                identity = qualify(boundary, "fragment", local)
+                node = {
+                    "id": identity,
+                    "boundary": boundary,
+                    "kind": "fragment",
+                    "local_id": local,
+                    "description": resource.get("description", ""),
+                    "depth": resource.get("depth", 0),
+                }
+                nodes.append(node)
+                fragment_candidates.append((boundary, identity, resource))
+                for dependency in resource.get("depends_on", {}):
+                    dependency_resource = output["context"]["resources"].get(dependency, {"name": dependency})
+                    edges.append(
+                        {
+                            "source": identity,
+                            "target": qualify(
+                                boundary,
+                                "fragment",
+                                local_id(dependency_resource, "fragment"),
+                            ),
+                            "kind": "depends-on",
+                        }
+                    )
+
+            workflow_resources = output["workflow"]["resources"]
+            for graph_id in topology_order(output["workflow"]):
+                if graph_id not in chosen["workflow"]:
+                    continue
+                resource = workflow_resources[graph_id]
+                local = local_id(resource, "step")
+                identity = qualify(boundary, "step", local)
+                nodes.append(
+                    {
+                        "id": identity,
+                        "boundary": boundary,
+                        "kind": "step",
+                        "local_id": local,
+                        "description": resource.get("description", ""),
+                        "depth": resource.get("depth", 0),
+                    }
+                )
+                dependencies = []
+                for dependency in resource.get("depends_on", {}):
+                    dependency_resource = workflow_resources.get(dependency, {"name": dependency})
+                    target = qualify(
+                        boundary,
+                        "step",
+                        local_id(dependency_resource, "step"),
+                    )
+                    dependencies.append(target)
+                    edges.append({"source": identity, "target": target, "kind": "depends-on"})
+                fragments = [
+                    qualify(boundary, "fragment", fragment)
+                    for fragment in resource.get("fragments", {})
+                ]
+                checks = [
+                    qualify(boundary, "check", check)
+                    for check in resource.get("checks", {})
+                ]
+                gates = [
+                    qualify(boundary, "gate", gate)
+                    for gate in resource.get("gates", {})
+                ]
+                selected_checks[boundary].update(resource.get("checks", {}))
+                selected_gates[boundary].update(resource.get("gates", {}))
+                edges.extend(
+                    {"source": identity, "target": target, "kind": "uses-fragment"}
+                    for target in fragments
+                )
+                edges.extend(
+                    {"source": identity, "target": target, "kind": "checked-by"}
+                    for target in checks
+                )
+                edges.extend(
+                    {"source": identity, "target": target, "kind": "gated-by"}
+                    for target in gates
+                )
+                plan.append(
+                    {
+                        "id": identity,
+                        "description": resource.get("description", ""),
+                        "depends_on": dependencies,
+                        "fragments": fragments,
+                        "checks": checks,
+                        "gates": gates,
+                    }
+                )
+
+        score_map = selected["scores"]
+        fragment_candidates.sort(
+            key=lambda item: (
+                -score_map.get(item[1], {}).get("score", 0),
+                -int(item[2].get("priority", 0)),
+                item[1],
+            )
+        )
+        fragments = []
+        for boundary, identity, resource in fragment_candidates[: request["budget"]["maxFragments"]]:
+            path = (Path(boundaries[boundary]["path"]) / resource["source"]["path"]).resolve()
             try:
                 path.relative_to(repo_root)
                 content = path.read_text(encoding="utf-8", errors="replace")
             except Exception as exc:
-                content = node["description"]
-                source_errors.append({"fragment": node["id"], "reason": str(exc)})
-            fragments.append({
-                "id": node["id"],
-                "source": node["source"],
-                "content": content[:max_chars],
-                "reason": ", ".join(selected["scores"].get(node["id"], {}).get("matched", [])) or "dependency closure",
-            })
+                content = str(resource.get("description", ""))
+                source_errors.append({"fragment": identity, "reason": str(exc)})
+            fragments.append(
+                {
+                    "id": identity,
+                    "boundary": boundary,
+                    "source": resource["source"],
+                    "content": content[:max_chars],
+                    "reason": ", ".join(score_map.get(identity, {}).get("matched", []))
+                    or "Apercue graph closure",
+                }
+            )
 
-        step_ids = {identity for identity, node in selected["nodes"].items() if node["kind"] == "step"}
-        deps = {identity: set() for identity in step_ids}
-        for edge in selected["edges"]:
-            if edge["kind"] == "depends-on" and edge["source"] in step_ids and edge["target"] in step_ids:
-                deps[edge["source"]].add(edge["target"])
-        ordered = []
-        while deps:
-            ready = sorted(identity for identity, values in deps.items() if not values) or [sorted(deps)[0]]
-            for identity in ready:
-                ordered.append(identity)
-                deps.pop(identity)
-                for values in deps.values():
-                    values.discard(identity)
-        plan = []
-        for identity in ordered[: request["budget"]["maxSteps"]]:
-            node = selected["nodes"][identity]
-            outgoing = [edge for edge in selected["edges"] if edge["source"] == identity]
-            plan.append({
-                "id": identity,
-                "description": node["description"],
-                "depends_on": [edge["target"] for edge in outgoing if edge["kind"] == "depends-on"],
-                "fragments": [edge["target"] for edge in outgoing if edge["kind"] == "uses-fragment"],
-                "checks": [edge["target"] for edge in outgoing if edge["kind"] == "checked-by"],
-                "gates": [edge["target"] for edge in outgoing if edge["kind"] == "gated-by"],
-            })
-
-        references_admitted = all(
-            edge["source"] in graph["nodes"] and edge["target"] in graph["nodes"]
-            for edge in selected["edges"]
+        references_admitted = not boundary_errors and all(
+            item["output"]["context"].get("valid") is True
+            and item["output"]["workflow"].get("valid") is True
+            for item in boundaries.values()
         )
+
+        for boundary, gate_ids in selected_gates.items():
+            for gate_id in gate_ids:
+                gate = boundaries[boundary]["output"].get("gates", {}).get(gate_id, {})
+                selected_checks[boundary].update(gate.get("requires", {}))
+
         checks = []
-        for node in selected["nodes"].values():
-            if node["kind"] != "check":
-                continue
-            status = "pending"
-            if node["local_id"] == "references_admitted":
-                status = "pass" if references_admitted else "fail"
-            elif node["local_id"] == "sources_bounded":
-                status = "pass" if not source_errors else "fail"
-            checks.append({"id": node["id"], "description": node["description"], "status": status, "command": node.get("command")})
+        for boundary in sorted(selected_checks):
+            declarations = boundaries[boundary]["output"].get("checks", {})
+            for check_id in sorted(selected_checks[boundary]):
+                declaration = declarations[check_id]
+                status = "pending"
+                if check_id == "references_admitted":
+                    status = "pass" if references_admitted else "fail"
+                elif check_id == "sources_bounded":
+                    status = "pass" if not source_errors else "fail"
+                identity = qualify(boundary, "check", check_id)
+                nodes.append(
+                    {
+                        "id": identity,
+                        "boundary": boundary,
+                        "kind": "check",
+                        "local_id": check_id,
+                        "description": declaration["description"],
+                    }
+                )
+                checks.append(
+                    {
+                        "id": identity,
+                        "description": declaration["description"],
+                        "status": status,
+                        "command": declaration.get("command"),
+                    }
+                )
+
         check_status = {item["id"]: item["status"] for item in checks}
         gates = []
-        for node in selected["nodes"].values():
-            if node["kind"] != "gate":
-                continue
-            required = [f"{node['boundary']}:check:{item}" for item in node.get("requires", [])]
-            gates.append({
-                "id": node["id"],
-                "description": node["description"],
-                "satisfied": bool(required) and all(check_status.get(identity) == "pass" for identity in required),
-            })
-        unresolved = boundary_errors + source_errors
+        for boundary in sorted(selected_gates):
+            declarations = boundaries[boundary]["output"].get("gates", {})
+            for gate_id in sorted(selected_gates[boundary]):
+                declaration = declarations[gate_id]
+                identity = qualify(boundary, "gate", gate_id)
+                required = [
+                    qualify(boundary, "check", check_id)
+                    for check_id in declaration.get("requires", {})
+                ]
+                satisfied = bool(required) and all(
+                    check_status.get(check_id) == "pass" for check_id in required
+                )
+                nodes.append(
+                    {
+                        "id": identity,
+                        "boundary": boundary,
+                        "kind": "gate",
+                        "local_id": gate_id,
+                        "description": declaration["description"],
+                    }
+                )
+                edges.extend(
+                    {"source": identity, "target": check_id, "kind": "requires"}
+                    for check_id in required
+                )
+                gates.append(
+                    {
+                        "id": identity,
+                        "description": declaration["description"],
+                        "satisfied": satisfied,
+                    }
+                )
+
+        unresolved = list(boundary_errors) + source_errors
         if selected["truncated"]:
             unresolved.append({"kind": "budget", "reason": "maxNodes reached"})
-        self_gates = [item for item in gates if item["id"].startswith("context-resolver:")]
+        self_gates = [
+            item
+            for item in gates
+            if item["id"].startswith("context-resolver.gate.")
+        ]
         return {
             "schema": "factory.context-packet.v0",
             "authority": False,
             "generated": True,
             "transient": True,
-            "admitted": bool(fragments) and bool(self_gates) and all(item["satisfied"] for item in self_gates),
+            "admitted": bool(fragments)
+            and bool(self_gates)
+            and all(item["satisfied"] for item in self_gates),
             "request": request,
             "context_graph": {
                 "seeds": selected["seeds"],
-                "nodes": list(selected["nodes"].values()),
-                "edges": selected["edges"],
+                "nodes": nodes,
+                "edges": edges,
                 "truncated": selected["truncated"],
             },
             "selected_fragments": fragments,
-            "implementation_plan": plan,
+            "implementation_plan": plan[: request["budget"]["maxSteps"]],
             "checks": checks,
             "gates": gates,
             "unresolved_context": unresolved,
         }
 
-    return build, load, mo, normalize, project, select
+    return load, mo, normalize, project, select
 
 
 @app.cell
@@ -304,7 +517,12 @@ def _():
         "event": "interactive",
         "prompt": "context resolver",
         "repo_root": ".",
-        "budget": {"maxFragments": 12, "maxSteps": 8, "maxNodes": 48, "maxTokens": 6000},
+        "budget": {
+            "maxFragments": 12,
+            "maxSteps": 8,
+            "maxNodes": 48,
+            "maxTokens": 6000,
+        },
     }
     return (workbook_request,)
 
@@ -318,40 +536,65 @@ def _(normalize, workbook_request):
 @app.cell
 def _(load, normalized_request):
     loaded_boundaries, boundary_errors = load(normalized_request)
-    return boundary_errors, loaded_boundaries
+    available_context_graph = {
+        boundary: {
+            "context": item["output"]["context"],
+            "workflow": item["output"]["workflow"],
+        }
+        for boundary, item in loaded_boundaries.items()
+    }
+    return available_context_graph, boundary_errors, loaded_boundaries
 
 
 @app.cell
-def _(build, loaded_boundaries):
-    available_context_graph = build(loaded_boundaries)
-    return (available_context_graph,)
-
-
-@app.cell
-def _(available_context_graph, normalized_request, select):
-    filtered_context_graph = select(available_context_graph, normalized_request)
+def _(loaded_boundaries, normalized_request, select):
+    filtered_context_graph = select(loaded_boundaries, normalized_request)
     return (filtered_context_graph,)
 
 
 @app.cell
-def _(available_context_graph, boundary_errors, filtered_context_graph, normalized_request, project):
-    workbook_result = project(normalized_request, available_context_graph, filtered_context_graph, boundary_errors)
+def _(
+    boundary_errors,
+    filtered_context_graph,
+    loaded_boundaries,
+    normalized_request,
+    project,
+):
+    workbook_result = project(
+        normalized_request,
+        loaded_boundaries,
+        filtered_context_graph,
+        boundary_errors,
+    )
     return (workbook_result,)
 
 
 @app.cell
 def _(mo, workbook_result):
-    mo.vstack([
-        mo.md("# Context resolver"),
-        mo.md("The reactive workbook DAG filters CUE-authoritative nested context graphs into a bounded Codex packet."),
-        mo.json(workbook_result),
-    ])
+    mo.vstack(
+        [
+            mo.md("# Context resolver"),
+            mo.md(
+                "The reactive workbook filters CUE/Apercue-authoritative graph "
+                "projections into a bounded Codex context packet."
+            ),
+            mo.json(workbook_result),
+        ]
+    )
     return
 
 
 _ALLOWED_HOOK_FIELDS = {
-    "agent_id", "agent_type", "cwd", "hook_event_name", "model",
-    "permission_mode", "prompt", "session_id", "transcript_path", "turn_id",
+    "agent_id",
+    "agent_type",
+    "cwd",
+    "hook_event_name",
+    "model",
+    "permission_mode",
+    "prompt",
+    "session_id",
+    "transcript_path",
+    "turn_id",
 }
 
 
@@ -375,18 +618,32 @@ def _run_codex_hook(repo_root: Path) -> int:
         "event": "UserPromptSubmit",
         "prompt": event["prompt"],
         "repo_root": str(repo_root.resolve()),
-        "budget": {"maxFragments": 12, "maxSteps": 8, "maxNodes": 48, "maxTokens": 6000},
+        "budget": {
+            "maxFragments": 12,
+            "maxSteps": 8,
+            "maxNodes": 48,
+            "maxTokens": 6000,
+        },
     }
     _outputs, definitions = app.run(defs={"workbook_request": request})
     result = definitions.get("workbook_result")
     if not isinstance(result, dict) or not result.get("admitted"):
         raise RuntimeError("workbook context packet was not admitted")
-    json.dump({
-        "hookSpecificOutput": {
-            "hookEventName": "UserPromptSubmit",
-            "additionalContext": json.dumps(result, ensure_ascii=False, separators=(",", ":")),
-        }
-    }, sys.stdout, ensure_ascii=False, separators=(",", ":"))
+    json.dump(
+        {
+            "hookSpecificOutput": {
+                "hookEventName": "UserPromptSubmit",
+                "additionalContext": json.dumps(
+                    result,
+                    ensure_ascii=False,
+                    separators=(",", ":"),
+                ),
+            }
+        },
+        sys.stdout,
+        ensure_ascii=False,
+        separators=(",", ":"),
+    )
     sys.stdout.write("\n")
     return 0
 
