@@ -88,7 +88,7 @@ No Marimo workbook, Python model, shell command, skill, issue comment, or genera
 9. Generated packets, evidence, observations, reports, and check state are transient projections, never authority.
 10. Admission is computed by CUE from concrete validator projections and admitted evidence.
 11. Workbooks and runners must not accept claimant-supplied validity or admission booleans.
-12. Every project-managed execution is bound to the admitted Factory `pyproject.toml` and `uv.lock`.
+12. Every ordinary project-managed execution is bound to the admitted Factory `pyproject.toml` and `uv.lock`. The sole UV/BD bootstrap unit may use its candidate project and lock identities only after minimal-bootstrap verification and only through the bounded transition defined below.
 13. Compatibility aliases express replacement and must never be ranked as active semantic profiles.
 14. The mandatory repository view is selected before optional semantic profiles.
 15. Architectural decisions made during implementation must be captured as candidate KG records and later admitted through the architecture-KG workflow.
@@ -171,10 +171,17 @@ uv run \
   -- \
   python "$factory_provider_root/marimo/workflows/bdd/validate_implementation_unit.py" \
   --provider-root "$factory_provider_root" \
-  --repo-root "$consumer_root"
+  --repo-root "$consumer_root" \
+  --evidence-root "$evidence_root"
 ```
 
 The exact command is binding-owned.
+
+The contract-owned operator command allocates a unique execution ID and creates
+`$evidence_root` below `${XDG_RUNTIME_DIR:-/tmp}/factory-bdd/<execution-id>/`
+before invoking the workbook. A direct caller must perform the same allocation
+and pass the resulting absolute coordinate explicitly; the workbook must not
+invent or infer its evidence location.
 
 Use absolute paths or explicit root arguments. `--project` selects the project environment but does not establish repository path semantics by itself.
 
@@ -283,6 +290,21 @@ UV-01 UV-02 UV-03 UV-04
 BD-01 BD-02 BD-03 BD-04
 BD-05 BD-06 BD-07 BD-08
 ```
+
+Its project and lock identities transition through these explicit states:
+
+```text
+candidate project/lock identity
+→ minimal-bootstrap verification
+→ bounded provisional use
+→ self-conformance
+→ admitted project/lock identity
+```
+
+Candidate identities may be used only by this bootstrap unit after the minimal
+validator has verified their declared metadata, lock consistency, and digests.
+They remain provisional evidence until self-conformance admission succeeds.
+Every ordinary unit requires already-admitted project and lock identities.
 
 The bootstrap sequence is:
 
@@ -558,7 +580,8 @@ uv run \
   -- \
   python "$factory_provider_root/marimo/workflows/bdd/validate_implementation_unit.py" \
   --provider-root "$factory_provider_root" \
-  --repo-root "$consumer_root"
+  --repo-root "$consumer_root" \
+  --evidence-root "$evidence_root"
 ```
 
 For the preserved resolver:
