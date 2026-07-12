@@ -1,0 +1,115 @@
+Implement https://github.com/fatb4f/factory/issues/104.
+
+Treat the following sources as authority, in order:
+
+1. https://github.com/fatb4f/factory/issues/103
+2. https://github.com/fatb4f/factory/issues/104
+3. AGENTS.md
+4. Vetted CUE contracts created for the implementation unit
+
+Implementation unit:
+
+    kg://repository/factory/implementation-unit/uv-bd-bootstrap/v1
+
+Use the workflow below as a transient Codex execution plan. It guides node
+selection and prompting but does not replace the issues, AGENTS.md, or CUE as
+architectural or admission authority.
+
+Execution rules:
+
+- Verify the pinned issue #103 transport revision, body digest, and normalized
+  bootstrap snapshot before consuming subordinate declarations.
+- Execute only nodes whose dependencies have validated evidence.
+- Independent runnable nodes may execute concurrently.
+- Stay within issue #104's authoritative artifact inventory, except for this
+  explicitly requested prompt.txt seed.
+- Update CUE declarations and workflow contracts before Python-assigned nodes.
+- Preserve the legacy context resolver, its inline metadata, and the active
+  UserPromptSubmit path.
+- Use disposable environments for locked/exact or mutation fixtures.
+- Treat generated prompts, reports, and evidence as transient projections.
+- Do not accept claimant-supplied validity or admission booleans.
+- Stop on an unresolved authority reference, invalid dependency, undeclared
+  mutation, failed validation, missing evidence, or non-true admission export.
+- CUE alone computes admission; shell and Python success are evidence only.
+
+Workflow DAG:
+
+    snapshot.verify
+        -> workbook-identity.admit
+        -> project.create
+
+    project.create
+        -> lock.create
+
+    snapshot.verify + workbook-identity.admit
+        -> contracts.create
+
+    lock.create + contracts.create
+        -> workbook.create
+
+    contracts.create
+        -> fixtures.create
+
+    workbook.create + fixtures.create
+        -> bootstrap.execute
+        -> self-conformance.admit
+        -> provisional.retire
+
+Node objectives:
+
+snapshot.verify
+    Verify the pinned #103 transport and normalized bootstrap snapshot.
+
+workbook-identity.admit
+    Encode and validate the issue-selected bootstrap workbook identity.
+
+project.create
+    Replace the empty pyproject.toml placeholder with the canonical Factory
+    uv project.
+
+lock.create
+    Generate uv.lock from the project and prove `uv lock --check` succeeds.
+
+contracts.create
+    Define the closed bootstrap, workflow, scenario, evidence, command, and
+    output contracts under marimo/workflows/bdd/.kb.
+
+workbook.create
+    Implement only Python-assigned workflow nodes in
+    marimo/workflows/bdd/validate_implementation_unit.py. Do not add PEP 723
+    metadata or admission logic.
+
+fixtures.create
+    Implement all positive, negative, invariant, compatibility, and
+    adversarial scenarios declared by issue #104.
+
+bootstrap.execute
+    Run locked and exact validation in disposable runtime state and admit the
+    resulting transient evidence through CUE.
+
+self-conformance.admit
+    Execute the canonical suite against this implementation unit and require
+    the CUE-exported self-conformance admission value to be literally true.
+
+provisional.retire
+    Prove provisional admission is retired and unavailable to later or
+    repeated implementation units. This is the terminal node.
+
+For each selected node, construct a bounded working prompt containing only:
+
+- implementation-unit and node identity;
+- applicable authority references;
+- requirement and acceptance-criterion IDs;
+- allowed artifacts and constraints;
+- required inputs and outputs;
+- exact validation commands;
+- required completion evidence.
+
+Execute the selected node, validate its evidence, and advance only through the
+declared DAG. The stable operator validation entrypoint must be:
+
+    just validate-bdd-bootstrap
+
+Completion requires every issue #104 admission condition, including literal
+true self-conformance admission and proof of provisional-admission retirement.

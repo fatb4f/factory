@@ -1,6 +1,8 @@
 
 # AGENTS.md
 
+Implementation prompt: [prompt.txt](prompt.txt)
+
 ## Scope
 
 This directory owns Factory’s Marimo execution surfaces and their integration with the repository-root `.kb` control plane.
