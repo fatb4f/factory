@@ -44,6 +44,8 @@ def _():
         event: str = Field(min_length=1)
         prompt: str = Field(min_length=1)
         repo_root: str = Field(min_length=1)
+        tokens: list[str] = Field(default_factory=list)
+        scope: dict[str, Any] = Field(default_factory=dict)
         budget: Budget
 
     class SourceRef(BaseModel):
@@ -153,6 +155,34 @@ def _():
 
     def run_properties() -> dict[str, Any]:
         counters = {"examples": 0}
+
+        ContextPacket.model_validate(
+            {
+                "schema": "factory.context-packet.v0",
+                "authority": False,
+                "generated": True,
+                "transient": True,
+                "admitted": True,
+                "request": {
+                    "schema": "factory.context-request.v0",
+                    "event": "operator",
+                    "prompt": "validate",
+                    "repo_root": "/repo",
+                    "tokens": ["validate"],
+                    "scope": {"boundaries": ["context-resolver"]},
+                    "budget": {
+                        "maxFragments": 12,
+                        "maxSteps": 8,
+                        "maxNodes": 48,
+                        "maxTokens": 6000,
+                    },
+                },
+                "selected_fragments": [{"id": "context-resolver.fragment.workbook"}],
+                "checks": [{"id": "references-admitted", "status": "pass"}],
+                "gates": [{"id": "packet-admitted", "satisfied": True}],
+            }
+        )
+        counters["examples"] += 1
 
         @settings(derandomize=True, deadline=None, max_examples=32)
         @given(st.text(min_size=1, max_size=80))

@@ -498,8 +498,22 @@ def _():
                     }
                 )
 
+        graph_truncated = (
+            selected["truncated"]
+            or len(nodes) > request["budget"]["maxNodes"]
+        )
+        if len(nodes) > request["budget"]["maxNodes"]:
+            nodes = nodes[: request["budget"]["maxNodes"]]
+            retained_node_ids = {node["id"] for node in nodes}
+            edges = [
+                edge
+                for edge in edges
+                if edge["source"] in retained_node_ids
+                and edge["target"] in retained_node_ids
+            ]
+
         unresolved = list(boundary_errors) + source_errors
-        if selected["truncated"]:
+        if graph_truncated:
             unresolved.append({"kind": "budget", "reason": "maxNodes reached"})
         self_gates = [
             item for item in gates if item["id"].startswith("context-resolver.gate.")
@@ -515,7 +529,7 @@ def _():
                 "seeds": selected["seeds"],
                 "nodes": nodes,
                 "edges": edges,
-                "truncated": selected["truncated"],
+                "truncated": graph_truncated,
             },
             "selected_fragments": fragments,
             "implementation_plan": plan[: request["budget"]["maxSteps"]],
@@ -565,25 +579,35 @@ def _():
                     separators=(",", ":"),
                 )
 
-        estimated_tokens = (len(serialized) + 3) // 4
-        result["metrics"] = {
-            "estimatedTokens": estimated_tokens,
-            "budgetRemaining": request["budget"]["maxTokens"] - estimated_tokens,
-            "truncationReasons": ["maxTokens"] if content_truncated else [],
-        }
-        serialized = json.dumps(
-            result,
-            ensure_ascii=False,
-            separators=(",", ":"),
-        )
-        within_budget = len(serialized) <= budget_chars
-        result["admitted"] = (
+        admission_ready = (
             bool(fragments)
             and not unresolved
             and bool(self_gates)
             and all(item["satisfied"] for item in self_gates)
-            and within_budget
         )
+        truncation_reasons = ["maxTokens"] if content_truncated else []
+        previous_state = None
+        for _ in range(16):
+            serialized = json.dumps(
+                result,
+                ensure_ascii=False,
+                separators=(",", ":"),
+            )
+            estimated_tokens = (len(serialized) + 3) // 4
+            state = (
+                estimated_tokens,
+                request["budget"]["maxTokens"] - estimated_tokens,
+                admission_ready and len(serialized) <= budget_chars,
+            )
+            result["metrics"] = {
+                "estimatedTokens": state[0],
+                "budgetRemaining": state[1],
+                "truncationReasons": truncation_reasons,
+            }
+            result["admitted"] = state[2]
+            if state == previous_state:
+                break
+            previous_state = state
         return result
 
     return load, mo, normalize, project, select
