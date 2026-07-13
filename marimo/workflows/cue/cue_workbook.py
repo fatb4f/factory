@@ -19,6 +19,7 @@ import selectors
 import shutil
 import subprocess
 import sys
+import tarfile
 import tempfile
 import time
 import traceback
@@ -33,7 +34,7 @@ import marimo
 app = marimo.App()
 
 RESULT_SCHEMA = "factory.cue-emergency-transaction-result.v1"
-REQUEST_SCHEMA = "factory.cue-emergency-transaction-request.v1"
+REQUEST_SCHEMA = "factory.cue-emergency-transaction-request.v2"
 PATCH_SCHEMA = "factory.cue-candidate-patch-manifest.v1"
 WORKER_SCHEMA = "factory.cue-py-worker-request.v1"
 WORKBOOK_PATH = Path("marimo/workflows/cue/cue_workbook.py")
@@ -46,6 +47,18 @@ KERNEL_RELATIVE_PATH = PurePosixPath("meta/kernel.cue")
 KERNEL_BLOB = "f2570c424de2d4cb5b4603a265b7a6fc9dd7a0dd"
 _ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
 _SELECTOR = re.compile(r"^[_#A-Za-z][_A-Za-z0-9]*(\.[_A-Za-z][_A-Za-z0-9]*)*$")
+_DECLARATION = re.compile(r"^[#_]?[A-Za-z][A-Za-z0-9_]*$")
+_PACKAGE_NAME = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
+_SHA256 = re.compile(r"^sha256:[0-9a-f]{64}$")
+_KERNEL_FORM_FOR_INTENT = {
+    "closed-ingress": "#Resource",
+    "exact-cardinality": "#StateKeySet",
+    "preservation": "#NoWideningProof",
+    "wiring": "#MakeClosedObligationState",
+    "value": "#ClosedObligationState",
+}
+_SUPPORTED_KERNEL_FORMS = frozenset((*_KERNEL_FORM_FOR_INTENT.values(), "#NegativeFixtureConflictProbe"))
+_CUE_PY_OPERATIONS = ("compile", "lookup", "unify-concrete-input", "unify", "schema", "validate", "project")
 
 
 class TransactionError(RuntimeError):
@@ -80,9 +93,12 @@ class Coordinates:
 
 
 @dataclasses.dataclass(frozen=True)
-class CandidateFile:
+class CandidateIntent:
     path: PurePosixPath
-    content: str | None
+    operation: str
+    package: str | None
+    selected_kernel_forms: tuple[str, ...]
+    declarations: tuple[Mapping[str, object], ...]
 
 
 @dataclasses.dataclass(frozen=True)
@@ -97,22 +113,43 @@ class PackageGate:
 class Probe:
     id: str
     polarity: str
-    source: str
+    module_root: PurePosixPath
+    package: str
+    files: tuple[PurePosixPath, ...]
     expression: str
     expected_state: str
     concrete_input: object
-    unify_source: str | None
-    schema_source: str | None
+    unify_intent: object | None
+    schema_intent: object | None
+    selected_kernel_forms: tuple[str, ...]
+    build_options: Mapping[str, object]
+
+
+@dataclasses.dataclass(frozen=True)
+class BindingExpectation:
+    cue_py_commit: str
+    libcue_commit: str
+    libcue_shared_library_digest: str
+    cffi_version: str
+    go_version: str
+    go_binary_digest: str
+    python_version: str
+    platform_identity: str
+    cue_cli_version: str
+    cue_binary_digest: str
+    uv_version: str
+    uv_binary_digest: str
 
 
 @dataclasses.dataclass(frozen=True)
 class Request:
     base_revision: str
     allowed_paths: tuple[PurePosixPath, ...]
-    candidates: tuple[CandidateFile, ...]
+    candidates: tuple[CandidateIntent, ...]
     gates: tuple[PackageGate, ...]
     probes: tuple[Probe, ...]
     lsp_argv: tuple[str, ...]
+    binding: BindingExpectation
 
 
 def _now() -> str:
@@ -219,8 +256,13 @@ def _git(root: Path, *args: str) -> str:
 
 
 def _verify_git_checkout(root: Path, commit: str, label: str) -> None:
+    checkout_root = Path(_git(root, "rev-parse", "--show-toplevel")).resolve(strict=True)
+    if checkout_root != root.resolve(strict=True):
+        raise TransactionError("binding-identity-mismatch", f"{label} coordinate is not its checkout root")
     if _git(root, "rev-parse", "HEAD") != commit:
         raise TransactionError("binding-identity-mismatch", f"{label} commit mismatch")
+    if _git(root, "status", "--porcelain=v1", "--untracked-files=all"):
+        raise TransactionError("binding-identity-mismatch", f"{label} checkout is dirty")
 
 
 def _verify_kernel(path: Path) -> dict[str, str]:
@@ -246,7 +288,111 @@ def _verify_kernel(path: Path) -> dict[str, str]:
     }
 
 
-def _load_request(path: Path) -> Request:
+def _kernel_form_names(path: Path) -> frozenset[str]:
+    if not path.is_file():
+        raise TransactionError("kernel-identity-mismatch", "kernel input is unavailable")
+    return _SUPPORTED_KERNEL_FORMS
+
+
+def _selected_kernel_forms(value: object, available: frozenset[str], label: str) -> tuple[str, ...]:
+    if not isinstance(value, list) or not value or not all(isinstance(item, str) for item in value):
+        raise TransactionError("invalid-request", f"{label} must select kernel forms")
+    selected = tuple(value)
+    if len(set(selected)) != len(selected) or not set(selected).issubset(available):
+        raise TransactionError("invalid-request", f"{label} contains an unavailable kernel form")
+    return selected
+
+
+def _cue_label(value: object, label: str) -> str:
+    if not isinstance(value, str) or not _DECLARATION.fullmatch(value):
+        raise TransactionError("invalid-request", f"invalid {label}")
+    return value
+
+
+def _cue_expr(value: object) -> str:
+    if value is None or isinstance(value, (bool, int, float, str)):
+        try:
+            return json.dumps(value, ensure_ascii=False, allow_nan=False)
+        except ValueError as error:
+            raise TransactionError("invalid-request", "CUE literal is not finite") from error
+    if isinstance(value, list):
+        return "[" + ", ".join(_cue_expr(item) for item in value) + "]"
+    if not isinstance(value, dict):
+        raise TransactionError("invalid-request", "CUE intent contains an unsupported value")
+    special = [key for key in value if isinstance(key, str) and key.startswith("$")]
+    if special:
+        if len(value) != 1:
+            raise TransactionError("invalid-request", "CUE expression operator must be the sole field")
+        operator = special[0]
+        operand = value[operator]
+        if operator == "$ref":
+            if not isinstance(operand, str) or not _SELECTOR.fullmatch(operand):
+                raise TransactionError("invalid-request", "invalid CUE reference intent")
+            return operand
+        if operator in {"$and", "$or"}:
+            if not isinstance(operand, list) or len(operand) < 2:
+                raise TransactionError("invalid-request", f"{operator} requires at least two operands")
+            separator = " & " if operator == "$and" else " | "
+            return "(" + separator.join(_cue_expr(item) for item in operand) + ")"
+        if operator == "$eq":
+            if not isinstance(operand, list) or len(operand) != 2:
+                raise TransactionError("invalid-request", "$eq requires two operands")
+            return f"({_cue_expr(operand[0])} == {_cue_expr(operand[1])})"
+        if operator == "$len":
+            return f"len({_cue_expr(operand)})"
+        if operator == "$close":
+            if not isinstance(operand, dict):
+                raise TransactionError("invalid-request", "$close requires a struct")
+            return f"close({_cue_expr(operand)})"
+        raise TransactionError("invalid-request", f"unsupported CUE expression operator: {operator}")
+    fields: list[str] = []
+    for key, item in value.items():
+        label = _cue_label(key, "CUE field")
+        fields.append(f"{label}: {_cue_expr(item)}")
+    return "{" + ", ".join(fields) + "}"
+
+
+def _render_declaration(declaration: Mapping[str, object], selected: frozenset[str]) -> str:
+    form = declaration.get("form")
+    required = _KERNEL_FORM_FOR_INTENT.get(str(form))
+    if required is None or required not in selected:
+        raise TransactionError("invalid-request", f"declaration form {form!r} lacks its selected kernel form")
+    name = _cue_label(declaration.get("name"), "declaration name")
+    if form == "closed-ingress":
+        if set(declaration) != {"form", "name", "fields"} or not isinstance(declaration["fields"], dict):
+            raise TransactionError("invalid-request", "invalid closed-ingress intent")
+        return f"{name}: close({_cue_expr(declaration['fields'])})"
+    if form == "exact-cardinality":
+        if set(declaration) != {"form", "name", "collection", "count"}:
+            raise TransactionError("invalid-request", "invalid exact-cardinality intent")
+        count = declaration["count"]
+        if not isinstance(count, int) or isinstance(count, bool) or count < 0:
+            raise TransactionError("invalid-request", "exact cardinality must be a nonnegative integer")
+        return f"{name}: (len({_cue_expr(declaration['collection'])}) == {count}) & true"
+    if form == "preservation":
+        if set(declaration) != {"form", "name", "authority", "target"}:
+            raise TransactionError("invalid-request", "invalid preservation intent")
+        return f"{name}: {_cue_expr({'$and': [declaration['authority'], declaration['target']]})}"
+    if form == "wiring":
+        if set(declaration) != {"form", "name", "target"}:
+            raise TransactionError("invalid-request", "invalid wiring intent")
+        return f"{name}: {_cue_expr(declaration['target'])}"
+    if form == "value":
+        if set(declaration) != {"form", "name", "value"}:
+            raise TransactionError("invalid-request", "invalid value intent")
+        return f"{name}: {_cue_expr(declaration['value'])}"
+    raise TransactionError("invalid-request", "unsupported declaration intent")
+
+
+def _candidate_source(candidate: CandidateIntent) -> str:
+    if candidate.operation != "construct" or candidate.package is None:
+        raise TransactionError("invalid-request", "cannot render a deletion intent")
+    selected = frozenset(candidate.selected_kernel_forms)
+    declarations = "\n\n".join(_render_declaration(item, selected) for item in candidate.declarations)
+    return f"package {candidate.package}\n\n{declarations}\n"
+
+
+def _load_request(path: Path, kernel_path: Path) -> Request:
     try:
         raw = json.loads(path.read_bytes())
     except (OSError, UnicodeDecodeError, json.JSONDecodeError) as error:
@@ -256,10 +402,11 @@ def _load_request(path: Path) -> Request:
         "repository",
         "baseRevision",
         "allowedPaths",
-        "candidateFiles",
+        "candidateIntents",
         "packageGates",
         "probes",
         "lsp",
+        "bindingExpectation",
     }:
         raise TransactionError("invalid-request", "request boundary is open or incomplete")
     if raw["schema"] != REQUEST_SCHEMA or raw["repository"] != REPOSITORY_ID:
@@ -271,16 +418,30 @@ def _load_request(path: Path) -> Request:
     allowed = tuple(_safe_relative(item, "allowed path") for item in raw["allowedPaths"])
     if len(set(allowed)) != len(allowed):
         raise TransactionError("invalid-request", "allowedPaths contains duplicates")
-    if not isinstance(raw["candidateFiles"], list):
-        raise TransactionError("invalid-request", "candidateFiles must be a list")
-    candidates: list[CandidateFile] = []
-    for item in raw["candidateFiles"]:
-        if not isinstance(item, dict) or set(item) != {"path", "content"}:
-            raise TransactionError("invalid-request", "invalid candidate file")
+    available_forms = _kernel_form_names(kernel_path)
+    if not isinstance(raw["candidateIntents"], list) or not raw["candidateIntents"]:
+        raise TransactionError("invalid-request", "candidateIntents must be nonempty")
+    candidates: list[CandidateIntent] = []
+    for item in raw["candidateIntents"]:
+        if not isinstance(item, dict) or set(item) != {"path", "operation", "package", "selectedKernelForms", "declarations"}:
+            raise TransactionError("invalid-request", "invalid candidate intent")
         candidate_path = _safe_relative(item["path"], "candidate path")
-        if candidate_path not in allowed or (item["content"] is not None and not isinstance(item["content"], str)):
-            raise TransactionError("invalid-request", "candidate file exceeds allowance")
-        candidates.append(CandidateFile(candidate_path, item["content"]))
+        if candidate_path not in allowed or item["operation"] not in {"construct", "delete"}:
+            raise TransactionError("invalid-request", "candidate intent exceeds allowance")
+        selected = _selected_kernel_forms(item["selectedKernelForms"], available_forms, "candidate intent")
+        declarations = item["declarations"]
+        if not isinstance(declarations, list) or not all(isinstance(value, dict) for value in declarations):
+            raise TransactionError("invalid-request", "candidate declarations must be structured intents")
+        package = item["package"]
+        if item["operation"] == "construct":
+            if not isinstance(package, str) or not _PACKAGE_NAME.fullmatch(package) or not declarations:
+                raise TransactionError("invalid-request", "constructed candidate requires package and declarations")
+        elif package is not None or declarations:
+            raise TransactionError("invalid-request", "deletion intent cannot contain source construction fields")
+        candidate = CandidateIntent(candidate_path, item["operation"], package, selected, tuple(declarations))
+        if candidate.operation == "construct":
+            _candidate_source(candidate)
+        candidates.append(candidate)
     if len({item.path for item in candidates}) != len(candidates):
         raise TransactionError("invalid-request", "duplicate candidate file")
     if not isinstance(raw["packageGates"], list) or not raw["packageGates"]:
@@ -308,16 +469,8 @@ def _load_request(path: Path) -> Request:
         raise TransactionError("invalid-request", "probes must be nonempty")
     probes: list[Probe] = []
     for item in raw["probes"]:
-        required = {
-            "id",
-            "polarity",
-            "source",
-            "expression",
-            "expectedState",
-            "concreteInput",
-            "unifySource",
-            "schemaSource",
-        }
+        required = {"id", "polarity", "moduleRoot", "package", "files", "expression", "expectedState",
+                    "concreteInput", "unifyIntent", "schemaIntent", "selectedKernelForms", "buildOptions"}
         if not isinstance(item, dict) or set(item) != required:
             raise TransactionError("invalid-request", "invalid probe boundary")
         if not isinstance(item["id"], str) or not _ID.fullmatch(item["id"]):
@@ -326,19 +479,35 @@ def _load_request(path: Path) -> Request:
             raise TransactionError("invalid-request", "invalid probe polarity")
         if item["expectedState"] not in {"accept", "reject", "incomplete"}:
             raise TransactionError("invalid-request", "invalid expected probe state")
-        for key in ("source", "expression"):
-            if not isinstance(item[key], str) or not item[key]:
-                raise TransactionError("invalid-request", f"invalid probe {key}")
+        if not isinstance(item["package"], str) or not _PACKAGE_NAME.fullmatch(item["package"]):
+            raise TransactionError("invalid-request", "invalid probe package")
+        if not isinstance(item["files"], list) or not item["files"]:
+            raise TransactionError("invalid-request", "probe file set must be nonempty")
+        files = tuple(_safe_relative(value, "probe file") for value in item["files"])
+        if len(set(files)) != len(files):
+            raise TransactionError("invalid-request", "probe file set contains duplicates")
+        if not isinstance(item["expression"], str) or not item["expression"]:
+            raise TransactionError("invalid-request", "invalid probe expression")
         if not _SELECTOR.fullmatch(item["expression"]):
             raise TransactionError("invalid-request", "probe expression must be a CUE selector path")
-        for key in ("unifySource", "schemaSource"):
-            if item[key] is not None and not isinstance(item[key], str):
-                raise TransactionError("invalid-request", f"invalid probe {key}")
+        for key in ("unifyIntent", "schemaIntent"):
+            if item[key] is not None:
+                _cue_expr(item[key])
+        selected = _selected_kernel_forms(item["selectedKernelForms"], available_forms, "probe")
+        if "#ClosedObligationState" not in selected:
+            raise TransactionError("invalid-request", "probe construction requires the selected closed-ingress kernel form")
+        if item["polarity"] in {"negative", "adversarial"} and "#NegativeFixtureConflictProbe" not in selected:
+            raise TransactionError("invalid-request", "destructive probe construction requires the selected conflict-probe kernel form")
+        build_options = item["buildOptions"]
+        if not isinstance(build_options, dict) or set(build_options) != {"tags", "allErrors"}:
+            raise TransactionError("invalid-request", "invalid probe build options")
+        if build_options != {"tags": [], "allErrors": False}:
+            raise TransactionError("invalid-request", "initial equivalent probes require the exact supported build options")
         probes.append(
             Probe(
-                item["id"], item["polarity"], item["source"], item["expression"],
-                item["expectedState"], item["concreteInput"], item["unifySource"],
-                item["schemaSource"],
+                item["id"], item["polarity"], _safe_relative(item["moduleRoot"], "probe module root"),
+                item["package"], files, item["expression"], item["expectedState"], item["concreteInput"],
+                item["unifyIntent"], item["schemaIntent"], selected, build_options,
             )
         )
     if len({item.id for item in probes}) != len(probes):
@@ -350,7 +519,28 @@ def _load_request(path: Path) -> Request:
         raise TransactionError("invalid-request", "invalid lsp declaration")
     if not all(isinstance(value, str) and value for value in lsp["argv"]):
         raise TransactionError("invalid-request", "invalid lsp argv")
-    return Request(raw["baseRevision"], allowed, tuple(candidates), tuple(gates), tuple(probes), tuple(lsp["argv"]))
+    binding = raw["bindingExpectation"]
+    binding_fields = {
+        "cuePyCommit", "libcueCommit", "libcueSharedLibraryDigest", "cffiVersion", "goVersion",
+        "goBinaryDigest", "pythonVersion", "platformIdentity", "cueCLIVersion", "cueBinaryDigest",
+        "uvVersion", "uvBinaryDigest",
+    }
+    if not isinstance(binding, dict) or set(binding) != binding_fields:
+        raise TransactionError("invalid-request", "invalid binding expectation")
+    if not all(isinstance(binding[key], str) and binding[key] for key in binding_fields):
+        raise TransactionError("invalid-request", "binding expectations must be concrete strings")
+    for key in ("libcueSharedLibraryDigest", "goBinaryDigest", "cueBinaryDigest", "uvBinaryDigest"):
+        if not _SHA256.fullmatch(binding[key]):
+            raise TransactionError("invalid-request", f"invalid {key}")
+    expectation = BindingExpectation(
+        binding["cuePyCommit"], binding["libcueCommit"], binding["libcueSharedLibraryDigest"],
+        binding["cffiVersion"], binding["goVersion"], binding["goBinaryDigest"], binding["pythonVersion"],
+        binding["platformIdentity"], binding["cueCLIVersion"], binding["cueBinaryDigest"],
+        binding["uvVersion"], binding["uvBinaryDigest"],
+    )
+    if expectation.cue_py_commit != CUE_PY_COMMIT or expectation.libcue_commit != LIBCUE_COMMIT:
+        raise TransactionError("invalid-request", "binding commit expectation differs from emergency authority")
+    return Request(raw["baseRevision"], allowed, tuple(candidates), tuple(gates), tuple(probes), tuple(lsp["argv"]), expectation)
 
 
 def _tree_digest(root: Path) -> str:
@@ -358,22 +548,39 @@ def _tree_digest(root: Path) -> str:
     ignored = {".git", ".venv", "__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache"}
     for path in sorted(root.rglob("*")):
         relative = path.relative_to(root)
-        if any(part in ignored for part in relative.parts) or not path.is_file() or path.is_symlink():
+        if any(part in ignored for part in relative.parts) or (not path.is_file() and not path.is_symlink()):
             continue
         digest.update(relative.as_posix().encode() + b"\0")
-        digest.update(hashlib.sha256(path.read_bytes()).digest())
+        if path.is_symlink():
+            digest.update(b"symlink\0" + os.readlink(path).encode())
+        elif path.is_file():
+            digest.update(b"file\0" + hashlib.sha256(path.read_bytes()).digest())
     return f"sha256:{digest.hexdigest()}"
 
 
-def _copy_shadow(repo_root: Path, shadow_root: Path) -> None:
+def _copy_shadow(repo_root: Path, shadow_root: Path, base_revision: str) -> None:
     if shadow_root.exists():
         raise TransactionError("shadow-exists", "shadow root must not exist")
-    shutil.copytree(
-        repo_root,
-        shadow_root,
-        symlinks=True,
-        ignore=shutil.ignore_patterns(".git", ".venv", "__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache"),
+    archive = subprocess.run(
+        ["git", "-C", str(repo_root), "archive", "--format=tar", base_revision],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
     )
+    if archive.returncode != 0:
+        raise TransactionError("base-read-failure", archive.stderr.decode("utf-8", "replace")[:2000])
+    shadow_root.mkdir()
+    archive_path = shadow_root.parent / "base-revision.tar"
+    archive_path.write_bytes(archive.stdout)
+    try:
+        with tarfile.open(archive_path, mode="r:") as stream:
+            for member in stream.getmembers():
+                member_path = PurePosixPath(member.name)
+                if member_path.is_absolute() or ".." in member_path.parts or member.issym() or member.islnk():
+                    raise TransactionError("unsafe-base-archive", "base revision contains an unsafe archive member")
+            stream.extractall(shadow_root, filter="data")
+    finally:
+        archive_path.unlink(missing_ok=True)
 
 
 def _apply_candidates(shadow: Path, request: Request) -> None:
@@ -382,14 +589,14 @@ def _apply_candidates(shadow: Path, request: Request) -> None:
         resolved = path.resolve(strict=False)
         if not resolved.is_relative_to(shadow):
             raise TransactionError("path-escape", f"candidate path escapes: {candidate.path}")
-        if candidate.content is None:
+        if candidate.operation == "delete":
             if path.exists():
                 if not path.is_file() or path.is_symlink():
                     raise TransactionError("unsafe-candidate", f"cannot remove: {candidate.path}")
                 path.unlink()
         else:
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(candidate.content, encoding="utf-8", newline="")
+            path.write_text(_candidate_source(candidate), encoding="utf-8", newline="")
 
 
 def _gate_observation(gate: PackageGate, shadow: Path, cue_bin: Path) -> dict[str, object]:
@@ -420,49 +627,129 @@ def _gate_observation(gate: PackageGate, shadow: Path, cue_bin: Path) -> dict[st
     }
 
 
-def _subject(probe: Probe, filename: str) -> dict[str, str]:
-    build_options = {
-        "filename": filename,
-        "importPath": "",
-        "unifySourceDigest": None if probe.unify_source is None else _digest_bytes(probe.unify_source.encode()),
-        "schemaSourceDigest": None if probe.schema_source is None else _digest_bytes(probe.schema_source.encode()),
+def _strip_package(source: str, package: str, label: str) -> str:
+    match = re.match(r"\s*package\s+([A-Za-z_][A-Za-z0-9_]*)\s*\n", source)
+    if match is None or match.group(1) != package:
+        raise TransactionError("invalid-probe-file", f"{label} does not declare package {package}")
+    body = source[match.end():]
+    if re.search(r"(?m)^\s*import(?:\s|\()", body):
+        raise TransactionError("unsupported-import-context", f"{label} uses imports not supported by equivalent cue-py probes")
+    return body
+
+
+def _concrete_value_source(value: object) -> str:
+    rendered = _cue_expr(value)
+    return f"close({rendered})" if isinstance(value, dict) else rendered
+
+
+def _concrete_input_source(probe: Probe) -> str:
+    return _concrete_value_source(probe.concrete_input)
+
+
+def _probe_harness_source(probe: Probe) -> str:
+    concrete_input = _concrete_input_source(probe)
+    subject = f"({probe.expression}) & {concrete_input}"
+    if probe.unify_intent is not None:
+        subject = f"({subject}) & ({_cue_expr(probe.unify_intent)})"
+    result = "_factoryProbeSubject"
+    lines = [
+        f"package {probe.package}",
+        "",
+        f"_factoryConcreteInput: {concrete_input}",
+        f"_factoryProbeSubject: {subject}",
+    ]
+    if probe.schema_intent is not None:
+        lines.append(f"_factoryProbeSchema: {_cue_expr(probe.schema_intent)}")
+        lines.append("_factoryProbeSchemaProof: _factoryProbeSubject & _factoryProbeSchema")
+        result = "_factoryProbeSchemaProof"
+    lines.append(f"_factoryProbeResult: {result}")
+    return "\n".join(lines) + "\n"
+
+
+def _format_cue_source(source: str, cue_bin: Path, cwd: Path) -> str:
+    formatted = _run((str(cue_bin), "fmt", "-"), cwd=cwd, input_bytes=source.encode())
+    if formatted["exitCode"] != 0:
+        raise TransactionError("probe-format-failure", str(formatted["stderr"]))
+    return str(formatted["stdout"])
+
+
+def _probe_materialization(
+    probe: Probe,
+    shadow: Path,
+    binding: Mapping[str, object],
+    cue_bin: Path,
+) -> dict[str, object]:
+    module = shadow.joinpath(*probe.module_root.parts).resolve(strict=True)
+    if not module.is_relative_to(shadow) or not (module / "cue.mod/module.cue").is_file():
+        raise TransactionError("invalid-module-coordinate", f"invalid probe module root: {probe.id}")
+    file_digests: dict[str, str] = {}
+    source_parts = [f"package {probe.package}", ""]
+    for relative in probe.files:
+        path = module.joinpath(*relative.parts).resolve(strict=True)
+        if not path.is_relative_to(module) or not path.is_file() or path.is_symlink():
+            raise TransactionError("invalid-file-coordinate", f"invalid probe file: {relative}")
+        source = path.read_text(encoding="utf-8")
+        file_digests[relative.as_posix()] = _digest_bytes(source.encode())
+        source_parts.append(_strip_package(source, probe.package, relative.as_posix()).rstrip())
+        source_parts.append("")
+    semantic_source = "\n".join(source_parts).rstrip() + "\n"
+    harness_source = _format_cue_source(_probe_harness_source(probe), cue_bin, module)
+    relative_harness = PurePosixPath(".factory-cue-probes") / f"{probe.id}.cue"
+    components: dict[str, object] = {
+        "moduleRoot": probe.module_root.as_posix(),
+        "package": probe.package,
+        "files": [path.as_posix() for path in probe.files],
+        "fileDigests": file_digests,
+        "semanticSourceDigest": _digest_bytes(semantic_source.encode()),
+        "generatedHarnessDigest": _digest_bytes(harness_source.encode()),
+        "selectedExpression": probe.expression,
+        "buildOptions": dict(probe.build_options),
+        "concreteInputDigest": _digest_bytes(_json_bytes(probe.concrete_input)),
+        "unifyIntentDigest": None if probe.unify_intent is None else _digest_bytes(_json_bytes(probe.unify_intent)),
+        "schemaIntentDigest": None if probe.schema_intent is None else _digest_bytes(_json_bytes(probe.schema_intent)),
+        "selectedKernelForms": list(probe.selected_kernel_forms),
+        "importContext": "none-in-initial-equivalent-probe",
+        "cueCLIContext": {
+            "version": binding["cueCLIVersion"],
+            "binaryDigest": binding["cueBinaryDigest"],
+            "operations": ["eval", "export"],
+            "options": ["-p", probe.package, "-e", "_factoryProbeResult"],
+        },
+        "cuePyContext": {
+            "cuePyCommit": binding["cuePyCommit"],
+            "libcueCommit": binding["libcueCommit"],
+            "libcueSharedLibraryDigest": binding["libcueSharedLibraryDigest"],
+            "operations": list(_CUE_PY_OPERATIONS),
+        },
     }
     return {
-        "candidateOrProbeDigest": _digest_bytes(probe.source.encode()),
-        "selectedExpression": probe.expression,
-        "cueBuildOptionsDigest": _digest_bytes(_json_bytes(build_options)),
-        "concreteInputDigest": _digest_bytes(_json_bytes(probe.concrete_input)),
+        "module": module,
+        "harnessRelative": relative_harness.as_posix(),
+        "harnessSource": harness_source,
+        "semanticSource": semantic_source,
+        "subjectComponents": components,
+        "subject": {"digest": _digest_bytes(_json_bytes(components)), "components": components},
     }
 
 
-def _cli_probe_source(probe: Probe) -> str:
-    parts = [probe.source.rstrip(), ""]
-    if probe.unify_source is not None:
-        parts.extend(("// Workbook-constructed equivalent unify conjunct.", probe.unify_source.rstrip(), ""))
-    if probe.schema_source is not None:
-        parts.extend(
-            (
-                "// Workbook-constructed concrete schema-conformance proof.",
-                f"_factoryProbeSchemaProof: ({probe.expression}) & ({probe.schema_source})",
-                "",
-            )
-        )
-    return "\n".join(parts)
-
-
-def _cue_py_worker_request(probes: Sequence[Probe], probe_files: Mapping[str, str], cue_py_root: Path) -> dict[str, object]:
+def _cue_py_worker_request(
+    probes: Sequence[Probe],
+    materializations: Mapping[str, Mapping[str, object]],
+    cue_py_root: Path,
+) -> dict[str, object]:
     return {
         "schema": WORKER_SCHEMA,
         "cuePyRoot": str(cue_py_root),
         "probes": [
             {
                 "id": probe.id,
-                "source": probe.source,
-                "filename": probe_files[probe.id],
+                "source": materializations[probe.id]["semanticSource"],
+                "filename": materializations[probe.id]["harnessRelative"],
                 "expression": probe.expression,
-                "unifySource": probe.unify_source,
-                "schemaSource": probe.schema_source,
-                "subject": _subject(probe, probe_files[probe.id]),
+                "concreteInput": probe.concrete_input,
+                "unifyIntent": probe.unify_intent,
+                "schemaIntent": probe.schema_intent,
+                "subjectComponents": materializations[probe.id]["subjectComponents"],
             }
             for probe in probes
         ],
@@ -471,12 +758,12 @@ def _cue_py_worker_request(probes: Sequence[Probe], probe_files: Mapping[str, st
 
 def _run_cue_py(
     probes: Sequence[Probe],
-    probe_files: Mapping[str, str],
+    materializations: Mapping[str, Mapping[str, object]],
     coordinates: Coordinates,
     workbook: Path,
 ) -> tuple[list[dict[str, object]], dict[str, object]]:
     request_path = coordinates.transient_root / "cue-py-worker-request.json"
-    request_path.write_bytes(_pretty_json(_cue_py_worker_request(probes, probe_files, coordinates.cue_py_root)))
+    request_path.write_bytes(_pretty_json(_cue_py_worker_request(probes, materializations, coordinates.cue_py_root)))
     environment = dict(os.environ)
     library_variable = "PATH" if sys.platform == "win32" else ("DYLD_LIBRARY_PATH" if sys.platform == "darwin" else "LD_LIBRARY_PATH")
     environment[library_variable] = str(coordinates.libcue_library.parent) + os.pathsep + environment.get(library_variable, "")
@@ -492,7 +779,7 @@ def _run_cue_py(
                 "evaluator": "cue-py/libcue",
                 "stage": "compile",
                 "semanticOutcome": {"state": "infrastructure-failure", "category": "worker-failure"},
-                "subject": _subject(probe, probe_files[probe.id]),
+                "subject": materializations[probe.id]["subject"],
                 "rawDiagnostic": str(result["stderr"]),
             }
             for probe in probes
@@ -500,26 +787,63 @@ def _run_cue_py(
         return observations, result
     try:
         payload = json.loads(str(result["stdout"]))
-    except json.JSONDecodeError as error:
-        raise TransactionError("cue-py-worker-protocol", "cue-py worker returned invalid JSON") from error
-    if not isinstance(payload, dict) or not isinstance(payload.get("observations"), list):
-        raise TransactionError("cue-py-worker-protocol", "cue-py worker response mismatch")
-    return payload["observations"], result
+    except json.JSONDecodeError:
+        payload = None
+    observations = payload.get("observations") if isinstance(payload, dict) else None
+    valid = isinstance(observations, list) and len(observations) == len(probes)
+    if valid:
+        by_id = {str(item.get("probeID")): item for item in observations if isinstance(item, dict)}
+        valid = set(by_id) == {probe.id for probe in probes} and len(by_id) == len(observations)
+        valid = valid and all(
+            by_id[probe.id].get("subject") == materializations[probe.id]["subject"]
+            and isinstance(by_id[probe.id].get("semanticOutcome"), dict)
+            and by_id[probe.id]["semanticOutcome"].get("state") in {item.value for item in Outcome}  # type: ignore[index]
+            for probe in probes
+        )
+    if not valid:
+        return ([
+            {
+                "probeID": probe.id,
+                "evaluator": "cue-py/libcue",
+                "stage": "compile",
+                "semanticOutcome": {"state": "infrastructure-failure", "category": "worker-protocol"},
+                "subject": materializations[probe.id]["subject"],
+                "rawDiagnostic": "cue-py worker response did not match the closed protocol",
+            }
+            for probe in probes
+        ], result)
+    return observations, result
 
 
-def _cli_probe(probe: Probe, filename: str, module: Path, cue_bin: Path) -> dict[str, object]:
-    subject = _subject(probe, filename)
-    eval_result = _run((str(cue_bin), "eval", "-e", probe.expression, filename), cwd=module)
+def _cli_probe(probe: Probe, materialization: Mapping[str, object], cue_bin: Path) -> dict[str, object]:
+    module = materialization["module"]
+    if not isinstance(module, Path):
+        raise TransactionError("invalid-probe-materialization", "probe module was not materialized")
+    filename = str(materialization["harnessRelative"])
+    actual_harness = (module / filename).read_text(encoding="utf-8")
+    components = materialization["subjectComponents"]
+    if not isinstance(components, dict):
+        raise TransactionError("invalid-probe-materialization", "semantic subject components are invalid")
+    if _digest_bytes(actual_harness.encode()) != components["generatedHarnessDigest"]:
+        raise TransactionError("probe-subject-mismatch", "CLI harness changed after construction")
+    current_file_digests = {
+        relative.as_posix(): _digest_file(module.joinpath(*relative.parts)) for relative in probe.files
+    }
+    if current_file_digests != components["fileDigests"]:
+        raise TransactionError("probe-subject-mismatch", "CLI file set changed after subject construction")
+    inputs = [path.as_posix() for path in probe.files] + [filename]
+    common = ("-p", probe.package, "-e", "_factoryProbeResult", *inputs)
+    eval_result = _run((str(cue_bin), "eval", *common), cwd=module)
     if eval_result["exitCode"] is None:
         outcome = {"state": "infrastructure-failure", "category": "cli-unavailable"}
         stage = "compile"
         concrete_result: dict[str, object] | None = None
-    elif eval_result["exitCode"] != 0:
+    elif eval_result["exitCode"] != 0 or re.search(r"(?m)^\s*_\|_", str(eval_result["stdout"])):
         outcome = {"state": "reject", "category": "bottom"}
         stage = "validate"
         concrete_result = None
     else:
-        concrete_result = _run((str(cue_bin), "export", "--out", "json", "-e", probe.expression, filename), cwd=module)
+        concrete_result = _run((str(cue_bin), "export", "--out", "json", *common), cwd=module)
         if concrete_result["exitCode"] is None:
             outcome = {"state": "infrastructure-failure", "category": "cli-unavailable"}
             stage = "project"
@@ -543,8 +867,8 @@ def _cli_probe(probe: Probe, filename: str, module: Path, cue_bin: Path) -> dict
         "evaluator": "cue-cli",
         "stage": stage,
         "semanticOutcome": outcome,
-        "subject": subject,
-        "harnessDigest": _digest_bytes((module / filename).read_bytes()),
+        "subject": {"digest": _digest_bytes(_json_bytes(components)), "components": components},
+        "harnessDigest": _digest_bytes(actual_harness.encode()),
         "commands": [item for item in (eval_result, concrete_result) if item is not None],
     }
 
@@ -559,7 +883,15 @@ def _compare(
     comparisons: list[dict[str, object]] = []
     for probe in probes:
         left, right = py_by_id[probe.id], cli_by_id[probe.id]
-        equivalent = left.get("subject") == right.get("subject")
+        left_subject, right_subject = left.get("subject"), right.get("subject")
+        equivalent = (
+            isinstance(left_subject, dict)
+            and isinstance(right_subject, dict)
+            and left_subject.get("digest") == right_subject.get("digest")
+            and left_subject.get("components") == right_subject.get("components")
+            and left_subject.get("digest") == _digest_bytes(_json_bytes(left_subject.get("components")))
+            and right_subject.get("digest") == _digest_bytes(_json_bytes(right_subject.get("components")))
+        )
         left_outcome = left.get("semanticOutcome")
         right_outcome = right.get("semanticOutcome")
         agrees = equivalent and left_outcome == right_outcome
@@ -574,6 +906,7 @@ def _compare(
                 and left_outcome.get("state") == probe.expected_state,
                 "cuePyOutcome": left_outcome,
                 "cueCLIOutcome": right_outcome,
+                "semanticSubjectDigest": left_subject.get("digest") if equivalent else None,
             }
         )
     return comparisons
@@ -698,9 +1031,7 @@ def _candidate_patch(repo: Path, shadow: Path, request: Request, base_revision: 
     postimages: dict[str, str] = {}
     changed: list[str] = []
     for relative in request.allowed_paths:
-        before = _file_bytes(repo, relative)
-        if before != _base_file_bytes(repo, base_revision, relative):
-            raise TransactionError("dirty-patch-preimage", f"allowed path differs from base revision: {relative}")
+        before = _base_file_bytes(repo, base_revision, relative)
         after = _file_bytes(shadow, relative)
         if before == after:
             continue
@@ -772,11 +1103,43 @@ def _validate_patch_pair(
         raise TransactionError("unsafe-patch", "patch digests missing")
     for value in changed:
         relative = _safe_relative(value, "changed path")
-        before, after = _file_bytes(repo, relative), _file_bytes(shadow, relative)
+        before, after = _base_file_bytes(repo, base_revision, relative), _file_bytes(shadow, relative)
         expected_before = "absent" if before is None else _digest_bytes(before)
         expected_after = "absent" if after is None else _digest_bytes(after)
         if preimages.get(value) != expected_before or postimages.get(value) != expected_after:
             raise TransactionError("unsafe-patch", "patch preimage or postimage mismatch")
+    verification = shadow.parent / "patch-verification"
+    if verification.exists():
+        raise TransactionError("unsafe-patch", "patch verification root already exists")
+    _copy_shadow(repo, verification, base_revision)
+    try:
+        before_files = {
+            path.relative_to(verification).as_posix(): _digest_file(path)
+            for path in verification.rglob("*") if path.is_file() and not path.is_symlink()
+        }
+        check = _run(("git", "apply", "--check", "--whitespace=nowarn", "-"), cwd=verification, input_bytes=patch)
+        if check["exitCode"] != 0:
+            raise TransactionError("unsafe-patch", f"generated patch is not applicable: {check['stderr']}")
+        applied = _run(("git", "apply", "--whitespace=nowarn", "-"), cwd=verification, input_bytes=patch)
+        if applied["exitCode"] != 0:
+            raise TransactionError("unsafe-patch", f"generated patch failed to apply: {applied['stderr']}")
+        after_files = {
+            path.relative_to(verification).as_posix(): _digest_file(path)
+            for path in verification.rglob("*") if path.is_file() and not path.is_symlink()
+        }
+        applied_changes = {
+            path for path in set(before_files) | set(after_files)
+            if before_files.get(path) != after_files.get(path)
+        }
+        if applied_changes != set(changed):
+            raise TransactionError("unsafe-patch", "applied patch path set differs from manifest")
+        for value in changed:
+            actual = _file_bytes(verification, _safe_relative(value, "verified patch path"))
+            actual_digest = "absent" if actual is None else _digest_bytes(actual)
+            if postimages.get(value) != actual_digest:
+                raise TransactionError("unsafe-patch", "applied patch does not produce declared postimage")
+    finally:
+        shutil.rmtree(verification, ignore_errors=True)
 
 
 def _atomic_promote(root: Path, artifacts: Mapping[str, bytes]) -> None:
@@ -802,31 +1165,56 @@ def _atomic_promote(root: Path, artifacts: Mapping[str, bytes]) -> None:
         raise
 
 
-def _binding_identity(coordinates: Coordinates) -> dict[str, object]:
+def _binding_identity(coordinates: Coordinates, expected: BindingExpectation) -> dict[str, object]:
     _verify_git_checkout(coordinates.cue_py_root, CUE_PY_COMMIT, "cue-py")
     _verify_git_checkout(coordinates.libcue_root, LIBCUE_COMMIT, "libcue")
     canonical_library = "cue.dll" if sys.platform == "win32" else ("libcue.dylib" if sys.platform == "darwin" else "libcue.so")
     if coordinates.libcue_library.name != canonical_library or not coordinates.libcue_library.is_relative_to(coordinates.libcue_root):
         raise TransactionError("binding-identity-mismatch", "libcue library coordinate mismatch")
     go_version = _run((str(coordinates.go_bin), "version"), cwd=coordinates.repo_root)
-    if go_version["exitCode"] != 0:
-        raise TransactionError("binding-identity-mismatch", "go version unavailable")
+    cue_version = _run((str(coordinates.cue_bin), "version"), cwd=coordinates.repo_root)
+    uv_version = _run((str(coordinates.uv_bin), "--version"), cwd=coordinates.repo_root)
+    if any(item["exitCode"] != 0 for item in (go_version, cue_version, uv_version)):
+        raise TransactionError("binding-identity-mismatch", "tool version identity unavailable")
     try:
         cffi_version = importlib.metadata.version("cffi")
     except importlib.metadata.PackageNotFoundError as error:
         raise TransactionError("binding-identity-mismatch", "cffi is unavailable") from error
-    return {
+    observed = {
         "cuePyCommit": CUE_PY_COMMIT,
         "libcueCommit": LIBCUE_COMMIT,
         "libcueSharedLibraryDigest": _digest_file(coordinates.libcue_library),
         "cffiVersion": cffi_version,
         "goVersion": str(go_version["stdout"]).strip(),
+        "goBinaryDigest": _digest_file(coordinates.go_bin),
         "pythonVersion": platform.python_version(),
         "platformIdentity": platform.platform(),
+        "cueCLIVersion": str(cue_version["stdout"]).strip(),
+        "cueBinaryDigest": _digest_file(coordinates.cue_bin),
+        "uvVersion": str(uv_version["stdout"]).strip(),
+        "uvBinaryDigest": _digest_file(coordinates.uv_bin),
     }
+    expected_values = {
+        "cuePyCommit": expected.cue_py_commit,
+        "libcueCommit": expected.libcue_commit,
+        "libcueSharedLibraryDigest": expected.libcue_shared_library_digest,
+        "cffiVersion": expected.cffi_version,
+        "goVersion": expected.go_version,
+        "goBinaryDigest": expected.go_binary_digest,
+        "pythonVersion": expected.python_version,
+        "platformIdentity": expected.platform_identity,
+        "cueCLIVersion": expected.cue_cli_version,
+        "cueBinaryDigest": expected.cue_binary_digest,
+        "uvVersion": expected.uv_version,
+        "uvBinaryDigest": expected.uv_binary_digest,
+    }
+    if observed != expected_values:
+        mismatches = sorted(key for key in observed if observed[key] != expected_values[key])
+        raise TransactionError("binding-identity-mismatch", f"binding expectation mismatch: {', '.join(mismatches)}")
+    return {**observed, "expectationMatched": True}
 
 
-def _environment_identity(coordinates: Coordinates) -> dict[str, object]:
+def _environment_identity(coordinates: Coordinates, base_revision: str) -> dict[str, object]:
     environment = os.environ.get("UV_PROJECT_ENVIRONMENT")
     if not environment:
         raise TransactionError("unlocked-environment", "UV_PROJECT_ENVIRONMENT is required")
@@ -837,47 +1225,158 @@ def _environment_identity(coordinates: Coordinates) -> dict[str, object]:
         raise TransactionError("unsafe-environment", "environment must be outside the live repository")
     if environment_path.resolve().is_relative_to(coordinates.transient_root):
         raise TransactionError("unsafe-environment", "environment must be outside the transient root")
+    for name in ("pyproject.toml", "uv.lock"):
+        relative = PurePosixPath(name)
+        if _file_bytes(coordinates.repo_root, relative) != _base_file_bytes(coordinates.repo_root, base_revision, relative):
+            raise TransactionError("project-identity-mismatch", f"{name} differs from the base revision")
     lock_check = _run((str(coordinates.uv_bin), "lock", "--check", "--project", str(coordinates.repo_root)), cwd=coordinates.repo_root)
     if lock_check["exitCode"] != 0:
         raise TransactionError("lock-check-failure", str(lock_check["stderr"]))
+    exact_check = _run(
+        (str(coordinates.uv_bin), "sync", "--check", "--locked", "--project", str(coordinates.repo_root)),
+        cwd=coordinates.repo_root,
+        env={**os.environ, "UV_PROJECT_ENVIRONMENT": str(environment_path.resolve())},
+    )
+    if exact_check["exitCode"] != 0:
+        raise TransactionError("exact-sync-failure", str(exact_check["stderr"]))
     return {
         "uvProjectEnvironment": str(environment_path.resolve()),
         "pythonExecutable": str(Path(sys.executable).resolve()),
         "projectDigest": _digest_file(coordinates.repo_root / "pyproject.toml"),
         "lockDigest": _digest_file(coordinates.repo_root / "uv.lock"),
         "lockCheck": lock_check,
+        "exactSyncCheck": exact_check,
+        "locked": True,
+        "exact": True,
     }
 
 
-def _transaction(coordinates: Coordinates) -> tuple[dict[str, object], bytes | None, dict[str, object] | None]:
-    started = _now()
+def _initial_result(coordinates: Coordinates) -> dict[str, object]:
+    return {
+        "schema": RESULT_SCHEMA,
+        "transactionState": "incomplete",
+        "startedAt": _now(),
+        "authority": {
+            "classification": "emergency-control-plane-recovery",
+            "status": "active",
+            "issue": 105,
+            "blockedBy104": False,
+            "ordinaryImplementationUnitAdmissionClaimed": False,
+            "selfAdmissionClaimed": False,
+        },
+        "transaction": {
+            "transientRoot": str(coordinates.transient_root),
+            "shadowRoot": str(coordinates.shadow_root),
+            "promotionRoot": str(coordinates.promotion_root),
+        },
+        "candidateConstructionObservations": [],
+        "packageGateObservations": [],
+        "cuePyObservations": [],
+        "cueCLIObservations": [],
+        "semanticComparisons": [],
+        "patchProjectability": {"state": "not-evaluated"},
+        "patchProjected": False,
+        "patchApplied": False,
+        "admissionComputed": False,
+    }
+
+
+def _transaction(
+    coordinates: Coordinates,
+    result: dict[str, object],
+    projected: dict[str, object],
+) -> dict[str, object]:
     workbook = coordinates.repo_root / WORKBOOK_PATH
     workbook_digest = _digest_file(workbook)
     kernel_identity = _verify_kernel(coordinates.kernel_path)
-    binding_identity = _binding_identity(coordinates)
-    environment_identity = _environment_identity(coordinates)
-    request = _load_request(coordinates.request_path)
+    request = _load_request(coordinates.request_path, coordinates.kernel_path)
     base_revision = _git(coordinates.repo_root, "rev-parse", "HEAD")
     if request.base_revision != base_revision:
         raise TransactionError("base-revision-mismatch", "request base revision does not match repository")
+    binding_identity = _binding_identity(coordinates, request.binding)
+    environment_identity = _environment_identity(coordinates, base_revision)
     before_digest = _tree_digest(coordinates.repo_root)
-    _copy_shadow(coordinates.repo_root, coordinates.shadow_root)
+    result["repository"] = {
+        "identity": REPOSITORY_ID,
+        "baseRevision": base_revision,
+        "root": str(coordinates.repo_root),
+        "liveTreeDigestBefore": before_digest,
+        "readOnlyByWorkbook": True,
+        "shadowSource": "exact-base-revision-archive",
+    }
+    result["transaction"] = {
+        **result["transaction"],  # type: ignore[arg-type]
+        "requestDigest": _digest_file(coordinates.request_path),
+        "workbookDigest": workbook_digest,
+        "kernelIdentity": kernel_identity,
+        "bindingIdentity": binding_identity,
+        "environmentIdentity": environment_identity,
+    }
+    _copy_shadow(coordinates.repo_root, coordinates.shadow_root, base_revision)
     _apply_candidates(coordinates.shadow_root, request)
-
-    gate_observations = [_gate_observation(gate, coordinates.shadow_root, coordinates.cue_bin) for gate in request.gates]
-    first_module = coordinates.shadow_root.joinpath(*request.gates[0].module_root.parts).resolve(strict=True)
-    probe_root = first_module / ".factory-cue-probes"
-    probe_root.mkdir()
-    probe_files: dict[str, str] = {}
+    construction = result["candidateConstructionObservations"]
+    assert isinstance(construction, list)
+    for candidate in request.candidates:
+        formatter: dict[str, object] | None = None
+        if candidate.operation == "construct":
+            formatter = _run(
+                (str(coordinates.cue_bin), "fmt", candidate.path.as_posix()),
+                cwd=coordinates.shadow_root,
+            )
+            if formatter["exitCode"] != 0:
+                raise TransactionError("candidate-format-failure", str(formatter["stderr"]))
+        construction.append({
+            "path": candidate.path.as_posix(),
+            "operation": candidate.operation,
+            "selectedKernelForms": list(candidate.selected_kernel_forms),
+            "constructedDigest": "absent" if candidate.operation == "delete" else _digest_file(
+                coordinates.shadow_root.joinpath(*candidate.path.parts)
+            ),
+            "formatter": formatter,
+        })
+    try:
+        pair = _candidate_patch(coordinates.repo_root, coordinates.shadow_root, request, base_revision)
+        if pair is None:
+            result["patchProjectability"] = {"state": "not-projectable", "reason": "candidate has no base-revision delta"}
+        else:
+            projected["patch"], projected["manifest"] = pair
+            result["patchProjectability"] = {"state": "projectable", "safetyValidated": True}
+            result["patchProjected"] = True
+    except Exception as error:
+        result["patchProjectability"] = {
+            "state": "unsafe",
+            "category": error.category if isinstance(error, TransactionError) else "patch-construction-failure",
+            "message": str(error)[:4000],
+        }
+    lsp_files = [
+        coordinates.shadow_root.joinpath(*candidate.path.parts)
+        for candidate in request.candidates if candidate.operation == "construct"
+    ]
+    result["lspObservation"] = _lsp_observation(request.lsp_argv, coordinates.shadow_root, lsp_files)
+    materializations: dict[str, Mapping[str, object]] = {}
     for probe in request.probes:
-        relative = Path(".factory-cue-probes") / f"{probe.id}.cue"
-        (first_module / relative).write_text(_cli_probe_source(probe), encoding="utf-8", newline="")
-        probe_files[probe.id] = relative.as_posix()
-    cue_py_observations, cue_py_process = _run_cue_py(request.probes, probe_files, coordinates, workbook)
-    cli_observations = [_cli_probe(probe, probe_files[probe.id], first_module, coordinates.cue_bin) for probe in request.probes]
+        materialization = _probe_materialization(
+            probe, coordinates.shadow_root, binding_identity, coordinates.cue_bin
+        )
+        module = materialization["module"]
+        assert isinstance(module, Path)
+        harness = module / str(materialization["harnessRelative"])
+        harness.parent.mkdir(exist_ok=True)
+        harness.write_text(str(materialization["harnessSource"]), encoding="utf-8", newline="")
+        materializations[probe.id] = materialization
+    gate_observations = result["packageGateObservations"]
+    assert isinstance(gate_observations, list)
+    for gate in request.gates:
+        gate_observations.append(_gate_observation(gate, coordinates.shadow_root, coordinates.cue_bin))
+    cue_py_observations, cue_py_process = _run_cue_py(request.probes, materializations, coordinates, workbook)
+    result["cuePyObservations"] = cue_py_observations
+    result["cuePyWorkerProcess"] = cue_py_process
+    cli_observations = result["cueCLIObservations"]
+    assert isinstance(cli_observations, list)
+    for probe in request.probes:
+        cli_observations.append(_cli_probe(probe, materializations[probe.id], coordinates.cue_bin))
     comparisons = _compare(request.probes, cue_py_observations, cli_observations)
-    lsp_files = [coordinates.shadow_root.joinpath(*candidate.path.parts) for candidate in request.candidates if candidate.content is not None]
-    lsp = _lsp_observation(request.lsp_argv, coordinates.shadow_root, lsp_files)
+    result["semanticComparisons"] = comparisons
 
     package_infrastructure = any(item["semanticOutcome"]["state"] == "infrastructure-failure" for item in gate_observations)  # type: ignore[index]
     probe_infrastructure = any(
@@ -895,82 +1394,52 @@ def _transaction(coordinates: Coordinates) -> tuple[dict[str, object], bytes | N
         state = "rejected"
     else:
         state = "accepted"
-    pair = _candidate_patch(coordinates.repo_root, coordinates.shadow_root, request, base_revision) if state == "accepted" else None
     after_digest = _tree_digest(coordinates.repo_root)
+    repository = result["repository"]
+    assert isinstance(repository, dict)
+    repository["liveTreeDigestAfter"] = after_digest
     if before_digest != after_digest:
         raise TransactionError("live-repository-mutated", "live repository identity changed during transaction")
-    result: dict[str, object] = {
+    result["transactionState"] = state
+    result["finishedAt"] = _now()
+    return result
+
+
+def _exception_result(
+    error: BaseException,
+    coordinates: Coordinates | None,
+    prior: Mapping[str, object] | None = None,
+) -> dict[str, object]:
+    category = error.category if isinstance(error, TransactionError) else "unexpected-exception"
+    result = dict(prior) if prior is not None else {
         "schema": RESULT_SCHEMA,
-        "transactionState": state,
-        "startedAt": started,
-        "finishedAt": _now(),
         "authority": {
             "classification": "emergency-control-plane-recovery",
             "status": "active",
             "issue": 105,
-            "blockedBy104": False,
             "ordinaryImplementationUnitAdmissionClaimed": False,
             "selfAdmissionClaimed": False,
         },
-        "repository": {
-            "identity": REPOSITORY_ID,
-            "baseRevision": base_revision,
-            "root": str(coordinates.repo_root),
-            "liveTreeDigestBefore": before_digest,
-            "liveTreeDigestAfter": after_digest,
-            "readOnlyByWorkbook": True,
-        },
-        "transaction": {
-            "transientRoot": str(coordinates.transient_root),
-            "shadowRoot": str(coordinates.shadow_root),
-            "promotionRoot": str(coordinates.promotion_root),
-            "requestDigest": _digest_file(coordinates.request_path),
-            "workbookDigest": workbook_digest,
-            "kernelIdentity": kernel_identity,
-            "bindingIdentity": binding_identity,
-            "environmentIdentity": environment_identity,
-        },
-        "packageGateObservations": gate_observations,
-        "cuePyObservations": cue_py_observations,
-        "cuePyWorkerProcess": cue_py_process,
-        "cueCLIObservations": cli_observations,
-        "semanticComparisons": comparisons,
-        "lspObservation": lsp,
-        "patchProjected": pair is not None,
+        "patchProjected": False,
         "patchApplied": False,
         "admissionComputed": False,
     }
-    return result, None if pair is None else pair[0], None if pair is None else pair[1]
-
-
-def _exception_result(error: BaseException, coordinates: Coordinates | None) -> dict[str, object]:
-    category = error.category if isinstance(error, TransactionError) else "unexpected-exception"
-    return {
-        "schema": RESULT_SCHEMA,
+    result.update({
         "transactionState": "exceptional",
         "finishedAt": _now(),
-        "authority": {
-            "classification": "emergency-control-plane-recovery",
-            "status": "active",
-            "issue": 105,
-            "ordinaryImplementationUnitAdmissionClaimed": False,
-            "selfAdmissionClaimed": False,
-        },
         "failure": {
             "category": category,
             "type": type(error).__name__,
             "message": str(error)[:4000],
             "traceback": traceback.format_exc(limit=12)[:12000],
         },
-        "transaction": None if coordinates is None else {
+        "transaction": result.get("transaction") if result.get("transaction") is not None else (None if coordinates is None else {
             "transientRoot": str(coordinates.transient_root),
             "shadowRoot": str(coordinates.shadow_root),
             "promotionRoot": str(coordinates.promotion_root),
-        },
-        "patchProjected": False,
-        "patchApplied": False,
-        "admissionComputed": False,
-    }
+        }),
+    })
+    return result
 
 
 def _coordinates(args: argparse.Namespace) -> Coordinates:
@@ -1005,6 +1474,41 @@ def _coordinates(args: argparse.Namespace) -> Coordinates:
     return Coordinates(repo, transient, shadow, promotion, request, kernel, cue_py, libcue, library, cue_bin, go_bin, uv_bin)
 
 
+def _worker_subject_valid(probe: object) -> bool:
+    required = {
+        "id", "source", "filename", "expression", "concreteInput", "unifyIntent", "schemaIntent",
+        "subjectComponents",
+    }
+    if not isinstance(probe, dict) or set(probe) != required or not isinstance(probe["subjectComponents"], dict):
+        return False
+    components = probe["subjectComponents"]
+    try:
+        module = Path.cwd().joinpath(*_safe_relative(components["moduleRoot"], "worker module root").parts).resolve(strict=True)
+        if not module.is_relative_to(Path.cwd().resolve(strict=True)):
+            return False
+        files = components["files"]
+        if not isinstance(files, list):
+            return False
+        file_digests = {
+            relative.as_posix(): _digest_file(module.joinpath(*relative.parts).resolve(strict=True))
+            for relative in (_safe_relative(value, "worker probe file") for value in files)
+        }
+        harness = module.joinpath(*_safe_relative(probe["filename"], "worker harness").parts).resolve(strict=True)
+        unify_digest = None if probe["unifyIntent"] is None else _digest_bytes(_json_bytes(probe["unifyIntent"]))
+        schema_digest = None if probe["schemaIntent"] is None else _digest_bytes(_json_bytes(probe["schemaIntent"]))
+        return (
+            file_digests == components["fileDigests"]
+            and _digest_file(harness) == components["generatedHarnessDigest"]
+            and _digest_bytes(str(probe["source"]).encode()) == components["semanticSourceDigest"]
+            and probe["expression"] == components["selectedExpression"]
+            and _digest_bytes(_json_bytes(probe["concreteInput"])) == components["concreteInputDigest"]
+            and unify_digest == components["unifyIntentDigest"]
+            and schema_digest == components["schemaIntentDigest"]
+        )
+    except (KeyError, OSError, TransactionError, TypeError, ValueError):
+        return False
+
+
 def _worker(argv: Sequence[str]) -> int:
     request_path = Path(argv[0]).resolve(strict=True)
     raw = json.loads(request_path.read_bytes())
@@ -1016,6 +1520,17 @@ def _worker(argv: Sequence[str]) -> int:
 
     observations: list[dict[str, object]] = []
     for probe in raw["probes"]:
+        if not _worker_subject_valid(probe):
+            components = probe.get("subjectComponents", {}) if isinstance(probe, dict) else {}
+            observations.append({
+                "probeID": probe.get("id", "invalid") if isinstance(probe, dict) else "invalid",
+                "evaluator": "cue-py/libcue",
+                "stage": "compile",
+                "semanticOutcome": {"state": "infrastructure-failure", "category": "subject-observation-mismatch"},
+                "subject": {"digest": _digest_bytes(_json_bytes(components)), "components": components},
+                "rawDiagnostic": "cue-py worker effective inputs differ from the declared semantic subject",
+            })
+            continue
         stage = "compile"
         outcome: dict[str, object]
         diagnostic: str | None = None
@@ -1028,21 +1543,26 @@ def _worker(argv: Sequence[str]) -> int:
                 outcome = {"state": "reject", "category": "bottom"}
                 diagnostic = error.err
             else:
-                if probe["unifySource"] is not None:
-                    stage = "unify"
-                    value = value.unify(context.compile(probe["unifySource"]))
-                    unified_error = value.error()
-                    if isinstance(unified_error, cue.Err):
-                        raise TransactionError("bottom", unified_error.err)
                 stage = "lookup"
                 path = probe["expression"]
                 value = value.lookup(path)
                 looked_up_error = value.error()
                 if isinstance(looked_up_error, cue.Err):
                     raise TransactionError("bottom", looked_up_error.err)
-                if probe["schemaSource"] is not None:
+                stage = "unify-concrete-input"
+                value = value.unify(context.compile(_concrete_value_source(probe["concreteInput"])))
+                concrete_error = value.error()
+                if isinstance(concrete_error, cue.Err):
+                    raise TransactionError("bottom", concrete_error.err)
+                if probe["unifyIntent"] is not None:
+                    stage = "unify"
+                    value = value.unify(context.compile(_cue_expr(probe["unifyIntent"])))
+                    unified_error = value.error()
+                    if isinstance(unified_error, cue.Err):
+                        raise TransactionError("bottom", unified_error.err)
+                if probe["schemaIntent"] is not None:
                     stage = "schema"
-                    value.check_schema(context.compile(probe["schemaSource"]))
+                    value.check_schema(context.compile(_cue_expr(probe["schemaIntent"])))
                 stage = "validate"
                 value.validate()
                 if value.incomplete_kind() == cue.Kind.BOTTOM:
@@ -1073,7 +1593,10 @@ def _worker(argv: Sequence[str]) -> int:
             "evaluator": "cue-py/libcue",
             "stage": stage,
             "semanticOutcome": outcome,
-            "subject": probe["subject"],
+            "subject": {
+                "digest": _digest_bytes(_json_bytes(probe["subjectComponents"])),
+                "components": probe["subjectComponents"],
+            },
         }
         if path is not None:
             observation["path"] = path
@@ -1110,28 +1633,28 @@ def main(argv: Sequence[str] | None = None) -> int:
         raise TransactionError("invalid-coordinate", f"missing arguments: {', '.join(missing)}")
     coordinates: Coordinates | None = None
     promoted = False
-    result: dict[str, object]
-    patch: bytes | None = None
-    manifest: dict[str, object] | None = None
+    journal: dict[str, object] | None = None
+    projected: dict[str, object] = {}
     try:
         coordinates = _coordinates(args)
-        result, patch, manifest = _transaction(coordinates)
+        journal = _initial_result(coordinates)
+        result = _transaction(coordinates, journal, projected)
     except BaseException as error:
-        result = _exception_result(error, coordinates)
+        result = _exception_result(error, coordinates, journal)
     result_bytes = _pretty_json(result)
     if coordinates is None:
         print(result_bytes.decode(), file=sys.stderr, end="")
         return 2
     artifacts = {"bounded-result.json": result_bytes}
-    if patch is not None and manifest is not None:
+    patch, manifest = projected.get("patch"), projected.get("manifest")
+    if isinstance(patch, bytes) and isinstance(manifest, dict):
         artifacts["candidate.patch"] = patch
         artifacts["candidate-patch-manifest.json"] = _pretty_json(manifest)
     try:
         _atomic_promote(coordinates.promotion_root, artifacts)
         promoted = True
     except BaseException as error:
-        fallback = _exception_result(error, coordinates)
-        fallback["priorResult"] = result
+        fallback = _exception_result(error, coordinates, result)
         (coordinates.transient_root / "bounded-result.json").write_bytes(_pretty_json(fallback))
         print(json.dumps(fallback, sort_keys=True), file=sys.stderr)
         return 2
