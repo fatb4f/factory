@@ -9,18 +9,20 @@ Treat the following sources as authority, in order:
 
 Issue transport:
 
-- First inspect the user prompt for pasted `gh issue view` output for issues
-  #103 and #104. Use each supplied payload as the transport input for that issue
-  during this run; do not fetch the same issue again merely to reacquire its
-  body.
-- Verify the repository and issue number from supplied metadata. Preserve an
-  available transport revision or update timestamp and compute body and
-  normalized-snapshot digests locally before consuming subordinate
-  declarations.
-- Fetch only an issue whose payload is missing, truncated, ambiguous, from a
-  different repository, or incompatible with a required pinned revision.
-- Treat pasted issue output as transient transport evidence, not as a new source
-  of architectural authority or a file to commit.
+- Resume implementation on the GitHub-linked #104 issue branch. The user prompt
+  may simply request continuation; do not require issue bodies in
+  `UserPromptSubmit`.
+- Read durable continuation state from online issue #104, then inspect the
+  branch, working tree, and validated workflow evidence.
+- Acquire #103 and #104 as structured JSON once per required refresh and write
+  `requirements-source.json` only below the current execution's declared
+  `${XDG_RUNTIME_DIR:-/tmp}/factory-bdd/<execution-id>/` evidence root.
+- Record repository, issue number, URL, update time, body, and body digest.
+  Verify #104's pinned #103 transport identity and normalized snapshot locally.
+- At session end, update online #104 first and then regenerate its offline
+  transport. Regenerate #103 only when its upstream revision changes.
+- Treat the JSON as machine-local transient transport evidence. Never commit it
+  or treat it as architectural authority.
 
 Implementation unit:
 
@@ -74,9 +76,9 @@ Workflow DAG:
 Node objectives:
 
 snapshot.verify
-    Resolve #103 and #104 from verified user-supplied issue transports when
-    available, then verify the pinned #103 transport and normalized bootstrap
-    snapshot. Reacquire only a missing or unverifiable issue payload.
+    Resolve #103 and #104 from the current execution's structured issue
+    transport, then verify the pinned #103 transport and normalized bootstrap
+    snapshot. Refresh missing, stale, or unverifiable issue data from GitHub.
 
 workbook-identity.admit
     Encode and validate the issue-selected bootstrap workbook identity.

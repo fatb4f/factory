@@ -5,18 +5,23 @@ Implementation prompt: [prompt.txt](prompt.txt)
 
 ## Upstream issue transport
 
-The user prompt may include the output of `gh issue view` for issues #103 and
-#104. When present, treat those pasted payloads as the issue transport input for
-the current run. Do not reacquire either issue merely to obtain the same body.
+Issue #104 is the durable cross-session implementation handoff. Work resumes on
+its GitHub-linked issue branch by reading this file, `prompt.txt`, the online
+issues, the working tree, and validated workflow evidence. A user may therefore
+request continuation without pasting either issue body into `UserPromptSubmit`.
 
-Before use, identify the issue number and repository from the supplied metadata,
-retain the supplied transport revision or update timestamp when available, and
-compute the required body and normalized-snapshot digests locally. Fail closed
-or reacquire only the missing issue when a payload is absent, truncated,
-ambiguous, from another repository, or cannot satisfy a required pinned
-revision. A pasted payload is transient transport evidence; it does not replace
-the upstream issue as architectural authority and must not be committed as a
-second authoritative copy.
+At the end of a session, update the online #104 issue with durable progress and
+continuation state before regenerating the offline issue transport. Regenerate
+#103 only when its upstream revision changes. Capture both issues as structured
+JSON in the current execution's declared transient evidence root, using
+`requirements-source.json`; include repository, issue number, URL, update time,
+body, and body digest. Verify #104's pinned #103 revision and digests locally
+before consuming subordinate declarations.
+
+The online issues remain architectural authority. The offline JSON is
+machine-local, transient transport evidence: do not commit it, disclose it as
+repository authority, or place it outside
+`${XDG_RUNTIME_DIR:-/tmp}/factory-bdd/<execution-id>/`.
 
 ## Scope
 
