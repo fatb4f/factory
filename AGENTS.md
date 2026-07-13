@@ -3,6 +3,21 @@
 
 Implementation prompt: [prompt.txt](prompt.txt)
 
+## Upstream issue transport
+
+The user prompt may include the output of `gh issue view` for issues #103 and
+#104. When present, treat those pasted payloads as the issue transport input for
+the current run. Do not reacquire either issue merely to obtain the same body.
+
+Before use, identify the issue number and repository from the supplied metadata,
+retain the supplied transport revision or update timestamp when available, and
+compute the required body and normalized-snapshot digests locally. Fail closed
+or reacquire only the missing issue when a payload is absent, truncated,
+ambiguous, from another repository, or cannot satisfy a required pinned
+revision. A pasted payload is transient transport evidence; it does not replace
+the upstream issue as architectural authority and must not be committed as a
+second authoritative copy.
+
 ## Scope
 
 This directory owns Factory’s Marimo execution surfaces and their integration with the repository-root `.kb` control plane.

@@ -7,6 +7,21 @@ Treat the following sources as authority, in order:
 3. AGENTS.md
 4. Vetted CUE contracts created for the implementation unit
 
+Issue transport:
+
+- First inspect the user prompt for pasted `gh issue view` output for issues
+  #103 and #104. Use each supplied payload as the transport input for that issue
+  during this run; do not fetch the same issue again merely to reacquire its
+  body.
+- Verify the repository and issue number from supplied metadata. Preserve an
+  available transport revision or update timestamp and compute body and
+  normalized-snapshot digests locally before consuming subordinate
+  declarations.
+- Fetch only an issue whose payload is missing, truncated, ambiguous, from a
+  different repository, or incompatible with a required pinned revision.
+- Treat pasted issue output as transient transport evidence, not as a new source
+  of architectural authority or a file to commit.
+
 Implementation unit:
 
     kg://repository/factory/implementation-unit/uv-bd-bootstrap/v1
@@ -59,7 +74,9 @@ Workflow DAG:
 Node objectives:
 
 snapshot.verify
-    Verify the pinned #103 transport and normalized bootstrap snapshot.
+    Resolve #103 and #104 from verified user-supplied issue transports when
+    available, then verify the pinned #103 transport and normalized bootstrap
+    snapshot. Reacquire only a missing or unverifiable issue payload.
 
 workbook-identity.admit
     Encode and validate the issue-selected bootstrap workbook identity.
