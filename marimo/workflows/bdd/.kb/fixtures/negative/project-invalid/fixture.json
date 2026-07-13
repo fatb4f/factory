@@ -1,0 +1,10 @@
+{
+  "schema": "factory.bdd-scenario-fixture.v1",
+  "scenarioID": "BDD-BOOT-NEG-001",
+  "executorProtocol": "project-inspect.v1",
+  "paths": [
+    {
+      "path": "marimo/workflows/bdd/.kb/fixtures/negative/project-invalid/missing.toml"
+    }
+  ]
+}

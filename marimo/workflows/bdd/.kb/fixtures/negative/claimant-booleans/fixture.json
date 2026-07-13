@@ -1,0 +1,7 @@
+{
+  "schema": "factory.bdd-scenario-fixture.v1",
+  "scenarioID": "BDD-BOOT-ADV-003",
+  "executorProtocol": "artifact-compare.v1",
+  "sourcePath": "$provider_root/marimo/workflows/bdd/.kb/fixtures/positive/contract-closed/fixture.json",
+  "candidatePath": "$provider_root/marimo/workflows/bdd/.kb/fixtures/negative/claimant-booleans/fixture.json"
+}

@@ -1,0 +1,7 @@
+{
+  "schema": "factory.bdd-scenario-fixture.v1",
+  "scenarioID": "BDD-BOOT-ADV-002",
+  "executorProtocol": "artifact-compare.v1",
+  "sourcePath": "$provider_root/marimo/workflows/bdd/.kb/fixtures/positive/contract-closed/fixture.json",
+  "candidatePath": "$provider_root/marimo/workflows/bdd/.kb/fixtures/negative/evidence-identity-mismatch/fixture.json"
+}

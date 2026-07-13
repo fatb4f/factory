@@ -1,0 +1,14 @@
+{
+  "schema": "factory.bdd-scenario-fixture.v1",
+  "scenarioID": "BDD-BOOT-NEG-007",
+  "executorProtocol": "process-run.v1",
+  "process": {
+    "argv": [
+      "sh",
+      "-c",
+      "exit 1"
+    ],
+    "cwd": "$provider_root",
+    "environment": {}
+  }
+}

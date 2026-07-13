@@ -141,6 +141,34 @@ def _bounded_path(path: Path, roots: Sequence[Path], label: str) -> Path:
     return resolved
 
 
+def _fixture_coordinate(spec: ExecutionSpec, value: object, label: str) -> Path:
+    if not isinstance(value, str):
+        raise ProtocolError(FailureCode.FIXTURE_PROTOCOL_MISMATCH, f"invalid {label}")
+    coordinates = {
+        "$provider_root": spec.provider_root,
+        "$consumer_root": spec.consumer_root,
+        "$evidence_root": spec.evidence_root,
+    }
+    for token, root in coordinates.items():
+        if value == token:
+            return root
+        prefix = f"{token}/"
+        if value.startswith(prefix):
+            return root / value.removeprefix(prefix)
+    return Path(value)
+
+
+def _expand_fixture_value(spec: ExecutionSpec, value: str) -> str:
+    replacements = {
+        "$provider_root": str(spec.provider_root),
+        "$consumer_root": str(spec.consumer_root),
+        "$evidence_root": str(spec.evidence_root),
+    }
+    for token, replacement in replacements.items():
+        value = value.replace(token, replacement)
+    return value
+
+
 def _load_manifest(path: Path, digest: str, schema: str) -> Mapping[str, Any]:
     raw = path.read_bytes()
     if _digest_bytes(raw) != digest:
@@ -261,10 +289,12 @@ def _process_run(spec: ExecutionSpec, fixture: Mapping[str, Any], node_root: Pat
     argv = process["argv"]
     if not argv or not all(isinstance(item, str) and item for item in argv) or Path(argv[0]).name == "cue":
         raise ProtocolError(FailureCode.FIXTURE_PROTOCOL_MISMATCH, "process argv is not permitted")
-    cwd = _bounded_path(Path(process.get("cwd", "")), (spec.provider_root, spec.consumer_root, spec.evidence_root), "process cwd")
+    argv = [_expand_fixture_value(spec, item) for item in argv]
+    cwd = _bounded_path(_fixture_coordinate(spec, process.get("cwd"), "process cwd"), (spec.provider_root, spec.consumer_root, spec.evidence_root), "process cwd")
     environment = process.get("environment", {})
     if not isinstance(environment, dict) or not all(isinstance(k, str) and isinstance(v, str) for k, v in environment.items()):
         raise ProtocolError(FailureCode.FIXTURE_PROTOCOL_MISMATCH, "invalid process environment")
+    environment = {key: _expand_fixture_value(spec, value) for key, value in environment.items()}
     started = _now()
     result = subprocess.run(argv, cwd=cwd, env={**os.environ, **environment}, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
     finished = _now()
@@ -284,8 +314,9 @@ def _process_run(spec: ExecutionSpec, fixture: Mapping[str, Any], node_root: Pat
 
 def _artifact_compare(spec: ExecutionSpec, fixture: Mapping[str, Any], node_root: Path) -> tuple[int, None, tuple[dict[str, object], ...]]:
     del node_root
-    source = _bounded_path(Path(fixture.get("sourcePath", "")), (spec.evidence_root,), "mutation source")
-    candidate = _bounded_path(Path(fixture.get("candidatePath", "")), (spec.evidence_root,), "mutation candidate")
+    fixture_root = (spec.provider_root / "marimo/workflows/bdd/.kb/fixtures").resolve()
+    source = _bounded_path(_fixture_coordinate(spec, fixture.get("sourcePath"), "comparison source"), (fixture_root, spec.evidence_root), "comparison source")
+    candidate = _bounded_path(_fixture_coordinate(spec, fixture.get("candidatePath"), "comparison candidate"), (fixture_root, spec.evidence_root), "comparison candidate")
     before_digest = _digest_file(source)
     after_digest = _digest_file(candidate)
     return 0, None, (_fact("beforeDigest", before_digest), _fact("afterDigest", after_digest))
@@ -293,7 +324,8 @@ def _artifact_compare(spec: ExecutionSpec, fixture: Mapping[str, Any], node_root
 
 def _projection_observe(spec: ExecutionSpec, fixture: Mapping[str, Any], node_root: Path) -> tuple[int, None, tuple[dict[str, object], ...]]:
     del node_root
-    path = _bounded_path(Path(fixture.get("projectionPath", "")), (spec.evidence_root,), "projection")
+    fixture_root = (spec.provider_root / "marimo/workflows/bdd/.kb/fixtures").resolve()
+    path = _bounded_path(_fixture_coordinate(spec, fixture.get("projectionPath"), "projection"), (fixture_root, spec.evidence_root), "projection")
     try:
         json.loads(path.read_bytes())
         parse_code = 0

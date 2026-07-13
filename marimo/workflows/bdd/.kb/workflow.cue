@@ -59,16 +59,16 @@ _executorProtocolByScenario: {
 	"BDD-BOOT-NEG-002":  "project-inspect.v1"
 	"BDD-BOOT-POS-003":  "project-inspect.v1"
 	"BDD-BOOT-NEG-003":  "project-inspect.v1"
-	"BDD-BOOT-COMP-001": "project-inspect.v1"
+	"BDD-BOOT-COMP-001": "artifact-compare.v1"
 	"BDD-BOOT-POS-004":  "process-run.v1"
 	"BDD-BOOT-ADV-001":  "artifact-compare.v1"
 	"BDD-BOOT-NEG-004":  "process-run.v1"
-	"BDD-BOOT-INV-003":  "project-inspect.v1"
+	"BDD-BOOT-INV-003":  "artifact-compare.v1"
 	"BDD-BOOT-POS-005":  "cue-projection-observe.v1"
 	"BDD-BOOT-NEG-005":  "cue-projection-observe.v1"
-	"BDD-BOOT-INV-001":  "cue-projection-observe.v1"
+	"BDD-BOOT-INV-001":  "artifact-compare.v1"
 	"BDD-BOOT-NEG-006":  "cue-projection-observe.v1"
-	"BDD-BOOT-INV-002":  "cue-projection-observe.v1"
+	"BDD-BOOT-INV-002":  "artifact-compare.v1"
 	"BDD-BOOT-ADV-002":  "artifact-compare.v1"
 	"BDD-BOOT-ADV-003":  "artifact-compare.v1"
 	"BDD-BOOT-POS-006":  "process-run.v1"
@@ -277,6 +277,51 @@ _workflowEvaluation: #WorkflowRefinementEvaluation & {
 
 _scenarioPolicyFailures: [for acceptanceID, policy in acceptancePolicies if len(policy.obligations)+len(policy.omissions) != len(_scenarioClasses) {acceptanceID}]
 
+_compatibleEvaluationProtocols: {
+	"project-inspect.v1": ["fact-predicate.v1"]
+	"process-run.v1": ["subject-exit.v1"]
+	"artifact-compare.v1": ["identity-match.v1", "identity-preservation.v1"]
+	"cue-projection-observe.v1": ["projection-conformance.v1"]
+}
+#ScenarioProtocolCompatibilityCheck: {
+	Declarations: [#ScenarioID]: #ScenarioExecutionDeclaration
+	_declarations: Declarations
+	_failures: [for scenarioID, declaration in _declarations if !list.Contains(_compatibleEvaluationProtocols[declaration.executorProtocol], declaration.evaluationProtocol) {scenarioID}]
+	compatible: len(_failures) == 0
+}
+
+#ScenarioProtocolCompatibilityPositiveProbe: #ScenarioProtocolCompatibilityCheck & {
+	Declarations: {
+		"BDD-BOOT-COMP-001": {
+			scenarioID:         "BDD-BOOT-COMP-001"
+			executorProtocol:   "artifact-compare.v1"
+			evaluationProtocol: "identity-preservation.v1"
+			executionBoundary:  "python-observe"
+			evaluationBoundary: "cue-evaluate"
+			fixturePath:        "positive/example/fixture.json"
+		}
+	}
+	compatible: true
+}
+
+#ScenarioProtocolCompatibilityNegativeProbe: #ScenarioProtocolCompatibilityCheck & {
+	Declarations: {
+		"BDD-BOOT-COMP-001": {
+			scenarioID:         "BDD-BOOT-COMP-001"
+			executorProtocol:   "artifact-compare.v1"
+			evaluationProtocol: "subject-exit.v1"
+			executionBoundary:  "python-observe"
+			evaluationBoundary: "cue-evaluate"
+			fixturePath:        "positive/example/fixture.json"
+		}
+	}
+	compatible: false
+}
+
+_scenarioProtocolCheck: #ScenarioProtocolCompatibilityCheck & {
+	Declarations: scenarioExecutionManifest
+}
+
 _requirementMilestones: {
 	"UV-01": 2, "UV-02": 2, "UV-03": 2, "UV-04": 4
 	"BD-01": 3, "BD-02": 5, "BD-03": 5, "BD-04": 5
@@ -302,6 +347,7 @@ workflowDeclarationCheck: close({
 	productionBeforeConsumption:      _workflowEvaluation.Result.productionBeforeConsumption
 	everyScenarioAssignedExactlyOnce: _workflowEvaluation.Result.everyScenarioAssignedExactlyOnce
 	allScenarioPoliciesComplete:      len(_scenarioPolicyFailures) == 0
+	scenarioProtocolsCompatible:      _scenarioProtocolCheck.compatible
 	evidenceFollowsExecution:         bootstrapWorkflow.nodes["workflow.verify"].index > bootstrapWorkflow.nodes["fixtures.execute"].index
 	unitAdmissionTerminal:            _workflowEvaluation.Result.unitAdmissionTerminal
 	pythonProducesObservationsOnly:   _workflowEvaluation.Result.pythonProducesObservationsOnly

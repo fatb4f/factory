@@ -7,6 +7,7 @@ It never writes to the live repository and never applies its generated patch.
 from __future__ import annotations
 
 import argparse
+import copy
 import dataclasses
 import difflib
 import hashlib
@@ -34,12 +35,14 @@ import marimo
 app = marimo.App()
 
 RESULT_SCHEMA = "factory.cue-emergency-transaction-result.v1"
-REQUEST_SCHEMA = "factory.cue-emergency-transaction-request.v2"
+REQUEST_SCHEMA = "factory.cue-emergency-transaction-request.v3"
 PATCH_SCHEMA = "factory.cue-candidate-patch-manifest.v1"
 WORKER_SCHEMA = "factory.cue-py-worker-request.v1"
 WORKBOOK_PATH = Path("marimo/workflows/cue/cue_workbook.py")
 REPOSITORY_ID = "fatb4f/factory"
+CUE_PY_REPOSITORY = "https://github.com/cue-lang/cue-py"
 CUE_PY_COMMIT = "81e6fb15247ed7050e5bd987db032f757e06c8f0"
+LIBCUE_REPOSITORY = "https://github.com/cue-lang/libcue"
 LIBCUE_COMMIT = "96d0572450429fa28d7a2345c04a8c47c85b47e4"
 KERNEL_REPOSITORY = "https://github.com/fatb4f/lattice"
 KERNEL_COMMIT = "4148dc1a2d1adfa0782e93e89ea402ce41c56d35"
@@ -49,7 +52,6 @@ _ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
 _SELECTOR = re.compile(r"^[_#A-Za-z][_A-Za-z0-9]*(\.[_A-Za-z][_A-Za-z0-9]*)*$")
 _DECLARATION = re.compile(r"^[#_]?[A-Za-z][A-Za-z0-9_]*$")
 _PACKAGE_NAME = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
-_SHA256 = re.compile(r"^sha256:[0-9a-f]{64}$")
 _KERNEL_FORM_FOR_INTENT = {
     "closed-ingress": "#Resource",
     "exact-cardinality": "#StateKeySet",
@@ -57,8 +59,16 @@ _KERNEL_FORM_FOR_INTENT = {
     "wiring": "#MakeClosedObligationState",
     "value": "#ClosedObligationState",
 }
-_SUPPORTED_KERNEL_FORMS = frozenset((*_KERNEL_FORM_FOR_INTENT.values(), "#NegativeFixtureConflictProbe"))
-_CUE_PY_OPERATIONS = ("compile", "lookup", "unify-concrete-input", "unify", "schema", "validate", "project")
+_REQUIRED_KERNEL_FORMS = frozenset((*_KERNEL_FORM_FOR_INTENT.values(), "#NegativeFixtureConflictProbe"))
+_CUE_PY_OPERATIONS = (
+    "compile",
+    "lookup",
+    "unify-concrete-input",
+    "unify",
+    "unify-schema-constraint",
+    "validate",
+    "project",
+)
 
 
 class TransactionError(RuntimeError):
@@ -126,30 +136,12 @@ class Probe:
 
 
 @dataclasses.dataclass(frozen=True)
-class BindingExpectation:
-    cue_py_commit: str
-    libcue_commit: str
-    libcue_shared_library_digest: str
-    cffi_version: str
-    go_version: str
-    go_binary_digest: str
-    python_version: str
-    platform_identity: str
-    cue_cli_version: str
-    cue_binary_digest: str
-    uv_version: str
-    uv_binary_digest: str
-
-
-@dataclasses.dataclass(frozen=True)
 class Request:
     base_revision: str
     allowed_paths: tuple[PurePosixPath, ...]
     candidates: tuple[CandidateIntent, ...]
     gates: tuple[PackageGate, ...]
     probes: tuple[Probe, ...]
-    lsp_argv: tuple[str, ...]
-    binding: BindingExpectation
 
 
 def _now() -> str:
@@ -288,10 +280,20 @@ def _verify_kernel(path: Path) -> dict[str, str]:
     }
 
 
-def _kernel_form_names(path: Path) -> frozenset[str]:
-    if not path.is_file():
-        raise TransactionError("kernel-identity-mismatch", "kernel input is unavailable")
-    return _SUPPORTED_KERNEL_FORMS
+def _kernel_form_names(path: Path, cue_bin: Path) -> frozenset[str]:
+    """Resolve the selected forms from the verified kernel, not a name whitelist."""
+    available = {
+        form
+        for form in _REQUIRED_KERNEL_FORMS
+        if _run((str(cue_bin), "eval", str(path), "-e", form), cwd=path.parent)["exitCode"] == 0
+    }
+    missing = sorted(_REQUIRED_KERNEL_FORMS - available)
+    if missing:
+        raise TransactionError(
+            "kernel-form-unavailable",
+            f"verified kernel does not export required forms: {', '.join(missing)}",
+        )
+    return frozenset(available)
 
 
 def _selected_kernel_forms(value: object, available: frozenset[str], label: str) -> tuple[str, ...]:
@@ -306,6 +308,8 @@ def _selected_kernel_forms(value: object, available: frozenset[str], label: str)
 def _cue_label(value: object, label: str) -> str:
     if not isinstance(value, str) or not _DECLARATION.fullmatch(value):
         raise TransactionError("invalid-request", f"invalid {label}")
+    if value.startswith(("_factory", "#FactoryKernel")):
+        raise TransactionError("invalid-request", f"{label} uses a reserved workbook prefix")
     return value
 
 
@@ -352,6 +356,132 @@ def _cue_expr(value: object) -> str:
     return "{" + ", ".join(fields) + "}"
 
 
+_RESOURCE_PATTERN_PROJECTION = r'''#FactoryKernelResource: close({
+	id:         string & !="" & =~"^[a-z0-9]+(-[a-z0-9]+)*$"
+	path:       string & !=""
+	role:       string & !=""
+	visibility: "public" | "internal" | "restricted" | *"internal"
+})'''
+
+_KERNEL_PATTERN_PROJECTION = r'''#FactoryKernelResource: close({
+	id:         string & !="" & =~"^[a-z0-9]+(-[a-z0-9]+)*$"
+	path:       string & !=""
+	role:       string & !=""
+	visibility: "public" | "internal" | "restricted" | *"internal"
+})
+
+#FactoryKernelRefSet: {[string]: true}
+
+#FactoryKernelOperation: close({
+	id:                string & !="" & =~"^[a-z0-9]+(-[a-z0-9]+)*$"
+	kind:              string & !=""
+	description:       string & !=""
+	reads:             #FactoryKernelRefSet
+	writes:            #FactoryKernelRefSet
+	creates:           #FactoryKernelRefSet
+	requiresGates:     #FactoryKernelRefSet
+	requiresWitnesses: #FactoryKernelRefSet
+})
+
+#FactoryKernelGate: close({
+	id:          string & !="" & =~"^[a-z0-9]+(-[a-z0-9]+)*$"
+	description: string & !=""
+	required:    bool | *true
+})
+
+#FactoryKernelWitness: #FactoryKernelGate
+
+#FactoryKernelClosedObligationState: close({
+	id: string & !="" & =~"^[a-z0-9]+(-[a-z0-9]+)*$"
+	resources: [ID=string]: #FactoryKernelResource & {id: ID}
+	operations: [ID=string]: #FactoryKernelOperation & {id: ID}
+	gates: [ID=string]: #FactoryKernelGate & {id: ID}
+	witnesses: [ID=string]: #FactoryKernelWitness & {id: ID}
+
+	_operationRefProof: {
+		for operationID, operation in operations {
+			for resourceID, _ in operation.reads {
+				"\(operationID)-reads-\(resourceID)-exists": list.Contains(list.SortStrings([for key, _ in resources {key}]), resourceID) & true
+			}
+			for resourceID, _ in operation.writes {
+				"\(operationID)-writes-\(resourceID)-exists": list.Contains(list.SortStrings([for key, _ in resources {key}]), resourceID) & true
+			}
+			for resourceID, _ in operation.creates {
+				"\(operationID)-creates-\(resourceID)-exists": list.Contains(list.SortStrings([for key, _ in resources {key}]), resourceID) & true
+				"\(operationID)-creates-\(resourceID)-role": resources[resourceID] & {role: "generated-output"}
+			}
+			for gateID, _ in operation.requiresGates {
+				"\(operationID)-requires-gate-\(gateID)-exists": list.Contains(list.SortStrings([for key, _ in gates {key}]), gateID) & true
+			}
+			for witnessID, _ in operation.requiresWitnesses {
+				"\(operationID)-requires-witness-\(witnessID)-exists": list.Contains(list.SortStrings([for key, _ in witnesses {key}]), witnessID) & true
+			}
+		}
+	}
+})
+
+#FactoryKernelStateKeySet: close({
+	state:      #FactoryKernelClosedObligationState
+	resources:  list.SortStrings([for key, _ in state.resources {key}])
+	operations: list.SortStrings([for key, _ in state.operations {key}])
+	gates:      list.SortStrings([for key, _ in state.gates {key}])
+	witnesses:  list.SortStrings([for key, _ in state.witnesses {key}])
+})
+
+#FactoryKernelOperationRefKeySet: close({
+	operation:        #FactoryKernelOperation
+	reads:             list.SortStrings([for key, _ in operation.reads {key}])
+	writes:            list.SortStrings([for key, _ in operation.writes {key}])
+	creates:           list.SortStrings([for key, _ in operation.creates {key}])
+	requiresGates:     list.SortStrings([for key, _ in operation.requiresGates {key}])
+	requiresWitnesses: list.SortStrings([for key, _ in operation.requiresWitnesses {key}])
+})
+
+#FactoryKernelNoWideningProof: close({
+	authority: #FactoryKernelClosedObligationState
+	target:    #FactoryKernelClosedObligationState
+	let authorityKeys = (#FactoryKernelStateKeySet & {state: authority})
+	let targetKeys = (#FactoryKernelStateKeySet & {state: target})
+	keyEquality: {
+		resources:  authorityKeys.resources & targetKeys.resources
+		operations: authorityKeys.operations & targetKeys.operations
+		gates:      authorityKeys.gates & targetKeys.gates
+		witnesses:  authorityKeys.witnesses & targetKeys.witnesses
+	}
+	operationRefEquality: {
+		for operationID, _ in authority.operations {
+			"\(operationID)": {
+				let authorityRefs = (#FactoryKernelOperationRefKeySet & {operation: authority.operations[operationID]})
+				let targetRefs = (#FactoryKernelOperationRefKeySet & {operation: target.operations[operationID]})
+				reads:             authorityRefs.reads & targetRefs.reads
+				writes:            authorityRefs.writes & targetRefs.writes
+				creates:           authorityRefs.creates & targetRefs.creates
+				requiresGates:     authorityRefs.requiresGates & targetRefs.requiresGates
+				requiresWitnesses: authorityRefs.requiresWitnesses & targetRefs.requiresWitnesses
+			}
+		}
+	}
+	compatibility: authority & target
+})
+
+#FactoryKernelMakeClosedObligationState: {
+	in: {
+		id: string
+		resources: [string]: {...}
+		operations: [string]: {...}
+		gates: [string]: {...}
+		witnesses: [string]: {...}
+	}
+	out: #FactoryKernelClosedObligationState & {
+		id: in.id
+		resources: {for resourceID, resource in in.resources {"\(resourceID)": resource & {id: resourceID}}}
+		operations: {for operationID, operation in in.operations {"\(operationID)": operation & {id: operationID}}}
+		gates: {for gateID, gate in in.gates {"\(gateID)": gate & {id: gateID}}}
+		witnesses: {for witnessID, witness in in.witnesses {"\(witnessID)": witness & {id: witnessID}}}
+	}
+}'''
+
+
 def _render_declaration(declaration: Mapping[str, object], selected: frozenset[str]) -> str:
     form = declaration.get("form")
     required = _KERNEL_FORM_FOR_INTENT.get(str(form))
@@ -361,26 +491,41 @@ def _render_declaration(declaration: Mapping[str, object], selected: frozenset[s
     if form == "closed-ingress":
         if set(declaration) != {"form", "name", "fields"} or not isinstance(declaration["fields"], dict):
             raise TransactionError("invalid-request", "invalid closed-ingress intent")
-        return f"{name}: close({_cue_expr(declaration['fields'])})"
+        return f"{name}: #FactoryKernelResource & {_cue_expr(declaration['fields'])}"
     if form == "exact-cardinality":
         if set(declaration) != {"form", "name", "collection", "count"}:
             raise TransactionError("invalid-request", "invalid exact-cardinality intent")
         count = declaration["count"]
         if not isinstance(count, int) or isinstance(count, bool) or count < 0:
             raise TransactionError("invalid-request", "exact cardinality must be a nonnegative integer")
-        return f"{name}: (len({_cue_expr(declaration['collection'])}) == {count}) & true"
+        collection = _cue_expr(declaration["collection"])
+        return (
+            f"let _factoryCollection{name.lstrip('#_')} = {collection}\n"
+            f"{name}: close({{\n"
+            f"\tkeys: list.SortStrings([for key, _ in _factoryCollection{name.lstrip('#_')} {{key}}])\n"
+            f"\tcount: len(keys) & {count}\n"
+            f"}})"
+        )
     if form == "preservation":
         if set(declaration) != {"form", "name", "authority", "target"}:
             raise TransactionError("invalid-request", "invalid preservation intent")
-        return f"{name}: {_cue_expr({'$and': [declaration['authority'], declaration['target']]})}"
+        return (
+            f"{name}: #FactoryKernelNoWideningProof & {{\n"
+            f"\tauthority: {_cue_expr(declaration['authority'])}\n"
+            f"\ttarget: {_cue_expr(declaration['target'])}\n"
+            f"}}"
+        )
     if form == "wiring":
         if set(declaration) != {"form", "name", "target"}:
             raise TransactionError("invalid-request", "invalid wiring intent")
-        return f"{name}: {_cue_expr(declaration['target'])}"
+        return (
+            f"{name}: (#FactoryKernelMakeClosedObligationState & "
+            f"{{\"in\": {_cue_expr(declaration['target'])}}}).out"
+        )
     if form == "value":
         if set(declaration) != {"form", "name", "value"}:
             raise TransactionError("invalid-request", "invalid value intent")
-        return f"{name}: {_cue_expr(declaration['value'])}"
+        return f"{name}: #FactoryKernelClosedObligationState & {_cue_expr(declaration['value'])}"
     raise TransactionError("invalid-request", "unsupported declaration intent")
 
 
@@ -389,10 +534,13 @@ def _candidate_source(candidate: CandidateIntent) -> str:
         raise TransactionError("invalid-request", "cannot render a deletion intent")
     selected = frozenset(candidate.selected_kernel_forms)
     declarations = "\n\n".join(_render_declaration(item, selected) for item in candidate.declarations)
-    return f"package {candidate.package}\n\n{declarations}\n"
+    resource_only = selected == {"#Resource"}
+    imports = "" if resource_only else 'import "list"\n\n'
+    projection = _RESOURCE_PATTERN_PROJECTION if resource_only else _KERNEL_PATTERN_PROJECTION
+    return f"package {candidate.package}\n\n{imports}{projection}\n\n{declarations}\n"
 
 
-def _load_request(path: Path, kernel_path: Path) -> Request:
+def _load_request(path: Path, kernel_path: Path, cue_bin: Path) -> Request:
     try:
         raw = json.loads(path.read_bytes())
     except (OSError, UnicodeDecodeError, json.JSONDecodeError) as error:
@@ -405,8 +553,6 @@ def _load_request(path: Path, kernel_path: Path) -> Request:
         "candidateIntents",
         "packageGates",
         "probes",
-        "lsp",
-        "bindingExpectation",
     }:
         raise TransactionError("invalid-request", "request boundary is open or incomplete")
     if raw["schema"] != REQUEST_SCHEMA or raw["repository"] != REPOSITORY_ID:
@@ -418,7 +564,7 @@ def _load_request(path: Path, kernel_path: Path) -> Request:
     allowed = tuple(_safe_relative(item, "allowed path") for item in raw["allowedPaths"])
     if len(set(allowed)) != len(allowed):
         raise TransactionError("invalid-request", "allowedPaths contains duplicates")
-    available_forms = _kernel_form_names(kernel_path)
+    available_forms = _kernel_form_names(kernel_path, cue_bin)
     if not isinstance(raw["candidateIntents"], list) or not raw["candidateIntents"]:
         raise TransactionError("invalid-request", "candidateIntents must be nonempty")
     candidates: list[CandidateIntent] = []
@@ -440,6 +586,9 @@ def _load_request(path: Path, kernel_path: Path) -> Request:
             raise TransactionError("invalid-request", "deletion intent cannot contain source construction fields")
         candidate = CandidateIntent(candidate_path, item["operation"], package, selected, tuple(declarations))
         if candidate.operation == "construct":
+            names = [str(value.get("name")) for value in declarations]
+            if len(set(names)) != len(names):
+                raise TransactionError("invalid-request", "candidate declaration names must be unique")
             _candidate_source(candidate)
         candidates.append(candidate)
     if len({item.path for item in candidates}) != len(candidates):
@@ -481,8 +630,11 @@ def _load_request(path: Path, kernel_path: Path) -> Request:
             raise TransactionError("invalid-request", "invalid expected probe state")
         if not isinstance(item["package"], str) or not _PACKAGE_NAME.fullmatch(item["package"]):
             raise TransactionError("invalid-request", "invalid probe package")
-        if not isinstance(item["files"], list) or not item["files"]:
-            raise TransactionError("invalid-request", "probe file set must be nonempty")
+        if not isinstance(item["files"], list) or len(item["files"]) != 1:
+            raise TransactionError(
+                "invalid-request",
+                "equivalent value-level probes require exactly one declared source file",
+            )
         files = tuple(_safe_relative(value, "probe file") for value in item["files"])
         if len(set(files)) != len(files):
             raise TransactionError("invalid-request", "probe file set contains duplicates")
@@ -514,33 +666,7 @@ def _load_request(path: Path, kernel_path: Path) -> Request:
         raise TransactionError("invalid-request", "duplicate probe id")
     if {item.polarity for item in probes}.isdisjoint({"positive"}) or {item.polarity for item in probes}.isdisjoint({"negative"}):
         raise TransactionError("missing-probes", "positive and negative probes are required")
-    lsp = raw["lsp"]
-    if not isinstance(lsp, dict) or set(lsp) != {"argv"} or not isinstance(lsp["argv"], list):
-        raise TransactionError("invalid-request", "invalid lsp declaration")
-    if not all(isinstance(value, str) and value for value in lsp["argv"]):
-        raise TransactionError("invalid-request", "invalid lsp argv")
-    binding = raw["bindingExpectation"]
-    binding_fields = {
-        "cuePyCommit", "libcueCommit", "libcueSharedLibraryDigest", "cffiVersion", "goVersion",
-        "goBinaryDigest", "pythonVersion", "platformIdentity", "cueCLIVersion", "cueBinaryDigest",
-        "uvVersion", "uvBinaryDigest",
-    }
-    if not isinstance(binding, dict) or set(binding) != binding_fields:
-        raise TransactionError("invalid-request", "invalid binding expectation")
-    if not all(isinstance(binding[key], str) and binding[key] for key in binding_fields):
-        raise TransactionError("invalid-request", "binding expectations must be concrete strings")
-    for key in ("libcueSharedLibraryDigest", "goBinaryDigest", "cueBinaryDigest", "uvBinaryDigest"):
-        if not _SHA256.fullmatch(binding[key]):
-            raise TransactionError("invalid-request", f"invalid {key}")
-    expectation = BindingExpectation(
-        binding["cuePyCommit"], binding["libcueCommit"], binding["libcueSharedLibraryDigest"],
-        binding["cffiVersion"], binding["goVersion"], binding["goBinaryDigest"], binding["pythonVersion"],
-        binding["platformIdentity"], binding["cueCLIVersion"], binding["cueBinaryDigest"],
-        binding["uvVersion"], binding["uvBinaryDigest"],
-    )
-    if expectation.cue_py_commit != CUE_PY_COMMIT or expectation.libcue_commit != LIBCUE_COMMIT:
-        raise TransactionError("invalid-request", "binding commit expectation differs from emergency authority")
-    return Request(raw["baseRevision"], allowed, tuple(candidates), tuple(gates), tuple(probes), tuple(lsp["argv"]), expectation)
+    return Request(raw["baseRevision"], allowed, tuple(candidates), tuple(gates), tuple(probes))
 
 
 def _tree_digest(root: Path) -> str:
@@ -627,14 +753,13 @@ def _gate_observation(gate: PackageGate, shadow: Path, cue_bin: Path) -> dict[st
     }
 
 
-def _strip_package(source: str, package: str, label: str) -> str:
+def _validate_probe_source(source: str, package: str, label: str) -> str:
     match = re.match(r"\s*package\s+([A-Za-z_][A-Za-z0-9_]*)\s*\n", source)
     if match is None or match.group(1) != package:
         raise TransactionError("invalid-probe-file", f"{label} does not declare package {package}")
-    body = source[match.end():]
-    if re.search(r"(?m)^\s*import(?:\s|\()", body):
+    if re.search(r"(?m)^\s*import(?:\s|\()", source[match.end():]):
         raise TransactionError("unsupported-import-context", f"{label} uses imports not supported by equivalent cue-py probes")
-    return body
+    return source
 
 
 def _concrete_value_source(value: object) -> str:
@@ -646,62 +771,55 @@ def _concrete_input_source(probe: Probe) -> str:
     return _concrete_value_source(probe.concrete_input)
 
 
-def _probe_harness_source(probe: Probe) -> str:
-    concrete_input = _concrete_input_source(probe)
-    subject = f"({probe.expression}) & {concrete_input}"
-    if probe.unify_intent is not None:
-        subject = f"({subject}) & ({_cue_expr(probe.unify_intent)})"
-    result = "_factoryProbeSubject"
-    lines = [
-        f"package {probe.package}",
-        "",
-        f"_factoryConcreteInput: {concrete_input}",
-        f"_factoryProbeSubject: {subject}",
-    ]
-    if probe.schema_intent is not None:
-        lines.append(f"_factoryProbeSchema: {_cue_expr(probe.schema_intent)}")
-        lines.append("_factoryProbeSchemaProof: _factoryProbeSubject & _factoryProbeSchema")
-        result = "_factoryProbeSchemaProof"
-    lines.append(f"_factoryProbeResult: {result}")
-    return "\n".join(lines) + "\n"
+def _probe_subject_expression_values(
+    expression: str,
+    concrete_input: object,
+    unify_intent: object | None,
+    schema_intent: object | None,
+) -> str:
+    rendered_input = _concrete_value_source(concrete_input)
+    subject = f"({expression}) & {rendered_input}"
+    if unify_intent is not None:
+        subject = f"({subject}) & ({_cue_expr(unify_intent)})"
+    if schema_intent is not None:
+        subject = f"({subject}) & ({_cue_expr(schema_intent)})"
+    return subject
 
 
-def _format_cue_source(source: str, cue_bin: Path, cwd: Path) -> str:
-    formatted = _run((str(cue_bin), "fmt", "-"), cwd=cwd, input_bytes=source.encode())
-    if formatted["exitCode"] != 0:
-        raise TransactionError("probe-format-failure", str(formatted["stderr"]))
-    return str(formatted["stdout"])
+def _probe_subject_expression(probe: Probe) -> str:
+    return _probe_subject_expression_values(
+        probe.expression,
+        probe.concrete_input,
+        probe.unify_intent,
+        probe.schema_intent,
+    )
 
 
 def _probe_materialization(
     probe: Probe,
     shadow: Path,
     binding: Mapping[str, object],
-    cue_bin: Path,
 ) -> dict[str, object]:
     module = shadow.joinpath(*probe.module_root.parts).resolve(strict=True)
     if not module.is_relative_to(shadow) or not (module / "cue.mod/module.cue").is_file():
         raise TransactionError("invalid-module-coordinate", f"invalid probe module root: {probe.id}")
-    file_digests: dict[str, str] = {}
-    source_parts = [f"package {probe.package}", ""]
-    for relative in probe.files:
-        path = module.joinpath(*relative.parts).resolve(strict=True)
-        if not path.is_relative_to(module) or not path.is_file() or path.is_symlink():
-            raise TransactionError("invalid-file-coordinate", f"invalid probe file: {relative}")
-        source = path.read_text(encoding="utf-8")
-        file_digests[relative.as_posix()] = _digest_bytes(source.encode())
-        source_parts.append(_strip_package(source, probe.package, relative.as_posix()).rstrip())
-        source_parts.append("")
-    semantic_source = "\n".join(source_parts).rstrip() + "\n"
-    harness_source = _format_cue_source(_probe_harness_source(probe), cue_bin, module)
-    relative_harness = PurePosixPath(".factory-cue-probes") / f"{probe.id}.cue"
+    relative = probe.files[0]
+    path = module.joinpath(*relative.parts).resolve(strict=True)
+    if not path.is_relative_to(module) or not path.is_file() or path.is_symlink():
+        raise TransactionError("invalid-file-coordinate", f"invalid probe file: {relative}")
+    semantic_source = _validate_probe_source(
+        path.read_text(encoding="utf-8"), probe.package, relative.as_posix()
+    )
+    file_digests = {relative.as_posix(): _digest_bytes(semantic_source.encode())}
+    effective_expression = _probe_subject_expression(probe)
     components: dict[str, object] = {
         "moduleRoot": probe.module_root.as_posix(),
         "package": probe.package,
-        "files": [path.as_posix() for path in probe.files],
+        "files": [relative.as_posix()],
         "fileDigests": file_digests,
         "semanticSourceDigest": _digest_bytes(semantic_source.encode()),
-        "generatedHarnessDigest": _digest_bytes(harness_source.encode()),
+        "effectiveExpression": effective_expression,
+        "effectiveExpressionDigest": _digest_bytes(effective_expression.encode()),
         "selectedExpression": probe.expression,
         "buildOptions": dict(probe.build_options),
         "concreteInputDigest": _digest_bytes(_json_bytes(probe.concrete_input)),
@@ -713,7 +831,7 @@ def _probe_materialization(
             "version": binding["cueCLIVersion"],
             "binaryDigest": binding["cueBinaryDigest"],
             "operations": ["eval", "export"],
-            "options": ["-p", probe.package, "-e", "_factoryProbeResult"],
+            "options": ["-p", probe.package, "-e", effective_expression, relative.as_posix()],
         },
         "cuePyContext": {
             "cuePyCommit": binding["cuePyCommit"],
@@ -724,9 +842,9 @@ def _probe_materialization(
     }
     return {
         "module": module,
-        "harnessRelative": relative_harness.as_posix(),
-        "harnessSource": harness_source,
+        "sourceRelative": relative.as_posix(),
         "semanticSource": semantic_source,
+        "effectiveExpression": effective_expression,
         "subjectComponents": components,
         "subject": {"digest": _digest_bytes(_json_bytes(components)), "components": components},
     }
@@ -744,7 +862,7 @@ def _cue_py_worker_request(
             {
                 "id": probe.id,
                 "source": materializations[probe.id]["semanticSource"],
-                "filename": materializations[probe.id]["harnessRelative"],
+                "filename": materializations[probe.id]["sourceRelative"],
                 "expression": probe.expression,
                 "concreteInput": probe.concrete_input,
                 "unifyIntent": probe.unify_intent,
@@ -819,20 +937,24 @@ def _cli_probe(probe: Probe, materialization: Mapping[str, object], cue_bin: Pat
     module = materialization["module"]
     if not isinstance(module, Path):
         raise TransactionError("invalid-probe-materialization", "probe module was not materialized")
-    filename = str(materialization["harnessRelative"])
-    actual_harness = (module / filename).read_text(encoding="utf-8")
+    filename = str(materialization["sourceRelative"])
+    actual_source = (module / filename).read_text(encoding="utf-8")
+    effective_expression = materialization["effectiveExpression"]
+    if not isinstance(effective_expression, str):
+        raise TransactionError("invalid-probe-materialization", "effective expression is invalid")
     components = materialization["subjectComponents"]
     if not isinstance(components, dict):
         raise TransactionError("invalid-probe-materialization", "semantic subject components are invalid")
-    if _digest_bytes(actual_harness.encode()) != components["generatedHarnessDigest"]:
-        raise TransactionError("probe-subject-mismatch", "CLI harness changed after construction")
+    if _digest_bytes(actual_source.encode()) != components["semanticSourceDigest"]:
+        raise TransactionError("probe-subject-mismatch", "CLI source changed after subject construction")
+    if _digest_bytes(effective_expression.encode()) != components["effectiveExpressionDigest"]:
+        raise TransactionError("probe-subject-mismatch", "CLI operation changed after subject construction")
     current_file_digests = {
         relative.as_posix(): _digest_file(module.joinpath(*relative.parts)) for relative in probe.files
     }
     if current_file_digests != components["fileDigests"]:
         raise TransactionError("probe-subject-mismatch", "CLI file set changed after subject construction")
-    inputs = [path.as_posix() for path in probe.files] + [filename]
-    common = ("-p", probe.package, "-e", "_factoryProbeResult", *inputs)
+    common = ("-p", probe.package, "-e", effective_expression, filename)
     eval_result = _run((str(cue_bin), "eval", *common), cwd=module)
     if eval_result["exitCode"] is None:
         outcome = {"state": "infrastructure-failure", "category": "cli-unavailable"}
@@ -868,7 +990,8 @@ def _cli_probe(probe: Probe, materialization: Mapping[str, object], cue_bin: Pat
         "stage": stage,
         "semanticOutcome": outcome,
         "subject": {"digest": _digest_bytes(_json_bytes(components)), "components": components},
-        "harnessDigest": _digest_bytes(actual_harness.encode()),
+        "sourceDigest": _digest_bytes(actual_source.encode()),
+        "effectiveExpressionDigest": _digest_bytes(effective_expression.encode()),
         "commands": [item for item in (eval_result, concrete_result) if item is not None],
     }
 
@@ -912,9 +1035,8 @@ def _compare(
     return comparisons
 
 
-def _lsp_observation(argv: Sequence[str], shadow: Path, files: Sequence[Path]) -> dict[str, object]:
-    if not argv:
-        return {"availability": "unavailable", "reason": "no LSP command declared", "diagnostics": []}
+def _lsp_observation(cue_bin: Path, shadow: Path, files: Sequence[Path]) -> dict[str, object]:
+    argv = (str(cue_bin), "lsp")
     started = _now()
     process: subprocess.Popen[bytes] | None = None
     messages: list[object] = []
@@ -1165,7 +1287,7 @@ def _atomic_promote(root: Path, artifacts: Mapping[str, bytes]) -> None:
         raise
 
 
-def _binding_identity(coordinates: Coordinates, expected: BindingExpectation) -> dict[str, object]:
+def _binding_identity(coordinates: Coordinates) -> dict[str, object]:
     _verify_git_checkout(coordinates.cue_py_root, CUE_PY_COMMIT, "cue-py")
     _verify_git_checkout(coordinates.libcue_root, LIBCUE_COMMIT, "libcue")
     canonical_library = "cue.dll" if sys.platform == "win32" else ("libcue.dylib" if sys.platform == "darwin" else "libcue.so")
@@ -1194,24 +1316,16 @@ def _binding_identity(coordinates: Coordinates, expected: BindingExpectation) ->
         "uvVersion": str(uv_version["stdout"]).strip(),
         "uvBinaryDigest": _digest_file(coordinates.uv_bin),
     }
-    expected_values = {
-        "cuePyCommit": expected.cue_py_commit,
-        "libcueCommit": expected.libcue_commit,
-        "libcueSharedLibraryDigest": expected.libcue_shared_library_digest,
-        "cffiVersion": expected.cffi_version,
-        "goVersion": expected.go_version,
-        "goBinaryDigest": expected.go_binary_digest,
-        "pythonVersion": expected.python_version,
-        "platformIdentity": expected.platform_identity,
-        "cueCLIVersion": expected.cue_cli_version,
-        "cueBinaryDigest": expected.cue_binary_digest,
-        "uvVersion": expected.uv_version,
-        "uvBinaryDigest": expected.uv_binary_digest,
+    return {
+        **observed,
+        "identitySource": {
+            "cuePyCommit": "issue-105",
+            "libcueCommit": "issue-105",
+            "pythonEnvironment": "repository-pyproject-and-uv-lock",
+            "remainingFields": "observed-from-verified-invocation-coordinates",
+        },
+        "callerExpectationAccepted": False,
     }
-    if observed != expected_values:
-        mismatches = sorted(key for key in observed if observed[key] != expected_values[key])
-        raise TransactionError("binding-identity-mismatch", f"binding expectation mismatch: {', '.join(mismatches)}")
-    return {**observed, "expectationMatched": True}
 
 
 def _environment_identity(coordinates: Coordinates, base_revision: str) -> dict[str, object]:
@@ -1289,11 +1403,11 @@ def _transaction(
     workbook = coordinates.repo_root / WORKBOOK_PATH
     workbook_digest = _digest_file(workbook)
     kernel_identity = _verify_kernel(coordinates.kernel_path)
-    request = _load_request(coordinates.request_path, coordinates.kernel_path)
+    request = _load_request(coordinates.request_path, coordinates.kernel_path, coordinates.cue_bin)
     base_revision = _git(coordinates.repo_root, "rev-parse", "HEAD")
     if request.base_revision != base_revision:
         raise TransactionError("base-revision-mismatch", "request base revision does not match repository")
-    binding_identity = _binding_identity(coordinates, request.binding)
+    binding_identity = _binding_identity(coordinates)
     environment_identity = _environment_identity(coordinates, base_revision)
     before_digest = _tree_digest(coordinates.repo_root)
     result["repository"] = {
@@ -1352,17 +1466,10 @@ def _transaction(
         coordinates.shadow_root.joinpath(*candidate.path.parts)
         for candidate in request.candidates if candidate.operation == "construct"
     ]
-    result["lspObservation"] = _lsp_observation(request.lsp_argv, coordinates.shadow_root, lsp_files)
+    result["lspObservation"] = _lsp_observation(coordinates.cue_bin, coordinates.shadow_root, lsp_files)
     materializations: dict[str, Mapping[str, object]] = {}
     for probe in request.probes:
-        materialization = _probe_materialization(
-            probe, coordinates.shadow_root, binding_identity, coordinates.cue_bin
-        )
-        module = materialization["module"]
-        assert isinstance(module, Path)
-        harness = module / str(materialization["harnessRelative"])
-        harness.parent.mkdir(exist_ok=True)
-        harness.write_text(str(materialization["harnessSource"]), encoding="utf-8", newline="")
+        materialization = _probe_materialization(probe, coordinates.shadow_root, binding_identity)
         materializations[probe.id] = materialization
     gate_observations = result["packageGateObservations"]
     assert isinstance(gate_observations, list)
@@ -1493,13 +1600,19 @@ def _worker_subject_valid(probe: object) -> bool:
             relative.as_posix(): _digest_file(module.joinpath(*relative.parts).resolve(strict=True))
             for relative in (_safe_relative(value, "worker probe file") for value in files)
         }
-        harness = module.joinpath(*_safe_relative(probe["filename"], "worker harness").parts).resolve(strict=True)
+        source_path = module.joinpath(*_safe_relative(probe["filename"], "worker source").parts).resolve(strict=True)
         unify_digest = None if probe["unifyIntent"] is None else _digest_bytes(_json_bytes(probe["unifyIntent"]))
         schema_digest = None if probe["schemaIntent"] is None else _digest_bytes(_json_bytes(probe["schemaIntent"]))
+        effective_expression = _probe_subject_expression_values(
+            probe["expression"], probe["concreteInput"], probe["unifyIntent"], probe["schemaIntent"]
+        )
         return (
             file_digests == components["fileDigests"]
-            and _digest_file(harness) == components["generatedHarnessDigest"]
+            and source_path == module.joinpath(*_safe_relative(files[0], "worker source file").parts).resolve(strict=True)
+            and _digest_file(source_path) == components["semanticSourceDigest"]
             and _digest_bytes(str(probe["source"]).encode()) == components["semanticSourceDigest"]
+            and effective_expression == components["effectiveExpression"]
+            and _digest_bytes(effective_expression.encode()) == components["effectiveExpressionDigest"]
             and probe["expression"] == components["selectedExpression"]
             and _digest_bytes(_json_bytes(probe["concreteInput"])) == components["concreteInputDigest"]
             and unify_digest == components["unifyIntentDigest"]
@@ -1562,7 +1675,10 @@ def _worker(argv: Sequence[str]) -> int:
                         raise TransactionError("bottom", unified_error.err)
                 if probe["schemaIntent"] is not None:
                     stage = "schema"
-                    value.check_schema(context.compile(_cue_expr(probe["schemaIntent"])))
+                    value = value.unify(context.compile(_cue_expr(probe["schemaIntent"])))
+                    schema_error = value.error()
+                    if isinstance(schema_error, cue.Err):
+                        raise TransactionError("bottom", schema_error.err)
                 stage = "validate"
                 value.validate()
                 if value.incomplete_kind() == cue.Kind.BOTTOM:
@@ -1607,9 +1723,134 @@ def _worker(argv: Sequence[str]) -> int:
     return 0
 
 
+def _self_test(fixture_path: Path, cue_bin: Path, kernel_path: Path) -> int:
+    fixture = json.loads(fixture_path.read_bytes())
+    if not isinstance(fixture, dict) or fixture.get("schema") != "factory.cue-emergency-conformance-fixture.v1":
+        raise TransactionError("invalid-conformance-fixture", "fixture identity mismatch")
+    checks: list[dict[str, object]] = []
+
+    def record(name: str, passed: bool, detail: str = "") -> None:
+        checks.append({"name": name, "passed": passed, "detail": detail})
+        if not passed:
+            raise TransactionError("conformance-failure", f"{name}: {detail}")
+
+    def cue_accepts(source: str, expression: str) -> tuple[bool, str]:
+        observation = _run(
+            (str(cue_bin), "eval", "-", "-e", expression),
+            cwd=fixture_path.parent,
+            input_bytes=source.encode(),
+        )
+        return observation["exitCode"] == 0, str(observation["stderr"])
+
+    forms = tuple(_KERNEL_FORM_FOR_INTENT.values())
+    state = fixture["state"]
+    resource = fixture["resource"]
+    declarations = (
+        {"form": "closed-ingress", "name": "resource", "fields": resource},
+        {"form": "exact-cardinality", "name": "resourceCount", "collection": state["resources"], "count": 1},
+        {"form": "value", "name": "state", "value": state},
+        {"form": "wiring", "name": "wired", "target": state},
+        {"form": "preservation", "name": "preserved", "authority": state, "target": state},
+    )
+    candidate = CandidateIntent(PurePosixPath("conformance.cue"), "construct", "conformance", forms, declarations)
+    source = _candidate_source(candidate)
+    accepted, detail = cue_accepts(source, "preserved")
+    record("kernel-projection-positive", accepted, detail)
+    accepted, detail = cue_accepts(source, "wired")
+    record("wiring-applies-closed-state-construction", accepted, detail)
+    accepted, detail = cue_accepts(source, "resourceCount")
+    record("exact-cardinality-positive", accepted, detail)
+
+    widened = CandidateIntent(
+        PurePosixPath("widened.cue"),
+        "construct",
+        "conformance",
+        ("#NoWideningProof",),
+        ({
+            "form": "preservation",
+            "name": "preserved",
+            "authority": state,
+            "target": fixture["widenedState"],
+        },),
+    )
+    accepted, detail = cue_accepts(_candidate_source(widened), "preserved")
+    record("preservation-rejects-widening", not accepted, detail)
+
+    extra_resource = dict(resource)
+    extra_resource["claimantValid"] = True
+    closed = CandidateIntent(
+        PurePosixPath("closed.cue"),
+        "construct",
+        "conformance",
+        ("#Resource",),
+        ({"form": "closed-ingress", "name": "resource", "fields": extra_resource},),
+    )
+    accepted, detail = cue_accepts(_candidate_source(closed), "resource")
+    record("closed-ingress-rejects-extra-field", not accepted, detail)
+
+    wrong_count = CandidateIntent(
+        PurePosixPath("cardinality.cue"),
+        "construct",
+        "conformance",
+        ("#StateKeySet",),
+        ({"form": "exact-cardinality", "name": "count", "collection": state["resources"], "count": 2},),
+    )
+    accepted, detail = cue_accepts(_candidate_source(wrong_count), "count")
+    record("exact-cardinality-negative", not accepted, detail)
+
+    probe_source = "package conformance\n\nsubject: {x: int}\n"
+    probe_expression = _probe_subject_expression_values(
+        "subject", {"x": 1}, None, {"x": {"$ref": "int"}}
+    )
+    accepted, detail = cue_accepts(probe_source, probe_expression)
+    record("schema-constraint-uses-unification", accepted, detail)
+
+    request_value = fixture["request"]
+    with tempfile.TemporaryDirectory(prefix="factory-cue-self-test-") as temporary:
+        root = Path(temporary)
+        request_file = root / "request.json"
+        request_file.write_bytes(_pretty_json(request_value))
+        loaded = _load_request(request_file, kernel_path, cue_bin)
+        record("closed-request-v3", len(loaded.probes) == 2)
+
+        multi_file = copy.deepcopy(request_value)
+        multi_file["probes"][0]["files"].append("second.cue")
+        request_file.write_bytes(_pretty_json(multi_file))
+        try:
+            _load_request(request_file, kernel_path, cue_bin)
+        except TransactionError as error:
+            record("multi-file-equivalence-rejected", error.category == "invalid-request", str(error))
+        else:
+            record("multi-file-equivalence-rejected", False, "multi-file probe was accepted")
+
+        arbitrary_lsp = copy.deepcopy(request_value)
+        arbitrary_lsp["lsp"] = {"argv": ["/bin/sh", "-c", "false"]}
+        request_file.write_bytes(_pretty_json(arbitrary_lsp))
+        try:
+            _load_request(request_file, kernel_path, cue_bin)
+        except TransactionError as error:
+            record("arbitrary-lsp-request-rejected", error.category == "invalid-request", str(error))
+        else:
+            record("arbitrary-lsp-request-rejected", False, "arbitrary LSP argv was accepted")
+
+        incomplete_kernel = root / "kernel.cue"
+        incomplete_kernel.write_text("package kernel\n\n#Resource: {}\n", encoding="utf-8")
+        try:
+            _kernel_form_names(incomplete_kernel, cue_bin)
+        except TransactionError as error:
+            record("kernel-forms-derived-from-content", error.category == "kernel-form-unavailable", str(error))
+        else:
+            record("kernel-forms-derived-from-content", False, "missing kernel forms were treated as available")
+
+    print(json.dumps({"schema": fixture["schema"], "passed": len(checks), "checks": checks}, sort_keys=True))
+    return 0
+
+
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(allow_abbrev=False)
+    parser.add_argument("--authority", action="store_true")
     parser.add_argument("--cue-py-worker", nargs=1)
+    parser.add_argument("--self-test", nargs=1)
     for name in (
         "repo-root", "transient-root", "shadow-root", "promotion-root", "request",
         "kernel-path", "cue-py-root", "libcue-root", "libcue-library", "cue-bin",
@@ -1621,8 +1862,29 @@ def _parser() -> argparse.ArgumentParser:
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = _parser().parse_args(argv)
+    if args.authority:
+        print(json.dumps({
+            "schema": "factory.cue-emergency-implementation-constants.v1",
+            "cuePy": {"repository": CUE_PY_REPOSITORY, "revision": CUE_PY_COMMIT},
+            "libcue": {"repository": LIBCUE_REPOSITORY, "revision": LIBCUE_COMMIT},
+            "kernel": {
+                "repository": KERNEL_REPOSITORY,
+                "revision": KERNEL_COMMIT,
+                "relativePath": KERNEL_RELATIVE_PATH.as_posix(),
+                "gitBlobSHA1": KERNEL_BLOB,
+            },
+        }, sort_keys=True))
+        return 0
     if args.cue_py_worker is not None:
         return _worker(args.cue_py_worker)
+    if args.self_test is not None:
+        if args.cue_bin is None or args.kernel_path is None:
+            raise TransactionError("invalid-coordinate", "self-test requires --cue-bin and --kernel-path")
+        return _self_test(
+            _absolute_existing(args.self_test[0], directory=False, label="conformance fixture"),
+            _absolute_existing(args.cue_bin, directory=False, label="cue binary"),
+            _absolute_existing(args.kernel_path, directory=False, label="kernel"),
+        )
     required = (
         "repo_root", "transient_root", "shadow_root", "promotion_root", "request",
         "kernel_path", "cue_py_root", "libcue_root", "libcue_library", "cue_bin",

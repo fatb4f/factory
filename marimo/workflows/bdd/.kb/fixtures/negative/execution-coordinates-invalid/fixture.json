@@ -1,0 +1,31 @@
+{
+  "schema": "factory.bdd-scenario-fixture.v1",
+  "scenarioID": "BDD-BOOT-NEG-004",
+  "executorProtocol": "process-run.v1",
+  "process": {
+    "argv": [
+      "python",
+      "$provider_root/marimo/workflows/bdd/validate_implementation_unit.py",
+      "--provider-root",
+      "relative-provider",
+      "--repo-root",
+      "$consumer_root",
+      "--evidence-root",
+      "$evidence_root",
+      "--execution-id",
+      "fixture-invalid",
+      "--node",
+      "project-lock.verify",
+      "--command-manifest",
+      "$evidence_root/command-manifest.json",
+      "--command-manifest-digest",
+      "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "--scenario-manifest",
+      "$evidence_root/scenario-manifest.json",
+      "--scenario-manifest-digest",
+      "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+    ],
+    "cwd": "$provider_root",
+    "environment": {}
+  }
+}

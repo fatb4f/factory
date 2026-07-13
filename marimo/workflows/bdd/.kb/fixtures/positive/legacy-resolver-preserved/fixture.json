@@ -1,0 +1,7 @@
+{
+  "schema": "factory.bdd-scenario-fixture.v1",
+  "scenarioID": "BDD-BOOT-COMP-001",
+  "executorProtocol": "artifact-compare.v1",
+  "sourcePath": "$provider_root/marimo/workflows/bdd/.kb/fixtures/positive/legacy-resolver-preserved/fixture.json",
+  "candidatePath": "$provider_root/marimo/workflows/bdd/.kb/fixtures/positive/legacy-resolver-preserved/fixture.json"
+}

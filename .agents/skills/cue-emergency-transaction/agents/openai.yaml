@@ -1,0 +1,4 @@
+interface:
+  display_name: "CUE Emergency Transaction"
+  short_description: "Run the bounded issue 105 CUE transaction"
+  default_prompt: "Use $cue-emergency-transaction to construct and validate a shadow-only CUE candidate."

@@ -1,0 +1,11 @@
+{
+  "schema": "factory.bdd-scenario-fixture.v1",
+  "scenarioID": "BDD-BOOT-NEG-002",
+  "executorProtocol": "project-inspect.v1",
+  "paths": [
+    {
+      "path": "uv.lock",
+      "expectedDigest": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ]
+}

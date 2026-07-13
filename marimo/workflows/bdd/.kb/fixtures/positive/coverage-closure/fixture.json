@@ -1,0 +1,7 @@
+{
+  "schema": "factory.bdd-scenario-fixture.v1",
+  "scenarioID": "BDD-BOOT-INV-001",
+  "executorProtocol": "artifact-compare.v1",
+  "sourcePath": "$provider_root/marimo/workflows/bdd/.kb/fixtures/positive/coverage-closure/fixture.json",
+  "candidatePath": "$provider_root/marimo/workflows/bdd/.kb/fixtures/positive/coverage-closure/fixture.json"
+}

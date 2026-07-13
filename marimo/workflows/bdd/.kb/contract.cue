@@ -2,9 +2,10 @@ package bdd
 
 // Reusable BDD primitives. Factory owns v1 until an explicit compatibility
 // implementation unit admits an upstream extraction.
-#NonEmptyString: string & =~"[^[:space:]]"
-#Digest:         string & =~"^sha256:[0-9a-f]{64}$"
-#AbsolutePath:   string & =~"^/"
+#NonEmptyString:    string & =~"[^[:space:]]"
+#Digest:            string & =~"^sha256:[0-9a-f]{64}$"
+#AbsolutePath:      string & =~"^/"
+#FixtureCoordinate: #AbsolutePath | string & =~"^\\$(provider_root|consumer_root|evidence_root)(/[^[:space:]]+)?$"
 
 #RequirementID: string & =~"^(UV|BD)-[0-9]{2}$"
 #AcceptanceID:  string & =~"^(UV|BD)-[0-9]{2}-A[0-9]+$"
@@ -358,12 +359,12 @@ package bdd
 	})]
 	process?: close({
 		argv: [...#NonEmptyString] & [_, ...]
-		cwd: #AbsolutePath
+		cwd: #FixtureCoordinate
 		environment: [#NonEmptyString]: string
 	})
-	projectionPath?: #AbsolutePath
-	sourcePath?:     #AbsolutePath
-	candidatePath?:  #AbsolutePath
+	projectionPath?: #FixtureCoordinate
+	sourcePath?:     #FixtureCoordinate
+	candidatePath?:  #FixtureCoordinate
 })
 
 #ArtifactDeclaration: close({

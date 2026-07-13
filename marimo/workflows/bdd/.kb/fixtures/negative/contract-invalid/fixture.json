@@ -1,0 +1,6 @@
+{
+  "schema": "factory.bdd-scenario-fixture.v1",
+  "scenarioID": "BDD-BOOT-NEG-005",
+  "executorProtocol": "cue-projection-observe.v1",
+  "projectionPath": "$provider_root/marimo/workflows/bdd/.kb/fixtures/negative/contract-invalid/projection.txt"
+}

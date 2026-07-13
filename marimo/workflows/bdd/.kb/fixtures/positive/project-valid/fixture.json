@@ -1,0 +1,10 @@
+{
+  "schema": "factory.bdd-scenario-fixture.v1",
+  "scenarioID": "BDD-BOOT-POS-001",
+  "executorProtocol": "project-inspect.v1",
+  "paths": [
+    {
+      "path": "pyproject.toml"
+    }
+  ]
+}

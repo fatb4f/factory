@@ -1,0 +1,13 @@
+{
+  "schema": "factory.bdd-scenario-fixture.v1",
+  "scenarioID": "BDD-BOOT-POS-006",
+  "executorProtocol": "process-run.v1",
+  "process": {
+    "argv": [
+      "just",
+      "--list"
+    ],
+    "cwd": "$provider_root",
+    "environment": {}
+  }
+}

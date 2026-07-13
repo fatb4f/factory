@@ -1,0 +1,131 @@
+{
+  "schema": "factory.cue-emergency-conformance-fixture.v1",
+  "resource": {
+    "id": "source",
+    "path": "source.cue",
+    "role": "input"
+  },
+  "state": {
+    "id": "sample-state",
+    "resources": {
+      "source": {
+        "id": "source",
+        "path": "source.cue",
+        "role": "input"
+      }
+    },
+    "operations": {},
+    "gates": {},
+    "witnesses": {}
+  },
+  "widenedState": {
+    "id": "sample-state",
+    "resources": {
+      "source": {
+        "id": "source",
+        "path": "source.cue",
+        "role": "input"
+      },
+      "extra": {
+        "id": "extra",
+        "path": "extra.cue",
+        "role": "input"
+      }
+    },
+    "operations": {},
+    "gates": {},
+    "witnesses": {}
+  },
+  "request": {
+    "schema": "factory.cue-emergency-transaction-request.v3",
+    "repository": "fatb4f/factory",
+    "baseRevision": "0000000000000000000000000000000000000000",
+    "allowedPaths": [
+      "sample.cue"
+    ],
+    "candidateIntents": [
+      {
+        "path": "sample.cue",
+        "operation": "construct",
+        "package": "sample",
+        "selectedKernelForms": [
+          "#Resource"
+        ],
+        "declarations": [
+          {
+            "form": "closed-ingress",
+            "name": "resource",
+            "fields": {
+              "id": "source",
+              "path": "source.cue",
+              "role": "input"
+            }
+          }
+        ]
+      }
+    ],
+    "packageGates": [
+      {
+        "id": "sample-gate",
+        "moduleRoot": "module",
+        "package": "./sample",
+        "files": [
+          "sample.cue"
+        ]
+      }
+    ],
+    "probes": [
+      {
+        "id": "positive",
+        "polarity": "positive",
+        "moduleRoot": "module",
+        "package": "sample",
+        "files": [
+          "sample.cue"
+        ],
+        "expression": "resource",
+        "expectedState": "accept",
+        "concreteInput": {
+          "id": "source",
+          "path": "source.cue",
+          "role": "input"
+        },
+        "unifyIntent": null,
+        "schemaIntent": null,
+        "selectedKernelForms": [
+          "#ClosedObligationState"
+        ],
+        "buildOptions": {
+          "tags": [],
+          "allErrors": false
+        }
+      },
+      {
+        "id": "negative",
+        "polarity": "negative",
+        "moduleRoot": "module",
+        "package": "sample",
+        "files": [
+          "sample.cue"
+        ],
+        "expression": "resource",
+        "expectedState": "reject",
+        "concreteInput": {
+          "id": "wrong",
+          "path": "source.cue",
+          "role": "input"
+        },
+        "unifyIntent": null,
+        "schemaIntent": null,
+        "selectedKernelForms": [
+          "#ClosedObligationState",
+          "#NegativeFixtureConflictProbe"
+        ],
+        "buildOptions": {
+          "tags": [],
+          "allErrors": false
+        }
+      }
+    ]
+  }
+}
