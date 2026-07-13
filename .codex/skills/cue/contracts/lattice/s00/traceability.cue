@@ -64,11 +64,10 @@ unit: #ImplementationUnit & {
 	directRequirements: ["PT-01", "KR-01", "MG-01"]
 	requirements:  requirementClosure
 	validationDAG: declaredValidationDAG
-	directEvidence: {
-		"PT-01-A1": {positive: "pattern-inventory", negative: "metadata-exclusion", invariant: "exact-catalog-cardinality"}
-		"KR-01-A1": {positive: "kernel-source-manifest", negative: "source-claim-fixtures", compatibility: "local-copy-divergence"}
-		"MG-01-A1": {positive: "provisional-surfaces", negative: "claimed-admission-fixture", compatibility: "available-but-ineligible"}
-	}
+	// Evidence and prerequisite admissions are transient, typed inputs. Empty
+	// maps preserve quarantine until full runner-backed records are supplied.
+	directEvidence: {}
+	prerequisiteAdmissions: {}
 }
 
 selectedIDs: list.SortStrings([for id, _ in requirements {id}])
@@ -85,29 +84,50 @@ _validationDAGProof: {
 		"\(requirementID)-order": requirements[requirementID].order & order
 	}
 }
-_directCoverageProof: {
+_requiredDirectEvidenceScopeSet: {
 	for requirementID in unit.directRequirements {
 		let requirement = requirements[requirementID]
 		for scenario, _ in requirement.scenarios {
-			"\(requirement.acceptance)-\(scenario)": unit.directEvidence[requirement.acceptance][scenario] & #ID
+			"\(requirement.acceptance):\(scenario)": true
+		}
+	}
+}
+requiredDirectEvidenceScopes: list.SortStrings([for scope, _ in _requiredDirectEvidenceScopeSet {scope}])
+observedDirectEvidenceScopes: list.SortStrings([for _, evidence in unit.directEvidence {
+	"\(evidence.acceptanceID):\(evidence.scenario)"
+}])
+_directEvidenceBindingProof: {
+	for requirementID in unit.directRequirements {
+		let requirement = requirements[requirementID]
+		for evidenceID, evidence in unit.directEvidence if evidence.requirementID == requirementID {
+			"\(evidenceID)-acceptance": evidence.acceptanceID & requirement.acceptance
+			"\(evidenceID)-revision":   evidence.sourceRevision & source.revision
 		}
 	}
 }
 
+requiredPrerequisiteIDs: list.SortStrings([for id in selectedIDs if !list.Contains(unit.directRequirements, id) {id}])
+providedPrerequisiteIDs: list.SortStrings([for id, _ in unit.prerequisiteAdmissions {id}])
+let requiredPrerequisites = requiredPrerequisiteIDs
+let prerequisiteAdmissionRecords = unit.prerequisiteAdmissions
+
 closureComplete: len(selectedIDs) == 45 && len(_dependencyProof) == 218 &&
 			len(_validationDAGProof) == len(selectedIDs)
-directCoverageComplete: len(_directCoverageProof) == 9
+directCoverageComplete: requiredDirectEvidenceScopes == observedDirectEvidenceScopes &&
+	len(unit.directEvidence) == len(requiredDirectEvidenceScopes) &&
+	len(_directEvidenceBindingProof) == 2*len(unit.directEvidence)
 
-// The inventories are complete, but the canonical prerequisite evidence is
-// not. S00 therefore publishes quarantine rather than semantic admission.
-prerequisitesAdmitted: false
-quarantine: #QuarantineProjection & {Input: {
-	patterns:              patternInventory.status
-	kernel:                kernelManifest.status
-	prerequisitesAdmitted: false
-}}
+quarantine: #QuarantineProjection & {
+	patternStatus:           patternInventory.status
+	kernelStatus:            kernelManifest.status
+	sourceRevision:          source.revision
+	requiredPrerequisiteIDs: requiredPrerequisites
+	prerequisiteAdmissions:  prerequisiteAdmissionRecords
+}
+prerequisitesAdmitted: quarantine.prerequisitesAdmitted
 
 inventorySliceComplete: inventoryComplete && closureComplete && directCoverageComplete &&
+	negativeFixtureEvaluationComplete &&
 	!quarantine.downstreamEligible && !quarantine.admissionEligible &&
 	!quarantine.noWideningEligible
 

@@ -7,33 +7,6 @@ The target is the executable kernel–probe–eval CUE skill package on branch
 is execution guidance only; it does not replace issue #106 or vetted CUE
 contracts.
 
-Semantic authority:
-
-1. Online issue #106 requirement and acceptance-criterion matrix.
-2. Vetted skill-local CUE contracts produced for the selected unit.
-
-Implementation guidance:
-
-1. AGENTS.md.
-2. prompt.txt.
-
-Migration input:
-
-- `fatb4f/lattice/meta/kernel.cue`.
-
-Preflight:
-
-- Fetch the online issue and require the marker
-  `issue-106-requirements-matrix:v3`, plus `PR-09`, `RN-07`, `LS-03`, and
-  `SK-05` with their complete transitive dependency closure.
-- Verify the issue identifies the CUE Go API runner—not CUE CLI failure—as the
-  semantic observation channel.
-- Inspect the current branch, working tree, existing skill files, CUE module
-  roots, and the complete lattice kernel reference. Migrate that complete kernel
-  into the skill-local module; do not use the lattice checkout at runtime.
-- Stop if the online issue is stale, a reference is unresolved, or the selected
-  requirements do not have a valid complete dependency closure.
-
 Implementation objective:
 
 ```text
@@ -71,71 +44,6 @@ Keep implementation within:
 .codex/skills/cue/runner/go.mod
 .codex/skills/cue/runner/go.sum
 .codex/skills/cue/runner/cmd/cueprobe/**
-```
-
-Do not add Marimo, Python, cue-py/libcue, a custom language server, a second Go
-runner, or unrelated repository architecture during P0.
-
-Execution rules:
-
-- Update CUE contracts and fixtures before their Go or procedural consumers.
-- Bind candidate, fixture, probe, and evaluator contracts to the complete
-  migrated kernel through CUE package imports or same-package references. Do
-  not reproduce kernel-shaped schemas or reimplement kernel proofs in Go.
-- Generate probes from kernel operations and candidate declarations; do not
-  accept arbitrary expected-state harnesses.
-- Keep valid-state conflict fixtures separate from schema-invalid ingress.
-- Require `cueprobe` to derive the effective ProbeSubject from actual loaded
-  sources, module identity, normalized build options, selector inputs, runner
-  protocol, and CUE engine version. Treat `subjectExpectation` only as an
-  expectation and fail on mismatch.
-- Compare pre-load and post-operation digests for the module manifest, declared
-  sources, selector inputs, and build inputs. Emit `source-changed` and suppress
-  semantic facts on mutation.
-- Treat structured ProbeSubject equality as authoritative. Project exact CUE
-  numbers to the bounded `#CanonicalSubjectValue` tagged coefficient/exponent
-  representation before RFC 8785 serialization and SHA-256 projection.
-- Emit semantic bottom only from the structured CUE Go API channel after load,
-  lookup, and operand preconditions succeed.
-- Record CLI formatting and vet failures only as structural-gate observations.
-- Keep timeout, protocol, syntax, selector, package, and infrastructure failure
-  distinct from semantic bottom.
-- Keep the Go runner free of verdict, satisfaction, coverage, and admission
-  policy.
-- Reject unknown fields and claimant-provided conclusions at every external
-  ingress.
-- Produce bounded LSP observations through `cueprobe lsp-observe`; keep them
-  advisory and separately exportable.
-- Export rejected, incomplete, and runner-failure bundles without hiding their
-  state.
-- Do not allow generated observations, reports, or bundles to become authority.
-- Define the closed skill-interface manifest before updating `SKILL.md`.
-  Validate its bounded frontmatter reference and exact identifiers through
-  `cueprobe skill-check`; do not parse prose as architecture.
-
-Required fixture classes include:
-
-```text
-kernel positive
-valid-state conflict
-schema-invalid ingress
-probe boundary
-subject identity and digest projection
-canonical exact-number projection
-runner stage classification
-runner failure
-subject-expectation mismatch
-source-change detection
-observation boundary
-operation-specific evaluation
-permitted and required verdict aggregation
-coverage
-structural package gates
-bounded LSP client outcomes
-validator-of-validator
-accepted and categorized rejected candidates
-artifact bundle
-skill-interface reference validation
 ```
 
 Validation must use manifest-declared coordinates, validate both the migrated

@@ -53,7 +53,7 @@ kernelManifest: #KernelManifest & {
 	sourceContentSHA256: "2ab6df31c80276c7f5dc1097e23641339676c5aeca3bfd610fe52aa394b5cd19"
 	localPath:           ".codex/skills/cue/contracts/kernel/kernel.cue"
 	localContentSHA256:  "2321bdf585fd0d7be027a50d5dc55c6602dd9ac5ae55d99c663c851fd0ceab85"
-	exportedDeclarations: [
+	sourceExportedDeclarations: [
 		"#NonEmptyString", "#NonEmptyStringList", "#KebabIdentifier", "#CueSelectorExpr", "#KebabMapKeyGuard", "#RefSet",
 		"#ResourceRole", "#OperationKind", "#GeneratedOutputResourceRole", "#VisibilityTier", "#Resource", "#Operation", "#Gate", "#Witness",
 		"#ResourceMap", "#OperationMap", "#GateMap", "#WitnessMap", "#ObligationState", "#ClosedObligationState", "#MakeClosedObligationState",
@@ -61,11 +61,52 @@ kernelManifest: #KernelManifest & {
 		"#NegativeFixtureProbeSpec", "#NegativeFixtureConflictProbe", "#NegativeFixtureProbeBinding", "#NegativeFixtureCheck",
 		"#MakeUncheckedNegativeFixture", "#MakeNegativeFixtureSpec", "#MakeNegativeFixtureProbeBinding", "#MakeNegativeFixture", "#MakeNegativeFixtureCheck",
 	]
-	intentionalDivergences: [{id: "exact-key-compatibility-name", description: "The skill-local copy exposes #ExactKeyCompatibilityProof and retains #NoWideningProof only as a provisional compatibility alias."}]
+	localExportedDeclarations: [
+		"#NonEmptyString", "#NonEmptyStringList", "#KebabIdentifier", "#CueSelectorExpr", "#KebabMapKeyGuard", "#RefSet",
+		"#ResourceRole", "#OperationKind", "#GeneratedOutputResourceRole", "#VisibilityTier", "#Resource", "#Operation", "#Gate", "#Witness",
+		"#ResourceMap", "#OperationMap", "#GateMap", "#WitnessMap", "#ObligationState", "#ClosedObligationState", "#MakeClosedObligationState",
+		"#StateKeySet", "#OperationRefKeySet", "#ExactKeyCompatibilityProof", "#NoWideningProof", "#NegativeFixtureSpec", "#NegativeFixture", "#UncheckedNegativeFixture",
+		"#NegativeFixtureProbeSpec", "#NegativeFixtureConflictProbe", "#NegativeFixtureProbeBinding", "#NegativeFixtureCheck",
+		"#MakeUncheckedNegativeFixture", "#MakeNegativeFixtureSpec", "#MakeNegativeFixtureProbeBinding", "#MakeNegativeFixture", "#MakeNegativeFixtureCheck",
+	]
+	exportMapping: {
+		"#NoWideningProof": {
+			source:                  "#NoWideningProof"
+			localCompatibilityAlias: "#NoWideningProof"
+			localReplacement:        "#ExactKeyCompatibilityProof"
+		}
+	}
+	divergences: {
+		exactKeyCompatibilityName: {
+			description: "The local #ExactKeyCompatibilityProof names the weaker exact-key compatibility property; #NoWideningProof remains only as a compatibility alias."
+		}
+		selectorGrammar: {
+			source:  "A definition marker is permitted only in the first selector segment."
+			local:   "A definition marker is permitted after a dot."
+			witness: "foo.#Bar"
+		}
+	}
 	patternDependencies: [for id in ["bounds", "closedness", "constructors", "hidden-and-let", "negative-fixtures", "projections", "subsumption", "top-and-bottom", "unification"] {{id: id, status: "provisional", admitted: false}}]
 	conceptDependencies: [for id in ["closed-ingress", "constructor-wiring", "destructive-conflict", "exact-key-identity", "reference-integrity", "structural-compatibility"] {{id: id, status: "provisional", admitted: false}}]
 	status: "provisional"
 }
+
+// Runtime inventory observations are transient evidence and are intentionally
+// absent from source control. Completion remains false until one source and one
+// local observation are supplied and their exact declaration sets match.
+kernelDeclarationObservations: close({[ID=string]: #DeclarationInventoryObservation & {id: ID}}) & {}
+
+_sourceDeclarationSets: [for _, observation in kernelDeclarationObservations if observation.role == "source" {
+	list.SortStrings(observation.declarations)
+}]
+_localDeclarationSets: [for _, observation in kernelDeclarationObservations if observation.role == "local" {
+	list.SortStrings(observation.declarations)
+}]
+_declaredSourceExports: list.SortStrings(kernelManifest.sourceExportedDeclarations)
+_declaredLocalExports:  list.SortStrings(kernelManifest.localExportedDeclarations)
+
+kernelInventoryObserved: _sourceDeclarationSets == [_declaredSourceExports] &&
+	_localDeclarationSets == [_declaredLocalExports]
 
 patternIDs: list.SortStrings([for id, _ in patternInventory.patterns {id}])
 classificationIDs: list.SortStrings([for _, pattern in patternInventory.patterns {pattern.classification}])
@@ -76,9 +117,19 @@ _patternIdentityProof: {
 		"\(id)-identity": pattern.id & id
 	}
 }
+_exportMappingProof: {
+	for sourceName, mapping in kernelManifest.exportMapping {
+		"\(sourceName)-source":      list.Contains(_declaredSourceExports, mapping.source) & true
+		"\(sourceName)-alias":       list.Contains(_declaredLocalExports, mapping.localCompatibilityAlias) & true
+		"\(sourceName)-replacement": list.Contains(_declaredLocalExports, mapping.localReplacement) & true
+	}
+}
 
 inventoryComplete: patternIDs == expectedPatternIDs &&
 	len(patternIDs) == patternInventory.semanticCount &&
 	len(_patternIdentityProof) == patternInventory.semanticCount &&
 	patternInventory.metadata.schema.semanticProof == false &&
-	len(kernelManifest.exportedDeclarations) == 36
+	len(_declaredSourceExports) == len(kernelManifest.sourceExportedDeclarations) &&
+	len(_declaredLocalExports) == len(kernelManifest.localExportedDeclarations) &&
+	len(_exportMappingProof) == 3*len(kernelManifest.exportMapping) &&
+	kernelInventoryObserved
