@@ -52,6 +52,75 @@ scenarioManifest: {
 	}
 }
 
+_executorProtocolByScenario: {
+	"BDD-BOOT-POS-001":  "project-inspect.v1"
+	"BDD-BOOT-NEG-001":  "project-inspect.v1"
+	"BDD-BOOT-POS-002":  "project-inspect.v1"
+	"BDD-BOOT-NEG-002":  "project-inspect.v1"
+	"BDD-BOOT-POS-003":  "project-inspect.v1"
+	"BDD-BOOT-NEG-003":  "project-inspect.v1"
+	"BDD-BOOT-COMP-001": "project-inspect.v1"
+	"BDD-BOOT-POS-004":  "process-run.v1"
+	"BDD-BOOT-ADV-001":  "artifact-compare.v1"
+	"BDD-BOOT-NEG-004":  "process-run.v1"
+	"BDD-BOOT-INV-003":  "project-inspect.v1"
+	"BDD-BOOT-POS-005":  "cue-projection-observe.v1"
+	"BDD-BOOT-NEG-005":  "cue-projection-observe.v1"
+	"BDD-BOOT-INV-001":  "cue-projection-observe.v1"
+	"BDD-BOOT-NEG-006":  "cue-projection-observe.v1"
+	"BDD-BOOT-INV-002":  "cue-projection-observe.v1"
+	"BDD-BOOT-ADV-002":  "artifact-compare.v1"
+	"BDD-BOOT-ADV-003":  "artifact-compare.v1"
+	"BDD-BOOT-POS-006":  "process-run.v1"
+	"BDD-BOOT-NEG-007":  "process-run.v1"
+	"BDD-BOOT-POS-007":  "process-run.v1"
+	"BDD-BOOT-NEG-008":  "artifact-compare.v1"
+}
+
+_evaluationProtocolByScenario: {
+	"BDD-BOOT-POS-001":  "fact-predicate.v1"
+	"BDD-BOOT-NEG-001":  "fact-predicate.v1"
+	"BDD-BOOT-POS-002":  "fact-predicate.v1"
+	"BDD-BOOT-NEG-002":  "fact-predicate.v1"
+	"BDD-BOOT-POS-003":  "fact-predicate.v1"
+	"BDD-BOOT-NEG-003":  "fact-predicate.v1"
+	"BDD-BOOT-COMP-001": "identity-preservation.v1"
+	"BDD-BOOT-POS-004":  "subject-exit.v1"
+	"BDD-BOOT-ADV-001":  "identity-match.v1"
+	"BDD-BOOT-NEG-004":  "subject-exit.v1"
+	"BDD-BOOT-INV-003":  "identity-preservation.v1"
+	"BDD-BOOT-POS-005":  "projection-conformance.v1"
+	"BDD-BOOT-NEG-005":  "projection-conformance.v1"
+	"BDD-BOOT-INV-001":  "identity-preservation.v1"
+	"BDD-BOOT-NEG-006":  "projection-conformance.v1"
+	"BDD-BOOT-INV-002":  "identity-preservation.v1"
+	"BDD-BOOT-ADV-002":  "identity-match.v1"
+	"BDD-BOOT-ADV-003":  "identity-match.v1"
+	"BDD-BOOT-POS-006":  "subject-exit.v1"
+	"BDD-BOOT-NEG-007":  "subject-exit.v1"
+	"BDD-BOOT-POS-007":  "subject-exit.v1"
+	"BDD-BOOT-NEG-008":  "identity-match.v1"
+}
+
+scenarioExecutionManifest: {
+	for scenarioID, scenario in scenarioManifest {
+		let id = scenarioID
+		(id): #ScenarioExecutionDeclaration & {
+			scenarioID:         id
+			executorProtocol:   _executorProtocolByScenario[id]
+			evaluationProtocol: _evaluationProtocolByScenario[id]
+			executionBoundary:  "python-observe"
+			evaluationBoundary: "cue-evaluate"
+			fixturePath:        "\(scenario.fixture.root)/\(scenario.fixture.path)/fixture.json"
+		}
+	}
+}
+
+workbookScenarioManifest: close({
+	schema:    "factory.bdd-workbook-scenario-manifest.v1"
+	scenarios: scenarioExecutionManifest
+})
+
 acceptanceCoverage: {
 	"UV-01-A1": ["BDD-BOOT-POS-001", "BDD-BOOT-NEG-001"]
 	"UV-02-A1": ["BDD-BOOT-POS-002", "BDD-BOOT-NEG-002"]
@@ -123,10 +192,89 @@ bootstrapWorkflow: #ValidationWorkflow & {
 	}
 }
 
-_dependencyOrderFailures: [for _, node in bootstrapWorkflow.nodes for dep in node.dependsOn if !(bootstrapWorkflow.nodes[dep].index < node.index) {node: node.id, dependency: dep}]
-_productionOrderFailures: [for _, node in bootstrapWorkflow.nodes for artifact in node.consumes if len([for _, producer in bootstrapWorkflow.nodes if list.Contains(producer.produces, artifact) && producer.index < node.index {producer.id}]) == 0 {node: node.id, artifact: artifact}]
-_scenarioExecutionFailures: [for id, _ in scenarioManifest if !list.Contains(bootstrapWorkflow.nodes["fixtures.execute"].scenarioIDs, id) {id}]
-_terminalDependents: [for _, node in bootstrapWorkflow.nodes if list.Contains(node.dependsOn, bootstrapWorkflow.terminalNode) {node.id}]
+artifactRole: {
+	"requirements-source":           "observation"
+	"workbook-identity":             "derived"
+	"locked-environment-identity":   "observation"
+	"bootstrap-contract-validation": "derived"
+	"positive-fixture-results":      "observation"
+	"negative-fixture-results":      "observation"
+	"workflow-refinement-result":    "derived"
+	"scenario-coverage-result":      "derived"
+	"bounded-provisional-admission": "derived"
+	"self-conformance-result":       "observation"
+	"self-conformance-admission":    "derived"
+	"provisional-retirement-result": "derived"
+	"implementation-unit-admission": "derived"
+}
+
+#WorkflowRefinementResult: close({
+	nodeIdentitiesMatch:              bool
+	nodeIndexesUnique:                bool
+	dependencyReferencesResolve:      bool
+	dependencyOrderPreserved:         bool
+	artifactReferencesResolve:        bool
+	productionBeforeConsumption:      bool
+	everyScenarioAssignedExactlyOnce: bool
+	unitAdmissionTerminal:            bool
+	pythonProducesObservationsOnly:   bool
+})
+
+#WorkflowRefinementEvaluation: {
+	Workflow: #ValidationWorkflow
+	ArtifactRole: [#NonEmptyString]: "observation" | "derived"
+	ScenarioIDs: [...#ScenarioID]
+
+	_workflow:     Workflow
+	_artifactRole: ArtifactRole
+	_scenarioIDs:  ScenarioIDs
+	_workflowNodeIDs: [for nodeID, _ in _workflow.nodes {nodeID}]
+	_artifactIDs: [for artifactID, _ in _artifactRole {artifactID}]
+
+	_nodeIdentityFailures: [for nodeID, node in _workflow.nodes if node.id != nodeID {nodeID}]
+	_duplicateIndexFailures: [for leftID, left in _workflow.nodes for rightID, right in _workflow.nodes
+		if leftID < rightID && left.index == right.index {left: leftID, right: rightID, index: left.index}]
+	_dependencyReferenceFailures: [for _, node in _workflow.nodes for dependency in node.dependsOn
+		if !list.Contains(_workflowNodeIDs, dependency) {node: node.id, dependency: dependency}]
+	_dependencyOrderFailures: [for _, node in _workflow.nodes for dependency in node.dependsOn if len([
+		for dependencyID, dependencyNode in _workflow.nodes
+		if dependencyID == dependency && dependencyNode.index < node.index {dependencyID}
+	]) != 1 {node: node.id, dependency: dependency}]
+	_artifactReferenceFailures: [for _, node in _workflow.nodes for artifact in list.Concat([node.consumes, node.produces])
+		if !list.Contains(_artifactIDs, artifact) {node: node.id, artifact: artifact}]
+	_productionFailures: [for _, node in _workflow.nodes for artifact in node.consumes if len([
+		for _, producer in _workflow.nodes if list.Contains(producer.produces, artifact) && producer.index < node.index {producer.id}
+	]) != 1 {node: node.id, artifact: artifact}]
+	_scenarioAssignmentFailures: [for scenarioID in _scenarioIDs if len([
+		for _, node in _workflow.nodes if list.Contains(node.scenarioIDs, scenarioID) {node.id}
+	]) != 1 {scenarioID}]
+	_unknownScenarioAssignments: [for _, node in _workflow.nodes for scenarioID in node.scenarioIDs
+		if !list.Contains(_scenarioIDs, scenarioID) {node: node.id, scenarioID: scenarioID}]
+	_terminalNodeFailures: [for nodeID, node in _workflow.nodes
+		if (nodeID == _workflow.terminalNode) != node.terminal {nodeID}]
+	_terminalDependents: [for _, node in _workflow.nodes if list.Contains(node.dependsOn, _workflow.terminalNode) {node.id}]
+	_pythonDerivedArtifacts: [for _, node in _workflow.nodes if node.boundary == "marimo-python"
+		for artifact in node.produces if list.Contains(_artifactIDs, artifact) && _artifactRole[artifact] != "observation" {artifact}]
+
+	Result: #WorkflowRefinementResult & {
+		nodeIdentitiesMatch:              len(_nodeIdentityFailures) == 0
+		nodeIndexesUnique:                len(_duplicateIndexFailures) == 0
+		dependencyReferencesResolve:      len(_dependencyReferenceFailures) == 0
+		dependencyOrderPreserved:         len(_dependencyOrderFailures) == 0
+		artifactReferencesResolve:        len(_artifactReferenceFailures) == 0
+		productionBeforeConsumption:      len(_productionFailures) == 0
+		everyScenarioAssignedExactlyOnce: len(_scenarioAssignmentFailures) == 0 && len(_unknownScenarioAssignments) == 0
+		unitAdmissionTerminal:            len(_terminalNodeFailures) == 0 && len(_terminalDependents) == 0
+		pythonProducesObservationsOnly:   len(_pythonDerivedArtifacts) == 0
+	}
+}
+
+_workflowEvaluation: #WorkflowRefinementEvaluation & {
+	Workflow:     bootstrapWorkflow
+	ArtifactRole: artifactRole
+	ScenarioIDs:  _allScenarioIDs
+}
+
 _scenarioPolicyFailures: [for acceptanceID, policy in acceptancePolicies if len(policy.obligations)+len(policy.omissions) != len(_scenarioClasses) {acceptanceID}]
 
 _requirementMilestones: {
@@ -146,13 +294,17 @@ _requirementEdges: [
 _requirementOrderFailures: [for edge in _requirementEdges if !(_requirementMilestones[edge.before] <= _requirementMilestones[edge.after]) {edge}]
 
 workflowDeclarationCheck: close({
-	dependencyReferencesResolve: len(_dependencyOrderFailures) == 0
-	dependencyOrderPreserved:    len(_dependencyOrderFailures) == 0 && len(_requirementOrderFailures) == 0
-	productionBeforeConsumption: len(_productionOrderFailures) == 0
-	everyScenarioAssigned:       len(_scenarioExecutionFailures) == 0
-	allScenarioPoliciesComplete: len(_scenarioPolicyFailures) == 0
-	evidenceFollowsExecution:    bootstrapWorkflow.nodes["workflow.verify"].index > bootstrapWorkflow.nodes["fixtures.execute"].index
-	unitAdmissionTerminal:       bootstrapWorkflow.nodes[bootstrapWorkflow.terminalNode].terminal && len(_terminalDependents) == 0
+	nodeIdentitiesMatch:              _workflowEvaluation.Result.nodeIdentitiesMatch
+	nodeIndexesUnique:                _workflowEvaluation.Result.nodeIndexesUnique
+	dependencyReferencesResolve:      _workflowEvaluation.Result.dependencyReferencesResolve
+	dependencyOrderPreserved:         _workflowEvaluation.Result.dependencyOrderPreserved && len(_requirementOrderFailures) == 0
+	artifactReferencesResolve:        _workflowEvaluation.Result.artifactReferencesResolve
+	productionBeforeConsumption:      _workflowEvaluation.Result.productionBeforeConsumption
+	everyScenarioAssignedExactlyOnce: _workflowEvaluation.Result.everyScenarioAssignedExactlyOnce
+	allScenarioPoliciesComplete:      len(_scenarioPolicyFailures) == 0
+	evidenceFollowsExecution:         bootstrapWorkflow.nodes["workflow.verify"].index > bootstrapWorkflow.nodes["fixtures.execute"].index
+	unitAdmissionTerminal:            _workflowEvaluation.Result.unitAdmissionTerminal
+	pythonProducesObservationsOnly:   _workflowEvaluation.Result.pythonProducesObservationsOnly
 })
 
 _unresolvedCommandNodes: [for step in commandProjection.steps if len([

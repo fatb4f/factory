@@ -64,6 +64,10 @@ commandProjection: close({
 				"--evidence-root", "$evidence_root",
 				"--execution-id", "$execution_id",
 				"--node", "project-lock.verify",
+				"--command-manifest", "$evidence_root/command-manifest.json",
+				"--command-manifest-digest", "$command_manifest_digest",
+				"--scenario-manifest", "$evidence_root/scenario-manifest.json",
+				"--scenario-manifest-digest", "$scenario_manifest_digest",
 			]
 			consumes: ["workbook-identity"]
 			produces: ["locked-environment-identity"]
@@ -89,6 +93,10 @@ commandProjection: close({
 				"--evidence-root", "$evidence_root",
 				"--execution-id", "$execution_id",
 				"--node", "fixtures.execute",
+				"--command-manifest", "$evidence_root/command-manifest.json",
+				"--command-manifest-digest", "$command_manifest_digest",
+				"--scenario-manifest", "$evidence_root/scenario-manifest.json",
+				"--scenario-manifest-digest", "$scenario_manifest_digest",
 			]
 			consumes: ["locked-environment-identity", "bootstrap-contract-validation"]
 			produces: ["positive-fixture-results", "negative-fixture-results"]
@@ -122,6 +130,10 @@ commandProjection: close({
 				"--evidence-root", "$evidence_root",
 				"--execution-id", "$execution_id",
 				"--node", "self-conformance.execute",
+				"--command-manifest", "$evidence_root/command-manifest.json",
+				"--command-manifest-digest", "$command_manifest_digest",
+				"--scenario-manifest", "$evidence_root/scenario-manifest.json",
+				"--scenario-manifest-digest", "$scenario_manifest_digest",
 			]
 			consumes: ["bounded-provisional-admission"]
 			produces: ["self-conformance-result"]
@@ -156,4 +168,35 @@ commandProjection: close({
 		requiredJSONValue:        "true"
 		shellExitAloneSufficient: false
 	})
+	manifestExports: close({
+		command: ["cue", "export", "./marimo/workflows/bdd/.kb", "-e", "workbookCommandManifest", "--out", "json"]
+		scenario: ["cue", "export", "./marimo/workflows/bdd/.kb", "-e", "workbookScenarioManifest", "--out", "json"]
+	})
+})
+
+workbookCommandManifest: close({
+	schema: "factory.bdd-workbook-command-manifest.v1"
+	nodes: {
+		for _, step in commandProjection.steps if step.boundary == "marimo-python" {
+			(step.workflowNode): close({
+				consumes: step.consumes
+				produces: step.produces
+			})
+		}
+	}
+})
+
+validationTargets: close({
+	"workbook.protocol": close({
+		nodes: ["project-lock.verify"]
+		assertions: [
+			"closed CLI",
+			"external evidence-root ownership",
+			"manifest-bound dispatch",
+			"raw observation closure",
+			"claimant field rejection",
+		]
+	})
+	"fixtures.protocol": close({nodes: ["fixtures.execute"]})
+	full: close({terminalNode: "unit.admit"})
 })

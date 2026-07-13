@@ -3,6 +3,9 @@ package bdd
 _workflowDeclarationCheck: workflowDeclarationCheck
 _acceptancePolicies:       acceptancePolicies
 _commandRefinement:        commandProjectionRefinement
+_workbookCommandManifest:  workbookCommandManifest
+_workbookScenarioManifest: workbookScenarioManifest
+_validationTargets:        validationTargets
 
 contractsOutput: close({
 	schema:               "factory.bdd-contracts-output.v1"
@@ -22,7 +25,10 @@ contractsOutput: close({
 			schema:     "factory.bdd-run-summary.v1"
 			derivation: "cue-derived-from-closed-raw-observation-ingress"
 		})
-		command: commandProjection
+		command:                  commandProjection
+		workbookCommandManifest:  _workbookCommandManifest
+		workbookScenarioManifest: _workbookScenarioManifest
+		validationTargets:        _validationTargets
 	})
 	deferredClaims: [
 		"fixture execution",
