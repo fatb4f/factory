@@ -14,7 +14,10 @@ import (
 	"cuelang.org/go/cue/cuecontext"
 )
 
-const protocol = "cue-workbook/v0"
+const (
+	protocol          = "cue-workbook/v0"
+	cueEngineRevision = "806821e40fae070318600a264d311517e596353b"
+)
 
 type Limits struct {
 	TimeoutMS      int `json:"timeout_ms"`
@@ -266,6 +269,7 @@ func baseResponse(requestID string, started time.Time) Response {
 			"id":                 "go-runner",
 			"go_version":         runtime.Version(),
 			"cue_module_version": cueModuleVersion(),
+			"engine_revision":    cueEngineRevision,
 		},
 		Stages: map[string]string{}, Facts: map[string]any{}, Diagnostics: []Diagnostic{},
 		Metrics: map[string]any{"started_unix_ns": started.UnixNano()},
