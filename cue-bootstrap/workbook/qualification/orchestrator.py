@@ -119,11 +119,31 @@ def run_process(
 
 
 def run_cue_py(request: ProbeRequest) -> ProcessObservation:
+    workbook = Path(__file__).resolve().parents[1]
+    cue_py = workbook / ".deps" / "cue-py"
+    libcue = workbook / ".deps" / "libcue"
+    env: dict[str, str] = {}
+    if cue_py.exists():
+        env["PYTHONPATH"] = (
+            str(cue_py) + os.pathsep + os.environ.get("PYTHONPATH", "")
+        )
+    if libcue.exists():
+        if sys.platform == "darwin":
+            env["DYLD_LIBRARY_PATH"] = (
+                str(libcue) + os.pathsep + os.environ.get("DYLD_LIBRARY_PATH", "")
+            )
+        elif sys.platform == "win32":
+            env["PATH"] = str(libcue) + os.pathsep + os.environ.get("PATH", "")
+        else:
+            env["LD_LIBRARY_PATH"] = (
+                str(libcue) + os.pathsep + os.environ.get("LD_LIBRARY_PATH", "")
+            )
     return run_process(
         request,
         [sys.executable, "-m", "qualification.worker"],
         backend_id="cue-py-worker",
-        cwd=Path(__file__).resolve().parents[1],
+        cwd=workbook,
+        env=env,
     )
 
 
