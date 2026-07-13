@@ -1,0 +1,10 @@
+workbook/.venv/
+workbook/.deps/
+workbook/.marimo/
+workbook/__pycache__/
+workbook/qualification/__pycache__/
+runner/bin/
+*.pyc
+*.so
+*.dylib
+*.dll

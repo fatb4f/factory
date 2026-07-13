@@ -1,0 +1,30 @@
+# Project-local Codex configuration for issue #109.
+# Every Python MCP server is launched through the locked workbook project.
+
+[mcp_servers.cue_lsp]
+command = "uv"
+args = [
+  "run", "--project", "workbook", "--locked", "--",
+  "python", "-m", "qualification.mcp_lsp",
+  "--language", "cue", "--", "cue", "lsp"
+]
+cwd = "."
+enabled = true
+required = true
+startup_timeout_sec = 20
+tool_timeout_sec = 30
+supports_parallel_tool_calls = false
+
+[mcp_servers.gopls]
+command = "uv"
+args = [
+  "run", "--project", "workbook", "--locked", "--",
+  "python", "-m", "qualification.mcp_lsp",
+  "--language", "go", "--", "gopls"
+]
+cwd = "."
+enabled = true
+required = true
+startup_timeout_sec = 20
+tool_timeout_sec = 30
+supports_parallel_tool_calls = false
