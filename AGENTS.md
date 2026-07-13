@@ -1,671 +1,432 @@
-
 # AGENTS.md
 
 Implementation prompt: [prompt.txt](prompt.txt)
 
-## Upstream issue transport
-
-Issue #104 is the durable cross-session implementation handoff. Work resumes on
-its GitHub-linked issue branch by reading this file, `prompt.txt`, the online
-issues, the working tree, and validated workflow evidence. A user may therefore
-request continuation without pasting either issue body into `UserPromptSubmit`.
-
-At the end of a session, update the online #104 issue with durable progress and
-continuation state before regenerating the offline issue transport. Regenerate
-#103 only when its upstream revision changes. Capture both issues as structured
-JSON in the current execution's declared transient evidence root, using
-`requirements-source.json`; include repository, issue number, URL, update time,
-body, and body digest. Verify #104's pinned #103 revision and digests locally
-before consuming subordinate declarations.
-
-The online issues remain architectural authority. The offline JSON is
-machine-local, transient transport evidence: do not commit it, disclose it as
-repository authority, or place it outside
-`${XDG_RUNTIME_DIR:-/tmp}/factory-bdd/<execution-id>/`.
-
 ## Scope
 
-This directory owns Factory’s Marimo execution surfaces and their integration with the repository-root `.kb` control plane.
-
-The admitted Python implementation surfaces are:
-
-```text
-marimo/profiles/context-resolver/context_resolver.py
-marimo/workflows/bdd/validate_implementation_unit.py
-```
-
-Their responsibilities are distinct:
+This branch implements issue #106: the executable CUE kernel–probe–eval skill
+package rooted at:
 
 ```text
-context_resolver.py
-    legacy inline-managed UserPromptSubmit resolver
-    preserved until the root-.kb resolver migration passes RM-08
-
-validate_implementation_unit.py
-    project-managed BDD execution surface
-    validates implementation units and produces transient evidence
+.codex/skills/cue/
 ```
 
-Do not add additional Python runtimes, adapters, generators, hook scripts, or workflow engines without first adding the corresponding architectural requirement to issue #103.
-
-Python implementation must remain inside admitted Marimo workbooks.
-
----
-
-## Authority model
+The admitted P0 implementation surfaces are:
 
 ```text
-Issue #103
-    canonical architectural requirements,
-    acceptance criteria, and dependency topology
-
-root <repo>/.kb
-    canonical repository identity,
-    graph catalog, registries, views, bindings,
-    validation declarations, and KG disclosure
-
-versioned BDD CUE contract
-    canonical scenario, workflow, fixture,
-    evidence, bootstrap, and admission semantics
-
-architecture KG
-    canonical decisions, references, derivations,
-    insights, provenance, and rejected or deferred alternatives
-
-Marimo workbooks
-    Python execution boundaries
-
-Pydantic and Hypothesis
-    transport and adversarial validation tools
-
-kg command
-    read-only projection and discovery interface
-
-just recipes and procedural skills
-    thin operator-facing wrappers
-
-generated evidence, reports, packets, caches, and environments
-    non-authoritative transient outputs
+.codex/skills/cue/SKILL.md
+.codex/skills/cue/agents/openai.yaml
+.codex/skills/cue/interface/**
+.codex/skills/cue/contracts/**
+.codex/skills/cue/runner/go.mod
+.codex/skills/cue/runner/go.sum
+.codex/skills/cue/runner/cmd/cueprobe/**
 ```
 
-No Marimo workbook, Python model, shell command, skill, issue comment, or generated report may become an independent source of architectural authority.
+Root `AGENTS.md` and `prompt.txt` are operator guidance for this implementation
+unit. They are not semantic authority.
 
----
+Do not add a Marimo workbook, Python adapter, cue-py/libcue adapter, custom CUE
+language server, or second P0 runner. Those surfaces are deferred by issue #106.
+
+## Authority and revision gate
+
+Use authority in this order:
+
+```text
+online fatb4f/factory issue #106
+    canonical requirements, acceptance criteria, and dependency topology
+
+skill-local CUE contracts
+    canonical kernel, package, probe, subject, observation, evaluator,
+    coverage, suite, and artifact semantics
+
+machine-readable skill-interface manifest
+    canonical procedural identifiers and command bindings
+
+Go cueprobe runner
+    admitted execution, subject-derivation, LSP-client, structural-gate,
+    skill-check, and raw-observation producer
+
+CUE CLI
+    structural formatting, unification, and concrete-surface gates
+
+CUE LSP
+    advisory authoring service
+
+SKILL.md
+    human procedural guidance linked to the machine-readable interface
+
+generated observations, evaluations, reports, and bundles
+    non-authoritative projections
+```
+
+Before implementation, fetch issue #106 and verify that the online body contains
+the marker `issue-106-requirements-matrix:v3`. At minimum it must contain
+`PR-09`, `RN-07`, `LS-03`, and `SK-05`, in addition to the complete preceding
+P0 dependency closure, and must identify `cueprobe`, rather than CUE CLI failure,
+as the P0 semantic observation channel. Stop if the online issue is stale,
+ambiguous, or internally inconsistent.
+
+The normative dependency graph is generated from the issue's `depends_on`
+fields. Never reconstruct dependency ranges or use the diagram in place of the
+requirement records.
 
 ## Core invariants
 
-1. Except for the sole UV/BD bootstrap unit declared by issue #104, read repository authority from `<repo>/.kb` before resolving subordinate resources. The bootstrap unit is bounded by its pinned #103 snapshot, bootstrap workbook decision, and minimal CUE validator.
-2. Follow only graphs, registries, views, bindings, and KG packages disclosed by the admitted root.
-3. Validate each CUE or graph boundary independently before consuming its export.
-4. Preserve the distinction between:
+1. The complete lattice meta kernel is migrated as executable CUE inside the
+   skill package and its consumers bind to its exported definitions.
+2. The kernel remains domain-neutral; runner, verdict, coverage, and artifact
+   vocabularies live above it.
+3. Probe specifications are generated from kernel operations and candidate
+   declarations, not arbitrary expected outcomes.
+4. Conflict fixtures contain two independently valid closed states.
+5. Schema-invalid ingress fixtures are a separate proof class.
+6. The runner derives the effective subject from actual loaded sources, build
+   inputs, selectors, and engine identity. A caller subject is expectation only.
+7. Pre-load and post-operation source digests must match. Source change suppresses
+   semantic facts.
+8. Exact CUE numbers use the bounded `PR-09` tagged coefficient/exponent
+   representation before RFC 8785 canonicalization.
+9. Raw observations contain facts only. They never contain claimant-supplied
+   verdict, satisfaction, coverage, success, or admission fields.
+10. Semantic bottom may be observed only after module loading, lookup, and the
+   declared operand preconditions succeed and the declared operation bottoms.
+11. CLI failure, timeout, protocol failure, and infrastructure failure never
+   prove semantic bottom.
+12. Structured `#ProbeSubject` equality is authoritative. Its SHA-256 digest is
+   a reproducibility projection, not the identity proof.
+13. CUE alone derives verdicts, permitted and required satisfaction, family and
+    candidate aggregation, coverage, and suite state.
+14. Structural gates and semantic probes are both required and remain distinct.
+15. LSP observations are advisory and cannot admit or reject the suite.
+16. Manifest, interface, probe, subject, observation, runner-request, and publication
+    ingress fail closed on unknown fields.
+17. The only P0 execution boundary is the source-controlled Go `cueprobe`
+    command with an explicit CUE Go API dependency closure.
+18. Subjects, probe specs, observations, evaluations, coverage, package gates,
+    LSP observations, and suite results remain separately exportable.
+19. The closed skill-interface manifest owns machine-readable procedural
+    identities; `SKILL.md` references them through bounded frontmatter.
+20. Static checks do not claim that an LLM obeyed prose at runtime.
 
-   * architectural requirement graphs;
-   * semantic knowledge graphs;
-   * materialization and validation DAGs;
-   * runtime execution state.
-5. Semantic graphs may contain cycles unless their contract explicitly defines a DAG.
-6. Validation and materialization workflows must be acyclic and preserve declared dependency ordering.
-7. Python may calculate or transport observations, but it may not assert them as admitted graph or repository facts.
-8. Externally computed topology remains untrusted evidence until validated through the applicable CUE/Apercue contract.
-9. Generated packets, evidence, observations, reports, and check state are transient projections, never authority.
-10. Admission is computed by CUE from concrete validator projections and admitted evidence.
-11. Workbooks and runners must not accept claimant-supplied validity or admission booleans.
-12. Every ordinary project-managed execution is bound to the admitted Factory `pyproject.toml` and `uv.lock`. The sole UV/BD bootstrap unit may use its candidate project and lock identities only after minimal-bootstrap verification and only through the bounded transition defined below.
-13. Compatibility aliases express replacement and must never be ranked as active semantic profiles.
-14. The mandatory repository view is selected before optional semantic profiles.
-15. Architectural decisions made during implementation must be captured as candidate KG records and later admitted through the architecture-KG workflow.
+## Implementation-unit protocol
 
----
+Issue #106 is a parent matrix, not an implementation plan. Before changing an
+implementation surface:
 
-## Python and uv policy
+1. Select the requirement IDs the unit directly satisfies.
+2. Compute their complete transitive local dependency closure from direct
+   `depends_on` edges.
+3. Cite every requirement and acceptance-criterion ID in scope.
+4. Declare a validation DAG that refines, but does not replace, the architectural
+   dependency order.
+5. Map every acceptance criterion to each required scenario class.
+6. Identify inputs, commands, fixtures, observations, evaluations, artifacts,
+   and exported evidence.
+7. Implement only nodes whose prerequisite evidence has validated.
+8. Require CUE-computed unit satisfaction; command success is evidence only.
 
-Factory intentionally uses a locked root `uv` project for project-managed Marimo workbooks.
+P1 `WB-*` and `CP-*` requirements must not enter a P0 unit without their full
+closure and explicit authorization.
 
-The root project files are:
+## Package boundary
 
-```text
-pyproject.toml
-uv.lock
-```
-
-They own:
-
-* supported Python constraints;
-* direct Python dependencies;
-* locked dependency resolution;
-* platform markers;
-* project and lockfile identity.
-
-### Project-managed BDD workbook
-
-The canonical BDD workbook is:
-
-```text
-marimo/workflows/bdd/validate_implementation_unit.py
-```
-
-It must:
-
-* use the root Factory `uv` project;
-* contain no PEP 723 inline dependency metadata;
-* run under locked and exact project execution;
-* receive provider and consumer repository coordinates explicitly;
-* emit evidence only through the declared transient evidence boundary.
-
-The following metadata is forbidden in the project-managed workbook:
-
-```text
-# /// script
-...
-# ///
-```
-
-Inline script metadata would bypass the surrounding Factory project and create a competing dependency authority.
-
-### Legacy resolver workbook
-
-The existing resolver remains:
+Implement a versioned, skill-local package with surfaces equivalent to:
 
 ```text
-marimo/profiles/context-resolver/context_resolver.py
+.codex/skills/cue/
+├── SKILL.md
+├── agents/openai.yaml
+├── interface/manifest.cue
+├── contracts/
+│   ├── cue.mod/module.cue
+│   ├── kernel/kernel.cue
+│   ├── package/manifest.cue
+│   ├── probe/spec.cue
+│   ├── subject/subject.cue
+│   ├── canonical/value.cue
+│   ├── observation/{probe,lsp}.cue
+│   ├── eval/{probe,family,candidate,coverage,suite}.cue
+│   ├── runner/protocol.cue
+│   ├── fixtures/{kernel,conflict,invalid-ingress,invalid-probe,invalid-observation,valid-observation}/
+│   └── candidates/{accepted,rejected}/
+└── runner/
+    ├── go.mod
+    ├── go.sum
+    └── cmd/cueprobe/main.go
 ```
 
-It may retain PEP 723 inline metadata only while it has explicit legacy migration status.
+The final split may differ only when the issue's requirement and artifact-role
+contracts still resolve deterministically and without role collisions.
 
-The active `UserPromptSubmit` hook must remain operational until its project-managed root-`.kb` replacement passes the migration-preservation requirement `RM-08`.
+## Kernel and fixture rules
 
-Do not:
+Migrate the complete domain-neutral lattice meta kernel from
+`~/src/lattice/meta/kernel.cue` into the skill-local CUE module. Preserve all
+exported definitions and proof surfaces required by `KR-01` through `KR-05`.
+Package and module adaptation is permitted, but selective reconstruction and an
+external runtime import from the lattice checkout are not.
 
-* remove the resolver’s inline metadata prematurely;
-* convert the resolver to project mode during BDD bootstrap;
-* replace the active hook before the migration gate passes;
-* treat the resolver workbook as the canonical BDD workbook.
+Candidate and fixture contracts must bind to the migrated kernel through CUE
+package imports or same-package definition references. They must use the
+appropriate exported state definitions, constructors, exact-key proofs,
+no-widening proof, and destructive conflict surface rather than reproduce
+kernel-shaped schemas. Package validation must prove every declared kernel
+selector resolves. Do not reimplement the kernel in Go or conjoin the entire
+system into a monolithic `#Kernel & ...` expression.
 
-### Execution
+Preserve:
 
-Project-managed workbook execution must use the admitted binding equivalent of:
+- closed ingress and guarded keyed maps;
+- local aliases for conjunct-provided fields;
+- shape/proof separation and hidden proof fields;
+- exact state and operation-reference key sets;
+- no-widening proofs;
+- destructive conflict proof through unification.
+
+Keep these fixture classes distinct:
+
+```text
+valid conflict fixture
+    authority and mutation validate independently
+    destructive unification bottoms
+
+schema-invalid ingress fixture
+    raw data is applied to an explicit target schema
+    rejection occurs before any conflict proof
+```
+
+Do not call malformed fields, invalid keys, dangling references, wrong generated
+roles, or incomplete required ingress a valid conflict fixture.
+
+## Probe and subject rules
+
+`#ProbeSpec` must be a closed discriminated operation contract. Each operation
+admits only its required operands and explicit module, package, value, and build
+coordinates.
+
+`#ProbeSubject` is a closed structured projection. Structured equality is the
+identity proof. Materialize defaults before comparison, normalize paths to
+repository- or module-relative POSIX paths, and exclude machine-local paths.
+
+Project exact CUE numbers into the bounded `#CanonicalSubjectValue` tagged
+coefficient/exponent representation before JSON serialization. Normalize only
+lists whose schema declares set semantics. The subject digest pipeline is:
+
+```text
+concrete closed #ProbeSubject
+→ exact-number projection to #CanonicalSubjectValue
+→ schema-declared set normalization
+→ UTF-8 RFC 8785 canonical JSON
+→ SHA-256
+```
+
+Treat the digest as a checked projection. Never replace structured equality
+with digest-only matching.
+
+## Go runner rules
+
+The sole P0 runner is `.codex/skills/cue/runner/cmd/cueprobe`.
+
+It may:
+
+- consume one closed runner request;
+- load only explicitly declared module, package, files, and values;
+- derive the effective subject from the actual module manifest, declared source
+  bytes, normalized build options, selector inputs, runner protocol, and CUE
+  semantic-engine version;
+- compare an optional caller `subjectExpectation` without allowing it to
+  override the derived subject;
+- hash every subject source and module file before load and after operation;
+- execute declared operations through the pinned official CUE Go API;
+- invoke only declared structural CUE CLI command templates;
+- act as the bounded JSON-RPC client for the verified `cue lsp` binding;
+- validate the bounded skill-interface references;
+- record stage-specific raw facts;
+- materialize closed observations atomically;
+- enforce declared path, deadline, and output-size bounds.
+
+It must not:
+
+- generate candidates, expected verdicts, evaluator policy, coverage, or
+  admission;
+- accept arbitrary command vectors or guess roots;
+- infer semantic results from diagnostic wording;
+- convert CLI or infrastructure failure into semantic bottom;
+- mutate candidate authority;
+- execute undeclared probes or read undeclared files.
+
+Any manifest, source, selector-input, or declared build-input change during
+execution emits `source-changed` and suppresses semantic facts.
+
+The admitted bounded subcommands are:
+
+```text
+cueprobe observe
+cueprobe lsp-observe
+cueprobe skill-check
+```
+
+Keep request decoding, module loading, build, lookup, operand validation,
+operation, concreteness, and projection stages independently observable.
+
+The runner's dedicated `go.mod` and `go.sum` own its Go and `cuelang.org/go`
+dependency closure. Do not borrow an ambient repository Go dependency or edit
+`go.sum` manually.
+
+## Evaluation rules
+
+CUE evaluators must be total for every admitted spec/observation pair. They
+derive identity validity, evidence completeness, exactly one verdict,
+diagnostic projections, and policy satisfaction.
+
+Require:
+
+- operation-specific proof rather than expected-outcome dispatch;
+- independent evidence completeness and exact cardinality;
+- permitted verdict checks for every scoped result;
+- `requiredAny` and, where declared, `requiredEach` witnesses;
+- exact candidate, family, probe, and structured-subject scoping;
+- complete kernel, candidate, fixture, gate, evaluator, and coverage proofs;
+- no claimant-provided suite or admission Boolean.
+
+## Structural gates and LSP
+
+Use explicit structural gates:
 
 ```bash
-uv run \
-  --project "$factory_provider_root" \
-  --locked \
-  --exact \
-  -- \
-  python "$factory_provider_root/marimo/workflows/bdd/validate_implementation_unit.py" \
-  --provider-root "$factory_provider_root" \
-  --repo-root "$consumer_root" \
-  --evidence-root "$evidence_root"
+cue fmt --check --files <declared-files>
+cue vet -c=false <declared-package>
+cue vet -c <declared-concrete-surface>
 ```
 
-The exact command is binding-owned.
-
-The contract-owned operator command allocates a unique execution ID and creates
-`$evidence_root` below `${XDG_RUNTIME_DIR:-/tmp}/factory-bdd/<execution-id>/`
-before invoking the workbook. A direct caller must perform the same allocation
-and pass the resulting absolute coordinate explicitly; the workbook must not
-invent or infer its evidence location.
-
-Use absolute paths or explicit root arguments. `--project` selects the project environment but does not establish repository path semantics by itself.
-
-Mutation and exact-sync fixtures must use a disposable environment:
-
-```bash
-UV_PROJECT_ENVIRONMENT="$temporary_environment"
-```
-
-Tests must never destructively synchronize an undeclared developer, consumer, or shared repository environment.
-
-`--locked` prevents lockfile changes.
-
-`--exact` removes undeclared environment packages.
-
-`--offline` is a separate cache-dependent property and must not be implied by locked execution.
-
----
-
-## BDD implementation-unit workflow
-
-The canonical BDD workflow is declared in CUE and, after the AK substrate is admitted, captured through admitted KG references. The sole bootstrap unit uses its pinned issue snapshot and bootstrap CUE decision directly; it does not claim nonexistent KG admission.
-
-The Marimo workbook executes only the nodes assigned to the Python boundary.
-
-The required sequence is:
-
-```text
-resolve normalized #103 requirement snapshot
-→ resolve implementation-unit declaration
-→ consume the CUE-exported complete local dependency closure
-→ query admitted KG workflow context when the AK substrate is available
-→ resolve returned references to authoritative CUE declarations
-→ vet and export the declared validation workflow
-→ validate acceptance-criterion scenario coverage
-→ execute assigned Marimo/Pydantic/Hypothesis scenarios
-→ write transient revision-bound evidence
-→ vet evidence through the declared CUE ingress
-→ compute implementation-unit admission in CUE
-→ verify the exported admission value is literally true
-```
-
-### Acceptance coverage
-
-Every directly satisfied acceptance criterion must be covered by at least one scenario.
-
-Coverage must reference stable acceptance-criterion IDs, not only requirement IDs.
-
-Scenario references must remain inside the implementation unit’s dependency closure.
-
-Prerequisite requirements already admitted by an earlier unit do not need their full scenario suites rerun. Their admission identity and snapshot coordinates must be verified.
-
-### Workflow refinement
-
-An implementation unit declares its validation DAG.
-
-The validator must prove:
-
-* every node reference resolves;
-* the workflow is acyclic;
-* requirement dependency order is preserved;
-* every scenario has an execution node;
-* required artifacts are produced before consumption;
-* evidence admission follows scenario execution;
-* unit admission is terminal;
-* no unrelated architectural ordering is introduced.
-
-The workbook must not invent alternate workflow nodes when the declared workflow is incomplete.
-
-Missing or invalid workflow projections fail closed.
-
-### Evidence identity
-
-Evidence must bind to:
-
-* issue #103 transport revision;
-* issue-body digest;
-* normalized requirement-snapshot schema and digest;
-* implementation-unit ID;
-* requirement and acceptance-criterion IDs;
-* repository revision;
-* clean or deterministic working-tree identity;
-* provider and consumer repository roots;
-* BDD contract digest;
-* workflow digest;
-* project metadata digest;
-* `uv.lock` digest;
-* workbook digest;
-* fixture digest;
-* runner protocol version;
-* scenario IDs;
-* execution platform and interpreter identity.
-
-Python runner success is evidence only.
-
-It is not admission.
-
----
-
-## BDD bootstrap exception
-
-Exactly one implementation unit may use provisional BDD admission:
-
-```text
-UV-01 UV-02 UV-03 UV-04
-BD-01 BD-02 BD-03 BD-04
-BD-05 BD-06 BD-07 BD-08
-```
-
-Its project and lock identities transition through these explicit states:
-
-```text
-candidate project/lock identity
-→ minimal-bootstrap verification
-→ bounded provisional use
-→ self-conformance
-→ admitted project/lock identity
-```
-
-Candidate identities may be used only by this bootstrap unit after the minimal
-validator has verified their declared metadata, lock consistency, and digests.
-They remain provisional evidence until self-conformance admission succeeds.
-Every ordinary unit requires already-admitted project and lock identities.
-
-The bootstrap sequence is:
-
-```text
-establish root pyproject.toml
-→ establish and verify uv.lock
-→ establish project-managed BDD workbook
-→ preserve legacy inline resolver
-→ vet/export minimal bootstrap contracts
-→ run positive and negative bootstrap fixtures
-→ compute bounded provisional admission
-→ execute canonical BDD suite against itself
-→ admit self-conformance evidence through CUE
-→ verify self-conformance admission == true
-→ retire provisional admission
-```
-
-The minimal bootstrap validator may prove only:
-
-* required packages close and export;
-* required definitions exist;
-* positive fixtures pass;
-* negative fixtures fail;
-* project and lockfile identity is valid;
-* locked/exact execution succeeds;
-* claimant-supplied validity booleans are rejected.
-
-It must not claim full BDD conformance.
-
-No later implementation unit may use provisional admission.
-
----
-
-## Architecture KG integration
-
-Architecture knowledge must be captured as typed records rather than unordered document facts.
-
-Applicable record classes include:
-
-```text
-decision
-reference
-derivation
-insight
-pattern
-rejected
-deferred
-superseded
-observation
-provenance
-```
-
-Do not encode every source paragraph as a decision.
-
-Use the classification flow:
-
-```text
-document, issue, comment, or implementation observation
-→ candidate claim
-→ typed classification
-→ deduplication and adjudication
-→ stable KG identity
-→ requirement and acceptance-ID linkage
-→ CUE validation
-→ admitted KG record
-```
-
-KG records may reference issue #103 requirements and acceptance criteria.
-
-They must not redefine the canonical requirement matrix.
-
-The `kg` command is read-only and may be used to:
-
-* discover the admitted BDD workflow;
-* resolve decision and reference IDs;
-* locate authoritative CUE packages;
-* export bounded workflow context;
-* retrieve rationale and rejected alternatives.
-
-The `kg` command must not:
-
-* compute admission;
-* mutate authority;
-* replace CUE validation;
-* execute workflow nodes;
-* supply pass or failure claims.
-
-A thin BDD skill may invoke `kg`, but it must follow returned references to their authoritative declarations and then run the declared CUE/Marimo workflow.
-
----
-
-## Root-.kb resolver architecture
-
-The target resolver flow is:
-
-```text
-locate <repo>/.kb
-→ export and validate root admission
-→ resolve only root-disclosed graph descriptors
-→ validate each child graph independently
-→ verify registry and runtime-binding identity
-→ select the mandatory repository view
-→ activate optional semantic profiles
-→ execute the verified runtime binding
-→ validate the generated packet
-→ classify the packet as transient and non-authoritative
-```
-
-The resolver must fail closed on:
-
-* missing root identity;
-* missing mandatory graph;
-* unresolved reference;
-* invalid package;
-* path escape;
-* missing mandatory view;
-* registry mismatch;
-* stale or invalid digest;
-* unsupported binding protocol;
-* unsupported platform;
-* ambiguous provider/consumer roots;
-* profile-only output without the mandatory repository view.
-
-Legacy `self`, `self/bootstrap`, and `self/turn` aliases are compatibility redirects only.
-
-Never rank them as semantic profiles.
-
----
-
-## Context-resolver preservation rules
-
-Until the root-`.kb` resolver migration is admitted:
-
-1. Preserve the direct `UserPromptSubmit` bridge.
-2. Preserve `app.run(defs={"workbook_request": ...})` compatibility where currently required.
-3. Preserve the active hook command and bounded packet behavior.
-4. Preserve legacy inline dependency metadata.
-5. Do not inject the BDD workbook into the hook path.
-6. Do not treat the existing resolver’s nested `.kb` as the future repository-root authority.
-7. Do not add later lifecycle events solely because their Codex event forms are documented.
-
-The resolver migration must be performed through the applicable `RM`, `RB`, `RS`, `EV`, and `HK` requirements.
-
----
-
-## KB and AK candidate development
-
-During the BDD bootstrap, candidate KB and AK work may proceed concurrently.
-
-Candidate artifacts are not authority.
-
-They must:
-
-* live under explicitly declared candidate roots;
-* carry candidate or provisional status;
-* remain excluded from root `.kb` disclosure;
-* remain excluded from admitted graph catalogs;
-* remain excluded from runtime bindings;
-* remain excluded from authoritative exports;
-* not satisfy downstream dependencies;
-* not be imported by UV or BD authority packages.
-
-Before the bootstrap issue closes, every candidate artifact must be:
-
-```text
-retained for a named later implementation unit
-superseded
-rejected
-or removed
-```
-
-Historical document-to-KG migration begins only after the architecture-KG substrate is admitted.
-
-New BD, KB, and AK decisions should still be captured immediately as candidate records to avoid reconstructing their rationale later.
-
----
-
-## Procedural skills and just recipes
-
-Skills and `just` recipes are procedural wrappers only.
-
-They may:
-
-* locate the implementation unit;
-* invoke `kg` read-only queries;
-* invoke CUE vet/export commands;
-* invoke the admitted Marimo workbook;
-* verify generated evidence;
-* verify the CUE-exported admission result.
-
-They must not contain copied:
-
-* CUE schemas;
-* requirement matrices;
-* acceptance criteria;
-* workflow-node definitions;
-* digest values;
-* registry inventories;
-* view definitions;
-* profile definitions;
-* admission logic.
-
-The desired operator flow is:
-
-```text
-skill
-→ just recipe
-→ kg read-only workflow projection
-→ CUE vet/export
-→ uv locked/exact Marimo execution
-→ CUE evidence admission
-→ literal true gate verification
-```
-
-A successful shell exit alone is not admission.
-
----
+`-c=false` proves structural unification without requiring concreteness.
+`-c` applies only to a declared concrete surface. Neither gate replaces semantic
+probes.
+
+Use `cueprobe lsp-observe` as the admitted bounded JSON-RPC client for the fixed,
+verified standard `cue lsp` binding. It initializes against explicit workspace
+and module coordinates, records server capabilities, sends `initialized`, opens
+declared documents with explicit versions, collects version-correlated
+diagnostics until declared quiescence or deadline, performs orderly shutdown,
+and emits one closed `#LSPObservation`. Retain unavailability, startup failure,
+protocol error, timeout, capabilities, diagnostics, and shutdown facts. LSP
+cleanliness or failure is never a semantic verdict or admission gate.
+
+## Static skill boundary
+
+The closed machine-readable skill-interface manifest owns the exact kernel and
+package IDs, runner binary and subcommands, LSP binding, structural gate
+templates, artifact-role IDs, stop conditions, file IDs, and single `SKILL.md`
+path. `SKILL.md` frontmatter references that manifest, and its prose routes users
+to those identifiers. It must not copy:
+
+- CUE schema bodies;
+- probe generators;
+- verdict or aggregation rules;
+- dependency matrices or validation DAGs;
+- alternative or fallback command implementations.
+
+`cueprobe skill-check` parses only the bounded YAML frontmatter needed to resolve
+the interface manifest, validates the manifest through CUE, and proves its exact
+command, package, artifact, and file identifiers resolve. General Markdown
+interpretation, broader prose duplication, fallback wording, and runtime LLM
+behavior remain review policy.
+
+## Artifacts and non-authority
+
+Keep the package and skill-interface manifests, kernel inventory, structured
+subjects, canonical subject values and digest projections, generated probes,
+raw observations, evaluations, coverage, suite state, package gates, and LSP
+observations as distinct artifact roles.
+
+Artifact IDs, ordering, canonicalization, and digests must be deterministic.
+Reject partial, duplicate, stale, or mixed-subject bundles. Export rejected,
+incomplete, and runner-failure results without hiding their state. Optional
+publication artifacts remain linked to the evaluated candidate and subject.
+
+Generated observations, evaluations, reports, and bundles are transient
+projections. Do not commit runtime output or treat it as authority.
 
 ## Change protocol
 
-When modifying the BDD surface:
+1. Verify the revised online issue #106 contract.
+2. Select a dependency-closed implementation unit.
+3. Update CUE contracts before adapters or procedural guidance.
+4. Add positive, negative, invariant, compatibility, and adversarial fixtures
+   required by the cited acceptance criteria.
+5. Update the Go runner only for admitted observation-production operations.
+6. Run structural gates and semantic probes independently.
+7. Vet raw observations through the closed CUE ingress.
+8. Export and inspect evaluation, coverage, suite, and artifact projections.
+9. Verify CUE-computed unit satisfaction is true.
+10. Run `cueprobe skill-check` against the closed interface manifest.
+11. Update `SKILL.md` last, using only stable admitted references.
 
-1. Resolve and verify the #103 requirement snapshot.
-2. Update CUE declarations and workflow contracts first.
-3. Update KG candidate or admitted records for architectural decisions.
-4. Update fixtures and acceptance-criterion coverage.
-5. Update the project-managed Marimo workbook only for Python-assigned workflow nodes.
-6. Regenerate transient evidence.
-7. Validate evidence through CUE.
-8. Verify the CUE-exported admission value is literally `true`.
-
-When modifying the resolver surface:
-
-1. Preserve the current hook path unless the migration unit explicitly replaces it.
-2. Update root and binding contracts before runtime behavior.
-3. Keep repository-view selection mandatory.
-4. Keep optional profiles subordinate to the repository view.
-5. Preserve packet non-authority.
-6. Validate migration compatibility through the golden `UserPromptSubmit` fixture.
-
-When changing Python dependencies:
-
-1. Update `pyproject.toml`.
-2. Regenerate `uv.lock`.
-3. Run `uv lock --check`.
-4. Verify project and lockfile digests.
-5. Run locked/exact execution in a disposable environment.
-6. Verify unsupported or stale environments fail closed.
-
----
+Make small, reversible changes. Do not edit generated, cache, vendor, runtime,
+secret, credential, or machine-local files.
 
 ## Validation
 
-Run the authoritative commands declared by the applicable BDD workflow and runtime binding.
-
-At minimum, validation must cover:
-
-```bash
-uv lock --check
-```
+Use coordinates exported by the admitted package manifest, skill-interface
+manifest, and runner protocol. Validate the migrated kernel package and every
+consuming package. At minimum, applicable units must run:
 
 ```bash
-cue vet <bdd-contract-package>
-cue export <bdd-contract-package> -e <bootstrap-or-unit-admission>
+cue fmt --check --files <declared-files>
+cue vet -c=false <declared-package>
+cue vet -c <declared-concrete-surface>
 ```
+
+For the Go runner:
 
 ```bash
-UV_PROJECT_ENVIRONMENT="$temporary_environment" \
-uv run \
-  --project "$factory_provider_root" \
-  --locked \
-  --exact \
-  -- \
-  python "$factory_provider_root/marimo/workflows/bdd/validate_implementation_unit.py" \
-  --provider-root "$factory_provider_root" \
-  --repo-root "$consumer_root" \
-  --evidence-root "$evidence_root"
+cd .codex/skills/cue/runner
+go mod verify
+go test -mod=readonly ./...
+go build -mod=readonly ./cmd/cueprobe
 ```
 
-For the preserved resolver:
+Run the applicable bounded command surfaces:
 
 ```bash
-cue vet ./marimo/profiles/context-resolver/.kb
-cue export ./marimo/profiles/context-resolver/.kb -e output --out json
+cueprobe observe --request <request> --output <probe-observation>
+cueprobe lsp-observe --request <request> --output <lsp-observation>
+cueprobe skill-check --skill <SKILL.md> --manifest <interface-manifest>
 ```
 
-```bash
-printf '%s\n' \
-  '{"hook_event_name":"UserPromptSubmit","prompt":"inspect context resolver"}' |
-  uv run --script \
-    marimo/profiles/context-resolver/context_resolver.py \
-    --codex-hook \
-    --repo-root "$PWD"
-```
-
-The exact BDD command must be exposed through the contract-owned command projection, optionally through a thin `just` recipe.
-
----
-
-## Admission conditions
-
-A change is admitted only when:
-
-* the normalized #103 requirement snapshot matches the implementation unit;
-* the complete dependency closure is valid;
-* every directly satisfied acceptance criterion has required scenario coverage;
-* the validation workflow is an admitted acyclic refinement;
-* all authoritative CUE boundaries validate independently;
-* project metadata and `uv.lock` are current and verified;
-* the project-managed BDD workbook contains no inline dependency metadata;
-* locked and exact execution succeeds in a disposable environment;
-* legacy resolver behavior remains intact unless its migration is admitted;
-* evidence is bound to the correct repository, workspace, fixture, workflow, project, lockfile, and contract identities;
-* claimant-supplied pass booleans are rejected;
-* CUE computes admission;
-* the exported admission result is literally `true`;
-* provisional admission is unavailable to ordinary units;
-* no Python implementation exists outside admitted Marimo workbooks;
-* candidate KB and AK artifacts remain visibly non-authoritative;
-* generated evidence and packets remain transient projections.
-
----
+Then execute the declared reference probes, validate every raw observation
+against the CUE ingress, export the probe/family/candidate/coverage/suite
+evaluations, and require the declared CUE satisfaction expression to be
+literally `true`.
 
 ## Forbidden changes
 
 Do not:
 
-* add standalone Python scripts as runtime or validation implementations;
-* create a second context resolver;
-* use the legacy resolver as the canonical BDD workbook;
-* remove resolver inline metadata before `RM-08`;
-* add inline dependency metadata to the project-managed BDD workbook;
-* edit `uv.lock` manually;
-* run destructive exact-sync fixtures against an undeclared shared environment;
-* reconstruct CUE/Apercue graph authority in Python;
-* make `kg`, Marimo, skills, `just`, or shell exit codes admission authority;
-* copy requirement matrices or CUE schemas into skills or workbooks;
-* treat semantic profiles as replacements for the mandatory repository view;
-* rank legacy `self` aliases as active profiles;
-* promote generated evidence, reports, packets, caches, or materialized plugin files to authority;
-* allow KB or AK candidates to satisfy dependencies before ordinary BDD admission;
-* introduce new architecture without updating issue #103 and the applicable KG records.
+- use CUE CLI exit status or diagnostics as semantic-bottom evidence;
+- place verdict, satisfaction, coverage, or admission logic in Go;
+- accept claimant conclusions at raw ingress;
+- conflate schema-invalid ingress with valid-state conflict fixtures;
+- parse CUE source or diagnostics to infer semantics;
+- match subjects by labels, diagnostic text, or digest alone;
+- accept a caller subject as the effective subject or emit semantic facts after
+  a detected source change;
+- import the lattice checkout as a runtime kernel dependency or reconstruct only
+  a kernel-shaped subset;
+- add a second P0 runner, Go adapter, Python adapter, or workbook;
+- introduce P1 Marimo or cue-py work during a P0 unit;
+- duplicate executable contracts or dependency topology in `SKILL.md`;
+- publish partial or mixed-subject bundles;
+- let generated artifacts become authority.
+
+## Final response schema
+
+```text
+Summary:
+- <what changed>
+
+Validation:
+- <command>: <pass/fail/blocked>
+```

@@ -1,134 +1,194 @@
-Implement https://github.com/fatb4f/factory/issues/104.
+Implement the revised P0 contract from:
 
-Treat the following sources as authority, in order:
+    https://github.com/fatb4f/factory/issues/106
 
-1. https://github.com/fatb4f/factory/issues/103
-2. https://github.com/fatb4f/factory/issues/104
-3. AGENTS.md
-4. Vetted CUE contracts created for the implementation unit
+The target is the executable kernel–probe–eval CUE skill package on branch
+`feat/cue-skill`, including the single admitted Go `cueprobe` runner. This file
+is execution guidance only; it does not replace issue #106 or vetted CUE
+contracts.
 
-Issue transport:
+Semantic authority:
 
-- Resume implementation on the GitHub-linked #104 issue branch. The user prompt
-  may simply request continuation; do not require issue bodies in
-  `UserPromptSubmit`.
-- Read durable continuation state from online issue #104, then inspect the
-  branch, working tree, and validated workflow evidence.
-- Acquire #103 and #104 as structured JSON once per required refresh and write
-  `requirements-source.json` only below the current execution's declared
-  `${XDG_RUNTIME_DIR:-/tmp}/factory-bdd/<execution-id>/` evidence root.
-- Record repository, issue number, URL, update time, body, and body digest.
-  Verify #104's pinned #103 transport identity and normalized snapshot locally.
-- At session end, update online #104 first and then regenerate its offline
-  transport. Regenerate #103 only when its upstream revision changes.
-- Treat the JSON as machine-local transient transport evidence. Never commit it
-  or treat it as architectural authority.
+1. Online issue #106 requirement and acceptance-criterion matrix.
+2. Vetted skill-local CUE contracts produced for the selected unit.
 
-Implementation unit:
+Implementation guidance:
 
-    kg://repository/factory/implementation-unit/uv-bd-bootstrap/v1
+1. AGENTS.md.
+2. prompt.txt.
 
-Use the workflow below as a transient Codex execution plan. It guides node
-selection and prompting but does not replace the issues, AGENTS.md, or CUE as
-architectural or admission authority.
+Migration input:
+
+- `fatb4f/lattice/meta/kernel.cue`.
+
+Preflight:
+
+- Fetch the online issue and require the marker
+  `issue-106-requirements-matrix:v3`, plus `PR-09`, `RN-07`, `LS-03`, and
+  `SK-05` with their complete transitive dependency closure.
+- Verify the issue identifies the CUE Go API runner—not CUE CLI failure—as the
+  semantic observation channel.
+- Inspect the current branch, working tree, existing skill files, CUE module
+  roots, and the complete lattice kernel reference. Migrate that complete kernel
+  into the skill-local module; do not use the lattice checkout at runtime.
+- Stop if the online issue is stale, a reference is unresolved, or the selected
+  requirements do not have a valid complete dependency closure.
+
+Implementation objective:
+
+```text
+skill-local executable kernel
+→ versioned package and closed ProbeSpec
+→ closed structured ProbeSubject
+→ closed machine-readable skill-interface manifest
+→ source-controlled Go cueprobe subject and observation adapter
+→ closed raw ProbeObservation
+→ CUE-derived probe/family/candidate/coverage/suite evaluation
+→ distinct structural CLI gates and advisory LSP observations
+→ deterministic complete semantic artifact bundle
+→ statically constrained thin SKILL.md
+```
+
+Implementation-unit procedure:
+
+1. Select the P0 requirement IDs to satisfy in the current unit.
+2. Compute their complete transitive closure from the issue's direct
+   `depends_on` edges.
+3. Record every requirement and acceptance-criterion ID in scope.
+4. Declare a validation DAG preserving the dependency order.
+5. Map every cited acceptance criterion to all required scenario classes.
+6. Identify authoritative inputs, implementation artifacts, commands,
+   fixtures, raw observations, CUE evaluations, and exported evidence.
+7. Execute only nodes whose prerequisites have validated evidence.
+
+Keep implementation within:
+
+```text
+.codex/skills/cue/SKILL.md
+.codex/skills/cue/agents/openai.yaml
+.codex/skills/cue/interface/**
+.codex/skills/cue/contracts/**
+.codex/skills/cue/runner/go.mod
+.codex/skills/cue/runner/go.sum
+.codex/skills/cue/runner/cmd/cueprobe/**
+```
+
+Do not add Marimo, Python, cue-py/libcue, a custom language server, a second Go
+runner, or unrelated repository architecture during P0.
 
 Execution rules:
 
-- Verify the pinned issue #103 transport revision, body digest, and normalized
-  bootstrap snapshot before consuming subordinate declarations.
-- Execute only nodes whose dependencies have validated evidence.
-- Independent runnable nodes may execute concurrently.
-- Stay within issue #104's authoritative artifact inventory, except for this
-  explicitly requested prompt.txt seed.
-- Update CUE declarations and workflow contracts before Python-assigned nodes.
-- Preserve the legacy context resolver, its inline metadata, and the active
-  UserPromptSubmit path.
-- Use disposable environments for locked/exact or mutation fixtures.
-- Treat generated prompts, reports, and evidence as transient projections.
-- Do not accept claimant-supplied validity or admission booleans.
-- Stop on an unresolved authority reference, invalid dependency, undeclared
-  mutation, failed validation, missing evidence, or non-true admission export.
-- CUE alone computes admission; shell and Python success are evidence only.
+- Update CUE contracts and fixtures before their Go or procedural consumers.
+- Bind candidate, fixture, probe, and evaluator contracts to the complete
+  migrated kernel through CUE package imports or same-package references. Do
+  not reproduce kernel-shaped schemas or reimplement kernel proofs in Go.
+- Generate probes from kernel operations and candidate declarations; do not
+  accept arbitrary expected-state harnesses.
+- Keep valid-state conflict fixtures separate from schema-invalid ingress.
+- Require `cueprobe` to derive the effective ProbeSubject from actual loaded
+  sources, module identity, normalized build options, selector inputs, runner
+  protocol, and CUE engine version. Treat `subjectExpectation` only as an
+  expectation and fail on mismatch.
+- Compare pre-load and post-operation digests for the module manifest, declared
+  sources, selector inputs, and build inputs. Emit `source-changed` and suppress
+  semantic facts on mutation.
+- Treat structured ProbeSubject equality as authoritative. Project exact CUE
+  numbers to the bounded `#CanonicalSubjectValue` tagged coefficient/exponent
+  representation before RFC 8785 serialization and SHA-256 projection.
+- Emit semantic bottom only from the structured CUE Go API channel after load,
+  lookup, and operand preconditions succeed.
+- Record CLI formatting and vet failures only as structural-gate observations.
+- Keep timeout, protocol, syntax, selector, package, and infrastructure failure
+  distinct from semantic bottom.
+- Keep the Go runner free of verdict, satisfaction, coverage, and admission
+  policy.
+- Reject unknown fields and claimant-provided conclusions at every external
+  ingress.
+- Produce bounded LSP observations through `cueprobe lsp-observe`; keep them
+  advisory and separately exportable.
+- Export rejected, incomplete, and runner-failure bundles without hiding their
+  state.
+- Do not allow generated observations, reports, or bundles to become authority.
+- Define the closed skill-interface manifest before updating `SKILL.md`.
+  Validate its bounded frontmatter reference and exact identifiers through
+  `cueprobe skill-check`; do not parse prose as architecture.
 
-Workflow DAG:
+Required fixture classes include:
 
-    snapshot.verify
-        -> workbook-identity.admit
-        -> project.create
+```text
+kernel positive
+valid-state conflict
+schema-invalid ingress
+probe boundary
+subject identity and digest projection
+canonical exact-number projection
+runner stage classification
+runner failure
+subject-expectation mismatch
+source-change detection
+observation boundary
+operation-specific evaluation
+permitted and required verdict aggregation
+coverage
+structural package gates
+bounded LSP client outcomes
+validator-of-validator
+accepted and categorized rejected candidates
+artifact bundle
+skill-interface reference validation
+```
 
-    project.create
-        -> lock.create
+Validation must use manifest-declared coordinates, validate both the migrated
+kernel package and its consuming packages, and keep structural gates separate
+from semantic probes. At minimum run the applicable forms of:
 
-    snapshot.verify + workbook-identity.admit
-        -> contracts.create
+```bash
+cue fmt --check --files <declared-files>
+cue vet -c=false <declared-package>
+cue vet -c <declared-concrete-surface>
+```
 
-    lock.create + contracts.create
-        -> workbook.create
+For the runner:
 
-    contracts.create
-        -> fixtures.create
+```bash
+cd .codex/skills/cue/runner
+go mod verify
+go test -mod=readonly ./...
+go build -mod=readonly ./cmd/cueprobe
+```
 
-    workbook.create + fixtures.create
-        -> bootstrap.execute
-        -> self-conformance.admit
-        -> provisional.retire
+Run only the closed declared command surfaces:
 
-Node objectives:
+```bash
+cueprobe observe --request <request> --output <probe-observation>
+cueprobe lsp-observe --request <request> --output <lsp-observation>
+cueprobe skill-check --skill <SKILL.md> --manifest <interface-manifest>
+```
 
-snapshot.verify
-    Resolve #103 and #104 from the current execution's structured issue
-    transport, then verify the pinned #103 transport and normalized bootstrap
-    snapshot. Refresh missing, stale, or unverifiable issue data from GitHub.
+Validate raw output against `#ProbeObservation` or `#LSPObservation`, replay
+probe facts through CUE evaluation, validate interface references through CUE,
+and run the required positive, negative, invariant, compatibility, and
+adversarial scenarios.
 
-workbook-identity.admit
-    Encode and validate the issue-selected bootstrap workbook identity.
+Completion for each unit requires:
 
-project.create
-    Replace the empty pyproject.toml placeholder with the canonical Factory
-    uv project.
+- its selected requirements include a verified complete dependency closure;
+- every cited acceptance criterion has complete scenario coverage;
+- package metadata, probe specs, subjects, requests, observations, and artifact
+  ingress are closed;
+- valid conflict fixtures and schema-invalid ingress fixtures prove their
+  distinct boundaries;
+- runner stage facts distinguish semantic bottom from every execution failure;
+- the runner-derived subject matches any supplied expectation and pre/post
+  source digests remain stable;
+- exact numbers round-trip through the bounded canonical subject value;
+- bounded LSP and skill-interface observations validate without becoming
+  semantic admission;
+- structural gates and semantic evaluation both pass independently;
+- accepted and rejected candidates behave as declared;
+- artifact bundles are deterministic, complete, and single-subject;
+- CUE computes unit satisfaction and the exported value is literally `true`;
+- no P1 adapter or workbook semantics enter the P0 implementation.
 
-lock.create
-    Generate uv.lock from the project and prove `uv lock --check` succeeds.
-
-contracts.create
-    Define the closed bootstrap, workflow, scenario, evidence, command, and
-    output contracts under marimo/workflows/bdd/.kb.
-
-workbook.create
-    Implement only Python-assigned workflow nodes in
-    marimo/workflows/bdd/validate_implementation_unit.py. Do not add PEP 723
-    metadata or admission logic.
-
-fixtures.create
-    Implement all positive, negative, invariant, compatibility, and
-    adversarial scenarios declared by issue #104.
-
-bootstrap.execute
-    Run locked and exact validation in disposable runtime state and admit the
-    resulting transient evidence through CUE.
-
-self-conformance.admit
-    Execute the canonical suite against this implementation unit and require
-    the CUE-exported self-conformance admission value to be literally true.
-
-provisional.retire
-    Prove provisional admission is retired and unavailable to later or
-    repeated implementation units. This is the terminal node.
-
-For each selected node, construct a bounded working prompt containing only:
-
-- implementation-unit and node identity;
-- applicable authority references;
-- requirement and acceptance-criterion IDs;
-- allowed artifacts and constraints;
-- required inputs and outputs;
-- exact validation commands;
-- required completion evidence.
-
-Execute the selected node, validate its evidence, and advance only through the
-declared DAG. The stable operator validation entrypoint must be:
-
-    just validate-bdd-bootstrap
-
-Completion requires every issue #104 admission condition, including literal
-true self-conformance admission and proof of provisional-admission retirement.
+Do not treat Go, CLI, LSP, or shell success as admission. CUE-derived
+satisfaction is the terminal gate.
