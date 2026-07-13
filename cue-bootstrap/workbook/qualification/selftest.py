@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import sys
-import tempfile
 from pathlib import Path
 from uuid import uuid4
 
@@ -28,7 +27,7 @@ def check_worker_protocol() -> None:
     workbook = Path(__file__).resolve().parents[1]
     observation = run_process(
         request,
-        [sys.executable, "-m", "qualification.worker"],
+        [sys.executable, "-m", "qualification.worker_target"],
         backend_id="cue-py-worker",
         cwd=workbook,
     )
