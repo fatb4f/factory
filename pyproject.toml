@@ -3,6 +3,7 @@ name = "factory"
 version = "0.0.0"
 requires-python = ">=3.11"
 dependencies = [
+    "cffi>=1.16,<3",
     "hypothesis>=6,<7",
     "marimo>=0.19,<1",
     "pydantic>=2,<3",
