@@ -140,7 +140,7 @@ def run_cue_py(request: ProbeRequest) -> ProcessObservation:
             )
     return run_process(
         request,
-        [sys.executable, "-m", "qualification.worker"],
+        [sys.executable, "-m", "qualification.worker_target"],
         backend_id="cue-py-worker",
         cwd=workbook,
         env=env,
