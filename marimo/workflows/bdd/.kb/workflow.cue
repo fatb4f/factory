@@ -154,3 +154,45 @@ workflowDeclarationCheck: close({
 	evidenceFollowsExecution:    bootstrapWorkflow.nodes["workflow.verify"].index > bootstrapWorkflow.nodes["fixtures.execute"].index
 	unitAdmissionTerminal:       bootstrapWorkflow.nodes[bootstrapWorkflow.terminalNode].terminal && len(_terminalDependents) == 0
 })
+
+_unresolvedCommandNodes: [for step in commandProjection.steps if len([
+	for nodeID, _ in bootstrapWorkflow.nodes if nodeID == step.workflowNode {nodeID}
+]) != 1 {step.workflowNode}]
+
+_commandCoverageFailures: [for nodeID, _ in bootstrapWorkflow.nodes if len([
+	for step in commandProjection.steps if step.workflowNode == nodeID {step.id}
+]) != 1 {nodeID}]
+
+_commandBoundaryFailures: [for step in commandProjection.steps if len([
+	for nodeID, node in bootstrapWorkflow.nodes if nodeID == step.workflowNode && node.boundary == step.boundary {nodeID}
+]) != 1 {step.workflowNode}]
+
+_commandConsumptionFailures: [for step in commandProjection.steps if len([
+	for nodeID, node in bootstrapWorkflow.nodes if nodeID == step.workflowNode && node.consumes == step.consumes {nodeID}
+]) != 1 {step.workflowNode}]
+
+_commandProductionFailures: [for step in commandProjection.steps if len([
+	for nodeID, node in bootstrapWorkflow.nodes if nodeID == step.workflowNode && node.produces == step.produces {nodeID}
+]) != 1 {step.workflowNode}]
+
+_commandOrderingFailures: [for commandIndex, step in commandProjection.steps
+	for nodeID, node in bootstrapWorkflow.nodes if nodeID == step.workflowNode
+	for dependency in node.dependsOn if len([
+		for dependencyIndex, dependencyStep in commandProjection.steps
+		if dependencyStep.workflowNode == dependency && dependencyIndex < commandIndex {dependencyStep.id}
+	]) != 1 {node: nodeID, dependency: dependency}]
+
+_finalCommandStep:     commandProjection.steps[len(commandProjection.steps)-1]
+_terminalWorkflowNode: bootstrapWorkflow.nodes[bootstrapWorkflow.terminalNode]
+
+commandProjectionRefinement: close({
+	everyCommandReferencesWorkflowNode: true & len(_unresolvedCommandNodes) == 0
+	everyWorkflowNodeProjectedOnce:     true & len(_commandCoverageFailures) == 0
+	commandBoundariesMatch:             true & len(_commandBoundaryFailures) == 0
+	commandConsumptionMatches:          true & len(_commandConsumptionFailures) == 0
+	commandProductionMatches:           true & len(_commandProductionFailures) == 0
+	commandOrderingPreservesWorkflow:   true & len(_commandOrderingFailures) == 0
+	finalCommandTargetsTerminalNode:    true & _finalCommandStep.workflowNode == bootstrapWorkflow.terminalNode
+	terminalProductIsUnitAdmission: true & _terminalWorkflowNode.produces == ["implementation-unit-admission"]
+	literalGateTargetsUnitAdmission: true & commandProjection.literalTrueGate.expression == "implementationUnitAdmission"
+})

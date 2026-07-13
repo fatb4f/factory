@@ -20,6 +20,42 @@ import "list"
 	uvVersion:                 #NonEmptyString
 })
 
+#ObservedArtifactIdentity: close({
+	id:     #NonEmptyString
+	digest: #Digest
+})
+
+#CapturedStream: close({
+	path:   #AbsolutePath
+	digest: #Digest
+})
+
+#RelevantEnvironmentIdentity: close({
+	providerRoot:         #AbsolutePath
+	consumerRoot:         #AbsolutePath
+	evidenceRoot:         #AbsolutePath
+	uvProjectEnvironment: #AbsolutePath
+	platform:             #ExecutionPlatform
+})
+
+#RawCommandObservation: close({
+	schema:       "factory.bdd-raw-command-observation.v1"
+	executionID:  #NonEmptyString
+	workflowNode: #NonEmptyString
+	argv: [...#NonEmptyString] & [_, ...]
+	exitCode:    int
+	startedAt:   #NonEmptyString
+	finishedAt:  #NonEmptyString
+	environment: #RelevantEnvironmentIdentity
+	stdout:      #CapturedStream
+	stderr:      #CapturedStream
+	consumedArtifacts: [...#ObservedArtifactIdentity]
+	producedArtifacts: [...#ObservedArtifactIdentity]
+	runnerProtocolVersion:   #NonEmptyString
+	workbookDigest:          #Digest
+	commandProjectionDigest: #Digest
+})
+
 #EvidenceIdentity: close({
 	implementationUnitID: _implementationUnitID
 	executionID:          #NonEmptyString
@@ -27,14 +63,15 @@ import "list"
 	requirementsSource:   #SourceIdentity
 	requirementIDs: [...#RequirementID] & [_, ...]
 	acceptanceIDs: [...#AcceptanceID] & [_, ...]
-	workspace:      #WorkspaceIdentity
-	contractDigest: #Digest
-	workflowDigest: #Digest
-	projectDigest:  #Digest
-	lockDigest:     #Digest
-	workbookDigest: #Digest
-	fixtureDigest:  #Digest
-	runnerProtocol: #NonEmptyString
+	workspace:               #WorkspaceIdentity
+	contractDigest:          #Digest
+	workflowDigest:          #Digest
+	projectDigest:           #Digest
+	lockDigest:              #Digest
+	workbookDigest:          #Digest
+	commandProjectionDigest: #Digest
+	fixtureDigest:           #Digest
+	runnerProtocol:          #NonEmptyString
 	scenarioIDs: [...#ScenarioID] & [_, ...]
 	platform: #ExecutionPlatform
 })
@@ -49,8 +86,10 @@ import "list"
 	"self-conformance-result" |
 	"provisional-retirement-result"
 
+#ObservationName: #NonEmptyString & !~"^(success|valid|complete|admitted|admission|canonicalReady)$"
+
 #EvidenceObservation: close({
-	name: #NonEmptyString
+	name: #ObservationName
 	value: string | int | bool | [...string]
 	source: #NonEmptyString
 })
@@ -84,8 +123,9 @@ evidenceFiles: {
 
 requiredEvidenceKinds: [for kind, _ in evidenceFiles {kind}]
 
-// Admission is reduced from concrete records by CUE. It is a definition for a
-// later evidence ingress, not a claim about the current working tree.
+// Evidence acceptance is reduced from concrete records by CUE. It is a
+// definition for a later ingress, not a claim about the current working tree
+// or final implementation-unit admission.
 #EvidenceAdmission: {
 	Input:    #EvidenceSet
 	Expected: #EvidenceIdentity
@@ -96,26 +136,38 @@ requiredEvidenceKinds: [for kind, _ in evidenceFiles {kind}]
 	_identityMismatches: [for record in Input.records if record.identity != Expected {record.kind}]
 	_executions: [for record in Input.records for execution in record.executions {execution}]
 	_scenarioFailures: [for scenarioID, scenario in Scenarios if len([for execution in _executions if execution.scenarioID == scenarioID && execution.outcome == scenario.fixture.expectation {execution.scenarioID}]) == 0 {scenarioID}]
-	_selfConformanceFailures: [for record in Input.records if record.kind == "self-conformance-result" && len([for observation in record.observations if observation.name == "admissionExport" && observation.value == "true" {observation.name}]) == 0 {record.kind}]
-	_retirementFailures: [for record in Input.records if record.kind == "provisional-retirement-result" && (len([for observation in record.observations if observation.name == "retiredUnit" && observation.value == _implementationUnitID {observation.name}]) == 0 || len([for observation in record.observations if observation.name == "repeatEligible" && observation.value == false {observation.name}]) == 0 || len([for observation in record.observations if observation.name == "laterUnitEligible" && observation.value == false {observation.name}]) == 0) {record.kind}]
 
-	requiredKindsPresent:         len(_missingKinds) == 0
-	identitiesMatch:              len(_identityMismatches) == 0
-	scenariosMatch:               len(_scenarioFailures) == 0
-	selfConformanceIsLiteralTrue: len(_selfConformanceFailures) == 0
-	provisionalAdmissionRetired:  len(_retirementFailures) == 0
-	computedAdmission:            requiredKindsPresent && identitiesMatch && scenariosMatch &&
-		selfConformanceIsLiteralTrue && provisionalAdmissionRetired
+	requiredKindsPresent:       len(_missingKinds) == 0
+	identitiesMatch:            len(_identityMismatches) == 0
+	scenariosMatch:             len(_scenarioFailures) == 0
+	computedEvidenceAcceptance: requiredKindsPresent && identitiesMatch && scenariosMatch
 }
 
+#DerivedNodeState: "admitted" | "blocked" | "failed"
+
+#DerivedRunSummary: close({
+	schema:              "factory.bdd-run-summary.v1"
+	executionID:         #NonEmptyString
+	requestedNode:       #NonEmptyString
+	derivedState:        #DerivedNodeState
+	exitCode:            int
+	evidenceRoot:        #AbsolutePath
+	changedPathsAllowed: bool
+	literalGate:         bool
+	nextNode?:           #NonEmptyString
+	progressProjection:  #AbsolutePath
+})
+
 evidenceIngressContract: close({
-	schema:  "factory.bdd-evidence.v1"
-	root:    "${XDG_RUNTIME_DIR:-/tmp}/factory-bdd/<execution-id>/"
-	records: evidenceFiles
+	schema:                  "factory.bdd-evidence.v1"
+	root:                    "${XDG_RUNTIME_DIR:-/tmp}/factory-bdd/<execution-id>/"
+	records:                 evidenceFiles
+	rawObservationSchema:    "factory.bdd-raw-command-observation.v1"
+	derivedRunSummarySchema: "factory.bdd-run-summary.v1"
 	classification: close({
 		generated: true
 		transient: true
 		authority: false
 	})
-	claimantFieldsRejected: ["valid", "admitted", "admission"]
+	claimantFieldsRejected: ["success", "valid", "complete", "admitted", "admission", "canonicalReady"]
 })

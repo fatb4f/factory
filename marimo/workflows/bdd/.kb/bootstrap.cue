@@ -75,6 +75,6 @@ bootstrapDeclaration: close({
 	initialState: #BootstrapState & {
 		implementationUnitID: _implementationUnitID
 		phase:                "candidate-identities"
-		provisionalEligible:  true
+		provisionalEligible:  false
 	}
 })
