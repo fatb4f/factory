@@ -478,6 +478,36 @@ Until the root-`.kb` resolver migration is admitted:
 
 The resolver migration must be performed through the applicable `RM`, `RB`, `RS`, `EV`, and `HK` requirements.
 
+### Codex context retrieval during bootstrap
+
+The interactive `UserPromptSubmit` hook is locally deactivated to avoid
+injecting the resolver's full legacy packet into every turn. This operator
+setting does not authorize removing or changing the preserved hook command,
+workbook ingress, or compatibility behavior required above.
+
+When repository context is needed and no hook packet is already available, run
+the workbook's manual prompt mode once and project only compact routing fields:
+
+```bash
+uv run --script \
+  marimo/profiles/context-resolver/context_resolver.py \
+  --prompt "<prompt>" \
+  --repo-root "$PWD" |
+jq '{
+  routes: [.implementation_plan[] | {
+    id, depends_on, fragments, checks, gates
+  }],
+  fragments: [.selected_fragments[] | {id, source, reason}],
+  checks,
+  gates,
+  unresolved_context
+}'
+```
+
+Do not emit or ingest the full materialized packet merely to recover routes.
+Do not rerun manual resolution when the current turn already contains a usable
+hook packet. The compact projection is transient routing context, not authority.
+
 ---
 
 ## KB and AK candidate development
