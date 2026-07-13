@@ -782,13 +782,55 @@ def _run_codex_hook(repo_root: Path) -> int:
     return 0
 
 
+def _run_prompt(repo_root: Path, prompt: str) -> int:
+    request = {
+        "schema": "factory.context-request.v0",
+        "event": "manual",
+        "prompt": prompt,
+        "repo_root": str(repo_root.resolve()),
+        "scope": {"boundaries": []},
+        "budget": {
+            "maxFragments": 12,
+            "maxSteps": 8,
+            "maxNodes": 48,
+            "maxTokens": 6000,
+        },
+    }
+    _outputs, definitions = app.run(
+        defs={
+            "workbook_request": request,
+            "validation_mode": False,
+        }
+    )
+    result = definitions.get("workbook_result")
+    if not isinstance(result, dict) or not result.get("admitted"):
+        if isinstance(result, dict):
+            raise RuntimeError(
+                "workbook context packet was not admitted: "
+                f"{_summarize_rejection(result)}"
+            )
+        raise RuntimeError("workbook context packet was not admitted")
+    json.dump(
+        result,
+        sys.stdout,
+        ensure_ascii=False,
+        separators=(",", ":"),
+    )
+    sys.stdout.write("\n")
+    return 0
+
+
 def _main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--codex-hook", action="store_true")
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--codex-hook", action="store_true")
+    mode.add_argument("--prompt")
     parser.add_argument("--repo-root", type=Path, default=Path.cwd())
     args, marimo_args = parser.parse_known_args()
     if args.codex_hook:
         return _run_codex_hook(args.repo_root)
+    if args.prompt is not None:
+        return _run_prompt(args.repo_root, args.prompt)
     sys.argv = [sys.argv[0], *marimo_args]
     app.run()
     return 0
