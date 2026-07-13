@@ -5,22 +5,30 @@ Implementation prompt: [prompt.txt](prompt.txt)
 
 ## Upstream issue transport
 
-Issue #104 is the durable cross-session implementation handoff. Work resumes on
-its GitHub-linked issue branch by reading this file, `prompt.txt`, the online
-issues, the working tree, and validated workflow evidence. A user may therefore
-request continuation without pasting either issue body into `UserPromptSubmit`.
+Issue #104 is the stable implementation-unit authority. Routine cross-session
+progress belongs in its single maintained comment marked
+`<!-- factory-progress:v1 -->`, not in the issue body. Work resumes on the
+GitHub-linked issue branch by reading this file, `prompt.txt`, the stable issue
+bodies, the designated progress comment, the working tree, and validated
+workflow evidence. A user may therefore request continuation without pasting
+issue content into `UserPromptSubmit`.
 
-At the end of a session, update the online #104 issue with durable progress and
-continuation state before regenerating the offline issue transport. Regenerate
-#103 only when its upstream revision changes. Capture both issues as structured
-JSON in the current execution's declared transient evidence root, using
-`requirements-source.json`; include repository, issue number, URL, update time,
-body, and body digest. Verify #104's pinned #103 revision and digests locally
-before consuming subordinate declarations.
+Treat authority and tracking as separate transports. The authority transport
+contains the issue body, explicit authority revision when declared, and body
+digest. The tracking transport contains the progress-comment ID, comment update
+time, current node, statuses, last stable commit, validations, blockers, and
+next action. GitHub issue `updatedAt` is not an authority revision because
+comment activity may change it.
 
-The online issues remain architectural authority. The offline JSON is
-machine-local, transient transport evidence: do not commit it, disclose it as
-repository authority, or place it outside
+At session end, edit the same progress comment instead of adding comments or
+changing the issue body. Change the #104 body only through an explicit authority
+revision. Regenerate authority transport only after an authority-body change;
+refresh tracking context after progress-comment changes. Regenerate #103 only
+when its upstream authority revision changes.
+
+Offline JSON, plans, and tracking projections are machine-local, transient
+context: do not commit them or disclose them as repository authority. Admission
+evidence remains confined to
 `${XDG_RUNTIME_DIR:-/tmp}/factory-bdd/<execution-id>/`.
 
 ## Scope

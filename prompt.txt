@@ -12,17 +12,22 @@ Issue transport:
 - Resume implementation on the GitHub-linked #104 issue branch. The user prompt
   may simply request continuation; do not require issue bodies in
   `UserPromptSubmit`.
-- Read durable continuation state from online issue #104, then inspect the
-  branch, working tree, and validated workflow evidence.
-- Acquire #103 and #104 as structured JSON once per required refresh and write
-  `requirements-source.json` only below the current execution's declared
-  `${XDG_RUNTIME_DIR:-/tmp}/factory-bdd/<execution-id>/` evidence root.
-- Record repository, issue number, URL, update time, body, and body digest.
-  Verify #104's pinned #103 transport identity and normalized snapshot locally.
-- At session end, update online #104 first and then regenerate its offline
-  transport. Regenerate #103 only when its upstream revision changes.
-- Treat the JSON as machine-local transient transport evidence. Never commit it
-  or treat it as architectural authority.
+- Read stable authority from issue #104's body and mutable continuation state
+  from its single comment marked `<!-- factory-progress:v1 -->`; then inspect
+  the branch, working tree, and validated workflow evidence.
+- Keep authority transport separate from tracking transport. Authority records
+  the issue body, explicit authority revision when declared, and body digest.
+  Tracking records the progress-comment ID and update time, node statuses,
+  current node, commit, validations, blockers, and next action.
+- Do not use GitHub issue `updatedAt` as an authority revision. Do not regenerate
+  authority transport for routine progress-comment edits.
+- At session end, edit the existing marked progress comment. Change the issue
+  body only through an explicit authority revision, and regenerate authority
+  transport only after such a change. Regenerate #103 only when its upstream
+  authority revision changes.
+- Treat offline JSON, plans, and tracking projections as machine-local transient
+  context. Never commit them or treat them as architectural authority. Keep
+  admission evidence under the declared runtime evidence root.
 
 Implementation unit:
 
