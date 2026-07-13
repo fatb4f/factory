@@ -58,10 +58,11 @@ manifest: #PackageManifest & {
 		{id: "evaluation", root: "eval", extensions: [".cue", ".json"]},
 		{id: "coverage", root: "eval", extensions: [".cue", ".json"]},
 		{id: "structural-gate", root: "gate", extensions: [".cue", ".json"]},
+		{id: "lattice-conformance", root: "lattice/conformance", extensions: [".cue"]},
 		{id: "artifact-bundle", root: "artifact", extensions: [".cue", ".json"]},
 	]
 	discovery: {
 		rootFiles: ["cue.mod/module.cue"]
 	}
-	requiredExports: ["probe-subject", "canonical-subject", "probe-spec", "probe-observation", "lsp-observation", "probe-evaluation", "family-evaluation", "candidate-evaluation", "coverage", "suite", "package-gates", "artifact-bundle"]
+	requiredExports: ["probe-subject", "canonical-subject", "probe-spec", "probe-observation", "lsp-observation", "probe-evaluation", "family-evaluation", "candidate-evaluation", "coverage", "suite", "package-gates", "lattice-conformance-report", "artifact-bundle"]
 }

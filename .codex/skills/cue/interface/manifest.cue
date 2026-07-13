@@ -24,14 +24,15 @@ package interface
 	artifactRoles: [...#Role] & [_, ...]
 	stopConditions: [...#ID] & [_, ...]
 	files: close({
-		"package-manifest":  "contracts/package/manifest.cue"
-		"runner-protocol":   "contracts/runner/protocol.cue"
-		"probe-contract":    "contracts/probe/spec.cue"
-		"subject-contract":  "contracts/subject/subject.cue"
-		"probe-observation": "contracts/observation/probe.cue"
-		"lsp-observation":   "contracts/observation/lsp.cue"
-		"suite-evaluator":   "contracts/eval/suite.cue"
-		"artifact-bundle":   "contracts/artifact/bundle.cue"
+		"package-manifest":           "contracts/package/manifest.cue"
+		"runner-protocol":            "contracts/runner/protocol.cue"
+		"probe-contract":             "contracts/probe/spec.cue"
+		"subject-contract":           "contracts/subject/subject.cue"
+		"probe-observation":          "contracts/observation/probe.cue"
+		"lsp-observation":            "contracts/observation/lsp.cue"
+		"suite-evaluator":            "contracts/eval/suite.cue"
+		"lattice-conformance-report": "contracts/lattice/conformance/report/report.cue"
+		"artifact-bundle":            "contracts/artifact/bundle.cue"
 	})
 })
 
@@ -47,6 +48,7 @@ manifest: #SkillInterface & {
 		{id: "evaluation", path: "contracts/eval"},
 		{id: "coverage", path: "contracts/eval"},
 		{id: "structural-gate", path: "contracts/gate"},
+		{id: "lattice-conformance", path: "contracts/lattice/conformance"},
 		{id: "artifact-bundle", path: "contracts/artifact"},
 	]
 	stopConditions: ["source-changed", "subject-mismatch", "protocol-error", "timeout", "infrastructure-failure", "stale-interface"]

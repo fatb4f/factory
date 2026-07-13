@@ -2,7 +2,8 @@ package catalog
 
 import (
 	"list"
-	upstream "github.com/fatb4f/factory/cue-lattice-conformance/upstream"
+	gatepkg "github.com/fatb4f/factory/cue-skill/gate"
+	upstream "github.com/fatb4f/factory/cue-skill/lattice/conformance/upstream"
 )
 
 #RequirementID: string & =~"^[A-Z]{2}-[0-9]{2}$"
@@ -20,11 +21,11 @@ import (
 })
 
 #RequirementRecord: close({
-	id:         #RequirementID
-	dependsOn:  [...#RequirementID]
+	id: #RequirementID
+	dependsOn: [...#RequirementID]
 	acceptance: #AcceptanceID
-	scenarios:  {[#Scenario]: true}
-	order:      int & >=0
+	scenarios: {[#Scenario]: true}
+	order: int & >=0
 })
 
 matrix: #MatrixSnapshot & {
@@ -53,9 +54,9 @@ directEvidence: close({
 
 validationPlan: close({
 	structural: [
-		"cue fmt --check --files upstream/*.cue catalog/*.cue report/*.cue",
-		"cue vet -c=false ./...",
-		"cue vet -c ./report",
+		"cue fmt --check --files lattice/conformance",
+		"cue vet -c=false ./lattice/conformance/...",
+		"cue vet -c ./lattice/conformance/report",
 	]
 	negative: [
 		"conjoin each upstream.negativeFixtures value with its declared target and require bottom",
@@ -67,6 +68,24 @@ validationPlan: close({
 		"evaluate report.sliceAdmission",
 	]
 })
+
+structuralGateEvaluation: gatepkg.#PackageGateEvaluation & {
+	observations: [
+		{
+			id:              "format", template: "cue-fmt-check", exitCode: 0
+			startedUnixNano: 0, elapsedNanos:    0, stdout:                 "", stderr: ""
+		},
+		{
+			id:              "vet-structural", template: "cue-vet-structural", exitCode: 0
+			startedUnixNano: 0, elapsedNanos:            0, stdout:                      "", stderr: ""
+		},
+		{
+			id:              "vet-concrete", template: "cue-vet-concrete", exitCode: 0
+			startedUnixNano: 0, elapsedNanos:          0, stdout:                    "", stderr: ""
+		},
+	]
+}
+structuralGatesComplete: structuralGateEvaluation.structuralComplete && structuralGateEvaluation.allSucceeded
 
 selectedIDs: list.SortStrings([for id, _ in requirements {id}])
 _dependencyProof: {
@@ -91,9 +110,10 @@ _directCoverageProof: {
 }
 
 closureComplete: selectedIDs == validationDAG && len(selectedIDs) == 4 &&
-	len(_dependencyProof) == 6 && len(_validationDAGProof) == 4
+			len(_dependencyProof) == 6 && len(_validationDAGProof) == 4
 directCoverageComplete: len(_directCoverageProof) == 10
 
 sliceComplete: upstream.authorityPinned && upstream.authorityFixtureSatisfaction &&
-	catalogComplete && catalogFixtureSatisfaction && closureComplete && directCoverageComplete
+	catalogComplete && catalogFixtureSatisfaction && closureComplete && directCoverageComplete &&
+		structuralGatesComplete
 sliceAdmission: sliceComplete

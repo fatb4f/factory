@@ -2,7 +2,7 @@ package catalog
 
 import (
 	"strings"
-	upstream "github.com/fatb4f/factory/cue-lattice-conformance/upstream"
+	upstream "github.com/fatb4f/factory/cue-skill/lattice/conformance/upstream"
 )
 
 #NonEmptyString: string & strings.MinRunes(1)
@@ -17,7 +17,7 @@ import (
 	"language-features-context" |
 	"cue-version-identity"
 
-#LocatorKind: "section" | "line-range" | "go-symbol" | "test-family" | "command-contract"
+#LocatorKind:  "section" | "line-range" | "go-symbol" | "test-family" | "command-contract"
 #AuthorityUse: "defines" | "constrains" | "corroborates" | "context"
 #ObservationMode:
 	"cue-language-expression" |
@@ -43,6 +43,24 @@ import (
 	locatorKind: #LocatorKind
 	locator:     #NonEmptyString
 	use:         #AuthorityUse
+
+	let artifactID = artifact
+	let sourceUse = use
+	let artifactRecord = upstream.authority.artifacts[artifactID]
+	let sourcePolicy = upstream.authority.boundary[artifactRecord.class]
+
+	if sourceUse == "defines" {
+		_definePolicy: sourcePolicy.mayDefineConcepts & true
+	}
+	if sourceUse == "constrains" {
+		_constrainPolicy: sourcePolicy.role & ("normative" | "supporting")
+	}
+	if sourceUse == "corroborates" {
+		_corroboratePolicy: sourcePolicy.role & "supporting"
+	}
+	if sourceUse == "context" {
+		_contextPolicy: sourcePolicy.role & "context-only"
+	}
 })
 
 #Applicability: close({
@@ -51,13 +69,13 @@ import (
 })
 
 #Concept: close({
-	id:                    #ConceptID
-	term:                  #NonEmptyString
-	statement:             #NonEmptyString
-	relations:             [...#NonEmptyString]
-	applicability:         #Applicability
-	observationModes:      [...#ObservationMode] & [_, ...]
-	sources:               [...#SourceReference] & [_, ...]
+	id:        #ConceptID
+	term:      #NonEmptyString
+	statement: #NonEmptyString
+	relations: [...#NonEmptyString]
+	applicability: #Applicability
+	observationModes: [...#ObservationMode] & [_, ...]
+	sources: [...#SourceReference] & [_, ...]
 	applicationVocabulary: false
 })
 
@@ -65,5 +83,5 @@ import (
 	id:                "cue-lattice-concept-catalog-v1"
 	authorityID:       "cue-upstream-authority-v1"
 	authorityRevision: upstream.#GitCommit
-	concepts:          {[#ConceptID]: #Concept}
+	concepts: {[#ConceptID]: #Concept}
 })
