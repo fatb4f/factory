@@ -5,8 +5,15 @@ import json
 import subprocess
 from pathlib import Path
 
-CUE_PY = ("https://github.com/cue-lang/cue-py", "81e6fb15247ed7050e5bd987db032f757e06c8f0")
-LIBCUE = ("https://github.com/cue-lang/libcue", "96d0572450429fa28d7a2345c04a8c47c85b47e4")
+CUE_PY = (
+    "https://github.com/cue-lang/cue-py",
+    "81e6fb15247ed7050e5bd987db032f757e06c8f0",
+)
+LIBCUE = (
+    "https://github.com/cue-lang/libcue",
+    "96d0572450429fa28d7a2345c04a8c47c85b47e4",
+)
+CUE_MODULE_VERSION = "v0.15.3"
 
 
 def run(*args: str, cwd: Path | None = None) -> None:
@@ -18,7 +25,9 @@ def checkout(target: Path, repository: str, commit: str) -> None:
         run("git", "clone", "--filter=blob:none", "--no-checkout", repository, str(target))
     run("git", "fetch", "--depth", "1", "origin", commit, cwd=target)
     run("git", "checkout", "--detach", commit, cwd=target)
-    observed = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=target, text=True).strip()
+    observed = subprocess.check_output(
+        ["git", "rev-parse", "HEAD"], cwd=target, text=True
+    ).strip()
     if observed != commit:
         raise RuntimeError(f"checkout identity mismatch for {target}: {observed}")
 
@@ -47,6 +56,7 @@ def main() -> int:
             "commit": LIBCUE[1],
             "library": library,
             "digest": digest(libcue / library),
+            "cue_module_version": CUE_MODULE_VERSION,
         },
     }
     (deps / "manifest.json").write_text(

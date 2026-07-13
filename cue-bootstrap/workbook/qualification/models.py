@@ -102,6 +102,7 @@ class BackendIdentity(BaseModel):
     id: str
     revision: str | None = None
     engine_revision: str | None = None
+    cue_module_version: str | None = None
     python_version: str | None = None
     go_version: str | None = None
     platform: str | None = None

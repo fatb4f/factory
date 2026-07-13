@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"runtime"
+	"runtime/debug"
 	"time"
 
 	"cuelang.org/go/cue"
@@ -62,7 +63,12 @@ func main() {
 		return
 	}
 	if req.Protocol != protocol || req.RequestID == "" {
-		writeProtocolError(req.RequestID, "validate envelope", errors.New("invalid protocol or request_id"), started)
+		writeProtocolError(
+			req.RequestID,
+			"validate envelope",
+			errors.New("invalid protocol or request_id"),
+			started,
+		)
 		return
 	}
 
@@ -164,7 +170,9 @@ func execute(req Request, started time.Time) Response {
 		if err := unified.Err(); err != nil {
 			resp.ExecutionState = "cue-rejection"
 			resp.Facts["semantic_bottom"] = true
-			resp.Diagnostics = append(resp.Diagnostics, Diagnostic{Phase: "unify", Raw: err.Error(), Message: err.Error(), Provenance: "native"})
+			resp.Diagnostics = append(resp.Diagnostics, Diagnostic{
+				Phase: "unify", Raw: err.Error(), Message: err.Error(), Provenance: "native",
+			})
 		} else {
 			resp.Facts["semantic_bottom"] = false
 		}
@@ -207,7 +215,9 @@ func execute(req Request, started time.Time) Response {
 		if err := general.Subsume(specific); err != nil {
 			resp.ExecutionState = "cue-rejection"
 			resp.Facts["subsumes"] = false
-			resp.Diagnostics = append(resp.Diagnostics, Diagnostic{Phase: "subsume", Raw: err.Error(), Message: err.Error(), Provenance: "native"})
+			resp.Diagnostics = append(resp.Diagnostics, Diagnostic{
+				Phase: "subsume", Raw: err.Error(), Message: err.Error(), Provenance: "native",
+			})
 		} else {
 			resp.Facts["subsumes"] = true
 		}
@@ -231,7 +241,10 @@ func execute(req Request, started time.Time) Response {
 
 	default:
 		resp.ExecutionState = "unsupported"
-		resp.Diagnostics = append(resp.Diagnostics, Diagnostic{Phase: "backend", Raw: "unsupported operation", Message: req.Operation, Provenance: "operation-boundary"})
+		resp.Diagnostics = append(resp.Diagnostics, Diagnostic{
+			Phase: "backend", Raw: "unsupported operation", Message: req.Operation,
+			Provenance: "operation-boundary",
+		})
 	}
 
 	return finish(resp, started)
@@ -249,8 +262,12 @@ func optionBool(payload map[string]any, name string) bool {
 func baseResponse(requestID string, started time.Time) Response {
 	return Response{
 		Protocol: protocol, RequestID: requestID, ExecutionState: "completed",
-		Backend: map[string]any{"id": "go-runner", "go_version": runtime.Version()},
-		Stages:  map[string]string{}, Facts: map[string]any{}, Diagnostics: []Diagnostic{},
+		Backend: map[string]any{
+			"id":                 "go-runner",
+			"go_version":         runtime.Version(),
+			"cue_module_version": cueModuleVersion(),
+		},
+		Stages: map[string]string{}, Facts: map[string]any{}, Diagnostics: []Diagnostic{},
 		Metrics: map[string]any{"started_unix_ns": started.UnixNano()},
 	}
 }
@@ -263,6 +280,21 @@ func finish(resp Response, started time.Time) Response {
 func writeProtocolError(requestID, phase string, err error, started time.Time) {
 	resp := baseResponse(requestID, started)
 	resp.ExecutionState = "protocol-error"
-	resp.Diagnostics = append(resp.Diagnostics, Diagnostic{Phase: phase, Raw: err.Error(), Message: err.Error(), Provenance: "operation-boundary"})
+	resp.Diagnostics = append(resp.Diagnostics, Diagnostic{
+		Phase: phase, Raw: err.Error(), Message: err.Error(), Provenance: "operation-boundary",
+	})
 	_ = json.NewEncoder(os.Stdout).Encode(finish(resp, started))
+}
+
+func cueModuleVersion() string {
+	info, ok := debug.ReadBuildInfo()
+	if !ok {
+		return "unknown"
+	}
+	for _, dependency := range info.Deps {
+		if dependency.Path == "cuelang.org/go" {
+			return dependency.Version
+		}
+	}
+	return "unknown"
 }

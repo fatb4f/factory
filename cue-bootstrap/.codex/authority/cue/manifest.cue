@@ -7,7 +7,7 @@ package authority
 
 cue: #GitObject & {
 	repository: "https://github.com/cue-lang/cue"
-	commit:     "806821e40fae070318600a264d311517e596353b"
+	commit:     "829b565633abb51541be4f8b7ad6d3372c689d2d"
 }
 
 cuePy: #GitObject & {
@@ -16,14 +16,16 @@ cuePy: #GitObject & {
 }
 
 libcue: #GitObject & {
-	repository: "https://github.com/cue-lang/libcue"
-	commit:     "96d0572450429fa28d7a2345c04a8c47c85b47e4"
+	repository:    "https://github.com/cue-lang/libcue"
+	commit:        "96d0572450429fa28d7a2345c04a8c47c85b47e4"
+	engineModule:  "cuelang.org/go"
+	engineVersion: "v0.15.3"
 }
 
 sources: {
 	languageSpec: {
 		path:       "doc/ref/spec.md"
-		gitBlobSHA: "6a6e6fd631d96e7025e0e16cc9b54eaa6a5baa6a"
+		gitBlobSHA: "846d5d8dae3d4eed96e649b0f8125661ace77c35"
 		role:       "normative"
 		sections: ["Values", "Unification", "Bounds"]
 	}

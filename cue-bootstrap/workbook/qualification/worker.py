@@ -24,6 +24,7 @@ from .protocol import decode_request
 
 CUE_PY_REVISION = "81e6fb15247ed7050e5bd987db032f757e06c8f0"
 LIBCUE_REVISION = "96d0572450429fa28d7a2345c04a8c47c85b47e4"
+CUE_MODULE_VERSION = "v0.15.3"
 
 
 def _native_paths() -> tuple[Path, Path]:
@@ -32,16 +33,9 @@ def _native_paths() -> tuple[Path, Path]:
 
 
 def _load_cue() -> Any:
-    cue_py, libcue = _native_paths()
+    cue_py, _ = _native_paths()
     if cue_py.exists():
         sys.path.insert(0, str(cue_py))
-    if libcue.exists():
-        if platform.system() == "Darwin":
-            os.environ["DYLD_LIBRARY_PATH"] = str(libcue) + os.pathsep + os.environ.get("DYLD_LIBRARY_PATH", "")
-        elif platform.system() == "Windows":
-            os.environ["PATH"] = str(libcue) + os.pathsep + os.environ.get("PATH", "")
-        else:
-            os.environ["LD_LIBRARY_PATH"] = str(libcue) + os.pathsep + os.environ.get("LD_LIBRARY_PATH", "")
     import cue  # type: ignore[import-not-found]
 
     return cue
@@ -112,11 +106,21 @@ def execute(request: ProbeRequest) -> ProcessObservation:
 
         elif request.operation is Operation.UNIFY:
             left = _lookup(
-                _compile(cue, ctx, payload["left_source"], payload.get("left_filename", "left.cue")),
+                _compile(
+                    cue,
+                    ctx,
+                    payload["left_source"],
+                    payload.get("left_filename", "left.cue"),
+                ),
                 payload.get("left_path"),
             )
             right = _lookup(
-                _compile(cue, ctx, payload["right_source"], payload.get("right_filename", "right.cue")),
+                _compile(
+                    cue,
+                    ctx,
+                    payload["right_source"],
+                    payload.get("right_filename", "right.cue"),
+                ),
                 payload.get("right_path"),
             )
             stages.update({"compile-left": "completed", "compile-right": "completed"})
@@ -145,11 +149,21 @@ def execute(request: ProbeRequest) -> ProcessObservation:
 
         elif request.operation is Operation.SUBSUME:
             general = _lookup(
-                _compile(cue, ctx, payload["general_source"], payload.get("general_filename", "general.cue")),
+                _compile(
+                    cue,
+                    ctx,
+                    payload["general_source"],
+                    payload.get("general_filename", "general.cue"),
+                ),
                 payload.get("general_path"),
             )
             specific = _lookup(
-                _compile(cue, ctx, payload["specific_source"], payload.get("specific_filename", "specific.cue")),
+                _compile(
+                    cue,
+                    ctx,
+                    payload["specific_source"],
+                    payload.get("specific_filename", "specific.cue"),
+                ),
                 payload.get("specific_path"),
             )
             stages.update({"compile-general": "completed", "compile-specific": "completed"})
@@ -183,12 +197,18 @@ def execute(request: ProbeRequest) -> ProcessObservation:
                 )
             )
 
-    except Exception as exc:  # CUE rejection at compile/validate and adapter failures are separated below.
+    except Exception as exc:
         raw = str(exc)
         cue_error = exc.__class__.__module__.startswith("cue")
         state = ExecutionState.CUE_REJECTION if cue_error else ExecutionState.BACKEND_ERROR
-        phase = "compile" if request.operation in {Operation.COMPILE, Operation.LOOKUP} else request.operation.value
-        diagnostics.append(_diagnostic(phase, exc, "native" if cue_error else "operation-boundary"))
+        phase = (
+            "compile"
+            if request.operation in {Operation.COMPILE, Operation.LOOKUP}
+            else request.operation.value
+        )
+        diagnostics.append(
+            _diagnostic(phase, exc, "native" if cue_error else "operation-boundary")
+        )
         if not cue_error:
             diagnostics.append(
                 CueDiagnostic(
@@ -207,6 +227,7 @@ def execute(request: ProbeRequest) -> ProcessObservation:
             id="cue-py-worker",
             revision=CUE_PY_REVISION,
             engine_revision=LIBCUE_REVISION,
+            cue_module_version=CUE_MODULE_VERSION,
             python_version=platform.python_version(),
             platform=platform.platform(),
         ),
@@ -231,7 +252,12 @@ def main() -> int:
         observation = ProcessObservation(
             request_id="unknown",
             execution_state=ExecutionState.PROTOCOL_ERROR,
-            backend=BackendIdentity(id="cue-py-worker", revision=CUE_PY_REVISION, engine_revision=LIBCUE_REVISION),
+            backend=BackendIdentity(
+                id="cue-py-worker",
+                revision=CUE_PY_REVISION,
+                engine_revision=LIBCUE_REVISION,
+                cue_module_version=CUE_MODULE_VERSION,
+            ),
             diagnostics=(
                 CueDiagnostic(
                     phase="transport",

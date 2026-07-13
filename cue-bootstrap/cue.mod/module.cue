@@ -1,4 +1,4 @@
 module: "github.com/fatb4f/cue-bootstrap"
 language: {
-	version: "v0.14.0"
+	version: "v0.15.3"
 }

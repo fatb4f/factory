@@ -4,7 +4,7 @@ traceability: {
 	pattern: "#BoundedInt"
 	authority: [{
 		repository: "https://github.com/cue-lang/cue"
-		commit:     "806821e40fae070318600a264d311517e596353b"
+		commit:     "829b565633abb51541be4f8b7ad6d3372c689d2d"
 		path:       "doc/ref/spec.md"
 		sections: ["Values", "Unification", "Bounds"]
 	}]
