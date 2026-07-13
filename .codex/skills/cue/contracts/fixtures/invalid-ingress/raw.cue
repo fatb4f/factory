@@ -1,5 +1,10 @@
 package invalidingress
 
+import kernel "github.com/fatb4f/factory/cue-skill/kernel"
+
+#ClosedStateSchema: kernel.#ClosedObligationState
+#ResourceSchema:    kernel.#Resource
+
 raw: {
 	unknownField: {id: "bad", resources: {}, operations: {}, gates: {}, witnesses: {}, surprise: true}
 	invalidKey: {id: "bad", resources: {"Not-Kebab": {id: "Not-Kebab"}}}

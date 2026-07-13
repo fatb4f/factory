@@ -185,7 +185,10 @@ import (
 	requiresWitnesses: list.SortStrings([for key, _ in operation.requiresWitnesses {key}])
 })
 
-#NoWideningProof: close({
+// This proves exact key identity followed by structural compatibility. It does
+// not prove directional CUE subsumption; that operation belongs to the admitted
+// Go API observation boundary.
+#ExactKeyCompatibilityProof: close({
 	authority: #ClosedObligationState
 	target:    #ClosedObligationState
 
@@ -212,6 +215,10 @@ import (
 	}
 	compatibility: authority & target
 })
+
+// Retained for the issue #106 KR-04 interface. Consumers that need directional
+// no-widening must additionally use the runner's CUE API observation.
+#NoWideningProof: #ExactKeyCompatibilityProof
 
 #NegativeFixtureSpec: close({
 	id:          #KebabIdentifier
