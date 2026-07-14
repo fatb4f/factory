@@ -1,6 +1,7 @@
 workbook/.venv/
 workbook/.deps/
 workbook/.marimo/
+workbook/cue_native/
 workbook/__pycache__/
 workbook/qualification/__pycache__/
 runner/bin/
@@ -8,3 +9,4 @@ runner/bin/
 *.so
 *.dylib
 *.dll
+*.pyd

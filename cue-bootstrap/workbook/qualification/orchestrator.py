@@ -84,6 +84,19 @@ def run_process(
         )
 
     stderr = completed.stderr.decode("utf-8", errors="replace")
+    if len(completed.stdout) > request.limits.max_output_bytes:
+        return _failure(
+            request,
+            state=ExecutionState.PROTOCOL_ERROR,
+            backend_id=backend_id,
+            message=(
+                "backend response exceeded max_output_bytes: "
+                f"{len(completed.stdout)} > {request.limits.max_output_bytes}"
+            ),
+            stderr=stderr,
+            started=started,
+            exit_code=completed.returncode,
+        )
     if completed.returncode != 0 and not completed.stdout.strip():
         return _failure(
             request,
@@ -118,30 +131,15 @@ def run_process(
     return observation.model_copy(update={"metrics": metrics, "stderr": stderr})
 
 
-def run_cue_py(request: ProbeRequest) -> ProcessObservation:
+def run_gopy_worker(request: ProbeRequest) -> ProcessObservation:
     workbook = Path(__file__).resolve().parents[1]
-    cue_py = workbook / ".deps" / "cue-py"
-    libcue = workbook / ".deps" / "libcue"
-    env: dict[str, str] = {}
-    if cue_py.exists():
-        env["PYTHONPATH"] = (
-            str(cue_py) + os.pathsep + os.environ.get("PYTHONPATH", "")
-        )
-    if libcue.exists():
-        if sys.platform == "darwin":
-            env["DYLD_LIBRARY_PATH"] = (
-                str(libcue) + os.pathsep + os.environ.get("DYLD_LIBRARY_PATH", "")
-            )
-        elif sys.platform == "win32":
-            env["PATH"] = str(libcue) + os.pathsep + os.environ.get("PATH", "")
-        else:
-            env["LD_LIBRARY_PATH"] = (
-                str(libcue) + os.pathsep + os.environ.get("LD_LIBRARY_PATH", "")
-            )
+    env = {
+        "PYTHONPATH": str(workbook) + os.pathsep + os.environ.get("PYTHONPATH", ""),
+    }
     return run_process(
         request,
-        [sys.executable, "-m", "qualification.worker_target"],
-        backend_id="cue-py-worker",
+        [sys.executable, "-m", "qualification.gopy_worker"],
+        backend_id="gopy-worker",
         cwd=workbook,
         env=env,
     )

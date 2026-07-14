@@ -4,5 +4,6 @@ go 1.25.0
 
 require cuelang.org/go v0.18.0
 
-// The exact target engine is checked out by qualification.bootstrap_native.
+// Both the gopy binding package and cueprobe compile against this exact checkout.
+// qualification.bootstrap_native verifies the replacement before building.
 replace cuelang.org/go => ../workbook/.deps/cue

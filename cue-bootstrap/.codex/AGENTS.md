@@ -30,7 +30,7 @@ Declare exactly one class at session start.
 ### authority
 
 May update `.codex/authority/cue/**` and pilot traceability. May not change the
-pattern, fixtures, probes, runner, worker, or expected assertions.
+pattern, fixtures, probes, binding, runner, worker, or expected assertions.
 
 ### pattern
 
@@ -45,12 +45,13 @@ pattern, kernel, expected outcome after execution, or backend code.
 ### probe
 
 May update `probe/**` and protocol-compatible assertion declarations. May not
-alter the subject, fixtures, or runner to obtain a passing result.
+alter the subject, fixtures, or evaluator to obtain a passing result.
 
 ### runner
 
-May update `runner/**` only. Must use gopls MCP diagnostics. Runner output is
-facts only.
+May update `runner/**` only, including the gopy-facing binding package and the
+independent `cueprobe` executable. Must use gopls MCP diagnostics. Output from
+qualified surfaces is facts only.
 
 ### harness
 
@@ -64,7 +65,8 @@ Read-only. Runs registered assertions and records workbook state.
 ### diagnosis
 
 Read-only. Classifies a failure as authority, pattern, kernel, fixture, probe,
-cue-py, Go runner, MCP, protocol, or workbook.
+Go binding, gopy generation, direct backend, worker backend, Go runner, MCP,
+protocol, or workbook.
 
 ### correction
 
@@ -81,8 +83,12 @@ design -> implement -> execute -> diagnose -> select correction
 Never combine fixture design, subject correction, and judging execution in one
 session.
 
-## Native isolation
+## Native modes
 
-Accepted cue-py evaluations run in a child Python process. Native contexts,
-values, CFFI objects, and resource handles never enter the Marimo process.
-The Go runner is independent and must not import cue-py normalization code.
+Direct mode imports the gopy extension into Marimo and may retain live
+Go-backed `Context`, `Loader`, and `Value` proxies. It is exploratory only.
+
+Accepted qualification runs execute the same extension in a child Python
+process. Native proxy objects and gopy handles never cross that process
+boundary. The independent `cueprobe` executable must not import Python
+normalization or expected-result logic.

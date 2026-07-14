@@ -22,27 +22,22 @@ cue: #CueTarget & {
 	channel:         "development"
 }
 
-// Python binding source identity. This does not define the semantic engine.
-cuePy: #GitObject & {
-	repository: "https://github.com/cue-lang/cue-py"
-	commit:     "81e6fb15247ed7050e5bd987db032f757e06c8f0"
-}
-
-// Native binding source identity. Upstream currently declares CUE v0.15.3;
-// bootstrap rebases its Go module onto the exact v0.18 target above.
-libcue: #GitObject & {
-	repository: "https://github.com/cue-lang/libcue"
-	commit:     "96d0572450429fa28d7a2345c04a8c47c85b47e4"
+// Python extension generator identity. This does not define CUE semantics.
+gopy: #GitObject & {
+	repository: "https://github.com/go-python/gopy"
+	commit:     "72557f647208599c726c14dc9721a6c850d2e6d9"
 }
 
 binding: close({
-	engineModule:                 "cuelang.org/go"
-	targetEngineVersion:          cue.languageVersion
-	targetEngineCommit:           cue.commit
-	upstreamLibcueEngineVersion:  "v0.15.3"
-	libcueEngineRebindRequired:   true
-	goRunnerUsesTargetCheckout:   true
-	cuePyUsesReboundLibcue:        true
+	engineModule:               "cuelang.org/go"
+	targetEngineVersion:        cue.languageVersion
+	targetEngineCommit:         cue.commit
+	goBindingPackage:           "github.com/fatb4f/cue-bootstrap/runner/bindings"
+	pythonExtensionGenerator:   "gopy"
+	pythonObjectIdentity:       "managed-int64-handles"
+	directModeEnabled:          true
+	qualifiedWorkerRequired:    true
+	goRunnerUsesTargetCheckout: true
 })
 
 sources: {
@@ -57,9 +52,14 @@ sources: {
 		role: "supporting"
 		symbols: ["Value.Unify", "Value.Subsume", "Value.Validate", "Value.Err"]
 	}
-	pythonValueAPI: {
-		path: "cue/value.py"
+	goLoadAPI: {
+		path: "cue/load/instances.go"
 		role: "supporting"
-		symbols: ["Value.unify", "Value.check_schema", "Value.validate", "Value.error"]
+		symbols: ["load.Instances"]
+	}
+	goDiagnosticAPI: {
+		path: "cue/errors/errors.go"
+		role: "supporting"
+		symbols: ["errors.Errors", "errors.Positions", "errors.Path"]
 	}
 }

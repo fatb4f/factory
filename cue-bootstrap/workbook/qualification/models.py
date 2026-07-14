@@ -6,6 +6,8 @@ from typing import Any, Literal
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 PROTOCOL = "cue-workbook/v0"
+TARGET_CUE_REVISION = "806821e40fae070318600a264d311517e596353b"
+TARGET_CUE_MODULE_VERSION = "v0.18.0"
 
 
 class Operation(StrEnum):
@@ -66,6 +68,15 @@ class ProbeRequest(BaseModel):
         return self
 
 
+class SourcePosition(BaseModel):
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    filename: str | None = None
+    offset: int | None = Field(default=None, ge=0)
+    line: int | None = Field(default=None, ge=1)
+    column: int | None = Field(default=None, ge=1)
+
+
 class CueDiagnostic(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
 
@@ -93,6 +104,7 @@ class CueDiagnostic(BaseModel):
     line: int | None = None
     column: int | None = None
     cue_path: str | None = None
+    positions: tuple[SourcePosition, ...] = ()
     provenance: Literal["native", "operation-boundary", "parsed"]
 
 
@@ -100,12 +112,17 @@ class BackendIdentity(BaseModel):
     model_config = ConfigDict(extra="allow", frozen=True)
 
     id: str
+    mode: Literal["direct", "worker", "process"] | None = None
     revision: str | None = None
+    binding_revision: str | None = None
     engine_revision: str | None = None
     cue_module_version: str | None = None
+    observed_cue_module_version: str | None = None
     python_version: str | None = None
+    python_abi: str | None = None
     go_version: str | None = None
     platform: str | None = None
+    extension_digest: str | None = None
 
 
 class SemanticFacts(BaseModel):
@@ -116,6 +133,9 @@ class SemanticFacts(BaseModel):
     valid: bool | None = None
     subsumes: bool | None = None
     equal: bool | None = None
+    exists: bool | None = None
+    kind: str | None = None
+    incomplete_kind: str | None = None
     projection_json: str | None = None
 
 
@@ -126,6 +146,7 @@ class ProcessMetrics(BaseModel):
     rss_before: int | None = Field(default=None, ge=0)
     rss_after: int | None = Field(default=None, ge=0)
     peak_rss: int | None = Field(default=None, ge=0)
+    native_handles: int | None = Field(default=None, ge=0)
     pid: int | None = Field(default=None, ge=0)
     exit_code: int | None = None
     signal: int | None = None

@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cue-bootstrap-workbook"
-version = "0.1.0"
-description = "Marimo-centered CUE backend qualification harness"
+version = "0.2.0"
+description = "Marimo-centered CUE v0.18 native binding and qualification harness"
 requires-python = ">=3.12,<3.13"
 dependencies = [
-  "cffi==1.16.0",
   "marimo>=0.14,<1",
   "psutil>=6,<8",
+  "pybindgen>=0.22,<0.23",
   "pydantic>=2.11,<3",
 ]
 

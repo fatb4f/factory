@@ -7,31 +7,29 @@ from uuid import uuid4
 from pydantic import ValidationError
 
 from .models import ExecutionState, Operation, ProbeRequest
-from .orchestrator import run_process
+from .orchestrator import run_gopy_worker, run_process
 
 
 def check_request_validation() -> None:
     try:
-        ProbeRequest(request_id="bad", operation=Operation.UNIFY, payload={"left_source": "1"})
+        ProbeRequest(
+            request_id="bad",
+            operation=Operation.UNIFY,
+            payload={"left_source": "1"},
+        )
     except ValidationError:
         return
     raise AssertionError("missing right_source was accepted")
 
 
-def check_worker_protocol() -> None:
+def check_gopy_worker_protocol() -> None:
     request = ProbeRequest(
         request_id=str(uuid4()),
         operation=Operation.COMPILE,
         payload={"source": "x: 1", "filename": "selftest.cue"},
     )
-    workbook = Path(__file__).resolve().parents[1]
-    observation = run_process(
-        request,
-        [sys.executable, "-m", "qualification.worker_target"],
-        backend_id="cue-py-worker",
-        cwd=workbook,
-    )
-    # Without bootstrapped native deps the worker must fail as a typed backend
+    observation = run_gopy_worker(request)
+    # Without the generated extension, the worker must fail as a typed backend
     # error, never crash the orchestrating process or corrupt the protocol.
     if observation.execution_state not in {
         ExecutionState.COMPLETED,
@@ -57,10 +55,28 @@ def check_timeout_classification() -> None:
         raise AssertionError(observation)
 
 
+def check_output_limit() -> None:
+    request = ProbeRequest(
+        request_id=str(uuid4()),
+        operation=Operation.COMPILE,
+        payload={"source": "x: 1"},
+        limits={"timeout_ms": 2_000, "max_output_bytes": 32},
+    )
+    observation = run_process(
+        request,
+        [sys.executable, "-c", "print('x' * 128)"],
+        backend_id="output-test",
+        cwd=Path.cwd(),
+    )
+    if observation.execution_state is not ExecutionState.PROTOCOL_ERROR:
+        raise AssertionError(observation)
+
+
 def main() -> int:
     check_request_validation()
-    check_worker_protocol()
+    check_gopy_worker_protocol()
     check_timeout_classification()
+    check_output_limit()
     print("qualification selftest: pass")
     return 0
 
