@@ -28,8 +28,8 @@ authorityModel: close({
 		"openai/codex",
 		"GitHub adapter responses",
 		"ChatGPT observations",
-		"generated reports",
-		"generated evidence",
+		"generated run bundles",
+		"legacy generated reports and evidence",
 	]
 })
 
@@ -45,8 +45,11 @@ workflow: close({
 		"alpha_acquisition",
 		"semantic_classification",
 		"report_render",
+		"summary_render",
 		"publication_admission",
-		"publication",
+		"bundle_publication",
+		"bundle_manifest_seal",
+		"latest_pointer_update",
 	]
 	transitions: [
 		{from: "authority_read", to: "input_admission"},
@@ -54,9 +57,12 @@ workflow: close({
 		{from: "main_acquisition", to: "alpha_acquisition"},
 		{from: "alpha_acquisition", to: "semantic_classification"},
 		{from: "semantic_classification", to: "report_render"},
-		{from: "report_render", to: "publication_admission"},
-		{from: "publication_admission", to: "publication"},
-		{from: "publication", to: "terminal_success"},
+		{from: "report_render", to: "summary_render"},
+		{from: "summary_render", to: "publication_admission"},
+		{from: "publication_admission", to: "bundle_publication"},
+		{from: "bundle_publication", to: "bundle_manifest_seal"},
+		{from: "bundle_manifest_seal", to: "latest_pointer_update"},
+		{from: "latest_pointer_update", to: "terminal_success"},
 	]
 	failureStates: ["terminal_abort", "terminal_deferred", "coverage_gap"]
 	terminal: "terminal_success"
