@@ -45,13 +45,13 @@ This profile evaluates upstream Codex impact on the factory's own Codex contract
 package: contracts/factory/workers/codex/upstream-monitor/profiles_cuestrap
 entrypoint: contracts/upstream-monitor/codex/cuestrap-contract-surface/AGENTS.md
 profile_id: cuestrap
-signal: acceptedSignal
-context: context
-surfaces: surfaceCatalogue
-classification: classificationPolicy
+signal: cuestrapAcceptedSignal
+context: cuestrapContext
+surfaces: cuestrapSurfaceCatalogue
+classification: cuestrapClassificationPolicy
 report: cuestrapCodexImpactReportTemplate
-publication: publicationPlan
-assertions: validationAssertions / forbiddenAttractors
+publication: cuestrapPublicationPlan
+assertions: cuestrapValidationAssertions / cuestrapForbiddenAttractors
 public export: publicContract
 ```
 
