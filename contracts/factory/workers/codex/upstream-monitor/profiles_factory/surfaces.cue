@@ -6,7 +6,7 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/codex/upstream-
 	id: core.#NonEmptyString
 	terms: [_, ...core.#NonEmptyString]
 	classes: [_, ...core.#SurfaceClass]
-	impactFloor: core.#ImpactDecision
+	impactFloor:       core.#ImpactDecision
 	localContractHint: core.#NonEmptyString
 })
 
@@ -23,14 +23,14 @@ surfaceCatalogue: [
 ]
 
 classificationPolicy: close({
-	requireSurfaceMatch: true
+	requireSurfaceMatch:         true
 	requireLocalImpactForReport: true
-	upstreamRole: "evidence_only"
+	upstreamRole:                "evidence_only"
 	allowedDecisions: ["none", "note", "contract-update", "blocking-gate"]
 	severityMap: {
-		none: "none"
-		note: "note"
+		none:              "none"
+		note:              "note"
 		"contract-update": "high"
-		"blocking-gate": "critical"
+		"blocking-gate":   "critical"
 	}
 })
