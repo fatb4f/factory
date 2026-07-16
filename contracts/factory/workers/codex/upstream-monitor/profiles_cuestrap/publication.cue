@@ -6,7 +6,7 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/codex/upstream-
 	repo: "fatb4f/factory"
 }
 
-publicationPlan: close({
+cuestrapPublicationPlan: close({
 	factoryRepository: "fatb4f/factory"
 	factory: close({
 		report: close({
@@ -50,7 +50,7 @@ publicationPlan: close({
 	issueTargets: {}
 }
 
-publicationAdmission: close({
+cuestrapPublicationAdmission: close({
 	factoryReportsEnabled: true
 	factoryEvidenceEnabled: true
 	cuestrapReportMirrorEnabled: true
