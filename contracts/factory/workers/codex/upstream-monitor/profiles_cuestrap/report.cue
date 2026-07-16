@@ -93,11 +93,11 @@ cuestrapCodexImpactReportTemplate: close({
 		"Tracking issue",
 		"Validation notes",
 	]
-	requireSeparateChannelState:   true
-	requirePurposeImpact:          true
-	requireCuestrapRevision:       true
-	requireUnresolvedPreservation: true
-	requireMirrorDisclosure:       true
+	requireSeparateChannelState:    true
+	requirePurposeImpact:           true
+	requireCuestrapRevision:        true
+	requireUnresolvedPreservation:  true
+	requireMirrorDisclosure:        true
 	requireTrackingIssueDisclosure: true
 })
 
