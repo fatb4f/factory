@@ -1,0 +1,39 @@
+package cuestrapprofile
+
+publicContract: close({
+	apiVersion: "factory.upstream-monitor.codex.cuestrap/v1"
+	kind:       "CuestrapCodexContractSurfaceMonitor"
+	operational: bool
+	signal: #AcceptedSignal
+	authority: _
+	context: _
+	channels: _
+	actuator: _
+	workflow: _
+	surfaces: [...#Surface]
+	classification: _
+	reportTemplate: _
+	publicationPlan: _
+	publicationAdmission: _
+	forbiddenAttractors: [...string]
+	validationAssertions: _
+	validationPlan: _
+}) & {
+	apiVersion: "factory.upstream-monitor.codex.cuestrap/v1"
+	kind:       "CuestrapCodexContractSurfaceMonitor"
+	operational: operational
+	signal: acceptedSignal
+	authority: authorityModel
+	context: context
+	channels: channels
+	actuator: chatgptActuator
+	workflow: workflow
+	surfaces: surfaceCatalogue
+	classification: classificationPolicy
+	reportTemplate: cuestrapCodexImpactReportTemplate
+	publicationPlan: publicationPlan
+	publicationAdmission: publicationAdmission
+	forbiddenAttractors: forbiddenAttractors
+	validationAssertions: validationAssertions
+	validationPlan: validationPlan
+}
