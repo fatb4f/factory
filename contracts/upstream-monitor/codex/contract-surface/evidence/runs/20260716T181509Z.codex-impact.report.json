@@ -1,0 +1,89 @@
+{
+  "apiVersion": "factory.upstream-monitor.codex/v1",
+  "kind": "CodexImpactReport",
+  "loop": "codex-contract-surface",
+  "signal_id": "loop_bootstrap_request",
+  "run_id": "20260716T181509Z",
+  "channels": {
+    "main": {
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "726b6378d2513c25e5e59b1371326be2fe194be4",
+      "evidence": [
+        "prior profile head 41efc6333e3ed476ce824aa729656f97503c10b8",
+        "five commits ahead of the prior profile head and zero behind",
+        "app metadata, connector metadata, and environment-instruction context paths matched declared surfaces"
+      ]
+    },
+    "latest-alpha-cli": {
+      "channel": "latest-alpha-cli",
+      "status": "resolved",
+      "head_commit": "dd1363c67cbf530e362ea8e4c623d66fe97a5bc5",
+      "evidence": [
+        "identical to prior profile head dd1363c67cbf530e362ea8e4c623d66fe97a5bc5",
+        "main is fifteen commits ahead and one behind this independent alpha ref"
+      ]
+    }
+  },
+  "critical": [],
+  "high": [
+    {
+      "id": "main-app-metadata-connector-api",
+      "channels": ["main"],
+      "severity": "high",
+      "impactDecision": "contract-update",
+      "title": "App metadata and connector read protocol expanded",
+      "summary": "A new app-server apps/read API and connector metadata store expose additional connector discovery and tool-summary state.",
+      "surfaceMatches": ["mcp-tools"],
+      "evidence": [
+        "codex-rs/app-server-protocol/schema/json/v2/AppsReadParams.json",
+        "codex-rs/app-server-protocol/schema/json/v2/AppsReadResponse.json",
+        "codex-rs/app-server-protocol/src/protocol/v2/apps.rs",
+        "codex-rs/connectors/src/metadata_store.rs",
+        "codex-rs/chatgpt/src/connectors.rs"
+      ],
+      "localContractImpact": "Review MCP and connector lifecycle projections that assume app-list-only metadata."
+    },
+    {
+      "id": "main-environment-instruction-context",
+      "channels": ["main"],
+      "severity": "high",
+      "impactDecision": "contract-update",
+      "title": "Environment instructions entered session context state",
+      "summary": "Environment instructions are now represented in world state and context history.",
+      "surfaceMatches": ["context-fragments"],
+      "evidence": [
+        "codex-rs/core/src/context/environments_instructions.rs",
+        "codex-rs/core/src/context/world_state/environments_instructions.rs",
+        "codex-rs/core/src/context_manager/history_tests.rs",
+        "codex-rs/core/src/session/world_state.rs"
+      ],
+      "localContractImpact": "Review context injection, persistence, and compaction boundaries for environment-provided instructions."
+    }
+  ],
+  "notes": [
+    {
+      "id": "release-channel-divergence-expanded",
+      "channels": ["main", "latest-alpha-cli"],
+      "severity": "note",
+      "impactDecision": "note",
+      "title": "Main and alpha divergence expanded",
+      "summary": "Main moved from ten to fifteen commits ahead of alpha while alpha remains one commit ahead on its own line.",
+      "surfaceMatches": ["release-channel"],
+      "evidence": [
+        "main head 726b6378d2513c25e5e59b1371326be2fe194be4",
+        "alpha head dd1363c67cbf530e362ea8e4c623d66fe97a5bc5",
+        "compare latest-alpha-cli...main: main ahead 15 and behind 1"
+      ],
+      "localContractImpact": "Preserve separate channel baselines and do not infer either ref from the other."
+    }
+  ],
+  "noLocalAction": [],
+  "validationNotes": {
+    "authorityRead": true,
+    "channelsKeptDistinct": true,
+    "publicationPlanRead": true,
+    "forbiddenAttractorsChecked": true,
+    "cueExecution": "not_available_to_github_app"
+  }
+}
