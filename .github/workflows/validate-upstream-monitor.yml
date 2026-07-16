@@ -1,0 +1,42 @@
+name: Validate upstream monitor
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "contracts/factory/workers/codex/upstream-monitor/**"
+      - "contracts/upstream-monitor/**"
+      - ".github/workflows/validate-upstream-monitor.yml"
+  pull_request:
+    paths:
+      - "contracts/factory/workers/codex/upstream-monitor/**"
+      - "contracts/upstream-monitor/**"
+      - ".github/workflows/validate-upstream-monitor.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cue-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cue-lang/setup-cue@v1.0.0
+        with:
+          version: v0.16.0
+      - name: Format check
+        working-directory: contracts/factory/workers/codex/upstream-monitor
+        run: cue fmt --check *.cue
+      - name: Vet monitor authority
+        working-directory: contracts/factory/workers/codex/upstream-monitor
+        run: cue vet ./...
+      - name: Export public contract
+        working-directory: contracts/factory/workers/codex/upstream-monitor
+        run: cue export -e publicContract --out json > "$RUNNER_TEMP/upstream-monitor.public.json"
+      - name: Check actuator ingress
+        run: |
+          test -f contracts/upstream-monitor/AGENTS.md
+          test -f contracts/upstream-monitor/codex/AGENTS.md
+          test -f contracts/upstream-monitor/codex/contract-surface/AGENTS.md
+          test -f contracts/upstream-monitor/codex/contract-surface/output/report-template.md
