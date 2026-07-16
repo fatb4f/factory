@@ -4,7 +4,7 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/codex/upstream-
 
 #CuestrapPurposeID: "supervisory-session-controller" | "idiomatic-cue-workbook-harness"
 
-#AcceptedSignal: close({
+#CuestrapAcceptedSignal: close({
 	signal_id:    "loop_bootstrap_request"
 	profile_id:   "cuestrap"
 	target_repo:  "fatb4f/factory"
@@ -13,7 +13,7 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/codex/upstream-
 	adapter:      "github_app"
 })
 
-acceptedSignal: #AcceptedSignal & {
+cuestrapAcceptedSignal: #CuestrapAcceptedSignal & {
 	signal_id:    "loop_bootstrap_request"
 	profile_id:   "cuestrap"
 	target_repo:  "fatb4f/factory"
@@ -22,7 +22,7 @@ acceptedSignal: #AcceptedSignal & {
 	adapter:      "github_app"
 }
 
-context: close({
+cuestrapContext: close({
 	repository: "fatb4f/cuestrap"
 	branch:     "main"
 	role:       "subject_context_not_monitor_authority"
@@ -68,7 +68,7 @@ context: close({
 	]
 })
 
-authorityModel: close({
+cuestrapAuthorityModel: close({
 	authority: [
 		"contracts/factory/workers/codex/upstream-monitor/contract.cue",
 		"contracts/factory/workers/codex/upstream-monitor/profiles_cuestrap/*.cue",
@@ -93,7 +93,7 @@ authorityModel: close({
 channels: core.Channels
 chatgptActuator: core.ChatGPTActuator
 
-workflow: close({
+cuestrapWorkflow: close({
 	initial: "authority_read"
 	states: [
 		"authority_read",
@@ -123,4 +123,4 @@ workflow: close({
 	terminal:       "terminal_success"
 })
 
-operational: true
+cuestrapOperational: true
