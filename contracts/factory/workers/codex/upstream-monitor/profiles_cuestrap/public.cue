@@ -1,39 +1,39 @@
 package cuestrapprofile
 
 publicContract: close({
-	apiVersion: "factory.upstream-monitor.codex.cuestrap/v1"
-	kind:       "CuestrapCodexContractSurfaceMonitor"
+	apiVersion:  "factory.upstream-monitor.codex.cuestrap/v1"
+	kind:        "CuestrapCodexContractSurfaceMonitor"
 	operational: bool
-	signal: #CuestrapAcceptedSignal
-	authority: _
-	context: _
-	channels: _
-	actuator: _
-	workflow: _
+	signal:      #CuestrapAcceptedSignal
+	authority:   _
+	context:     _
+	channels:    _
+	actuator:    _
+	workflow:    _
 	surfaces: [...#CuestrapSurface]
-	classification: _
-	reportTemplate: _
-	publicationPlan: _
+	classification:       _
+	reportTemplate:       _
+	publicationPlan:      _
 	publicationAdmission: _
 	forbiddenAttractors: [...string]
 	validationAssertions: _
-	validationPlan: _
+	validationPlan:       _
 }) & {
-	apiVersion: "factory.upstream-monitor.codex.cuestrap/v1"
-	kind:       "CuestrapCodexContractSurfaceMonitor"
-	operational: cuestrapOperational
-	signal: cuestrapAcceptedSignal
-	authority: cuestrapAuthorityModel
-	context: cuestrapContext
-	channels: channels
-	actuator: chatgptActuator
-	workflow: cuestrapWorkflow
-	surfaces: cuestrapSurfaceCatalogue
-	classification: cuestrapClassificationPolicy
-	reportTemplate: cuestrapCodexImpactReportTemplate
-	publicationPlan: cuestrapPublicationPlan
+	apiVersion:           "factory.upstream-monitor.codex.cuestrap/v1"
+	kind:                 "CuestrapCodexContractSurfaceMonitor"
+	operational:          cuestrapOperational
+	signal:               cuestrapAcceptedSignal
+	authority:            cuestrapAuthorityModel
+	context:              cuestrapContext
+	channels:             channels
+	actuator:             chatgptActuator
+	workflow:             cuestrapWorkflow
+	surfaces:             cuestrapSurfaceCatalogue
+	classification:       cuestrapClassificationPolicy
+	reportTemplate:       cuestrapCodexImpactReportTemplate
+	publicationPlan:      cuestrapPublicationPlan
 	publicationAdmission: cuestrapPublicationAdmission
-	forbiddenAttractors: cuestrapForbiddenAttractors
+	forbiddenAttractors:  cuestrapForbiddenAttractors
 	validationAssertions: cuestrapValidationAssertions
-	validationPlan: cuestrapValidationPlan
+	validationPlan:       cuestrapValidationPlan
 }
