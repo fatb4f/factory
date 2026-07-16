@@ -20,6 +20,7 @@ publicContract: close({
 	surfaces: [...#Surface]
 	classification:       _
 	reportTemplate:       _
+	summaryTemplate:      _
 	publicationPlan:      _
 	publicationAdmission: _
 	forbiddenAttractors: [...string]
@@ -37,6 +38,7 @@ publicContract: close({
 	surfaces:             surfaceCatalogue
 	classification:       classificationPolicy
 	reportTemplate:       upstreamCodexImpactReportTemplate
+	summaryTemplate:      upstreamCodexRunSummaryTemplate
 	publicationPlan:      upstreamCodexPublicationPlan
 	publicationAdmission: selectedPublicationAdmission
 	forbiddenAttractors:  selectedForbiddenAttractors
