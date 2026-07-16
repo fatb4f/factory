@@ -38,12 +38,8 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/codex/upstream-
 		factoryPath:              core.#NonEmptyString
 		factoryManifestPath:      core.#NonEmptyString
 		factoryLatestPointerPath: core.#NonEmptyString
-		mirrorPath:               core.#NonEmptyString
-		mirrorManifestPath:       core.#NonEmptyString
-		mirrorLatestPointerPath:  core.#NonEmptyString
 		exportUnit:               "directory"
 		factoryComplete:          bool
-		mirrorComplete:           bool
 	})
 	trackingIssue: close({
 		repository:          "fatb4f/cuestrap"
@@ -56,23 +52,21 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/codex/upstream-
 		duplicateSuppressed: bool
 	})
 	validationNotes: close({
-		authorityRead:                bool
-		cuestrapContextRead:          bool
-		channelsKeptDistinct:         bool
-		publicationPlanRead:          bool
-		forbiddenAttractorsChecked:   bool
-		factoryRunBundlePublished:    bool
-		factoryBundleManifestSealed:  bool
-		cuestrapReportBundleMirrored: bool
-		mirrorContentEquivalent:      bool
-		mirrorManifestSourceBound:    bool
-		latestPointersOnly:           bool
-		noCuestrapPlumbingWritten:    bool
-		trackingIssueResolved:        bool
-		trackingIssueAppended:        bool
-		trackingIssueDeduplicated:    bool
-		trackingIssueBodyUnchanged:   bool
-		cueExecution:                 "not_available_to_github_app" | "executed_elsewhere"
+		authorityRead:                       bool
+		cuestrapContextRead:                 bool
+		channelsKeptDistinct:                bool
+		publicationPlanRead:                 bool
+		forbiddenAttractorsChecked:          bool
+		factoryRunBundlePublished:           bool
+		factoryBundleManifestSealed:         bool
+		latestPointerUpdated:                bool
+		noCuestrapRepositoryArtifactsWritten: bool
+		noCuestrapPlumbingWritten:           bool
+		trackingIssueResolved:               bool
+		trackingIssueAppended:               bool
+		trackingIssueDeduplicated:           bool
+		trackingIssueBodyUnchanged:          bool
+		cueExecution:                        "not_available_to_github_app" | "executed_elsewhere"
 	})
 })
 
@@ -97,7 +91,7 @@ cuestrapCodexImpactReportTemplate: close({
 	requirePurposeImpact:           true
 	requireCuestrapRevision:        true
 	requireUnresolvedPreservation:  true
-	requireMirrorDisclosure:        true
+	requireFactoryBundleDisclosure: true
 	requireTrackingIssueDisclosure: true
 })
 
@@ -109,7 +103,7 @@ cuestrapRunSummaryTemplate: close({
 		"CUEstrap context",
 		"Channel delta",
 		"Purpose decisions",
-		"Run bundles",
+		"Factory run bundle",
 		"Tracking issue",
 		"Validation",
 	]
