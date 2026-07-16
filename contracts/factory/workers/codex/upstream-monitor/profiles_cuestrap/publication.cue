@@ -3,7 +3,16 @@ package cuestrapprofile
 import core "github.com/fatb4f/factory/contracts/factory/workers/codex/upstream-monitor:upstreammonitor"
 
 #IssueTarget: core.#IssueTarget & {
-	repo: "fatb4f/factory"
+	repo:             "fatb4f/cuestrap"
+	updatePolicy:     "every_run"
+	mutation:         "append_comment"
+	dedupeKeyPattern: "cuestrap-codex-contract-surface/<run_id>"
+	terminalStates: [
+		"terminal_success",
+		"terminal_abort",
+		"terminal_deferred",
+		"coverage_gap",
+	]
 }
 
 cuestrapPublicationPlan: close({
@@ -88,6 +97,12 @@ cuestrapPublicationPlan: close({
 		plumbingAllowed: false
 	})
 	issueTargets: [string]: #IssueTarget
+	issueAudit: close({
+		target:        "runLog"
+		timing:        "after_terminal_state_determined"
+		failurePolicy: "append_with_available_results_and_failure_reason"
+		bodyMutation:  "forbidden"
+	})
 	writeOrder: [
 		"factory_bundle_report",
 		"factory_bundle_summary",
@@ -108,6 +123,10 @@ cuestrapPublicationPlan: close({
 	requireLatestPointerAfterManifest:  true
 	requireMirrorContentEquality:       true
 	requireMirrorManifestSourceBinding: true
+	requireTrackingIssueOpen:           true
+	requireIssueCommentEveryRun:        true
+	requireIssueCommentDedupe:          true
+	forbidIssueBodyMutation:            true
 	forbidRunArtifactsOutsideBundle:    true
 	forbidMutableLatestArtifactCopies:  true
 	forbidLegacyWrites:                 true
@@ -115,7 +134,11 @@ cuestrapPublicationPlan: close({
 	forbidCuestrapPlumbing:             true
 	forbidUndeclaredIssueUpdates:       true
 }) & {
-	issueTargets: {}
+	issueTargets: {
+		runLog: {
+			number: 9
+		}
+	}
 }
 
 cuestrapPublicationAdmission: close({
@@ -127,9 +150,10 @@ cuestrapPublicationAdmission: close({
 	latestPointersEnabled:        true
 	cuestrapEvidenceEnabled:      false
 	cuestrapPlumbingEnabled:      false
-	issueUpdatesEnabled:          false
+	issueUpdatesEnabled:          true
 	requireOperationalContract:   true
 	requireFixedTemplate:         true
 	requireCompleteFactoryBundle: true
 	requireMirrorDigestMatch:     true
+	requireRunLogComment:         true
 })
