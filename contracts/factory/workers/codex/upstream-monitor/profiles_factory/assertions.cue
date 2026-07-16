@@ -9,32 +9,41 @@ forbiddenAttractors: [
 	"latest-alpha-cli evidence assigned to main",
 	"main evidence assigned to latest-alpha-cli",
 	"unresolved ref populated from inference",
-	"report path outside reports/",
-	"evidence path outside evidence/",
+	"run artifacts split across report and evidence directories",
+	"run artifact written outside its runs/<run_id>/ bundle",
+	"bundle manifest published before required artifacts",
+	"mutable latest report or evidence copy",
+	"legacy report or evidence path used for a new write",
 	"issue update without publication target",
 	"claimant-supplied admission boolean",
 ]
 
 validationAssertions: close({
 	acceptedSignalExact:             true
-	mainRefExact:                    true
-	alphaRefExact:                   true
-	channelsDistinct:                true
-	upstreamEvidenceOnly:            true
-	chatgptIsActuatorNotAuthority:   true
-	reportPathsBounded:              true
-	evidencePathsBounded:            true
+	mainRefExact:                   true
+	alphaRefExact:                  true
+	channelsDistinct:               true
+	upstreamEvidenceOnly:           true
+	chatgptIsActuatorNotAuthority:  true
+	runArtifactsCoLocated:          true
+	bundleExportUnitIsDirectory:    true
+	bundleManifestSealsArtifacts:   true
+	latestIsPointerOnly:            true
+	legacyPathsReadOnly:            true
 	undeclaredIssueUpdatesForbidden: true
-	unresolvedEvidencePreserved:     true
-	workflowClosed:                  true
+	unresolvedEvidencePreserved:    true
+	workflowClosed:                 true
 })
 
 negativeFixtures: {
 	collapseChannels: close({main: "latest-alpha-cli", alpha: "latest-alpha-cli"})
 	promoteUpstreamAuthority: close({authority: "openai/codex"})
 	inferUnresolvedHead: close({status: "unresolved", inferred_head: core.#CommitSHA})
-	unboundedReportPath: close({path: string & !~"^contracts/upstream-monitor/codex/contract-surface/reports/"})
-	unboundedEvidencePath: close({path: string & !~"^contracts/upstream-monitor/codex/contract-surface/evidence/"})
+	scatteredRunArtifacts: close({reportDirectory: core.#NonEmptyString, evidenceDirectory: core.#NonEmptyString, sameDirectory: false})
+	unbundledRunArtifact: close({path: string & !~"^contracts/upstream-monitor/codex/contract-surface/runs/[^/]+/"})
+	manifestBeforeArtifacts: close({manifestWritten: true, requiredArtifactsComplete: false})
+	mutableLatestCopy: close({path: string & =~"^contracts/upstream-monitor/codex/contract-surface/(reports|evidence)/latest"})
+	legacyWrite: close({path: "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md" | "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json", write: true})
 	undeclaredIssueMutation: close({target: int & >0, declared: false})
 }
 
