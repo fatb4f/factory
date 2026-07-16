@@ -2,30 +2,30 @@ package upstreammonitor
 
 #NonEmptyString: string & !=""
 #NonEmptyStringList: [...#NonEmptyString] & [_, ...]
-#CommitSHA: string & =~"^[0-9a-f]{40}$"
-#GitObjectSHA: string & =~"^[0-9a-f]{40}$"
-#TerminalState: "terminal_success" | "terminal_abort" | "terminal_deferred" | "coverage_gap"
-#ChannelID: "main" | "latest-alpha-cli"
-#ChannelStatus: "resolved" | "unresolved"
-#ImpactDecision: "none" | "note" | "contract-update" | "blocking-gate"
-#Severity: "none" | "note" | "high" | "critical"
-#SurfaceClass: "protocol" | "adapter" | "storage" | "policy" | "ui" | "docs" | "context-window" | "multi-agent" | "rollout-trace" | "mcp" | "config" | "security" | "release"
+#CommitSHA:       string & =~"^[0-9a-f]{40}$"
+#GitObjectSHA:    string & =~"^[0-9a-f]{40}$"
+#TerminalState:   "terminal_success" | "terminal_abort" | "terminal_deferred" | "coverage_gap"
+#ChannelID:       "main" | "latest-alpha-cli"
+#ChannelStatus:   "resolved" | "unresolved"
+#ImpactDecision:  "none" | "note" | "contract-update" | "blocking-gate"
+#Severity:        "none" | "note" | "high" | "critical"
+#SurfaceClass:    "protocol" | "adapter" | "storage" | "policy" | "ui" | "docs" | "context-window" | "multi-agent" | "rollout-trace" | "mcp" | "config" | "security" | "release"
 #RunArtifactKind: "report" | "summary" | "evidence"
 
 #RunBundleArtifact: close({
-	kind:        #RunArtifactKind
-	filename:    #NonEmptyString
-	mediaType:   #NonEmptyString
-	gitBlobSHA:  #GitObjectSHA
+	kind:       #RunArtifactKind
+	filename:   #NonEmptyString
+	mediaType:  #NonEmptyString
+	gitBlobSHA: #GitObjectSHA
 })
 
 #RunBundleManifest: close({
-	apiVersion:    "factory.upstream-monitor.run-bundle/v1"
-	kind:          "UpstreamMonitorRunBundle" | "UpstreamMonitorRunBundleProjection"
-	run_id:        #NonEmptyString
-	profile_id:    #NonEmptyString
-	terminal_state: #TerminalState
-	export_unit:   "directory"
+	apiVersion:          "factory.upstream-monitor.run-bundle/v1"
+	kind:                "UpstreamMonitorRunBundle" | "UpstreamMonitorRunBundleProjection"
+	run_id:              #NonEmptyString
+	profile_id:          #NonEmptyString
+	terminal_state:      #TerminalState
+	export_unit:         "directory"
 	source_bundle_path?: #NonEmptyString
 	artifacts: [_, ...#RunBundleArtifact]
 })
