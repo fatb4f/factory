@@ -9,19 +9,15 @@ contracts/upstream-monitor/AGENTS.md
 contracts/upstream-monitor/codex/AGENTS.md
 contracts/factory/workers/codex/upstream-monitor/AGENTS.md
 contracts/factory/workers/codex/upstream-monitor/contract.cue
-contracts/factory/workers/codex/upstream-monitor/surfaces.cue
-contracts/factory/workers/codex/upstream-monitor/report.cue
-contracts/factory/workers/codex/upstream-monitor/publication.cue
-contracts/factory/workers/codex/upstream-monitor/assertions.cue
-contracts/factory/workers/codex/upstream-monitor/cuestrap_context.cue
-contracts/factory/workers/codex/upstream-monitor/cuestrap_surfaces.cue
-contracts/factory/workers/codex/upstream-monitor/cuestrap_report.cue
-contracts/factory/workers/codex/upstream-monitor/cuestrap_publication.cue
-contracts/factory/workers/codex/upstream-monitor/cuestrap_assertions.cue
-contracts/factory/workers/codex/upstream-monitor/cuestrap_public.cue
+contracts/factory/workers/codex/upstream-monitor/profiles_cuestrap/contract.cue
+contracts/factory/workers/codex/upstream-monitor/profiles_cuestrap/surfaces.cue
+contracts/factory/workers/codex/upstream-monitor/profiles_cuestrap/report.cue
+contracts/factory/workers/codex/upstream-monitor/profiles_cuestrap/publication.cue
+contracts/factory/workers/codex/upstream-monitor/profiles_cuestrap/assertions.cue
+contracts/factory/workers/codex/upstream-monitor/profiles_cuestrap/public.cue
 ```
 
-The factory-local CUE files are semantic authority. This file is the stable scheduled-task entrypoint and actuator procedure for profile `cuestrap`.
+The shared root contract and `profiles_cuestrap` package are semantic authority. Do not load any other profile package for this run. This file is the stable scheduled-task entrypoint and actuator procedure for profile `cuestrap`.
 
 ## Accepted input
 
@@ -51,23 +47,23 @@ The ChatGPT scheduled task remains the semantic actuator. Do not replace it with
 
 ## Run procedure
 
-1. Read all selected-profile authority files and confirm `cuestrapOperational: true`.
+1. Read the shared root contract and every file in `profiles_cuestrap`; confirm `operational: true`.
 2. Validate the exact signal and profile ID.
 3. Resolve the current `fatb4f/factory@main` revision.
-4. Resolve `fatb4f/cuestrap@main` and read every path in `cuestrapContext.requiredContextReads`.
+4. Resolve `fatb4f/cuestrap@main` and read every path in `context.requiredContextReads`.
 5. Record the exact cuestrap revision used for classification.
 6. Acquire concrete evidence for `openai/codex@main`.
 7. Separately acquire concrete evidence for `openai/codex@latest-alpha-cli`.
 8. Compare each upstream channel only with its own prior cuestrap-profile state.
-9. Match evidence only against `cuestrapSurfaceCatalogue`.
+9. Match evidence only against `surfaceCatalogue`.
 10. Assign every reportable item to one or both declared cuestrap purposes.
 11. Classify admitted items as `none`, `note`, `contract-update`, or `blocking-gate`.
 12. Render `cuestrapCodexImpactReportTemplate` with separate channel and purpose sections.
-13. Check all proposed paths against `cuestrapPublicationPlan`.
+13. Check all proposed paths against `publicationPlan`.
 14. Publish the factory run report, factory run evidence, factory latest report, and factory latest evidence in declared order.
 15. Copy the exact run and latest report contents to the declared paths in `fatb4f/cuestrap@main`.
 16. Verify that each cuestrap report copy is byte-equivalent to its factory source report.
-17. Update only issues explicitly present in `cuestrapPublicationPlan.issueTargets`.
+17. Update only issues explicitly present in `publicationPlan.issueTargets`.
 18. Return a concise run summary and validation notes.
 
 ## Context rules
@@ -109,6 +105,6 @@ No evidence artifact, CUE authority, AGENTS file, prompt, actuator configuration
 
 ## Validation notes
 
-The GitHub App actuator cannot run CUE commands. State that limitation and do not claim `cue vet` or `cue export` ran. Inspect the selected profile structurally and check every forbidden attractor in `cuestrap_assertions.cue`.
+The GitHub App actuator cannot run CUE commands. State that limitation and do not claim `cue vet` or `cue export` ran. Inspect the selected package structurally and check every forbidden attractor in `profiles_cuestrap/assertions.cue`.
 
 A missing authority file, context read, template, channel, publication path, mirror permission, or content-equivalence check terminates fail-closed.
