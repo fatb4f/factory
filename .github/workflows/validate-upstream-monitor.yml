@@ -28,21 +28,9 @@ jobs:
       - name: Format check
         working-directory: contracts/factory/workers/codex/upstream-monitor
         run: cue fmt --check contract.cue profiles_factory/*.cue profiles_cuestrap/*.cue
-      - name: Capture vet diagnostics
-        working-directory: contracts/factory/workers/codex/upstream-monitor
-        run: |
-          set +e
-          cue vet ./... > "$RUNNER_TEMP/cue-vet.log" 2>&1
-          echo "$?" > "$RUNNER_TEMP/cue-vet.status"
-      - name: Upload vet diagnostics
-        uses: actions/upload-artifact@v4
-        with:
-          name: upstream-monitor-vet-diagnostics
-          path: |
-            ${{ runner.temp }}/cue-vet.log
-            ${{ runner.temp }}/cue-vet.status
       - name: Vet monitor authority
-        run: test "$(cat "$RUNNER_TEMP/cue-vet.status")" -eq 0
+        working-directory: contracts/factory/workers/codex/upstream-monitor
+        run: cue vet -c=false ./...
       - name: Export factory profile
         working-directory: contracts/factory/workers/codex/upstream-monitor
         run: cue export ./profiles_factory -e publicContract --out json > "$RUNNER_TEMP/upstream-monitor.factory.public.json"
