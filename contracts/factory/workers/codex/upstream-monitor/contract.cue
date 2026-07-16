@@ -1,13 +1,43 @@
 package upstreammonitor
 
 #NonEmptyString: string & !=""
-#CommitSHA:      string & =~"^[0-9a-f]{40}$"
-#TerminalState:  "terminal_success" | "terminal_abort" | "terminal_deferred" | "coverage_gap"
-#ChannelID:      "main" | "latest-alpha-cli"
-#ChannelStatus:  "resolved" | "unresolved"
+#NonEmptyStringList: [...#NonEmptyString] & [_, ...]
+#CommitSHA: string & =~"^[0-9a-f]{40}$"
+#GitObjectSHA: string & =~"^[0-9a-f]{40}$"
+#TerminalState: "terminal_success" | "terminal_abort" | "terminal_deferred" | "coverage_gap"
+#ChannelID: "main" | "latest-alpha-cli"
+#ChannelStatus: "resolved" | "unresolved"
 #ImpactDecision: "none" | "note" | "contract-update" | "blocking-gate"
-#Severity:       "none" | "note" | "high" | "critical"
-#SurfaceClass:   "protocol" | "adapter" | "storage" | "policy" | "ui" | "docs" | "context-window" | "multi-agent" | "rollout-trace" | "mcp" | "config" | "security" | "release"
+#Severity: "none" | "note" | "high" | "critical"
+#SurfaceClass: "protocol" | "adapter" | "storage" | "policy" | "ui" | "docs" | "context-window" | "multi-agent" | "rollout-trace" | "mcp" | "config" | "security" | "release"
+#RunArtifactKind: "report" | "summary" | "evidence"
+
+#RunBundleArtifact: close({
+	kind:        #RunArtifactKind
+	filename:    #NonEmptyString
+	mediaType:   #NonEmptyString
+	gitBlobSHA:  #GitObjectSHA
+})
+
+#RunBundleManifest: close({
+	apiVersion:    "factory.upstream-monitor.run-bundle/v1"
+	kind:          "UpstreamMonitorRunBundle" | "UpstreamMonitorRunBundleProjection"
+	run_id:        #NonEmptyString
+	profile_id:    #NonEmptyString
+	terminal_state: #TerminalState
+	export_unit:   "directory"
+	source_bundle_path?: #NonEmptyString
+	artifacts: [_, ...#RunBundleArtifact]
+})
+
+#LatestRunPointer: close({
+	apiVersion:    "factory.upstream-monitor.latest-run/v1"
+	kind:          "LatestUpstreamMonitorRun"
+	run_id:        #NonEmptyString
+	profile_id:    #NonEmptyString
+	bundle_path:   #NonEmptyString
+	manifest_path: #NonEmptyString
+})
 
 #Channel: close({
 	id:   #ChannelID
