@@ -15,6 +15,7 @@ publicContract: close({
 	surfaces: [...#CuestrapSurface]
 	classification:       _
 	reportTemplate:       _
+	summaryTemplate:      _
 	publicationPlan:      _
 	publicationAdmission: _
 	forbiddenAttractors: [...string]
@@ -33,6 +34,7 @@ publicContract: close({
 	surfaces:             cuestrapSurfaceCatalogue
 	classification:       cuestrapClassificationPolicy
 	reportTemplate:       cuestrapCodexImpactReportTemplate
+	summaryTemplate:      cuestrapRunSummaryTemplate
 	publicationPlan:      cuestrapPublicationPlan
 	publicationAdmission: cuestrapPublicationAdmission
 	forbiddenAttractors:  cuestrapForbiddenAttractors
