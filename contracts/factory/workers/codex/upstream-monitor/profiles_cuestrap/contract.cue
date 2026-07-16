@@ -28,7 +28,7 @@ cuestrapContext: close({
 	role:       "subject_context_not_monitor_authority"
 	purposes: close({
 		supervisorySessionController: close({
-			id: "supervisory-session-controller"
+			id:      "supervisory-session-controller"
 			summary: "gopy, CUE, Pydantic, and Hypothesis implementation of a phase-sensitive supervisory controller for Codex sessions and tool use"
 			technologies: ["gopy", "CUE", "Pydantic", "Hypothesis"]
 			contextPaths: [
@@ -43,7 +43,7 @@ cuestrapContext: close({
 			]
 		})
 		idiomaticCueWorkbookHarness: close({
-			id: "idiomatic-cue-workbook-harness"
+			id:      "idiomatic-cue-workbook-harness"
 			summary: "gopy-backed Marimo workbook and browserless harness for exploring and qualifying idiomatic CUE behavior"
 			technologies: ["gopy", "CUE", "Marimo"]
 			contextPaths: [
@@ -90,7 +90,7 @@ cuestrapAuthorityModel: close({
 	]
 })
 
-channels: core.Channels
+channels:        core.Channels
 chatgptActuator: core.ChatGPTActuator
 
 cuestrapWorkflow: close({
@@ -120,7 +120,7 @@ cuestrapWorkflow: close({
 		{from: "cuestrap_report_mirror", to: "terminal_success"},
 	]
 	failureStates: ["terminal_abort", "terminal_deferred", "coverage_gap"]
-	terminal:       "terminal_success"
+	terminal: "terminal_success"
 })
 
 cuestrapOperational: true
