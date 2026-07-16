@@ -11,11 +11,11 @@ This directory is the authoritative contract for the ChatGPT-actuated Codex upst
 5. the selected compatibility entrypoint under `contracts/upstream-monitor/`;
 6. the selected fixed report template.
 
-`openai/codex`, GitHub adapter responses, ChatGPT conclusions, subject-repository observations, reports, and evidence are observations only. They never amend this contract.
+`openai/codex`, GitHub adapter responses, ChatGPT conclusions, subject-repository observations, run bundles, legacy reports, and legacy evidence are observations only. They never amend this contract.
 
 ## Actuator model
 
-The actuator is a scheduled ChatGPT task using the GitHub App. Keep this model. ChatGPT performs bounded acquisition, semantic classification, report rendering, and admitted GitHub writes. It must read the shared vocabulary, selected profile authority, and selected publication plan before inspecting upstream evidence.
+The actuator is a scheduled ChatGPT task using the GitHub App. Keep this model. ChatGPT performs bounded acquisition, semantic classification, report and summary rendering, bundle sealing, and admitted GitHub writes. It must read the shared vocabulary, selected profile authority, and selected publication plan before inspecting upstream evidence.
 
 The GitHub App cannot execute CUE. Record this limitation in validation notes. Do not replace CUE validation with claimant-supplied booleans or prior generated evidence.
 
@@ -32,6 +32,7 @@ signal: acceptedSignal
 surfaces: surfaceCatalogue
 classification: classificationPolicy
 report: upstreamCodexImpactReportTemplate
+summary: upstreamCodexRunSummaryTemplate
 publication: upstreamCodexPublicationPlan
 assertions: validationAssertions / forbiddenAttractors
 public export: publicContract
@@ -50,12 +51,13 @@ context: cuestrapContext
 surfaces: cuestrapSurfaceCatalogue
 classification: cuestrapClassificationPolicy
 report: cuestrapCodexImpactReportTemplate
+summary: cuestrapRunSummaryTemplate
 publication: cuestrapPublicationPlan
 assertions: cuestrapValidationAssertions / cuestrapForbiddenAttractors
 public export: publicContract
 ```
 
-This profile evaluates upstream Codex impact against the current `fatb4f/cuestrap@main` context. It keeps authority, evidence, and primary reports in factory and admits only byte-equivalent report copies into cuestrap.
+This profile evaluates upstream Codex impact against the current `fatb4f/cuestrap@main` context. It keeps authority, evidence, and the canonical run bundle in factory and admits only a report-and-summary bundle projection into cuestrap.
 
 An unknown, missing, ambiguous, or cross-profile selection terminates as `terminal_abort` before acquisition or writes.
 
@@ -71,8 +73,12 @@ authority_read
 → alpha_acquisition
 → semantic_classification
 → report_render
+→ summary_render
 → publication_admission
-→ selected publication steps
+→ immutable run-bundle artifact writes
+→ manifest seal
+→ latest-pointer update
+→ selected mirror and issue steps
 → terminal_success
 ```
 
@@ -101,18 +107,38 @@ Classify only against the selected profile's surface catalogue. A reportable ite
 
 Do not create semantic classification scripts. ChatGPT is the semantic actuator constrained by the selected CUE vocabulary.
 
-## Publication
+## Run bundles and publication
 
-Use only the selected profile's report template and publication plan.
+Use only the selected profile's report template, summary contract, and publication plan.
 
-Allowed writes are limited to the exact declared report, evidence, mirror, and issue targets. An empty `issueTargets` map means no issue updates. Write run-specific artifacts before replacing `latest` artifacts. Preserve the signal, profile, and run IDs across report and evidence artifacts.
+The canonical export unit for one run is exactly one immutable directory:
 
-For cross-repository report mirrors:
+```text
+runs/<run_id>/
+├── report.md
+├── summary.md
+├── evidence.json
+└── manifest.json
+```
+
+Rules:
+
+- report, summary, and evidence must be written into the same run directory;
+- `manifest.json` is written only after every required artifact exists and records their exact Git blob identities;
+- the manifest seals the directory as a complete exportable run bundle;
+- `latest.json` is a pointer to the sealed run directory and manifest, never a mutable copy of report or evidence content;
+- prior state is resolved through `latest.json` and then the referenced bundle manifest and evidence;
+- a publication plan may declare exact legacy latest paths as read-only migration inputs when no `latest.json` exists;
+- legacy `reports/` and `evidence/` paths must never receive new writes;
+- an empty `issueTargets` map means no issue updates.
+
+For cross-repository report-bundle projections:
 
 - the destination repository and branch must be explicit in the selected plan;
-- source and mirror report contents must be byte-equivalent;
+- report and summary copies must be byte-equivalent to their canonical factory sources;
+- the projection manifest must identify the canonical factory bundle;
 - evidence and actuator plumbing remain forbidden unless separately and explicitly admitted;
-- a partial mirror terminates fail-closed and must be reported.
+- a partial or mismatched projection terminates fail-closed and must be reported.
 
 ## Validation notes
 
@@ -124,6 +150,7 @@ Every run records:
 - separate `main` and `latest-alpha-cli` resolution state;
 - whether CUE execution was available;
 - selected forbidden-attractor checks;
-- publication and mirror paths used;
-- mirror equivalence when required;
+- the canonical run-bundle path and artifact inventory;
+- manifest seal and latest-pointer state;
+- mirror bundle path, source binding, and content equivalence when required;
 - issue update targets, or an explicit statement that none were declared.
