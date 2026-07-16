@@ -5,26 +5,28 @@ This directory is the authoritative contract for the ChatGPT-actuated Codex upst
 ## Authority order
 
 1. repository-root authority and applicable issue requirements;
-2. CUE files in this directory;
-3. this instruction file;
-4. the selected compatibility entrypoint under `contracts/upstream-monitor/`;
-5. the selected fixed report template.
+2. shared CUE vocabulary in `contract.cue`;
+3. every CUE file in exactly one selected `profiles_$profile/` directory;
+4. this instruction file;
+5. the selected compatibility entrypoint under `contracts/upstream-monitor/`;
+6. the selected fixed report template.
 
 `openai/codex`, GitHub adapter responses, ChatGPT conclusions, subject-repository observations, reports, and evidence are observations only. They never amend this contract.
 
 ## Actuator model
 
-The actuator is a scheduled ChatGPT task using the GitHub App. Keep this model. ChatGPT performs bounded acquisition, semantic classification, report rendering, and admitted GitHub writes. It must read the selected authority and publication plan before inspecting upstream evidence.
+The actuator is a scheduled ChatGPT task using the GitHub App. Keep this model. ChatGPT performs bounded acquisition, semantic classification, report rendering, and admitted GitHub writes. It must read the shared vocabulary, selected profile authority, and selected publication plan before inspecting upstream evidence.
 
 The GitHub App cannot execute CUE. Record this limitation in validation notes. Do not replace CUE validation with claimant-supplied booleans or prior generated evidence.
 
-## Profile dispatch
+## Profile containment and dispatch
 
-Resolve exactly one profile from the accepted input and entrypoint. Never merge profile catalogues, prior evidence, report templates, or publication plans.
+Every admitted profile is contained in one directory named `profiles_$profile`. Resolve exactly one profile from the accepted input and entrypoint. Load `contract.cue` plus only that profile directory. Never merge profile packages, catalogues, prior evidence, report templates, or publication plans.
 
 ### Factory profile
 
 ```text
+package: contracts/factory/workers/codex/upstream-monitor/profiles_factory
 entrypoint: contracts/upstream-monitor/codex/contract-surface/AGENTS.md
 signal: acceptedSignal
 surfaces: surfaceCatalogue
@@ -40,21 +42,22 @@ This profile evaluates upstream Codex impact on the factory's own Codex contract
 ### CUEstrap profile
 
 ```text
+package: contracts/factory/workers/codex/upstream-monitor/profiles_cuestrap
 entrypoint: contracts/upstream-monitor/codex/cuestrap-contract-surface/AGENTS.md
 profile_id: cuestrap
-signal: cuestrapAcceptedSignal
-context: cuestrapContext
-surfaces: cuestrapSurfaceCatalogue
-classification: cuestrapClassificationPolicy
+signal: acceptedSignal
+context: context
+surfaces: surfaceCatalogue
+classification: classificationPolicy
 report: cuestrapCodexImpactReportTemplate
-publication: cuestrapPublicationPlan
-assertions: cuestrapValidationAssertions / cuestrapForbiddenAttractors
-public export: cuestrapPublicContract
+publication: publicationPlan
+assertions: validationAssertions / forbiddenAttractors
+public export: publicContract
 ```
 
 This profile evaluates upstream Codex impact against the current `fatb4f/cuestrap@main` context. It keeps authority, evidence, and primary reports in factory and admits only byte-equivalent report copies into cuestrap.
 
-An unknown, missing, or ambiguous profile terminates as `terminal_abort` before acquisition or writes.
+An unknown, missing, ambiguous, or cross-profile selection terminates as `terminal_abort` before acquisition or writes.
 
 ## Required run sequence
 
@@ -115,7 +118,7 @@ For cross-repository report mirrors:
 
 Every run records:
 
-- selected profile and authority files read;
+- shared vocabulary and selected profile files read;
 - current factory revision when available;
 - profile-required context repository revision and reads;
 - separate `main` and `latest-alpha-cli` resolution state;
