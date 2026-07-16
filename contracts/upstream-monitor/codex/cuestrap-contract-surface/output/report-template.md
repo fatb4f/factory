@@ -46,11 +46,14 @@
 
 ## Publication
 
-- Factory run report: `{{factory_run_report_path}}`
-- Factory latest report: `{{factory_latest_report_path}}`
-- CUEstrap run report copy: `{{cuestrap_run_report_path}}`
-- CUEstrap latest report copy: `{{cuestrap_latest_report_path}}`
-- Mirror content equivalent: `{{mirror_content_equivalent}}`
+- Canonical factory run bundle: `{{factory_run_bundle_path}}`
+- Canonical factory manifest: `{{factory_manifest_path}}`
+- Factory latest pointer: `{{factory_latest_pointer_path}}`
+- CUEstrap report projection bundle: `{{cuestrap_run_bundle_path}}`
+- CUEstrap projection manifest: `{{cuestrap_manifest_path}}`
+- CUEstrap latest pointer: `{{cuestrap_latest_pointer_path}}`
+- Report content equivalent: `{{report_content_equivalent}}`
+- Summary content equivalent: `{{summary_content_equivalent}}`
 
 ## Validation notes
 
