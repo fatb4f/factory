@@ -17,17 +17,17 @@ upstreamCodexPublicationPlan: close({
 	})
 	issueTargets: [string]: #IssueTarget
 	writeOrder: ["report_run", "evidence_run", "report_latest", "evidence_latest", "declared_issue_updates"]
-	requireAuthorityRead: true
-	requireBothChannels: true
+	requireAuthorityRead:         true
+	requireBothChannels:          true
 	forbidUndeclaredIssueUpdates: true
 }) & {
 	issueTargets: {}
 }
 
 publicationAdmission: close({
-	reportsEnabled: true
-	evidenceEnabled: true
-	issueUpdatesEnabled: false
+	reportsEnabled:             true
+	evidenceEnabled:            true
+	issueUpdatesEnabled:        false
 	requireOperationalContract: true
-	requireFixedTemplate: true
+	requireFixedTemplate:       true
 })
