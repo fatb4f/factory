@@ -13,29 +13,30 @@ context_repo: fatb4f/cuestrap
 entrypoint: contracts/upstream-monitor/codex/cuestrap-contract-surface/AGENTS.md
 adapter: github_app
 
-Run the CUEstrap-adapted Codex contract-surface upstream-monitor loop through the admitted report/publication surface. Use the factory-local CUE profile as authority. Read the current fatb4f/cuestrap@main context before classifying upstream evidence. Use upstream openai/codex only as evidence. Check openai/codex targets `main` and `latest-alpha-cli`; keep both channels distinct in report and evidence.
+Run the CUEstrap-adapted Codex contract-surface upstream-monitor loop through the admitted publication surface. Use the factory-local CUE profile as authority. Read the current fatb4f/cuestrap@main context before classifying upstream evidence. Use upstream openai/codex only as evidence. Check openai/codex targets `main` and `latest-alpha-cli`; keep both channels distinct in report, summary, and evidence.
 
 Assess impact separately for:
 - the gopy, CUE, Pydantic, and Hypothesis supervisory session controller;
 - the gopy-backed Marimo workbook harness for idiomatic CUE.
 
-Apply `cuestrapCodexImpactReportTemplate`. Use `cuestrapPublicationPlan` for every factory artifact and cross-repository report copy.
+Apply `cuestrapCodexImpactReportTemplate`, `cuestrapRunSummaryTemplate`, and `cuestrapPublicationPlan` for every canonical factory artifact and cross-repository report projection.
 
 Required constraints:
-- Keep all authority, actuator instructions, evidence, and primary report plumbing in fatb4f/factory.
-- Do not create factory reports outside contracts/upstream-monitor/codex/cuestrap-contract-surface/reports/.
-- Do not create factory evidence outside contracts/upstream-monitor/codex/cuestrap-contract-surface/evidence/.
-- Publish only report copies to fatb4f/cuestrap under reports/upstream-monitor/codex/.
-- Make each cuestrap report copy byte-equivalent to the corresponding factory report.
+- Publish the canonical report, summary, evidence, and sealing manifest into one factory run directory declared by the publication plan.
+- Update only the factory `latest.json` pointer after the canonical manifest exists.
+- Publish only the admitted report-and-summary projection bundle to fatb4f/cuestrap.
+- Make each cuestrap report and summary copy byte-equivalent to its corresponding factory source.
+- Bind the CUEstrap projection manifest to the canonical factory bundle.
 - Do not publish evidence, CUE authority, AGENTS files, prompts, or actuator plumbing to cuestrap.
+- Treat legacy report and evidence paths as read-only migration inputs.
 - Do not update issues unless the target is declared by cuestrapPublicationPlan.
 - Do not treat ChatGPT output, GitHub adapter output, cuestrap repository state, or upstream Codex state as monitor authority.
 - Keep unresolved upstream signals unresolved unless concrete branch/ref/tag evidence is available.
 - Do not collapse latest-alpha-cli evidence into main or main evidence into alpha.
 
 Expected output:
-- Concise run report.
-- Factory-local report and evidence artifacts if publication is admitted.
-- Byte-equivalent report copies in fatb4f/cuestrap if mirror publication is admitted.
+- Concise run summary.
+- One sealed canonical factory run bundle if publication is admitted.
+- One CUEstrap report-projection bundle if mirror publication is admitted.
 - Issue update summary only for declared targets.
-- Validation notes for context reads, CUE exports, mirror equivalence, and forbidden-attractor checks.
+- Validation notes for context reads, CUE exports, bundle completeness, manifest seals, source binding, mirror equivalence, and forbidden-attractor checks.
