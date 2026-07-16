@@ -34,17 +34,31 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/codex/upstream-
 	high: [...core.#ReportItem]
 	notes: [...core.#ReportItem]
 	noLocalAction: [...core.#ReportItem]
+	bundle: close({
+		factoryPath:              core.#NonEmptyString
+		factoryManifestPath:      core.#NonEmptyString
+		factoryLatestPointerPath: core.#NonEmptyString
+		mirrorPath:               core.#NonEmptyString
+		mirrorManifestPath:       core.#NonEmptyString
+		mirrorLatestPointerPath:  core.#NonEmptyString
+		exportUnit:               "directory"
+		factoryComplete:          bool
+		mirrorComplete:           bool
+	})
 	validationNotes: close({
-		authorityRead:              bool
-		cuestrapContextRead:        bool
-		channelsKeptDistinct:       bool
-		publicationPlanRead:        bool
-		forbiddenAttractorsChecked: bool
-		factoryArtifactsPublished:  bool
-		cuestrapReportMirrored:     bool
-		mirrorContentEquivalent:    bool
-		noCuestrapPlumbingWritten:  bool
-		cueExecution:               "not_available_to_github_app" | "executed_elsewhere"
+		authorityRead:                bool
+		cuestrapContextRead:          bool
+		channelsKeptDistinct:         bool
+		publicationPlanRead:          bool
+		forbiddenAttractorsChecked:   bool
+		factoryRunBundlePublished:    bool
+		factoryBundleManifestSealed:  bool
+		cuestrapReportBundleMirrored: bool
+		mirrorContentEquivalent:      bool
+		mirrorManifestSourceBound:    bool
+		latestPointersOnly:           bool
+		noCuestrapPlumbingWritten:    bool
+		cueExecution:                 "not_available_to_github_app" | "executed_elsewhere"
 	})
 })
 
@@ -69,4 +83,20 @@ cuestrapCodexImpactReportTemplate: close({
 	requireCuestrapRevision:       true
 	requireUnresolvedPreservation: true
 	requireMirrorDisclosure:       true
+})
+
+cuestrapRunSummaryTemplate: close({
+	filename:  "summary.md"
+	mediaType: "text/markdown"
+	sections: [
+		"Run identity",
+		"CUEstrap context",
+		"Channel delta",
+		"Purpose decisions",
+		"Run bundles",
+		"Validation",
+	]
+	requireChannelHeads:     true
+	requirePurposeDecisions: true
+	requireTerminalState:    true
 })
