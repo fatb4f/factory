@@ -20,19 +20,19 @@ forbiddenAttractors: [
 
 validationAssertions: close({
 	acceptedSignalExact:             true
-	mainRefExact:                   true
-	alphaRefExact:                  true
-	channelsDistinct:               true
-	upstreamEvidenceOnly:           true
-	chatgptIsActuatorNotAuthority:  true
-	runArtifactsCoLocated:          true
-	bundleExportUnitIsDirectory:    true
-	bundleManifestSealsArtifacts:   true
-	latestIsPointerOnly:            true
-	legacyPathsReadOnly:            true
+	mainRefExact:                    true
+	alphaRefExact:                   true
+	channelsDistinct:                true
+	upstreamEvidenceOnly:            true
+	chatgptIsActuatorNotAuthority:   true
+	runArtifactsCoLocated:           true
+	bundleExportUnitIsDirectory:     true
+	bundleManifestSealsArtifacts:    true
+	latestIsPointerOnly:             true
+	legacyPathsReadOnly:             true
 	undeclaredIssueUpdatesForbidden: true
-	unresolvedEvidencePreserved:    true
-	workflowClosed:                 true
+	unresolvedEvidencePreserved:     true
+	workflowClosed:                  true
 })
 
 negativeFixtures: {
