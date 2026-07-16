@@ -95,18 +95,18 @@ cuestrapPublicationPlan: close({
 }
 
 cuestrapPublicationAdmission: close({
-	factoryRunBundleEnabled:             true
-	factoryEvidenceEnabled:              true
-	summariesEnabled:                    true
-	manifestsEnabled:                    true
-	latestPointersEnabled:               true
-	cuestrapRepositoryArtifactsEnabled:  false
+	factoryRunBundleEnabled:              true
+	factoryEvidenceEnabled:               true
+	summariesEnabled:                     true
+	manifestsEnabled:                     true
+	latestPointersEnabled:                true
+	cuestrapRepositoryArtifactsEnabled:   false
 	cuestrapEvidenceEnabled:              false
 	cuestrapPlumbingEnabled:              false
-	issueUpdatesEnabled:                 true
-	requireOperationalContract:          true
-	requireFixedTemplate:                true
-	requireCompleteFactoryBundle:        true
+	issueUpdatesEnabled:                  true
+	requireOperationalContract:           true
+	requireFixedTemplate:                 true
+	requireCompleteFactoryBundle:         true
 	requireNoCuestrapRepositoryArtifacts: true
-	requireRunLogComment:                true
+	requireRunLogComment:                 true
 })
