@@ -14,7 +14,7 @@ cuestrapForbiddenAttractors: [
 	"factory run artifact written outside its runs/<run_id>/ bundle",
 	"bundle manifest published before required artifacts",
 	"mutable latest report or evidence copy",
-	"legacy report or evidence path used for a new write",
+	"legacy report or evidence ledger retained",
 	"monitor artifact file written to fatb4f/cuestrap",
 	"evidence artifact written to fatb4f/cuestrap",
 	"CUE or AGENTS plumbing written to fatb4f/cuestrap",
@@ -40,7 +40,7 @@ cuestrapValidationAssertions: close({
 	factoryBundleExportUnitDirectory:     true
 	factoryBundleManifestSealsArtifacts:  true
 	latestPointersOnly:                   true
-	legacyPathsReadOnly:                  true
+	legacyLedgersPruned:                  true
 	cuestrapRepositoryArtifactsForbidden: true
 	cuestrapEvidenceForbidden:            true
 	cuestrapPlumbingForbidden:            true
@@ -64,6 +64,7 @@ cuestrapNegativeFixtures: {
 	unbundledFactoryArtifact: close({path: string & !~"^contracts/upstream-monitor/codex/cuestrap-contract-surface/runs/[^/]+/"})
 	manifestBeforeArtifacts: close({manifestWritten: true, requiredArtifactsComplete: false})
 	mutableFactoryLatestCopy: close({path: string & =~"^contracts/upstream-monitor/codex/cuestrap-contract-surface/(reports|evidence)/latest"})
+	legacyLedgerPresent: close({path: string & =~"^contracts/upstream-monitor/codex/cuestrap-contract-surface/(reports|evidence)/", present: true})
 	cuestrapArtifactWrite: close({repository: "fatb4f/cuestrap", kind: "report" | "summary" | "evidence" | "manifest" | "latest_pointer"})
 	cuestrapEvidenceWrite: close({repository: "fatb4f/cuestrap", kind: "evidence"})
 	cuestrapPlumbingWrite: close({repository: "fatb4f/cuestrap", kind: "authority" | "instruction" | "actuator"})

@@ -49,10 +49,6 @@ cuestrapPublicationPlan: close({
 			apiVersion: "factory.upstream-monitor.latest-run/v1"
 			kind:       "LatestUpstreamMonitorRun"
 		})
-		legacyReadOnly: close({
-			reportLatestPath:   "contracts/upstream-monitor/codex/cuestrap-contract-surface/reports/latest.codex-impact.md"
-			evidenceLatestPath: "contracts/upstream-monitor/codex/cuestrap-contract-surface/evidence/latest.codex-impact.report.json"
-		})
 	})
 	issueTargets: [string]: #IssueTarget
 	issueAudit: close({
@@ -82,6 +78,7 @@ cuestrapPublicationPlan: close({
 	forbidRunArtifactsOutsideBundle:   true
 	forbidMutableLatestArtifactCopies: true
 	forbidLegacyWrites:                true
+	forbidLegacyPathsPresent:          true
 	forbidCuestrapRepositoryArtifacts: true
 	forbidCuestrapEvidence:            true
 	forbidCuestrapPlumbing:            true
@@ -100,6 +97,7 @@ cuestrapPublicationAdmission: close({
 	summariesEnabled:                     true
 	manifestsEnabled:                     true
 	latestPointersEnabled:                true
+	legacyLedgersPruned:                   true
 	cuestrapRepositoryArtifactsEnabled:   false
 	cuestrapEvidenceEnabled:              false
 	cuestrapPlumbingEnabled:              false
