@@ -27,16 +27,23 @@ jobs:
           version: v0.16.0
       - name: Format check
         working-directory: contracts/factory/workers/codex/upstream-monitor
-        run: cue fmt --check *.cue
+        run: cue fmt --check contract.cue profiles_factory/*.cue profiles_cuestrap/*.cue
       - name: Vet monitor authority
         working-directory: contracts/factory/workers/codex/upstream-monitor
         run: cue vet ./...
       - name: Export factory profile
         working-directory: contracts/factory/workers/codex/upstream-monitor
-        run: cue export -e publicContract --out json > "$RUNNER_TEMP/upstream-monitor.factory.public.json"
+        run: cue export ./profiles_factory -e publicContract --out json > "$RUNNER_TEMP/upstream-monitor.factory.public.json"
       - name: Export cuestrap profile
         working-directory: contracts/factory/workers/codex/upstream-monitor
-        run: cue export -e cuestrapPublicContract --out json > "$RUNNER_TEMP/upstream-monitor.cuestrap.public.json"
+        run: cue export ./profiles_cuestrap -e publicContract --out json > "$RUNNER_TEMP/upstream-monitor.cuestrap.public.json"
+      - name: Check profile containment
+        run: |
+          test -f contracts/factory/workers/codex/upstream-monitor/contract.cue
+          test -f contracts/factory/workers/codex/upstream-monitor/profiles_factory/public.cue
+          test -f contracts/factory/workers/codex/upstream-monitor/profiles_cuestrap/public.cue
+          test ! -e contracts/factory/workers/codex/upstream-monitor/surfaces.cue
+          test ! -e contracts/factory/workers/codex/upstream-monitor/cuestrap_surfaces.cue
       - name: Check actuator ingress
         run: |
           test -f contracts/upstream-monitor/AGENTS.md
