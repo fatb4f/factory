@@ -16,17 +16,17 @@ forbiddenAttractors: [
 ]
 
 validationAssertions: close({
-	acceptedSignalExact: true
-	mainRefExact: true
-	alphaRefExact: true
-	channelsDistinct: true
-	upstreamEvidenceOnly: true
-	chatgptIsActuatorNotAuthority: true
-	reportPathsBounded: true
-	evidencePathsBounded: true
+	acceptedSignalExact:             true
+	mainRefExact:                    true
+	alphaRefExact:                   true
+	channelsDistinct:                true
+	upstreamEvidenceOnly:            true
+	chatgptIsActuatorNotAuthority:   true
+	reportPathsBounded:              true
+	evidencePathsBounded:            true
 	undeclaredIssueUpdatesForbidden: true
-	unresolvedEvidencePreserved: true
-	workflowClosed: true
+	unresolvedEvidencePreserved:     true
+	workflowClosed:                  true
 })
 
 negativeFixtures: {
