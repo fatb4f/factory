@@ -4,10 +4,10 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/codex/upstream-
 
 #ImpactReport: close({
 	apiVersion: "factory.upstream-monitor.codex/v1"
-	kind: "CodexImpactReport"
-	loop: "codex-contract-surface"
-	signal_id: "loop_bootstrap_request"
-	run_id: core.#NonEmptyString
+	kind:       "CodexImpactReport"
+	loop:       "codex-contract-surface"
+	signal_id:  "loop_bootstrap_request"
+	run_id:     core.#NonEmptyString
 	channels: close({
 		main: core.#ChannelObservation & {channel: "main"}
 		"latest-alpha-cli": core.#ChannelObservation & {channel: "latest-alpha-cli"}
@@ -17,11 +17,11 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/codex/upstream-
 	notes: [...core.#ReportItem]
 	noLocalAction: [...core.#ReportItem]
 	validationNotes: close({
-		authorityRead: bool
-		channelsKeptDistinct: bool
-		publicationPlanRead: bool
+		authorityRead:              bool
+		channelsKeptDistinct:       bool
+		publicationPlanRead:        bool
 		forbiddenAttractorsChecked: bool
-		cueExecution: "not_available_to_github_app" | "executed_elsewhere"
+		cueExecution:               "not_available_to_github_app" | "executed_elsewhere"
 	})
 })
 
@@ -37,6 +37,6 @@ upstreamCodexImpactReportTemplate: close({
 		"No local action",
 		"Validation notes",
 	]
-	requireSeparateChannelState: true
+	requireSeparateChannelState:   true
 	requireUnresolvedPreservation: true
 })
