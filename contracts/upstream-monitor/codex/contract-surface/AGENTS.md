@@ -10,14 +10,15 @@ contracts/upstream-monitor/codex/AGENTS.md
 contracts/upstream-monitor/codex/contract-surface/AGENTS.md
 contracts/factory/workers/codex/upstream-monitor/AGENTS.md
 contracts/factory/workers/codex/upstream-monitor/contract.cue
-contracts/factory/workers/codex/upstream-monitor/surfaces.cue
-contracts/factory/workers/codex/upstream-monitor/report.cue
-contracts/factory/workers/codex/upstream-monitor/publication.cue
-contracts/factory/workers/codex/upstream-monitor/assertions.cue
-contracts/factory/workers/codex/upstream-monitor/public.cue
+contracts/factory/workers/codex/upstream-monitor/profiles_factory/contract.cue
+contracts/factory/workers/codex/upstream-monitor/profiles_factory/surfaces.cue
+contracts/factory/workers/codex/upstream-monitor/profiles_factory/report.cue
+contracts/factory/workers/codex/upstream-monitor/profiles_factory/publication.cue
+contracts/factory/workers/codex/upstream-monitor/profiles_factory/assertions.cue
+contracts/factory/workers/codex/upstream-monitor/profiles_factory/public.cue
 ```
 
-The factory-local files are semantic authority. This file is the stable scheduled-task entrypoint and actuator procedure.
+The shared root contract and `profiles_factory` package are semantic authority. Do not load any other profile package for this run. This file is the stable scheduled-task entrypoint and actuator procedure.
 
 ## Accepted input
 
@@ -40,7 +41,7 @@ The ChatGPT scheduled task is the actuator. Keep reasoning in ChatGPT, constrain
 
 ## Run procedure
 
-1. Read all authority files and confirm `operational: true`.
+1. Read the shared root contract and every file in `profiles_factory`; confirm `operational: true`.
 2. Read `upstreamCodexImpactReportTemplate` and `upstreamCodexPublicationPlan`.
 3. Resolve the current target-repository revision when available.
 4. Acquire concrete evidence for `openai/codex@main`.
@@ -80,6 +81,6 @@ No other report or evidence path is admitted. `issueTargets: {}` means no issue 
 
 ## Validation notes
 
-The GitHub App actuator cannot run CUE commands. State that limitation; do not claim `cue vet` or `cue export` ran. Still inspect the CUE exports structurally and check all forbidden attractors listed in `assertions.cue`.
+The GitHub App actuator cannot run CUE commands. State that limitation; do not claim `cue vet` or `cue export` ran. Still inspect the selected package structurally and check all forbidden attractors listed in `profiles_factory/assertions.cue`.
 
 A missing authority file, template, channel, publication path, or required concrete observation terminates as `terminal_deferred`, `coverage_gap`, or `terminal_abort` as appropriate.
