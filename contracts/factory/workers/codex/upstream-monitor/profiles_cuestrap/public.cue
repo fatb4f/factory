@@ -4,13 +4,13 @@ publicContract: close({
 	apiVersion: "factory.upstream-monitor.codex.cuestrap/v1"
 	kind:       "CuestrapCodexContractSurfaceMonitor"
 	operational: bool
-	signal: #AcceptedSignal
+	signal: #CuestrapAcceptedSignal
 	authority: _
 	context: _
 	channels: _
 	actuator: _
 	workflow: _
-	surfaces: [...#Surface]
+	surfaces: [...#CuestrapSurface]
 	classification: _
 	reportTemplate: _
 	publicationPlan: _
@@ -21,19 +21,19 @@ publicContract: close({
 }) & {
 	apiVersion: "factory.upstream-monitor.codex.cuestrap/v1"
 	kind:       "CuestrapCodexContractSurfaceMonitor"
-	operational: operational
-	signal: acceptedSignal
-	authority: authorityModel
-	context: context
+	operational: cuestrapOperational
+	signal: cuestrapAcceptedSignal
+	authority: cuestrapAuthorityModel
+	context: cuestrapContext
 	channels: channels
 	actuator: chatgptActuator
-	workflow: workflow
-	surfaces: surfaceCatalogue
-	classification: classificationPolicy
+	workflow: cuestrapWorkflow
+	surfaces: cuestrapSurfaceCatalogue
+	classification: cuestrapClassificationPolicy
 	reportTemplate: cuestrapCodexImpactReportTemplate
-	publicationPlan: publicationPlan
-	publicationAdmission: publicationAdmission
-	forbiddenAttractors: forbiddenAttractors
-	validationAssertions: validationAssertions
-	validationPlan: validationPlan
+	publicationPlan: cuestrapPublicationPlan
+	publicationAdmission: cuestrapPublicationAdmission
+	forbiddenAttractors: cuestrapForbiddenAttractors
+	validationAssertions: cuestrapValidationAssertions
+	validationPlan: cuestrapValidationPlan
 }
