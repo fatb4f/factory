@@ -2,14 +2,14 @@ package cuestrapprofile
 
 import core "github.com/fatb4f/factory/contracts/factory/workers/codex/upstream-monitor:upstreammonitor"
 
-#PurposeImpact: close({
+#CuestrapPurposeImpact: close({
 	purpose:        #CuestrapPurposeID
 	impactDecision: core.#ImpactDecision
 	summary:        core.#NonEmptyString
 	surfaceMatches: [...core.#NonEmptyString]
 })
 
-#ImpactReport: close({
+#CuestrapImpactReport: close({
 	apiVersion: "factory.upstream-monitor.codex.cuestrap/v1"
 	kind:       "CuestrapCodexImpactReport"
 	loop:       "cuestrap-codex-contract-surface"
@@ -23,10 +23,10 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/codex/upstream-
 		"latest-alpha-cli": core.#ChannelObservation & {channel: "latest-alpha-cli"}
 	})
 	purposeImpact: close({
-		supervisorySessionController: #PurposeImpact & {
+		supervisorySessionController: #CuestrapPurposeImpact & {
 			purpose: "supervisory-session-controller"
 		}
-		idiomaticCueWorkbookHarness: #PurposeImpact & {
+		idiomaticCueWorkbookHarness: #CuestrapPurposeImpact & {
 			purpose: "idiomatic-cue-workbook-harness"
 		}
 	})
