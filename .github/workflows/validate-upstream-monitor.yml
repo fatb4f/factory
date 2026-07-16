@@ -27,7 +27,9 @@ jobs:
           version: v0.16.0
       - name: Format check
         working-directory: contracts/factory/workers/codex/upstream-monitor
-        run: cue fmt --check contract.cue profiles_factory/*.cue profiles_cuestrap/*.cue
+        run: |
+          cue fmt contract.cue profiles_factory/*.cue profiles_cuestrap/*.cue
+          git diff --exit-code -- contract.cue profiles_factory profiles_cuestrap
       - name: Vet monitor authority
         working-directory: contracts/factory/workers/codex/upstream-monitor
         run: cue vet ./...
