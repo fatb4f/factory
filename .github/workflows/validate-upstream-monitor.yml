@@ -31,27 +31,12 @@ jobs:
       - name: Vet monitor authority
         working-directory: contracts/factory/workers/codex/upstream-monitor
         run: cue vet -c=false ./...
-      - name: Capture profile export diagnostics
-        working-directory: contracts/factory/workers/codex/upstream-monitor
-        run: |
-          set +e
-          cue export ./profiles_factory -e publicContract --out json > "$RUNNER_TEMP/upstream-monitor.factory.public.json" 2> "$RUNNER_TEMP/factory-export.log"
-          echo "$?" > "$RUNNER_TEMP/factory-export.status"
-          cue export ./profiles_cuestrap -e publicContract --out json > "$RUNNER_TEMP/upstream-monitor.cuestrap.public.json" 2> "$RUNNER_TEMP/cuestrap-export.log"
-          echo "$?" > "$RUNNER_TEMP/cuestrap-export.status"
-      - name: Upload profile export diagnostics
-        uses: actions/upload-artifact@v4
-        with:
-          name: upstream-monitor-export-diagnostics
-          path: |
-            ${{ runner.temp }}/factory-export.log
-            ${{ runner.temp }}/factory-export.status
-            ${{ runner.temp }}/cuestrap-export.log
-            ${{ runner.temp }}/cuestrap-export.status
       - name: Export factory profile
-        run: test "$(cat "$RUNNER_TEMP/factory-export.status")" -eq 0
+        working-directory: contracts/factory/workers/codex/upstream-monitor
+        run: cue export ./profiles_factory -e publicContract --out json > "$RUNNER_TEMP/upstream-monitor.factory.public.json"
       - name: Export cuestrap profile
-        run: test "$(cat "$RUNNER_TEMP/cuestrap-export.status")" -eq 0
+        working-directory: contracts/factory/workers/codex/upstream-monitor
+        run: cue export ./profiles_cuestrap -e publicContract --out json > "$RUNNER_TEMP/upstream-monitor.cuestrap.public.json"
       - name: Check profile containment
         run: |
           test -f contracts/factory/workers/codex/upstream-monitor/contract.cue
