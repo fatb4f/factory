@@ -59,7 +59,7 @@ cuestrapNegativeFixtures: {
 cuestrapValidationPlan: close({
 	commands: [
 		"cue fmt --check contract.cue profiles_cuestrap/*.cue",
-		"cue vet -c ./profiles_cuestrap",
+		"cue vet -c=false ./...",
 		"cue export ./profiles_cuestrap -e publicContract --out json",
 	]
 	adapterLimitation: "The GitHub App actuator cannot execute these commands; repository CI or a checked local environment performs executable validation."
