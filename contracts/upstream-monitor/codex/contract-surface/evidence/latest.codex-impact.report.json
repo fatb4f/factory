@@ -3,16 +3,16 @@
   "kind": "CodexImpactReport",
   "loop": "codex-contract-surface",
   "signal_id": "loop_bootstrap_request",
-  "run_id": "20260716T162023Z",
-  "target_revision": "4aa0ca5121038e2c5949d5cd55b9a10f9dbff0e4",
+  "run_id": "20260716T181509Z",
   "channels": {
     "main": {
       "channel": "main",
       "status": "resolved",
-      "head_commit": "41efc6333e3ed476ce824aa729656f97503c10b8",
+      "head_commit": "726b6378d2513c25e5e59b1371326be2fe194be4",
       "evidence": [
-        "compare latest-alpha-cli...main: diverged; main ahead 10, behind 1",
-        "main-only changes intersect permissions, config, multi-agent, skills, context/compaction, MCP, and sandbox surfaces"
+        "prior profile head 41efc6333e3ed476ce824aa729656f97503c10b8",
+        "five commits ahead of the prior profile head and zero behind",
+        "app metadata, connector metadata, and environment-instruction context paths matched declared surfaces"
       ]
     },
     "latest-alpha-cli": {
@@ -20,70 +20,62 @@
       "status": "resolved",
       "head_commit": "dd1363c67cbf530e362ea8e4c623d66fe97a5bc5",
       "evidence": [
-        "compare main...latest-alpha-cli: diverged; alpha ahead 1, behind 10",
-        "alpha-only changed path: codex-rs/Cargo.toml"
+        "identical to prior profile head dd1363c67cbf530e362ea8e4c623d66fe97a5bc5",
+        "main is fifteen commits ahead and one behind this independent alpha ref"
       ]
     }
   },
-  "critical": [
-    {
-      "id": "main-instruction-skill-selection",
-      "channels": ["main"],
-      "severity": "critical",
-      "impactDecision": "blocking-gate",
-      "title": "Instruction and skill-selection surface changed",
-      "summary": "Dynamic skill-selection implementations changed and an implicit-invocation test surface was removed.",
-      "surfaceMatches": ["instructions"],
-      "evidence": ["codex-rs/ext/skills/src/dynamic_skill_selector/*", "codex-rs/ext/skills/tests/implicit_invocation.rs removed"],
-      "localContractImpact": "Review instruction-chain, skill namespace, discovery, and invocation contracts before adoption."
-    },
-    {
-      "id": "main-auth-permissions-sandbox",
-      "channels": ["main"],
-      "severity": "critical",
-      "impactDecision": "blocking-gate",
-      "title": "Permission and sandbox surfaces changed",
-      "summary": "Protocol permissions, app-server schemas, config locking, sandbox transforms, and MCP tests changed.",
-      "surfaceMatches": ["authentication", "mcp-tools"],
-      "evidence": ["codex-rs/protocol/src/permissions.rs", "codex-rs/app-server-protocol/src/protocol/v2/permissions.rs", "codex-rs/sandboxing/src/policy_transforms.rs", "codex-rs/core/tests/suite/rmcp_client.rs"],
-      "localContractImpact": "Review authorization, approval, sandbox, and MCP lifecycle contracts before propagation."
-    }
-  ],
+  "critical": [],
   "high": [
     {
-      "id": "main-multi-agent-protocol",
+      "id": "main-app-metadata-connector-api",
       "channels": ["main"],
       "severity": "high",
       "impactDecision": "contract-update",
-      "title": "Multi-agent lifecycle surface changed",
-      "summary": "Agent roles, jobs, spawn handlers, tool specs, environment waiting, and notification tests changed.",
-      "surfaceMatches": ["agent-messages"],
-      "evidence": ["codex-rs/core/src/tools/handlers/multi_agents*", "codex-rs/core/tests/suite/subagent_notifications.rs"],
-      "localContractImpact": "Agent message envelope and lifecycle contracts may require updates."
+      "title": "App metadata and connector read protocol expanded",
+      "summary": "A new app-server apps/read API and connector metadata store expose additional connector discovery and tool-summary state.",
+      "surfaceMatches": ["mcp-tools"],
+      "evidence": [
+        "codex-rs/app-server-protocol/schema/json/v2/AppsReadParams.json",
+        "codex-rs/app-server-protocol/schema/json/v2/AppsReadResponse.json",
+        "codex-rs/app-server-protocol/src/protocol/v2/apps.rs",
+        "codex-rs/connectors/src/metadata_store.rs",
+        "codex-rs/chatgpt/src/connectors.rs"
+      ],
+      "localContractImpact": "Review MCP and connector lifecycle projections that assume app-list-only metadata."
     },
     {
-      "id": "main-config-context-compaction",
+      "id": "main-environment-instruction-context",
       "channels": ["main"],
       "severity": "high",
       "impactDecision": "contract-update",
-      "title": "Configuration and context surfaces changed",
-      "summary": "Config parsing, aliases, schema, environment and turn context, and compaction tests changed.",
-      "surfaceMatches": ["configuration", "context-fragments"],
-      "evidence": ["codex-rs/config/src/config_toml.rs", "codex-rs/core/config.schema.json", "codex-rs/core/src/context/environment_context.rs", "codex-rs/app-server/tests/suite/v2/compaction.rs"],
-      "localContractImpact": "Configuration layering, context injection, and compaction contracts require comparison."
+      "title": "Environment instructions entered session context state",
+      "summary": "Environment instructions are now represented in world state and context history.",
+      "surfaceMatches": ["context-fragments"],
+      "evidence": [
+        "codex-rs/core/src/context/environments_instructions.rs",
+        "codex-rs/core/src/context/world_state/environments_instructions.rs",
+        "codex-rs/core/src/context_manager/history_tests.rs",
+        "codex-rs/core/src/session/world_state.rs"
+      ],
+      "localContractImpact": "Review context injection, persistence, and compaction boundaries for environment-provided instructions."
     }
   ],
   "notes": [
     {
-      "id": "alpha-release-channel-divergence",
+      "id": "release-channel-divergence-expanded",
       "channels": ["main", "latest-alpha-cli"],
       "severity": "note",
       "impactDecision": "note",
-      "title": "Main and alpha refs are divergent",
-      "summary": "Alpha is one commit ahead and ten behind main; preserve independent baselines.",
+      "title": "Main and alpha divergence expanded",
+      "summary": "Main moved from ten to fifteen commits ahead of alpha while alpha remains one commit ahead on its own line.",
       "surfaceMatches": ["release-channel"],
-      "evidence": ["main head 41efc6333e3ed476ce824aa729656f97503c10b8", "alpha head dd1363c67cbf530e362ea8e4c623d66fe97a5bc5"],
-      "localContractImpact": "Do not infer alpha state from main or main state from alpha."
+      "evidence": [
+        "main head 726b6378d2513c25e5e59b1371326be2fe194be4",
+        "alpha head dd1363c67cbf530e362ea8e4c623d66fe97a5bc5",
+        "compare latest-alpha-cli...main: main ahead 15 and behind 1"
+      ],
+      "localContractImpact": "Preserve separate channel baselines and do not infer either ref from the other."
     }
   ],
   "noLocalAction": [],
@@ -93,6 +85,5 @@
     "publicationPlanRead": true,
     "forbiddenAttractorsChecked": true,
     "cueExecution": "not_available_to_github_app"
-  },
-  "terminal_state": "terminal_success"
+  }
 }
