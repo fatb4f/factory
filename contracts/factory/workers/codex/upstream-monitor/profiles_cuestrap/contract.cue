@@ -84,9 +84,9 @@ cuestrapAuthorityModel: close({
 		"GitHub adapter responses",
 		"ChatGPT observations",
 		"fatb4f/cuestrap repository observations",
-		"generated factory reports",
-		"generated factory evidence",
-		"generated cuestrap report copies",
+		"generated factory run bundles",
+		"generated cuestrap report-bundle projections",
+		"legacy generated reports and evidence",
 	]
 })
 
@@ -103,9 +103,14 @@ cuestrapWorkflow: close({
 		"alpha_acquisition",
 		"semantic_classification",
 		"report_render",
+		"summary_render",
 		"publication_admission",
-		"factory_publication",
-		"cuestrap_report_mirror",
+		"factory_bundle_publication",
+		"factory_manifest_seal",
+		"factory_latest_pointer_update",
+		"cuestrap_report_bundle_mirror",
+		"cuestrap_mirror_manifest_seal",
+		"cuestrap_latest_pointer_update",
 	]
 	transitions: [
 		{from: "authority_read", to: "input_admission"},
@@ -114,10 +119,15 @@ cuestrapWorkflow: close({
 		{from: "main_acquisition", to: "alpha_acquisition"},
 		{from: "alpha_acquisition", to: "semantic_classification"},
 		{from: "semantic_classification", to: "report_render"},
-		{from: "report_render", to: "publication_admission"},
-		{from: "publication_admission", to: "factory_publication"},
-		{from: "factory_publication", to: "cuestrap_report_mirror"},
-		{from: "cuestrap_report_mirror", to: "terminal_success"},
+		{from: "report_render", to: "summary_render"},
+		{from: "summary_render", to: "publication_admission"},
+		{from: "publication_admission", to: "factory_bundle_publication"},
+		{from: "factory_bundle_publication", to: "factory_manifest_seal"},
+		{from: "factory_manifest_seal", to: "factory_latest_pointer_update"},
+		{from: "factory_latest_pointer_update", to: "cuestrap_report_bundle_mirror"},
+		{from: "cuestrap_report_bundle_mirror", to: "cuestrap_mirror_manifest_seal"},
+		{from: "cuestrap_mirror_manifest_seal", to: "cuestrap_latest_pointer_update"},
+		{from: "cuestrap_latest_pointer_update", to: "terminal_success"},
 	]
 	failureStates: ["terminal_abort", "terminal_deferred", "coverage_gap"]
 	terminal: "terminal_success"
