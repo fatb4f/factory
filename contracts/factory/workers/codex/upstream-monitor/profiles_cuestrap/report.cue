@@ -10,16 +10,16 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/codex/upstream-
 })
 
 #CuestrapImpactReport: close({
-	apiVersion: "factory.upstream-monitor.codex.cuestrap/v1"
-	kind:       "CuestrapCodexImpactReport"
-	loop:       "cuestrap-codex-contract-surface"
-	signal_id:  "loop_bootstrap_request"
-	profile_id: "cuestrap"
-	run_id:     core.#NonEmptyString
+	apiVersion:        "factory.upstream-monitor.codex.cuestrap/v1"
+	kind:              "CuestrapCodexImpactReport"
+	loop:              "cuestrap-codex-contract-surface"
+	signal_id:         "loop_bootstrap_request"
+	profile_id:        "cuestrap"
+	run_id:            core.#NonEmptyString
 	factory_revision:  core.#CommitSHA
 	cuestrap_revision: core.#CommitSHA
 	channels: close({
-		main:               core.#ChannelObservation & {channel: "main"}
+		main: core.#ChannelObservation & {channel: "main"}
 		"latest-alpha-cli": core.#ChannelObservation & {channel: "latest-alpha-cli"}
 	})
 	purposeImpact: close({
@@ -30,21 +30,21 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/codex/upstream-
 			purpose: "idiomatic-cue-workbook-harness"
 		}
 	})
-	critical:      [...core.#ReportItem]
-	high:          [...core.#ReportItem]
-	notes:         [...core.#ReportItem]
+	critical: [...core.#ReportItem]
+	high: [...core.#ReportItem]
+	notes: [...core.#ReportItem]
 	noLocalAction: [...core.#ReportItem]
 	validationNotes: close({
-		authorityRead:             bool
-		cuestrapContextRead:       bool
-		channelsKeptDistinct:      bool
-		publicationPlanRead:       bool
+		authorityRead:              bool
+		cuestrapContextRead:        bool
+		channelsKeptDistinct:       bool
+		publicationPlanRead:        bool
 		forbiddenAttractorsChecked: bool
-		factoryArtifactsPublished: bool
-		cuestrapReportMirrored:    bool
-		mirrorContentEquivalent:   bool
-		noCuestrapPlumbingWritten: bool
-		cueExecution: "not_available_to_github_app" | "executed_elsewhere"
+		factoryArtifactsPublished:  bool
+		cuestrapReportMirrored:     bool
+		mirrorContentEquivalent:    bool
+		noCuestrapPlumbingWritten:  bool
+		cueExecution:               "not_available_to_github_app" | "executed_elsewhere"
 	})
 })
 
@@ -64,9 +64,9 @@ cuestrapCodexImpactReportTemplate: close({
 		"Publication",
 		"Validation notes",
 	]
-	requireSeparateChannelState: true
-	requirePurposeImpact:        true
-	requireCuestrapRevision:     true
+	requireSeparateChannelState:   true
+	requirePurposeImpact:          true
+	requireCuestrapRevision:       true
 	requireUnresolvedPreservation: true
-	requireMirrorDisclosure:     true
+	requireMirrorDisclosure:       true
 })
