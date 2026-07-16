@@ -64,16 +64,12 @@ The ChatGPT scheduled task remains the semantic actuator. Do not replace it with
 15. Assign every reportable item to one or both declared cuestrap purposes.
 16. Classify admitted items as `none`, `note`, `contract-update`, or `blocking-gate`.
 17. Render the fixed report and concise summary with separate channel and purpose sections.
-18. Check the canonical factory bundle, mirror projection bundle, latest pointers, and issue target against `cuestrapPublicationPlan`.
+18. Check the canonical factory bundle, latest pointer, and issue target against `cuestrapPublicationPlan`.
 19. Write factory `report.md`, `summary.md`, and `evidence.json` into one `runs/<run_id>/` directory.
 20. Fetch their exact Git blob identities and write the factory `manifest.json` last.
 21. Replace the factory `latest.json` only after the factory bundle is sealed.
-22. Copy the exact report and summary bytes into one CUEstrap report-projection directory for the same run ID.
-23. Write the CUEstrap projection `manifest.json`, binding it to the canonical factory bundle and recording the mirrored blob identities.
-24. Replace the CUEstrap `latest.json` only after the projection manifest exists.
-25. Verify that the CUEstrap report and summary copies are byte-equivalent to their factory sources.
-26. Append exactly one run comment to `fatb4f/cuestrap#9` after the terminal state is known. Include the run ID, terminal state, channel heads, purpose decisions, canonical bundle link, projection link, validation failures, and tracking identity.
-27. Return the concise run summary and validation notes.
+22. Append exactly one run comment to `fatb4f/cuestrap#9` after the terminal state is known. Include the run ID, terminal state, channel heads, purpose decisions, canonical factory bundle link, validation failures, and tracking identity.
+23. Return the concise run summary and validation notes.
 
 ## Tracking issue rules
 
@@ -82,15 +78,15 @@ The ChatGPT scheduled task remains the semantic actuator. Do not replace it with
 - Every run that reaches `terminal_success`, `terminal_abort`, `terminal_deferred`, or `coverage_gap` requires one comment.
 - Before posting, search existing comments for the exact tracking identity `cuestrap-codex-contract-surface/<run_id>`.
 - If that identity already exists, do not post again. Record the existing comment URL as the satisfied issue update.
-- A successful run comment is posted after bundle and pointer publication.
-- A failed, deferred, or coverage-gap run comment is posted immediately after the terminal state is determined and includes whatever artifact links are available plus the failure reason.
+- A successful run comment is posted after factory bundle and pointer publication.
+- A failed, deferred, or coverage-gap run comment is posted immediately after the terminal state is determined and includes whatever factory artifact links are available plus the failure reason.
 - Do not use impact severity as an issue-update gate. The declared policy is `every_run`.
 
 ## Context rules
 
 - CUEstrap repository state is required subject context, not monitor authority.
 - Do not classify against stale cuestrap paths when the current revision is resolvable.
-- Do not mutate cuestrap implementation, tests, configuration, CUE contracts, AGENTS files, or actuator plumbing.
+- Do not mutate cuestrap implementation, tests, configuration, CUE contracts, AGENTS files, actuator plumbing, or monitor artifact paths.
 - A missing required context path terminates as `coverage_gap` or `terminal_deferred`; do not silently omit it.
 
 ## Evidence rules
@@ -115,24 +111,12 @@ It contains `report.md`, `summary.md`, `evidence.json`, and the sealing `manifes
 contracts/upstream-monitor/codex/cuestrap-contract-surface/latest.json
 ```
 
-The CUEstrap report projection is limited to:
+Legacy factory report and evidence paths are read-only migration inputs. No new run artifact may be written there.
 
-```text
-reports/upstream-monitor/codex/runs/<run_id>/
-```
-
-It contains byte-equivalent `report.md` and `summary.md` copies plus a projection `manifest.json` that references the canonical factory bundle. Its only mutable discovery artifact is:
-
-```text
-reports/upstream-monitor/codex/latest.json
-```
-
-Legacy report and evidence paths are read-only migration inputs. No new run artifact may be written there. No evidence artifact, CUE authority, AGENTS file, prompt, actuator configuration, or other plumbing may be written to `fatb4f/cuestrap`.
-
-The only admitted non-artifact mutation in CUEstrap is one deduplicated append-only comment per run on issue `#9`.
+No monitor artifact file may be written to `fatb4f/cuestrap`. This includes reports, summaries, evidence, manifests, and latest pointers. The only admitted mutation in CUEstrap is one deduplicated append-only comment per run on issue `#9`.
 
 ## Validation notes
 
 The GitHub App actuator cannot run CUE commands. State that limitation and do not claim `cue vet` or `cue export` ran. Inspect the selected package structurally and check every forbidden attractor in `profiles_cuestrap/assertions.cue`.
 
-A missing authority file, context read, report template, summary contract, channel, bundle artifact, manifest seal, mirror permission, source binding, content-equivalence check, or tracking issue target terminates fail-closed.
+A missing authority file, context read, report template, summary contract, channel, factory bundle artifact, manifest seal, latest pointer, or tracking issue target terminates fail-closed.
