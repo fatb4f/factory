@@ -49,11 +49,7 @@
 - Canonical factory run bundle: `{{factory_run_bundle_path}}`
 - Canonical factory manifest: `{{factory_manifest_path}}`
 - Factory latest pointer: `{{factory_latest_pointer_path}}`
-- CUEstrap report projection bundle: `{{cuestrap_run_bundle_path}}`
-- CUEstrap projection manifest: `{{cuestrap_manifest_path}}`
-- CUEstrap latest pointer: `{{cuestrap_latest_pointer_path}}`
-- Report content equivalent: `{{report_content_equivalent}}`
-- Summary content equivalent: `{{summary_content_equivalent}}`
+- CUEstrap repository artifacts written: `false`
 
 ## Tracking issue
 
