@@ -47,23 +47,23 @@ The ChatGPT scheduled task remains the semantic actuator. Do not replace it with
 
 ## Run procedure
 
-1. Read the shared root contract and every file in `profiles_cuestrap`; confirm `operational: true`.
+1. Read the shared root contract and every file in `profiles_cuestrap`; confirm `cuestrapOperational: true`.
 2. Validate the exact signal and profile ID.
 3. Resolve the current `fatb4f/factory@main` revision.
-4. Resolve `fatb4f/cuestrap@main` and read every path in `context.requiredContextReads`.
+4. Resolve `fatb4f/cuestrap@main` and read every path in `cuestrapContext.requiredContextReads`.
 5. Record the exact cuestrap revision used for classification.
 6. Acquire concrete evidence for `openai/codex@main`.
 7. Separately acquire concrete evidence for `openai/codex@latest-alpha-cli`.
 8. Compare each upstream channel only with its own prior cuestrap-profile state.
-9. Match evidence only against `surfaceCatalogue`.
+9. Match evidence only against `cuestrapSurfaceCatalogue`.
 10. Assign every reportable item to one or both declared cuestrap purposes.
 11. Classify admitted items as `none`, `note`, `contract-update`, or `blocking-gate`.
 12. Render `cuestrapCodexImpactReportTemplate` with separate channel and purpose sections.
-13. Check all proposed paths against `publicationPlan`.
+13. Check all proposed paths against `cuestrapPublicationPlan`.
 14. Publish the factory run report, factory run evidence, factory latest report, and factory latest evidence in declared order.
 15. Copy the exact run and latest report contents to the declared paths in `fatb4f/cuestrap@main`.
 16. Verify that each cuestrap report copy is byte-equivalent to its factory source report.
-17. Update only issues explicitly present in `publicationPlan.issueTargets`.
+17. Update only issues explicitly present in `cuestrapPublicationPlan.issueTargets`.
 18. Return a concise run summary and validation notes.
 
 ## Context rules
