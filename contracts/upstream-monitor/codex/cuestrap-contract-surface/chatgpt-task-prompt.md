@@ -22,11 +22,12 @@ Assess impact separately for:
 Apply `cuestrapCodexImpactReportTemplate`, `cuestrapRunSummaryTemplate`, and `cuestrapPublicationPlan` for every canonical factory artifact and tracking issue update.
 
 Required constraints:
-- Require the selected publication plan to contain no `mirror` target and to set `forbidCuestrapRepositoryArtifacts: true`; otherwise terminate as `terminal_deferred` before artifact writes.
+- Require the selected publication plan to contain no `mirror` target, no `legacyReadOnly` target, `forbidLegacyPathsPresent: true`, and `forbidCuestrapRepositoryArtifacts: true`; otherwise terminate as `terminal_deferred` before artifact writes.
+- Resolve prior state only through factory `latest.json` and its referenced bundle.
 - Publish the canonical report, summary, evidence, and sealing manifest into one factory run directory declared by the publication plan.
 - Update only the factory `latest.json` pointer after the canonical manifest exists.
+- Do not create or read fallback state under `reports/` or `evidence/`; those legacy ledgers are forbidden.
 - Do not publish any monitor artifact file to fatb4f/cuestrap. Reports, summaries, evidence, manifests, and latest pointers are factory-only.
-- Treat legacy factory report and evidence paths as read-only migration inputs.
 - Resolve `fatb4f/cuestrap#9` before acquisition and use it as the sole tracking issue.
 - Append exactly one comment for every terminal run, including success, abort, deferred, and coverage-gap outcomes.
 - Include canonical factory bundle links in the issue comment.
@@ -41,4 +42,4 @@ Expected output:
 - Concise run summary.
 - One sealed canonical factory run bundle if publication is admitted.
 - One deduplicated append-only run comment on fatb4f/cuestrap#9.
-- Validation notes for context reads, CUE exports, bundle completeness, manifest seal, absence of CUEstrap repository artifacts, tracking issue append, and forbidden-attractor checks.
+- Validation notes for context reads, CUE exports, bundle completeness, manifest seal, absence of legacy ledgers and CUEstrap repository artifacts, tracking issue append, and forbidden-attractor checks.
