@@ -45,6 +45,16 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/codex/upstream-
 		factoryComplete:          bool
 		mirrorComplete:           bool
 	})
+	trackingIssue: close({
+		repository:          "fatb4f/cuestrap"
+		number:              9
+		updatePolicy:        "every_run"
+		mutation:            "append_comment"
+		dedupeKey:           core.#NonEmptyString
+		commentURL?:         core.#NonEmptyString
+		appended:            bool
+		duplicateSuppressed: bool
+	})
 	validationNotes: close({
 		authorityRead:                bool
 		cuestrapContextRead:          bool
@@ -58,6 +68,10 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/codex/upstream-
 		mirrorManifestSourceBound:    bool
 		latestPointersOnly:           bool
 		noCuestrapPlumbingWritten:    bool
+		trackingIssueResolved:        bool
+		trackingIssueAppended:        bool
+		trackingIssueDeduplicated:    bool
+		trackingIssueBodyUnchanged:   bool
 		cueExecution:                 "not_available_to_github_app" | "executed_elsewhere"
 	})
 })
@@ -76,6 +90,7 @@ cuestrapCodexImpactReportTemplate: close({
 		"Notes",
 		"No local action",
 		"Publication",
+		"Tracking issue",
 		"Validation notes",
 	]
 	requireSeparateChannelState:   true
@@ -83,6 +98,7 @@ cuestrapCodexImpactReportTemplate: close({
 	requireCuestrapRevision:       true
 	requireUnresolvedPreservation: true
 	requireMirrorDisclosure:       true
+	requireTrackingIssueDisclosure: true
 })
 
 cuestrapRunSummaryTemplate: close({
@@ -94,9 +110,11 @@ cuestrapRunSummaryTemplate: close({
 		"Channel delta",
 		"Purpose decisions",
 		"Run bundles",
+		"Tracking issue",
 		"Validation",
 	]
 	requireChannelHeads:     true
 	requirePurposeDecisions: true
 	requireTerminalState:    true
+	requireTrackingIssue:    true
 })
