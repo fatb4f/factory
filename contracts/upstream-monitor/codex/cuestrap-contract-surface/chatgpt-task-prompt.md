@@ -22,6 +22,7 @@ Assess impact separately for:
 Apply `cuestrapCodexImpactReportTemplate`, `cuestrapRunSummaryTemplate`, and `cuestrapPublicationPlan` for every canonical factory artifact and tracking issue update.
 
 Required constraints:
+- Require the selected publication plan to contain no `mirror` target and to set `forbidCuestrapRepositoryArtifacts: true`; otherwise terminate as `terminal_deferred` before artifact writes.
 - Publish the canonical report, summary, evidence, and sealing manifest into one factory run directory declared by the publication plan.
 - Update only the factory `latest.json` pointer after the canonical manifest exists.
 - Do not publish any monitor artifact file to fatb4f/cuestrap. Reports, summaries, evidence, manifests, and latest pointers are factory-only.
