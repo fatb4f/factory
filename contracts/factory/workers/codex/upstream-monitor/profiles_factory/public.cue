@@ -1,5 +1,13 @@
 package factoryprofile
 
+let selectedOperational = operational
+let selectedChannels = channels
+let selectedWorkflow = workflow
+let selectedPublicationAdmission = publicationAdmission
+let selectedForbiddenAttractors = forbiddenAttractors
+let selectedValidationAssertions = validationAssertions
+let selectedValidationPlan = validationPlan
+
 publicContract: close({
 	apiVersion:  "factory.upstream-monitor.codex/v1"
 	kind:        "CodexContractSurfaceMonitor"
@@ -20,18 +28,18 @@ publicContract: close({
 }) & {
 	apiVersion:           "factory.upstream-monitor.codex/v1"
 	kind:                 "CodexContractSurfaceMonitor"
-	operational:          operational
+	operational:          selectedOperational
 	signal:               acceptedSignal
 	authority:            authorityModel
-	channels:             channels
+	channels:             selectedChannels
 	actuator:             chatgptActuator
-	workflow:             workflow
+	workflow:             selectedWorkflow
 	surfaces:             surfaceCatalogue
 	classification:       classificationPolicy
 	reportTemplate:       upstreamCodexImpactReportTemplate
 	publicationPlan:      upstreamCodexPublicationPlan
-	publicationAdmission: publicationAdmission
-	forbiddenAttractors:  forbiddenAttractors
-	validationAssertions: validationAssertions
-	validationPlan:       validationPlan
+	publicationAdmission: selectedPublicationAdmission
+	forbiddenAttractors:  selectedForbiddenAttractors
+	validationAssertions: selectedValidationAssertions
+	validationPlan:       selectedValidationPlan
 }
