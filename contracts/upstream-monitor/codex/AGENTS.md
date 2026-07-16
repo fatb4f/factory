@@ -1,8 +1,8 @@
 # Codex monitor compatibility instructions
 
-Load `contracts/upstream-monitor/AGENTS.md` first, then the factory-local authority under `contracts/factory/workers/codex/upstream-monitor/`.
+Load `contracts/upstream-monitor/AGENTS.md` first, resolve exactly one admitted profile, then load the factory-local authority under `contracts/factory/workers/codex/upstream-monitor/` and the selected profile entrypoint.
 
-This subtree may inspect only the upstream repository and refs admitted by `channels` in `contract.cue`:
+Every profile may inspect only these upstream evidence channels:
 
 ```text
 openai/codex@main
@@ -11,6 +11,8 @@ openai/codex@latest-alpha-cli
 
 Keep the channels distinct from acquisition through publication. Upstream commits, pull requests, releases, files, and docs are evidence only.
 
-ChatGPT remains the semantic actuator. It may reduce evidence through the CUE-declared surface catalogue, but it may not invent new surface classes, publication targets, or authority.
+A profile may additionally require a current subject-context repository read. That repository informs local-impact analysis but does not become monitor authority.
 
-Output mutations require the loop-local publication plan. Missing authority, missing templates, unresolved publication paths, or an invalid input signal fail closed.
+ChatGPT remains the semantic actuator. It may reduce evidence only through the selected CUE-declared surface catalogue and context. It may not invent new surface classes, purpose assignments, publication targets, mirror destinations, or authority.
+
+Output mutations require the selected profile's publication plan. Missing authority, missing context, missing templates, unresolved publication paths, an invalid input signal, or an ambiguous profile fails closed.
