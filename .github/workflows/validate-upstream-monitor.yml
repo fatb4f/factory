@@ -60,6 +60,16 @@ jobs:
           jq -e '.publicationPlan.mirror.bundle.manifest.kind == "UpstreamMonitorRunBundleProjection"' "$cuestrap"
           jq -e '.publicationPlan.mirror.latestPointer.path == "reports/upstream-monitor/codex/latest.json"' "$cuestrap"
           jq -e '.publicationPlan.requireRunBundle and .publicationPlan.requireBundleManifestLast and .publicationPlan.requireMirrorManifestSourceBinding and .publicationPlan.forbidRunArtifactsOutsideBundle' "$cuestrap"
+
+          jq -e '.publicationPlan.issueTargets.runLog.repo == "fatb4f/cuestrap"' "$cuestrap"
+          jq -e '.publicationPlan.issueTargets.runLog.number == 9' "$cuestrap"
+          jq -e '.publicationPlan.issueTargets.runLog.updatePolicy == "every_run"' "$cuestrap"
+          jq -e '.publicationPlan.issueTargets.runLog.mutation == "append_comment"' "$cuestrap"
+          jq -e '.publicationPlan.issueTargets.runLog.dedupeKeyPattern == "cuestrap-codex-contract-surface/<run_id>"' "$cuestrap"
+          jq -e '(.publicationPlan.issueTargets.runLog.terminalStates | sort) == (["coverage_gap", "terminal_abort", "terminal_deferred", "terminal_success"] | sort)' "$cuestrap"
+          jq -e '.publicationPlan.issueAudit.target == "runLog" and .publicationPlan.issueAudit.bodyMutation == "forbidden"' "$cuestrap"
+          jq -e '.publicationPlan.requireTrackingIssueOpen and .publicationPlan.requireIssueCommentEveryRun and .publicationPlan.requireIssueCommentDedupe and .publicationPlan.forbidIssueBodyMutation' "$cuestrap"
+          jq -e '.publicationAdmission.issueUpdatesEnabled and .publicationAdmission.requireRunLogComment' "$cuestrap"
       - name: Check profile containment
         run: |
           test -f contracts/factory/workers/codex/upstream-monitor/contract.cue
@@ -78,3 +88,5 @@ jobs:
           test -f contracts/upstream-monitor/codex/cuestrap-contract-surface/chatgpt-task-prompt.md
           grep -q 'runs/<run_id>/' contracts/upstream-monitor/codex/contract-surface/AGENTS.md
           grep -q 'manifest.json' contracts/upstream-monitor/codex/cuestrap-contract-surface/AGENTS.md
+          grep -q 'fatb4f/cuestrap#9' contracts/upstream-monitor/codex/cuestrap-contract-surface/AGENTS.md
+          grep -q 'cuestrap-codex-contract-surface/<run_id>' contracts/upstream-monitor/codex/cuestrap-contract-surface/chatgpt-task-prompt.md
