@@ -1,16 +1,16 @@
 package upstreammonitor
 
-#NonEmptyString: string &!=""
+#NonEmptyString: string & !=""
 #NonEmptyStringList: [...#NonEmptyString] & [_, ...]
-#CommitSHA:       string & =~"^[0-9a-f]{40}$"
-#GitObjectSHA:    string & =~"^[0-9a-f]{40}$"
-#TerminalState:   "terminal_success" | "terminal_abort" | "terminal_deferred" | "coverage_gap"
-#ChannelID:       "main" | "latest-alpha-cli"
-#ChannelStatus:   "resolved" | "unresolved"
-#ImpactDecision:  "none" | "note" | "contract-update" | "blocking-gate"
-#Severity:        "none" | "note" | "high" | "critical"
-#SurfaceClass:    "protocol" | "adapter" | "storage" | "policy" | "ui" | "docs" | "context-window" | "multi-agent" | "rollout-trace" | "mcp" | "config" | "security" | "release"
-#RunArtifactKind: "report" | "summary" | "evidence"
+#CommitSHA:         string & =~"^[0-9a-f]{40}$"
+#GitObjectSHA:      string & =~"^[0-9a-f]{40}$"
+#TerminalState:     "terminal_success" | "terminal_abort" | "terminal_deferred" | "coverage_gap"
+#ChannelID:         "main" | "latest-alpha-cli"
+#ChannelStatus:     "resolved" | "unresolved"
+#ImpactDecision:    "none" | "note" | "contract-update" | "blocking-gate"
+#Severity:          "none" | "note" | "high" | "critical"
+#SurfaceClass:      "protocol" | "adapter" | "storage" | "policy" | "ui" | "docs" | "context-window" | "multi-agent" | "rollout-trace" | "mcp" | "config" | "security" | "release"
+#RunArtifactKind:   "report" | "summary" | "evidence"
 #IssueUpdatePolicy: "minimum_impact" | "every_run"
 
 #RunBundleArtifact: close({
