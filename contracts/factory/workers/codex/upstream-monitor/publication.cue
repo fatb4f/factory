@@ -27,7 +27,7 @@ upstreamCodexPublicationPlan: close({
 publicationAdmission: close({
 	reportsEnabled: true
 	evidenceEnabled: true
-	issueUpdatesEnabled: len(upstreamCodexPublicationPlan.issueTargets) > 0
+	issueUpdatesEnabled: false
 	requireOperationalContract: true
 	requireFixedTemplate: true
 })
