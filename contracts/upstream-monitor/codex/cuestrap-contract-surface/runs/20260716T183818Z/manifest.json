@@ -1,0 +1,28 @@
+{
+  "apiVersion": "factory.upstream-monitor.run-bundle/v1",
+  "kind": "UpstreamMonitorRunBundle",
+  "run_id": "20260716T183818Z",
+  "profile_id": "cuestrap",
+  "terminal_state": "terminal_success",
+  "export_unit": "directory",
+  "artifacts": [
+    {
+      "kind": "report",
+      "filename": "report.md",
+      "mediaType": "text/markdown",
+      "gitBlobSHA": "a16262c8cb9db6a4111dc47a8bc055ca842f9644"
+    },
+    {
+      "kind": "summary",
+      "filename": "summary.md",
+      "mediaType": "text/markdown",
+      "gitBlobSHA": "38c9fd6e137637cd14ad53e0d1b0f5ab67d22874"
+    },
+    {
+      "kind": "evidence",
+      "filename": "evidence.json",
+      "mediaType": "application/json",
+      "gitBlobSHA": "dbce386867f4a0b4df337db914c261f05f1cce5f"
+    }
+  ]
+}

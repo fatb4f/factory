@@ -55,21 +55,20 @@ The ChatGPT scheduled task remains the semantic actuator. Do not replace it with
 6. Resolve the current `fatb4f/factory@main` revision.
 7. Resolve `fatb4f/cuestrap@main` and read every path in `cuestrapContext.requiredContextReads`.
 8. Record the exact cuestrap revision used for classification.
-9. Resolve prior profile state through the factory `latest.json`, its manifest, and bundled `evidence.json`.
-10. If `latest.json` is absent, read only the exact factory legacy evidence path declared by `legacyReadOnly`; never write it.
-11. Acquire concrete evidence for `openai/codex@main`.
-12. Separately acquire concrete evidence for `openai/codex@latest-alpha-cli`.
-13. Compare each upstream channel only with its own prior cuestrap-profile state.
-14. Match evidence only against `cuestrapSurfaceCatalogue`.
-15. Assign every reportable item to one or both declared cuestrap purposes.
-16. Classify admitted items as `none`, `note`, `contract-update`, or `blocking-gate`.
-17. Render the fixed report and concise summary with separate channel and purpose sections.
-18. Check the canonical factory bundle, latest pointer, and issue target against `cuestrapPublicationPlan`.
-19. Write factory `report.md`, `summary.md`, and `evidence.json` into one `runs/<run_id>/` directory.
-20. Fetch their exact Git blob identities and write the factory `manifest.json` last.
-21. Replace the factory `latest.json` only after the factory bundle is sealed.
-22. Append exactly one run comment to `fatb4f/cuestrap#9` after the terminal state is known. Include the run ID, terminal state, channel heads, purpose decisions, canonical factory bundle link, validation failures, and tracking identity.
-23. Return the concise run summary and validation notes.
+9. Resolve prior profile state only through the factory `latest.json`, its manifest, and bundled `evidence.json`.
+10. Acquire concrete evidence for `openai/codex@main`.
+11. Separately acquire concrete evidence for `openai/codex@latest-alpha-cli`.
+12. Compare each upstream channel only with its own prior cuestrap-profile state.
+13. Match evidence only against `cuestrapSurfaceCatalogue`.
+14. Assign every reportable item to one or both declared cuestrap purposes.
+15. Classify admitted items as `none`, `note`, `contract-update`, or `blocking-gate`.
+16. Render the fixed report and concise summary with separate channel and purpose sections.
+17. Check the canonical factory bundle, latest pointer, and issue target against `cuestrapPublicationPlan`.
+18. Write factory `report.md`, `summary.md`, and `evidence.json` into one `runs/<run_id>/` directory.
+19. Fetch their exact Git blob identities and write the factory `manifest.json` last.
+20. Replace the factory `latest.json` only after the factory bundle is sealed.
+21. Append exactly one run comment to `fatb4f/cuestrap#9` after the terminal state is known. Include the run ID, terminal state, channel heads, purpose decisions, canonical factory bundle link, validation failures, and tracking identity.
+22. Return the concise run summary and validation notes.
 
 ## Tracking issue rules
 
@@ -111,7 +110,7 @@ It contains `report.md`, `summary.md`, `evidence.json`, and the sealing `manifes
 contracts/upstream-monitor/codex/cuestrap-contract-surface/latest.json
 ```
 
-Legacy factory report and evidence paths are read-only migration inputs. No new run artifact may be written there.
+The former `reports/` and `evidence/` ledgers are forbidden. They must not exist and may not be used as fallback state.
 
 No monitor artifact file may be written to `fatb4f/cuestrap`. This includes reports, summaries, evidence, manifests, and latest pointers. The only admitted mutation in CUEstrap is one deduplicated append-only comment per run on issue `#9`.
 

@@ -56,9 +56,10 @@ jobs:
           jq -e '.publicationPlan.factory.bundle.artifacts.evidence.filename == "evidence.json"' "$cuestrap"
           jq -e '.publicationPlan.factory.bundle.manifest.filename == "manifest.json"' "$cuestrap"
           jq -e '.publicationPlan.factory.latestPointer.path == "contracts/upstream-monitor/codex/cuestrap-contract-surface/latest.json"' "$cuestrap"
+          jq -e '(.publicationPlan.factory | has("legacyReadOnly")) | not' "$cuestrap"
           jq -e '(.publicationPlan | has("mirror")) | not' "$cuestrap"
-          jq -e '.publicationPlan.requireRunBundle and .publicationPlan.requireBundleManifestLast and .publicationPlan.forbidRunArtifactsOutsideBundle and .publicationPlan.forbidCuestrapRepositoryArtifacts' "$cuestrap"
-          jq -e '.publicationAdmission.factoryRunBundleEnabled and (.publicationAdmission.cuestrapRepositoryArtifactsEnabled | not) and .publicationAdmission.requireNoCuestrapRepositoryArtifacts' "$cuestrap"
+          jq -e '.publicationPlan.requireRunBundle and .publicationPlan.requireBundleManifestLast and .publicationPlan.forbidRunArtifactsOutsideBundle and .publicationPlan.forbidLegacyPathsPresent and .publicationPlan.forbidCuestrapRepositoryArtifacts' "$cuestrap"
+          jq -e '.publicationAdmission.factoryRunBundleEnabled and .publicationAdmission.legacyLedgersPruned and (.publicationAdmission.cuestrapRepositoryArtifactsEnabled | not) and .publicationAdmission.requireNoCuestrapRepositoryArtifacts' "$cuestrap"
 
           jq -e '.publicationPlan.issueTargets.runLog.repo == "fatb4f/cuestrap"' "$cuestrap"
           jq -e '.publicationPlan.issueTargets.runLog.number == 9' "$cuestrap"
@@ -69,6 +70,20 @@ jobs:
           jq -e '.publicationPlan.issueAudit.target == "runLog" and .publicationPlan.issueAudit.bodyMutation == "forbidden"' "$cuestrap"
           jq -e '.publicationPlan.requireTrackingIssueOpen and .publicationPlan.requireIssueCommentEveryRun and .publicationPlan.requireIssueCommentDedupe and .publicationPlan.forbidIssueBodyMutation' "$cuestrap"
           jq -e '.publicationAdmission.issueUpdatesEnabled and .publicationAdmission.requireRunLogComment' "$cuestrap"
+      - name: Check migrated cuestrap run ledger
+        run: |
+          root=contracts/upstream-monitor/codex/cuestrap-contract-surface
+          for run in 20260716T181510Z 20260716T183818Z; do
+            test -f "$root/runs/$run/report.md"
+            test -f "$root/runs/$run/summary.md"
+            test -f "$root/runs/$run/evidence.json"
+            test -f "$root/runs/$run/manifest.json"
+            jq -e --arg run "$run" '.run_id == $run and .profile_id == "cuestrap" and .export_unit == "directory" and (.artifacts | length) == 3' "$root/runs/$run/manifest.json"
+          done
+          test -f "$root/latest.json"
+          jq -e '.run_id == "20260716T183818Z" and .bundle_path == "contracts/upstream-monitor/codex/cuestrap-contract-surface/runs/20260716T183818Z/"' "$root/latest.json"
+          test ! -e "$root/reports"
+          test ! -e "$root/evidence"
       - name: Check profile containment
         run: |
           test -f contracts/factory/workers/codex/upstream-monitor/contract.cue
@@ -87,6 +102,7 @@ jobs:
           test -f contracts/upstream-monitor/codex/cuestrap-contract-surface/chatgpt-task-prompt.md
           grep -q 'runs/<run_id>/' contracts/upstream-monitor/codex/contract-surface/AGENTS.md
           grep -q 'manifest.json' contracts/upstream-monitor/codex/cuestrap-contract-surface/AGENTS.md
+          grep -q 'former `reports/` and `evidence/` ledgers are forbidden' contracts/upstream-monitor/codex/cuestrap-contract-surface/AGENTS.md
           grep -q 'No monitor artifact file may be written to `fatb4f/cuestrap`' contracts/upstream-monitor/codex/cuestrap-contract-surface/AGENTS.md
           grep -q 'fatb4f/cuestrap#9' contracts/upstream-monitor/codex/cuestrap-contract-surface/AGENTS.md
           grep -q 'cuestrap-codex-contract-surface/<run_id>' contracts/upstream-monitor/codex/cuestrap-contract-surface/chatgpt-task-prompt.md
