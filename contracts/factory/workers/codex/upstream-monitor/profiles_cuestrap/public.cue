@@ -1,5 +1,7 @@
 package cuestrapprofile
 
+let selectedChannels = channels
+
 publicContract: close({
 	apiVersion:  "factory.upstream-monitor.codex.cuestrap/v1"
 	kind:        "CuestrapCodexContractSurfaceMonitor"
@@ -25,7 +27,7 @@ publicContract: close({
 	signal:               cuestrapAcceptedSignal
 	authority:            cuestrapAuthorityModel
 	context:              cuestrapContext
-	channels:             channels
+	channels:             selectedChannels
 	actuator:             chatgptActuator
 	workflow:             cuestrapWorkflow
 	surfaces:             cuestrapSurfaceCatalogue
