@@ -49,22 +49,29 @@ The ChatGPT scheduled task remains the semantic actuator. Do not replace it with
 
 1. Read the shared root contract and every file in `profiles_cuestrap`; confirm `cuestrapOperational: true`.
 2. Validate the exact signal and profile ID.
-3. Resolve the current `fatb4f/factory@main` revision.
-4. Resolve `fatb4f/cuestrap@main` and read every path in `cuestrapContext.requiredContextReads`.
-5. Record the exact cuestrap revision used for classification.
-6. Acquire concrete evidence for `openai/codex@main`.
-7. Separately acquire concrete evidence for `openai/codex@latest-alpha-cli`.
-8. Compare each upstream channel only with its own prior cuestrap-profile state.
-9. Match evidence only against `cuestrapSurfaceCatalogue`.
-10. Assign every reportable item to one or both declared cuestrap purposes.
-11. Classify admitted items as `none`, `note`, `contract-update`, or `blocking-gate`.
-12. Render `cuestrapCodexImpactReportTemplate` with separate channel and purpose sections.
-13. Check all proposed paths against `cuestrapPublicationPlan`.
-14. Publish the factory run report, factory run evidence, factory latest report, and factory latest evidence in declared order.
-15. Copy the exact run and latest report contents to the declared paths in `fatb4f/cuestrap@main`.
-16. Verify that each cuestrap report copy is byte-equivalent to its factory source report.
-17. Update only issues explicitly present in `cuestrapPublicationPlan.issueTargets`.
-18. Return a concise run summary and validation notes.
+3. Read `cuestrapCodexImpactReportTemplate`, `cuestrapRunSummaryTemplate`, and `cuestrapPublicationPlan`.
+4. Resolve the current `fatb4f/factory@main` revision.
+5. Resolve `fatb4f/cuestrap@main` and read every path in `cuestrapContext.requiredContextReads`.
+6. Record the exact cuestrap revision used for classification.
+7. Resolve prior profile state through the factory `latest.json`, its manifest, and bundled `evidence.json`.
+8. If `latest.json` is absent, read only the exact factory legacy evidence path declared by `legacyReadOnly`; never write it.
+9. Acquire concrete evidence for `openai/codex@main`.
+10. Separately acquire concrete evidence for `openai/codex@latest-alpha-cli`.
+11. Compare each upstream channel only with its own prior cuestrap-profile state.
+12. Match evidence only against `cuestrapSurfaceCatalogue`.
+13. Assign every reportable item to one or both declared cuestrap purposes.
+14. Classify admitted items as `none`, `note`, `contract-update`, or `blocking-gate`.
+15. Render the fixed report and concise summary with separate channel and purpose sections.
+16. Check the canonical factory bundle, mirror projection bundle, latest pointers, and issue targets against `cuestrapPublicationPlan`.
+17. Write factory `report.md`, `summary.md`, and `evidence.json` into one `runs/<run_id>/` directory.
+18. Fetch their exact Git blob identities and write the factory `manifest.json` last.
+19. Replace the factory `latest.json` only after the factory bundle is sealed.
+20. Copy the exact report and summary bytes into one CUEstrap report-projection directory for the same run ID.
+21. Write the CUEstrap projection `manifest.json`, binding it to the canonical factory bundle and recording the mirrored blob identities.
+22. Replace the CUEstrap `latest.json` only after the projection manifest exists.
+23. Verify that the CUEstrap report and summary copies are byte-equivalent to their factory sources.
+24. Update only issues explicitly present in `cuestrapPublicationPlan.issueTargets`.
+25. Return the concise run summary and validation notes.
 
 ## Context rules
 
@@ -76,35 +83,41 @@ The ChatGPT scheduled task remains the semantic actuator. Do not replace it with
 ## Evidence rules
 
 - Exact commit, branch, tag, release, file, or version evidence is concrete.
-- Keep `main` and `latest-alpha-cli` independent through acquisition, classification, report, and evidence.
+- Keep `main` and `latest-alpha-cli` independent through acquisition, classification, report, summary, and evidence.
 - An unresolved exact head remains unresolved.
 - Do not infer alpha state from main, main state from alpha, or either from a version string.
 - Bind every report item to concrete upstream evidence, declared cuestrap surfaces, and one or both cuestrap purposes.
 
 ## Publication boundaries
 
-Factory reports are limited to:
+The canonical factory run bundle is limited to:
 
 ```text
-contracts/upstream-monitor/codex/cuestrap-contract-surface/reports/
+contracts/upstream-monitor/codex/cuestrap-contract-surface/runs/<run_id>/
 ```
 
-Factory evidence is limited to:
+It contains `report.md`, `summary.md`, `evidence.json`, and the sealing `manifest.json`. Its only mutable discovery artifact is:
 
 ```text
-contracts/upstream-monitor/codex/cuestrap-contract-surface/evidence/
+contracts/upstream-monitor/codex/cuestrap-contract-surface/latest.json
 ```
 
-CUEstrap report copies are limited to:
+The CUEstrap report projection is limited to:
 
 ```text
-reports/upstream-monitor/codex/
+reports/upstream-monitor/codex/runs/<run_id>/
 ```
 
-No evidence artifact, CUE authority, AGENTS file, prompt, actuator configuration, or other plumbing may be written to `fatb4f/cuestrap`. `issueTargets: {}` means no issue update.
+It contains byte-equivalent `report.md` and `summary.md` copies plus a projection `manifest.json` that references the canonical factory bundle. Its only mutable discovery artifact is:
+
+```text
+reports/upstream-monitor/codex/latest.json
+```
+
+Legacy report and evidence paths are read-only migration inputs. No new run artifact may be written there. No evidence artifact, CUE authority, AGENTS file, prompt, actuator configuration, or other plumbing may be written to `fatb4f/cuestrap`. `issueTargets: {}` means no issue update.
 
 ## Validation notes
 
 The GitHub App actuator cannot run CUE commands. State that limitation and do not claim `cue vet` or `cue export` ran. Inspect the selected package structurally and check every forbidden attractor in `profiles_cuestrap/assertions.cue`.
 
-A missing authority file, context read, template, channel, publication path, mirror permission, or content-equivalence check terminates fail-closed.
+A missing authority file, context read, report template, summary contract, channel, bundle artifact, manifest seal, mirror permission, source binding, or content-equivalence check terminates fail-closed.
