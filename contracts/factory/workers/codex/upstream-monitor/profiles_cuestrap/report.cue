@@ -52,21 +52,21 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/codex/upstream-
 		duplicateSuppressed: bool
 	})
 	validationNotes: close({
-		authorityRead:                       bool
-		cuestrapContextRead:                 bool
-		channelsKeptDistinct:                bool
-		publicationPlanRead:                 bool
-		forbiddenAttractorsChecked:          bool
-		factoryRunBundlePublished:           bool
-		factoryBundleManifestSealed:         bool
-		latestPointerUpdated:                bool
+		authorityRead:                        bool
+		cuestrapContextRead:                  bool
+		channelsKeptDistinct:                 bool
+		publicationPlanRead:                  bool
+		forbiddenAttractorsChecked:           bool
+		factoryRunBundlePublished:            bool
+		factoryBundleManifestSealed:          bool
+		latestPointerUpdated:                 bool
 		noCuestrapRepositoryArtifactsWritten: bool
-		noCuestrapPlumbingWritten:           bool
-		trackingIssueResolved:               bool
-		trackingIssueAppended:               bool
-		trackingIssueDeduplicated:           bool
-		trackingIssueBodyUnchanged:          bool
-		cueExecution:                        "not_available_to_github_app" | "executed_elsewhere"
+		noCuestrapPlumbingWritten:            bool
+		trackingIssueResolved:                bool
+		trackingIssueAppended:                bool
+		trackingIssueDeduplicated:            bool
+		trackingIssueBodyUnchanged:           bool
+		cueExecution:                         "not_available_to_github_app" | "executed_elsewhere"
 	})
 })
 
