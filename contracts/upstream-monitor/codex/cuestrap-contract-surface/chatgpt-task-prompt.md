@@ -19,18 +19,16 @@ Assess impact separately for:
 - the gopy, CUE, Pydantic, and Hypothesis supervisory session controller;
 - the gopy-backed Marimo workbook harness for idiomatic CUE.
 
-Apply `cuestrapCodexImpactReportTemplate`, `cuestrapRunSummaryTemplate`, and `cuestrapPublicationPlan` for every canonical factory artifact, cross-repository report projection, and tracking issue update.
+Apply `cuestrapCodexImpactReportTemplate`, `cuestrapRunSummaryTemplate`, and `cuestrapPublicationPlan` for every canonical factory artifact and tracking issue update.
 
 Required constraints:
 - Publish the canonical report, summary, evidence, and sealing manifest into one factory run directory declared by the publication plan.
 - Update only the factory `latest.json` pointer after the canonical manifest exists.
-- Publish only the admitted report-and-summary projection bundle to fatb4f/cuestrap.
-- Make each cuestrap report and summary copy byte-equivalent to its corresponding factory source.
-- Bind the CUEstrap projection manifest to the canonical factory bundle.
-- Do not publish evidence, CUE authority, AGENTS files, prompts, or actuator plumbing to cuestrap.
-- Treat legacy report and evidence paths as read-only migration inputs.
+- Do not publish any monitor artifact file to fatb4f/cuestrap. Reports, summaries, evidence, manifests, and latest pointers are factory-only.
+- Treat legacy factory report and evidence paths as read-only migration inputs.
 - Resolve `fatb4f/cuestrap#9` before acquisition and use it as the sole tracking issue.
 - Append exactly one comment for every terminal run, including success, abort, deferred, and coverage-gap outcomes.
+- Include canonical factory bundle links in the issue comment.
 - Use tracking identity `cuestrap-codex-contract-surface/<run_id>` to suppress duplicate comments.
 - Never edit the tracking issue title or body during a run.
 - Do not update any other issue unless separately declared by `cuestrapPublicationPlan`.
@@ -41,6 +39,5 @@ Required constraints:
 Expected output:
 - Concise run summary.
 - One sealed canonical factory run bundle if publication is admitted.
-- One CUEstrap report-projection bundle if mirror publication is admitted.
 - One deduplicated append-only run comment on fatb4f/cuestrap#9.
-- Validation notes for context reads, CUE exports, bundle completeness, manifest seals, source binding, mirror equivalence, tracking issue append, and forbidden-attractor checks.
+- Validation notes for context reads, CUE exports, bundle completeness, manifest seal, absence of CUEstrap repository artifacts, tracking issue append, and forbidden-attractor checks.
