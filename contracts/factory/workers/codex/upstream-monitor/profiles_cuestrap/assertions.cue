@@ -28,18 +28,18 @@ cuestrapValidationAssertions: close({
 	alphaRefExact:                   true
 	channelsDistinct:                true
 	upstreamEvidenceOnly:            true
-	cuestrapContextNotAuthority:      true
-	chatgptIsActuatorNotAuthority:    true
-	factoryReportPathsBounded:        true
-	factoryEvidencePathsBounded:      true
-	cuestrapMirrorPathsBounded:       true
-	cuestrapEvidenceForbidden:        true
-	cuestrapPlumbingForbidden:        true
-	mirrorContentEqualityRequired:    true
-	undeclaredIssueUpdatesForbidden:  true
-	unresolvedEvidencePreserved:      true
-	purposeAssignmentRequired:        true
-	workflowClosed:                   true
+	cuestrapContextNotAuthority:     true
+	chatgptIsActuatorNotAuthority:   true
+	factoryReportPathsBounded:       true
+	factoryEvidencePathsBounded:     true
+	cuestrapMirrorPathsBounded:      true
+	cuestrapEvidenceForbidden:       true
+	cuestrapPlumbingForbidden:       true
+	mirrorContentEqualityRequired:   true
+	undeclaredIssueUpdatesForbidden: true
+	unresolvedEvidencePreserved:     true
+	purposeAssignmentRequired:       true
+	workflowClosed:                  true
 })
 
 cuestrapNegativeFixtures: {
