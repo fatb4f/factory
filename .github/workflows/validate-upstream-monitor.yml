@@ -37,6 +37,29 @@ jobs:
       - name: Export cuestrap profile
         working-directory: contracts/factory/workers/codex/upstream-monitor
         run: cue export ./profiles_cuestrap -e publicContract --out json > "$RUNNER_TEMP/upstream-monitor.cuestrap.public.json"
+      - name: Check run-bundle publication contracts
+        run: |
+          factory="$RUNNER_TEMP/upstream-monitor.factory.public.json"
+          cuestrap="$RUNNER_TEMP/upstream-monitor.cuestrap.public.json"
+
+          jq -e '.publicationPlan.bundle.directoryPattern == "contracts/upstream-monitor/codex/contract-surface/runs/<run_id>/"' "$factory"
+          jq -e '.publicationPlan.bundle.artifacts.report.filename == "report.md"' "$factory"
+          jq -e '.publicationPlan.bundle.artifacts.summary.filename == "summary.md"' "$factory"
+          jq -e '.publicationPlan.bundle.artifacts.evidence.filename == "evidence.json"' "$factory"
+          jq -e '.publicationPlan.bundle.manifest.filename == "manifest.json"' "$factory"
+          jq -e '.publicationPlan.latestPointer.path == "contracts/upstream-monitor/codex/contract-surface/latest.json"' "$factory"
+          jq -e '.publicationPlan.requireRunBundle and .publicationPlan.requireBundleManifestLast and .publicationPlan.forbidRunArtifactsOutsideBundle and .publicationPlan.forbidMutableLatestArtifactCopies' "$factory"
+
+          jq -e '.publicationPlan.factory.bundle.directoryPattern == "contracts/upstream-monitor/codex/cuestrap-contract-surface/runs/<run_id>/"' "$cuestrap"
+          jq -e '.publicationPlan.factory.bundle.artifacts.summary.filename == "summary.md"' "$cuestrap"
+          jq -e '.publicationPlan.factory.bundle.manifest.filename == "manifest.json"' "$cuestrap"
+          jq -e '.publicationPlan.factory.latestPointer.path == "contracts/upstream-monitor/codex/cuestrap-contract-surface/latest.json"' "$cuestrap"
+          jq -e '.publicationPlan.mirror.bundle.directoryPattern == "reports/upstream-monitor/codex/runs/<run_id>/"' "$cuestrap"
+          jq -e '.publicationPlan.mirror.bundle.artifacts.report.filename == "report.md"' "$cuestrap"
+          jq -e '.publicationPlan.mirror.bundle.artifacts.summary.filename == "summary.md"' "$cuestrap"
+          jq -e '.publicationPlan.mirror.bundle.manifest.kind == "UpstreamMonitorRunBundleProjection"' "$cuestrap"
+          jq -e '.publicationPlan.mirror.latestPointer.path == "reports/upstream-monitor/codex/latest.json"' "$cuestrap"
+          jq -e '.publicationPlan.requireRunBundle and .publicationPlan.requireBundleManifestLast and .publicationPlan.requireMirrorManifestSourceBinding and .publicationPlan.forbidRunArtifactsOutsideBundle' "$cuestrap"
       - name: Check profile containment
         run: |
           test -f contracts/factory/workers/codex/upstream-monitor/contract.cue
@@ -53,3 +76,5 @@ jobs:
           test -f contracts/upstream-monitor/codex/cuestrap-contract-surface/AGENTS.md
           test -f contracts/upstream-monitor/codex/cuestrap-contract-surface/output/report-template.md
           test -f contracts/upstream-monitor/codex/cuestrap-contract-surface/chatgpt-task-prompt.md
+          grep -q 'runs/<run_id>/' contracts/upstream-monitor/codex/contract-surface/AGENTS.md
+          grep -q 'manifest.json' contracts/upstream-monitor/codex/cuestrap-contract-surface/AGENTS.md
