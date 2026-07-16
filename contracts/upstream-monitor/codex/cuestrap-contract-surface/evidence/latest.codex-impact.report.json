@@ -36,7 +36,7 @@
     "supervisorySessionController": {
       "purpose": "supervisory-session-controller",
       "impactDecision": "blocking-gate",
-      "summary": "Requalify the closed permission/configuration and instruction/skill ingress against the current alpha ref; retain multi-agent ownership as unsupported.",
+      "summary": "Requalify main turn-scoped project-instruction loading and the alpha permission/configuration and dynamic instruction/skill ingress; retain multi-agent ownership as unsupported.",
       "surfaceMatches": [
         "permission-sandbox-approval",
         "instruction-skill-policy",
@@ -58,6 +58,38 @@
     }
   },
   "critical": [
+    {
+      "id": "main-active-turn-instruction-context",
+      "channels": [
+        "main"
+      ],
+      "severity": "critical",
+      "impactDecision": "blocking-gate",
+      "title": "Turn-scoped project-instruction context changed",
+      "summary": "Main preserves each turn's captured environment selection when loading project instructions, so settings updates apply to later turns rather than the active turn.",
+      "surfaceMatches": [
+        "instruction-skill-policy",
+        "context-turn-lifecycle",
+        "session-turn-identity"
+      ],
+      "evidence": [
+        "openai/codex commit c4ce0493dc94923493ca5b1e7e8695c289febad0",
+        "codex-rs/core/src/agents_md.rs",
+        "codex-rs/core/src/agents_md_tests.rs",
+        "codex-rs/core/src/context/world_state/environment.rs",
+        "codex-rs/core/src/environment_selection.rs",
+        "codex-rs/core/src/session/mod.rs",
+        "codex-rs/core/src/session/turn.rs"
+      ],
+      "localContractImpact": "Requalify repository instruction loading, turn identity, and context boundaries against captured per-turn environment state.",
+      "suggestedLocalTargets": [
+        ".codex/AGENTS.md",
+        ".codex/config.toml",
+        "src/cue-workbook/supervisory_hooks/models.py",
+        "src/cue-workbook/supervisory_hooks/supervisor.py",
+        "src/cue-workbook/cue-workbook.py"
+      ]
+    },
     {
       "id": "alpha-permission-contract-delta",
       "channels": [
@@ -135,33 +167,6 @@
         "src/cue-workbook/cue-workbook.py",
         "src/cue-workbook/supervisory_hooks/policy.py",
         "src/cue-workbook/supervisory_hooks/supervisor.py"
-      ]
-    },
-    {
-      "id": "main-active-turn-environment-lifecycle",
-      "channels": [
-        "main"
-      ],
-      "severity": "high",
-      "impactDecision": "contract-update",
-      "title": "Active-turn environment state is stabilized across settings updates",
-      "summary": "Main changed environment and session handling so active-turn environment state remains stable while settings change.",
-      "surfaceMatches": [
-        "context-turn-lifecycle",
-        "session-turn-identity"
-      ],
-      "evidence": [
-        "openai/codex commit c4ce0493dc94923493ca5b1e7e8695c289febad0",
-        "codex-rs/core/src/context/world_state/environment.rs",
-        "codex-rs/core/src/environment_selection.rs",
-        "codex-rs/core/src/session/mod.rs",
-        "codex-rs/core/src/session/turn.rs"
-      ],
-      "localContractImpact": "Recheck session continuity and context-boundary assumptions used by the controller and workbook.",
-      "suggestedLocalTargets": [
-        "src/cue-workbook/supervisory_hooks/models.py",
-        "src/cue-workbook/supervisory_hooks/supervisor.py",
-        "src/cue-workbook/cue-workbook.py"
       ]
     },
     {
