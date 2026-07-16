@@ -24,31 +24,31 @@ cuestrapForbiddenAttractors: [
 ]
 
 cuestrapValidationAssertions: close({
-	acceptedSignalExact:                  true
-	profileIDExact:                       true
-	contextRepositoryExact:               true
-	currentContextRequired:               true
-	mainRefExact:                         true
-	alphaRefExact:                        true
-	channelsDistinct:                     true
-	upstreamEvidenceOnly:                 true
-	cuestrapContextNotAuthority:          true
-	chatgptIsActuatorNotAuthority:        true
-	factoryRunArtifactsCoLocated:         true
-	factoryBundleExportUnitDirectory:     true
-	factoryBundleManifestSealsArtifacts:  true
-	mirrorRunArtifactsCoLocated:          true
-	mirrorBundleExportUnitDirectory:      true
-	latestPointersOnly:                   true
-	legacyPathsReadOnly:                  true
-	cuestrapEvidenceForbidden:            true
-	cuestrapPlumbingForbidden:            true
-	mirrorContentEqualityRequired:        true
-	mirrorManifestSourceBindingRequired:  true
-	undeclaredIssueUpdatesForbidden:      true
-	unresolvedEvidencePreserved:          true
-	purposeAssignmentRequired:            true
-	workflowClosed:                       true
+	acceptedSignalExact:                 true
+	profileIDExact:                      true
+	contextRepositoryExact:              true
+	currentContextRequired:              true
+	mainRefExact:                        true
+	alphaRefExact:                       true
+	channelsDistinct:                    true
+	upstreamEvidenceOnly:                true
+	cuestrapContextNotAuthority:         true
+	chatgptIsActuatorNotAuthority:       true
+	factoryRunArtifactsCoLocated:        true
+	factoryBundleExportUnitDirectory:    true
+	factoryBundleManifestSealsArtifacts: true
+	mirrorRunArtifactsCoLocated:         true
+	mirrorBundleExportUnitDirectory:     true
+	latestPointersOnly:                  true
+	legacyPathsReadOnly:                 true
+	cuestrapEvidenceForbidden:           true
+	cuestrapPlumbingForbidden:           true
+	mirrorContentEqualityRequired:       true
+	mirrorManifestSourceBindingRequired: true
+	undeclaredIssueUpdatesForbidden:     true
+	unresolvedEvidencePreserved:         true
+	purposeAssignmentRequired:           true
+	workflowClosed:                      true
 })
 
 cuestrapNegativeFixtures: {
