@@ -19,6 +19,9 @@ cuestrapForbiddenAttractors: [
 	"CUE or AGENTS plumbing written to fatb4f/cuestrap",
 	"cuestrap report or summary copy differs from factory source",
 	"mirror projection manifest not bound to factory bundle",
+	"terminal run without a tracking issue comment",
+	"duplicate tracking issue comment for one run ID",
+	"tracking issue body mutated instead of appending a comment",
 	"issue update without publication target",
 	"claimant-supplied admission boolean",
 ]
@@ -45,6 +48,11 @@ cuestrapValidationAssertions: close({
 	cuestrapPlumbingForbidden:           true
 	mirrorContentEqualityRequired:       true
 	mirrorManifestSourceBindingRequired: true
+	trackingIssueTargetExact:            true
+	trackingIssueAppendOnly:             true
+	trackingIssueUpdatedEveryRun:        true
+	trackingIssueRunIDDeduplicated:      true
+	trackingIssueBodyStable:             true
 	undeclaredIssueUpdatesForbidden:     true
 	unresolvedEvidencePreserved:         true
 	purposeAssignmentRequired:           true
@@ -66,6 +74,10 @@ cuestrapNegativeFixtures: {
 	cuestrapPlumbingWrite: close({repository: "fatb4f/cuestrap", kind: "authority" | "instruction" | "actuator"})
 	mismatchedMirror: close({factoryDigest: core.#NonEmptyString, mirrorDigest: core.#NonEmptyString, equal: false})
 	unboundMirrorManifest: close({sourceBundlePath: "", projection: "report_summary_only"})
+	missingTrackingComment: close({terminalState: core.#TerminalState, matchingComments: 0})
+	duplicateTrackingComment: close({run_id: core.#NonEmptyString, matchingComments: int & >1})
+	trackingIssueBodyMutation: close({repository: "fatb4f/cuestrap", issue: 9, mutation: "body_edit"})
+	wrongTrackingIssue: close({repository: string & !="fatb4f/cuestrap", issue: int & !=9})
 	undeclaredIssueMutation: close({target: int & >0, declared: false})
 }
 
