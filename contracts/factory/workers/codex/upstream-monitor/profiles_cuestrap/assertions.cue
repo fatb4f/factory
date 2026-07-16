@@ -10,36 +10,45 @@ cuestrapForbiddenAttractors: [
 	"latest-alpha-cli evidence assigned to main",
 	"main evidence assigned to latest-alpha-cli",
 	"unresolved ref populated from inference",
-	"factory report path outside cuestrap profile reports/",
-	"factory evidence path outside cuestrap profile evidence/",
+	"factory run artifacts split across report and evidence directories",
+	"factory run artifact written outside its runs/<run_id>/ bundle",
+	"bundle manifest published before required artifacts",
+	"mutable latest report or evidence copy",
+	"legacy report or evidence path used for a new write",
 	"evidence artifact written to fatb4f/cuestrap",
 	"CUE or AGENTS plumbing written to fatb4f/cuestrap",
-	"cuestrap report copy differs from factory report",
+	"cuestrap report or summary copy differs from factory source",
+	"mirror projection manifest not bound to factory bundle",
 	"issue update without publication target",
 	"claimant-supplied admission boolean",
 ]
 
 cuestrapValidationAssertions: close({
-	acceptedSignalExact:             true
-	profileIDExact:                  true
-	contextRepositoryExact:          true
-	currentContextRequired:          true
-	mainRefExact:                    true
-	alphaRefExact:                   true
-	channelsDistinct:                true
-	upstreamEvidenceOnly:            true
-	cuestrapContextNotAuthority:     true
-	chatgptIsActuatorNotAuthority:   true
-	factoryReportPathsBounded:       true
-	factoryEvidencePathsBounded:     true
-	cuestrapMirrorPathsBounded:      true
-	cuestrapEvidenceForbidden:       true
-	cuestrapPlumbingForbidden:       true
-	mirrorContentEqualityRequired:   true
-	undeclaredIssueUpdatesForbidden: true
-	unresolvedEvidencePreserved:     true
-	purposeAssignmentRequired:       true
-	workflowClosed:                  true
+	acceptedSignalExact:                  true
+	profileIDExact:                       true
+	contextRepositoryExact:               true
+	currentContextRequired:               true
+	mainRefExact:                         true
+	alphaRefExact:                        true
+	channelsDistinct:                     true
+	upstreamEvidenceOnly:                 true
+	cuestrapContextNotAuthority:          true
+	chatgptIsActuatorNotAuthority:        true
+	factoryRunArtifactsCoLocated:         true
+	factoryBundleExportUnitDirectory:     true
+	factoryBundleManifestSealsArtifacts:  true
+	mirrorRunArtifactsCoLocated:          true
+	mirrorBundleExportUnitDirectory:      true
+	latestPointersOnly:                   true
+	legacyPathsReadOnly:                  true
+	cuestrapEvidenceForbidden:            true
+	cuestrapPlumbingForbidden:            true
+	mirrorContentEqualityRequired:        true
+	mirrorManifestSourceBindingRequired:  true
+	undeclaredIssueUpdatesForbidden:      true
+	unresolvedEvidencePreserved:          true
+	purposeAssignmentRequired:            true
+	workflowClosed:                       true
 })
 
 cuestrapNegativeFixtures: {
@@ -47,12 +56,16 @@ cuestrapNegativeFixtures: {
 	promoteUpstreamAuthority: close({authority: "openai/codex"})
 	promoteContextAuthority: close({authority: "fatb4f/cuestrap"})
 	inferUnresolvedHead: close({status: "unresolved", inferred_head: core.#CommitSHA})
-	unboundedFactoryReportPath: close({path: string & !~"^contracts/upstream-monitor/codex/cuestrap-contract-surface/reports/"})
-	unboundedFactoryEvidencePath: close({path: string & !~"^contracts/upstream-monitor/codex/cuestrap-contract-surface/evidence/"})
-	unboundedMirrorPath: close({path: string & !~"^reports/upstream-monitor/codex/"})
+	scatteredFactoryRun: close({reportDirectory: core.#NonEmptyString, evidenceDirectory: core.#NonEmptyString, sameDirectory: false})
+	unbundledFactoryArtifact: close({path: string & !~"^contracts/upstream-monitor/codex/cuestrap-contract-surface/runs/[^/]+/"})
+	unbundledMirrorArtifact: close({path: string & !~"^reports/upstream-monitor/codex/runs/[^/]+/"})
+	manifestBeforeArtifacts: close({manifestWritten: true, requiredArtifactsComplete: false})
+	mutableFactoryLatestCopy: close({path: string & =~"^contracts/upstream-monitor/codex/cuestrap-contract-surface/(reports|evidence)/latest"})
+	mutableMirrorLatestCopy: close({path: "reports/upstream-monitor/codex/latest.codex-impact.md", write: true})
 	cuestrapEvidenceWrite: close({repository: "fatb4f/cuestrap", kind: "evidence"})
 	cuestrapPlumbingWrite: close({repository: "fatb4f/cuestrap", kind: "authority" | "instruction" | "actuator"})
 	mismatchedMirror: close({factoryDigest: core.#NonEmptyString, mirrorDigest: core.#NonEmptyString, equal: false})
+	unboundMirrorManifest: close({sourceBundlePath: "", projection: "report_summary_only"})
 	undeclaredIssueMutation: close({target: int & >0, declared: false})
 }
 
