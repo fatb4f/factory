@@ -4,27 +4,31 @@
   "loop": "cuestrap-codex-contract-surface",
   "signal_id": "loop_bootstrap_request",
   "profile_id": "cuestrap",
-  "run_id": "20260716T181510Z",
-  "factory_revision": "7ab6bc1de901396d4325fa891c064819b54738b8",
-  "cuestrap_revision": "d246290fd39064b0940839c9f3d683a92a43c9eb",
+  "run_id": "20260716T183818Z",
+  "factory_revision": "9fa1955d6676b0f9de95fe89700f3bb41569fab0",
+  "cuestrap_revision": "34d179bf014b09e988fb1e5256a255b64c178e8e",
   "channels": {
     "main": {
       "channel": "main",
       "status": "resolved",
-      "head_commit": "726b6378d2513c25e5e59b1371326be2fe194be4",
+      "head_commit": "5331d20f6ef9b80ee4153132a70d4989780d916d",
       "evidence": [
-        "initial cuestrap-profile bootstrap snapshot",
-        "main is fifteen commits ahead and one behind latest-alpha-cli",
-        "permission, sandbox, skill selection, multi-agent, MCP, code-mode, context, and unified-exec paths matched declared cuestrap surfaces"
+        "prior main head 726b6378d2513c25e5e59b1371326be2fe194be4",
+        "main advanced four commits with zero commits behind the prior channel baseline",
+        "5331d20f6ef9b80ee4153132a70d4989780d916d requires data URLs for code-mode image output and reports malformed or unsupported image values as tool-call errors",
+        "active-turn environment state, sub-agent role restoration, and spawn-role validation changed on main"
       ]
     },
     "latest-alpha-cli": {
       "channel": "latest-alpha-cli",
       "status": "resolved",
-      "head_commit": "dd1363c67cbf530e362ea8e4c623d66fe97a5bc5",
+      "head_commit": "f84f9a6406cc55b210395f71b4c6aed236fc7ebb",
+      "workspace_version": "0.145.0-alpha.18",
       "evidence": [
-        "initial cuestrap-profile bootstrap snapshot",
-        "kept independent from main with no inferred state"
+        "prior alpha head dd1363c67cbf530e362ea8e4c623d66fe97a5bc5",
+        "latest-alpha-cli diverged from the recorded alpha baseline: fourteen commits ahead and one behind",
+        "alpha delta includes permission, config alias, dynamic skill, environment-instruction, MCP/RMCP, session, and multi-agent paths",
+        "f84f9a6406cc55b210395f71b4c6aed236fc7ebb declares workspace version 0.145.0-alpha.18"
       ]
     }
   },
@@ -32,19 +36,19 @@
     "supervisorySessionController": {
       "purpose": "supervisory-session-controller",
       "impactDecision": "blocking-gate",
-      "summary": "Requalify permission and sandbox vocabulary, dynamic instruction and skill behavior, and concurrent tool-event correlation before strengthening supervisory coverage claims.",
+      "summary": "Requalify the closed permission/configuration and instruction/skill ingress against the current alpha ref; retain multi-agent ownership as unsupported.",
       "surfaceMatches": [
         "permission-sandbox-approval",
-        "tool-dispatch-classification",
         "instruction-skill-policy",
         "session-turn-identity",
+        "context-turn-lifecycle",
         "multi-agent-session-control"
       ]
     },
     "idiomaticCueWorkbookHarness": {
       "purpose": "idiomatic-cue-workbook-harness",
       "impactDecision": "contract-update",
-      "summary": "Compare MCP and code-mode result envelopes plus environment-instruction context state with the workbook adapter and raw observation contracts.",
+      "summary": "Compare code-mode image-output errors, MCP/RMCP envelopes, and context persistence with the Marimo adapter and raw observation contracts.",
       "surfaceMatches": [
         "mcp-code-mode",
         "tool-result-error-semantics",
@@ -55,20 +59,25 @@
   },
   "critical": [
     {
-      "id": "bootstrap-permission-sandbox-contract",
-      "channels": ["main"],
+      "id": "alpha-permission-contract-delta",
+      "channels": [
+        "latest-alpha-cli"
+      ],
       "severity": "critical",
       "impactDecision": "blocking-gate",
-      "title": "Permission and sandbox contracts require requalification",
-      "summary": "Upstream permission schemas and sandbox policy changed while CUEstrap closes permission modes and fail-closed decisions over a fixed vocabulary.",
-      "surfaceMatches": ["permission-sandbox-approval"],
+      "title": "Alpha permission and configuration contracts changed",
+      "summary": "The current alpha history changes app-server permission schemas, core permission configuration, config aliases, and sandbox-related policy paths.",
+      "surfaceMatches": [
+        "permission-sandbox-approval"
+      ],
       "evidence": [
-        "codex-rs/protocol/src/permissions.rs",
         "codex-rs/app-server-protocol/src/protocol/v2/permissions.rs",
         "codex-rs/core/src/config/permissions.rs",
+        "codex-rs/config/src/config_toml.rs",
+        "codex-rs/config/src/key_aliases.rs",
         "codex-rs/sandboxing/src/policy_transforms.rs"
       ],
-      "localContractImpact": "Requalify CUE and Pydantic permission ingress plus phase-sensitive allow and deny policy.",
+      "localContractImpact": "Requalify the closed CUE and Pydantic permission-mode ingress plus fail-closed admission against latest-alpha-cli.",
       "suggestedLocalTargets": [
         "src/cue-workbook/supervisory_hooks/contracts.cue",
         "src/cue-workbook/supervisory_hooks/models.py",
@@ -76,63 +85,52 @@
       ]
     },
     {
-      "id": "bootstrap-tool-dispatch-concurrency",
-      "channels": ["main"],
-      "severity": "critical",
-      "impactDecision": "blocking-gate",
-      "title": "Concurrent unified-exec dispatch challenges event correlation",
-      "summary": "Upstream runs write_stdin concurrently across terminal sessions, changing the execution ordering assumptions around tool dispatch.",
-      "surfaceMatches": ["tool-dispatch-classification", "session-turn-identity"],
-      "evidence": [
-        "codex-rs/core/src/tools/handlers/unified_exec/write_stdin.rs",
-        "codex-rs/core/src/unified_exec/process.rs",
-        "codex-rs/core/src/unified_exec/process_manager.rs",
-        "codex-rs/core/tests/suite/unified_exec.rs"
+      "id": "alpha-instruction-skill-delta",
+      "channels": [
+        "latest-alpha-cli"
       ],
-      "localContractImpact": "Requalify pending tool_use_id correlation, pre/post ordering, duplicate handling, and quarantine under concurrent terminal activity.",
-      "suggestedLocalTargets": [
-        "src/cue-workbook/supervisory_hooks/models.py",
-        "src/cue-workbook/supervisory_hooks/supervisor.py",
-        "src/cue-workbook/supervisory_hooks/ledger.py"
-      ]
-    },
-    {
-      "id": "bootstrap-instruction-skill-policy",
-      "channels": ["main"],
       "severity": "critical",
       "impactDecision": "blocking-gate",
-      "title": "Dynamic skill-selection behavior changed",
-      "summary": "Dynamic skill-selection implementations changed and an implicit-invocation test surface was removed.",
-      "surfaceMatches": ["instruction-skill-policy"],
+      "title": "Alpha instruction and dynamic-skill behavior changed",
+      "summary": "The current alpha history changes dynamic skill-selector implementations and related invocation surfaces.",
+      "surfaceMatches": [
+        "instruction-skill-policy"
+      ],
       "evidence": [
         "codex-rs/ext/skills/src/dynamic_skill_selector.rs",
         "codex-rs/ext/skills/src/dynamic_skill_selector/character_ngram.rs",
         "codex-rs/ext/skills/src/dynamic_skill_selector/fielded_bm25.rs",
         "codex-rs/ext/skills/tests/implicit_invocation.rs removed"
       ],
-      "localContractImpact": "Recheck repository instruction loading, phase policy, and any assumptions about implicit skill invocation.",
-      "suggestedLocalTargets": [".codex/AGENTS.md", ".codex/config.toml"]
+      "localContractImpact": "Recheck repository instruction loading and session-phase constraints before treating current alpha skill behavior as covered.",
+      "suggestedLocalTargets": [
+        ".codex/AGENTS.md",
+        ".codex/config.toml"
+      ]
     }
   ],
   "high": [
     {
-      "id": "bootstrap-mcp-code-mode-results",
-      "channels": ["main"],
+      "id": "main-code-mode-image-output-contract",
+      "channels": [
+        "main"
+      ],
       "severity": "high",
       "impactDecision": "contract-update",
-      "title": "MCP and code-mode result surfaces expanded",
-      "summary": "App metadata reads, connector metadata, code-mode tests, RMCP tests, and event mapping changed.",
-      "surfaceMatches": ["mcp-code-mode", "tool-result-error-semantics"],
-      "evidence": [
-        "codex-rs/app-server-protocol/schema/json/v2/AppsReadResponse.json",
-        "codex-rs/connectors/src/metadata_store.rs",
-        "codex-rs/core/tests/suite/code_mode.rs",
-        "codex-rs/core/tests/suite/rmcp_client.rs",
-        "codex-rs/core/src/event_mapping.rs"
+      "title": "Code-mode image output now requires data URLs",
+      "summary": "Main rejects malformed or unsupported image URLs with a dedicated tool-call error and accepts image output only through data URLs.",
+      "surfaceMatches": [
+        "mcp-code-mode",
+        "tool-result-error-semantics"
       ],
-      "localContractImpact": "Compare Marimo MCP dispatch and raw result or error interpretation with current upstream envelopes.",
+      "evidence": [
+        "openai/codex commit 5331d20f6ef9b80ee4153132a70d4989780d916d",
+        "codex-rs/code-mode/src/runtime/value.rs",
+        "codex-rs/code-mode/src/service_tests.rs",
+        "codex-rs/core/tests/suite/code_mode.rs"
+      ],
+      "localContractImpact": "Compare workbook result normalization and reported-error classification with the new image-output envelope.",
       "suggestedLocalTargets": [
-        ".codex/config.toml",
         "src/cue-workbook/workbook_cli.py",
         "src/cue-workbook/cue-workbook.py",
         "src/cue-workbook/supervisory_hooks/policy.py",
@@ -140,57 +138,112 @@
       ]
     },
     {
-      "id": "bootstrap-context-turn-lifecycle",
-      "channels": ["main"],
+      "id": "main-active-turn-environment-lifecycle",
+      "channels": [
+        "main"
+      ],
       "severity": "high",
       "impactDecision": "contract-update",
-      "title": "Environment instructions entered context world state",
-      "summary": "Environment instructions are represented in world state and context history alongside related session changes.",
-      "surfaceMatches": ["context-turn-lifecycle"],
+      "title": "Active-turn environment state is stabilized across settings updates",
+      "summary": "Main changed environment and session handling so active-turn environment state remains stable while settings change.",
+      "surfaceMatches": [
+        "context-turn-lifecycle",
+        "session-turn-identity"
+      ],
       "evidence": [
+        "openai/codex commit c4ce0493dc94923493ca5b1e7e8695c289febad0",
+        "codex-rs/core/src/context/world_state/environment.rs",
+        "codex-rs/core/src/environment_selection.rs",
+        "codex-rs/core/src/session/mod.rs",
+        "codex-rs/core/src/session/turn.rs"
+      ],
+      "localContractImpact": "Recheck session continuity and context-boundary assumptions used by the controller and workbook.",
+      "suggestedLocalTargets": [
+        "src/cue-workbook/supervisory_hooks/models.py",
+        "src/cue-workbook/supervisory_hooks/supervisor.py",
+        "src/cue-workbook/cue-workbook.py"
+      ]
+    },
+    {
+      "id": "alpha-mcp-context-contract",
+      "channels": [
+        "latest-alpha-cli"
+      ],
+      "severity": "high",
+      "impactDecision": "contract-update",
+      "title": "Alpha MCP and context-state surfaces changed",
+      "summary": "The alpha delta changes RMCP tests, MCP tool-call handling, environment-instruction world state, session state, and app metadata APIs.",
+      "surfaceMatches": [
+        "mcp-code-mode",
+        "tool-result-error-semantics",
+        "context-turn-lifecycle"
+      ],
+      "evidence": [
+        "codex-rs/core/tests/suite/rmcp_client.rs",
+        "codex-rs/core/src/mcp_tool_call.rs",
         "codex-rs/core/src/context/environments_instructions.rs",
         "codex-rs/core/src/context/world_state/environments_instructions.rs",
-        "codex-rs/core/src/context_manager/history_tests.rs",
-        "codex-rs/core/src/session/world_state.rs"
+        "codex-rs/core/src/session/world_state.rs",
+        "codex-rs/app-server-protocol/schema/json/v2/RawResponseCompletedNotification.json"
       ],
-      "localContractImpact": "Compare session continuity, context persistence, compaction, and workbook-controller boundaries.",
+      "localContractImpact": "Requalify raw result/error observations and context persistence independently from main.",
       "suggestedLocalTargets": [
-        "src/cue-workbook/supervisory_hooks/supervisor.py",
+        "src/cue-workbook/workbook_cli.py",
         "src/cue-workbook/cue-workbook.py",
-        "src/cue-workbook/workbook_cli.py"
+        "src/cue-workbook/supervisory_hooks/policy.py",
+        "src/cue-workbook/supervisory_hooks/supervisor.py"
       ]
     }
   ],
   "notes": [
     {
-      "id": "bootstrap-multi-agent-session-control",
-      "channels": ["main"],
+      "id": "multi-agent-state-delta",
+      "channels": [
+        "main",
+        "latest-alpha-cli"
+      ],
       "severity": "note",
       "impactDecision": "note",
-      "title": "Multi-agent lifecycle remains an explicit future boundary",
-      "summary": "Agent roles, jobs, spawn handling, and notifications changed while the current controller binds a single session and turn attempt.",
-      "surfaceMatches": ["multi-agent-session-control"],
+      "title": "Sub-agent state changed on both channels",
+      "summary": "Both channels changed sub-agent role, spawn, notification, or resume behavior while CUEstrap binds one supervisory session and attempt.",
+      "surfaceMatches": [
+        "multi-agent-session-control"
+      ],
       "evidence": [
-        "codex-rs/core/src/agent/role.rs",
-        "codex-rs/core/src/tools/handlers/agent_jobs.rs",
+        "main commits b7983c2a07182c3c74fbe67283b5893b762dd508 and 8a7c854bffcb93c36512884f50f4abf5539fca32",
+        "codex-rs/core/src/agent/control/spawn.rs",
         "codex-rs/core/src/tools/handlers/multi_agents/spawn.rs",
+        "codex-rs/core/tests/suite/multi_agent_resume.rs",
         "codex-rs/core/tests/suite/subagent_notifications.rs"
       ],
-      "localContractImpact": "Retain multi-agent ownership and run or attempt boundaries as unsupported until explicitly designed."
+      "localContractImpact": "Retain multi-agent ownership and cross-agent attempt correlation as unsupported until explicitly designed.",
+      "suggestedLocalTargets": [
+        "src/cue-workbook/supervisory_hooks/models.py",
+        "src/cue-workbook/supervisory_hooks/supervisor.py"
+      ]
     },
     {
-      "id": "bootstrap-release-channel-divergence",
-      "channels": ["main", "latest-alpha-cli"],
+      "id": "alpha-release-divergence",
+      "channels": [
+        "latest-alpha-cli"
+      ],
       "severity": "note",
       "impactDecision": "note",
-      "title": "Main and alpha require independent qualification",
-      "summary": "Main is fifteen commits ahead and one behind alpha at the bootstrap snapshot.",
-      "surfaceMatches": ["release-channel"],
-      "evidence": [
-        "main head 726b6378d2513c25e5e59b1371326be2fe194be4",
-        "alpha head dd1363c67cbf530e362ea8e4c623d66fe97a5bc5"
+      "title": "Alpha baseline diverged and advanced to 0.145.0-alpha.18",
+      "summary": "The alpha ref is fourteen commits ahead and one behind its prior recorded head and now declares workspace version 0.145.0-alpha.18.",
+      "surfaceMatches": [
+        "release-channel"
       ],
-      "localContractImpact": "Do not infer support for one channel from observations of the other."
+      "evidence": [
+        "prior alpha head dd1363c67cbf530e362ea8e4c623d66fe97a5bc5",
+        "current alpha head f84f9a6406cc55b210395f71b4c6aed236fc7ebb",
+        "codex-rs/Cargo.toml workspace.package.version = 0.145.0-alpha.18"
+      ],
+      "localContractImpact": "Preserve the current alpha head as an independent qualification baseline; do not derive alpha support from main.",
+      "suggestedLocalTargets": [
+        ".codex/config.toml",
+        "README.md"
+      ]
     }
   ],
   "noLocalAction": [],
