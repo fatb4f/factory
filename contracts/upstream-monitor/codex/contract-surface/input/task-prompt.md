@@ -15,6 +15,6 @@ entrypoint: contracts/upstream-monitor/codex/contract-surface/AGENTS.md
 adapter: github_app
 ```
 
-Run the ChatGPT-actuated Codex contract-surface upstream-monitor loop through the admitted report and publication surface. Use factory-local CUE as authority and upstream `openai/codex` only as evidence. Inspect `main` and `latest-alpha-cli` as separate channels. Apply `upstreamCodexImpactReportTemplate` and `upstreamCodexPublicationPlan`.
+Run the ChatGPT-actuated Codex contract-surface upstream-monitor loop through the admitted publication surface. Use factory-local CUE as authority and upstream `openai/codex` only as evidence. Inspect `main` and `latest-alpha-cli` as separate channels. Apply `upstreamCodexImpactReportTemplate`, `upstreamCodexRunSummaryTemplate`, and `upstreamCodexPublicationPlan`.
 
-Do not create report or evidence artifacts outside the declared paths. Do not update issues unless an exact target is declared. Preserve unresolved upstream state unless concrete ref evidence is available.
+Publish every artifact for one run into the single directory declared by the publication plan. Write report, summary, and evidence before the sealing manifest; update only the declared latest pointer after the manifest exists. Treat legacy report and evidence paths as read-only migration inputs. Do not update issues unless an exact target is declared. Preserve unresolved upstream state unless concrete ref evidence is available.
