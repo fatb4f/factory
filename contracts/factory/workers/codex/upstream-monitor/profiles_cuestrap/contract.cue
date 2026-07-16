@@ -86,7 +86,6 @@ cuestrapAuthorityModel: close({
 		"fatb4f/cuestrap repository observations",
 		"fatb4f/cuestrap issue #9 comments",
 		"generated factory run bundles",
-		"generated cuestrap report-bundle projections",
 		"legacy generated reports and evidence",
 	]
 })
@@ -110,9 +109,6 @@ cuestrapWorkflow: close({
 		"factory_bundle_publication",
 		"factory_manifest_seal",
 		"factory_latest_pointer_update",
-		"cuestrap_report_bundle_mirror",
-		"cuestrap_mirror_manifest_seal",
-		"cuestrap_latest_pointer_update",
 		"tracking_issue_append",
 	]
 	transitions: [
@@ -128,10 +124,7 @@ cuestrapWorkflow: close({
 		{from: "publication_admission", to: "factory_bundle_publication"},
 		{from: "factory_bundle_publication", to: "factory_manifest_seal"},
 		{from: "factory_manifest_seal", to: "factory_latest_pointer_update"},
-		{from: "factory_latest_pointer_update", to: "cuestrap_report_bundle_mirror"},
-		{from: "cuestrap_report_bundle_mirror", to: "cuestrap_mirror_manifest_seal"},
-		{from: "cuestrap_mirror_manifest_seal", to: "cuestrap_latest_pointer_update"},
-		{from: "cuestrap_latest_pointer_update", to: "tracking_issue_append"},
+		{from: "factory_latest_pointer_update", to: "tracking_issue_append"},
 		{from: "tracking_issue_append", to: "terminal_success"},
 	]
 	failureStates: ["terminal_abort", "terminal_deferred", "coverage_gap"]
