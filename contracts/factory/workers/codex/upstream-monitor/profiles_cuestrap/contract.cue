@@ -84,6 +84,7 @@ cuestrapAuthorityModel: close({
 		"GitHub adapter responses",
 		"ChatGPT observations",
 		"fatb4f/cuestrap repository observations",
+		"fatb4f/cuestrap issue #9 comments",
 		"generated factory run bundles",
 		"generated cuestrap report-bundle projections",
 		"legacy generated reports and evidence",
@@ -98,6 +99,7 @@ cuestrapWorkflow: close({
 	states: [
 		"authority_read",
 		"input_admission",
+		"tracking_issue_resolution",
 		"context_acquisition",
 		"main_acquisition",
 		"alpha_acquisition",
@@ -111,10 +113,12 @@ cuestrapWorkflow: close({
 		"cuestrap_report_bundle_mirror",
 		"cuestrap_mirror_manifest_seal",
 		"cuestrap_latest_pointer_update",
+		"tracking_issue_append",
 	]
 	transitions: [
 		{from: "authority_read", to: "input_admission"},
-		{from: "input_admission", to: "context_acquisition"},
+		{from: "input_admission", to: "tracking_issue_resolution"},
+		{from: "tracking_issue_resolution", to: "context_acquisition"},
 		{from: "context_acquisition", to: "main_acquisition"},
 		{from: "main_acquisition", to: "alpha_acquisition"},
 		{from: "alpha_acquisition", to: "semantic_classification"},
@@ -127,10 +131,22 @@ cuestrapWorkflow: close({
 		{from: "factory_latest_pointer_update", to: "cuestrap_report_bundle_mirror"},
 		{from: "cuestrap_report_bundle_mirror", to: "cuestrap_mirror_manifest_seal"},
 		{from: "cuestrap_mirror_manifest_seal", to: "cuestrap_latest_pointer_update"},
-		{from: "cuestrap_latest_pointer_update", to: "terminal_success"},
+		{from: "cuestrap_latest_pointer_update", to: "tracking_issue_append"},
+		{from: "tracking_issue_append", to: "terminal_success"},
 	]
 	failureStates: ["terminal_abort", "terminal_deferred", "coverage_gap"]
-	terminal: "terminal_success"
+	terminal:      "terminal_success"
+	terminalAudit: close({
+		target:            "runLog"
+		mutation:          "append_comment"
+		exactlyOncePerRun: true
+		requiredFor: [
+			"terminal_success",
+			"terminal_abort",
+			"terminal_deferred",
+			"coverage_gap",
+		]
+	})
 })
 
 cuestrapOperational: true
