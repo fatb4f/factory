@@ -26,33 +26,33 @@ cuestrapForbiddenAttractors: [
 ]
 
 cuestrapValidationAssertions: close({
-	acceptedSignalExact:                 true
-	profileIDExact:                      true
-	contextRepositoryExact:              true
-	currentContextRequired:              true
-	mainRefExact:                        true
-	alphaRefExact:                       true
-	channelsDistinct:                    true
-	upstreamEvidenceOnly:                true
-	cuestrapContextNotAuthority:         true
-	chatgptIsActuatorNotAuthority:       true
-	factoryRunArtifactsCoLocated:        true
-	factoryBundleExportUnitDirectory:    true
-	factoryBundleManifestSealsArtifacts: true
-	latestPointersOnly:                  true
-	legacyPathsReadOnly:                 true
+	acceptedSignalExact:                  true
+	profileIDExact:                       true
+	contextRepositoryExact:               true
+	currentContextRequired:               true
+	mainRefExact:                         true
+	alphaRefExact:                        true
+	channelsDistinct:                     true
+	upstreamEvidenceOnly:                 true
+	cuestrapContextNotAuthority:          true
+	chatgptIsActuatorNotAuthority:        true
+	factoryRunArtifactsCoLocated:         true
+	factoryBundleExportUnitDirectory:     true
+	factoryBundleManifestSealsArtifacts:  true
+	latestPointersOnly:                   true
+	legacyPathsReadOnly:                  true
 	cuestrapRepositoryArtifactsForbidden: true
-	cuestrapEvidenceForbidden:           true
-	cuestrapPlumbingForbidden:           true
-	trackingIssueTargetExact:            true
-	trackingIssueAppendOnly:             true
-	trackingIssueUpdatedEveryRun:        true
-	trackingIssueRunIDDeduplicated:      true
-	trackingIssueBodyStable:             true
-	undeclaredIssueUpdatesForbidden:     true
-	unresolvedEvidencePreserved:         true
-	purposeAssignmentRequired:           true
-	workflowClosed:                      true
+	cuestrapEvidenceForbidden:            true
+	cuestrapPlumbingForbidden:            true
+	trackingIssueTargetExact:             true
+	trackingIssueAppendOnly:              true
+	trackingIssueUpdatedEveryRun:         true
+	trackingIssueRunIDDeduplicated:       true
+	trackingIssueBodyStable:              true
+	undeclaredIssueUpdatesForbidden:      true
+	unresolvedEvidencePreserved:          true
+	purposeAssignmentRequired:            true
+	workflowClosed:                       true
 })
 
 cuestrapNegativeFixtures: {
