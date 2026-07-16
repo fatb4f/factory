@@ -1,0 +1,98 @@
+{
+  "apiVersion": "factory.upstream-monitor.codex/v1",
+  "kind": "CodexImpactReport",
+  "loop": "codex-contract-surface",
+  "signal_id": "loop_bootstrap_request",
+  "run_id": "20260716T162023Z",
+  "target_revision": "4aa0ca5121038e2c5949d5cd55b9a10f9dbff0e4",
+  "channels": {
+    "main": {
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "41efc6333e3ed476ce824aa729656f97503c10b8",
+      "evidence": [
+        "compare latest-alpha-cli...main: diverged; main ahead 10, behind 1",
+        "main-only changes intersect permissions, config, multi-agent, skills, context/compaction, MCP, and sandbox surfaces"
+      ]
+    },
+    "latest-alpha-cli": {
+      "channel": "latest-alpha-cli",
+      "status": "resolved",
+      "head_commit": "dd1363c67cbf530e362ea8e4c623d66fe97a5bc5",
+      "evidence": [
+        "compare main...latest-alpha-cli: diverged; alpha ahead 1, behind 10",
+        "alpha-only changed path: codex-rs/Cargo.toml"
+      ]
+    }
+  },
+  "critical": [
+    {
+      "id": "main-instruction-skill-selection",
+      "channels": ["main"],
+      "severity": "critical",
+      "impactDecision": "blocking-gate",
+      "title": "Instruction and skill-selection surface changed",
+      "summary": "Dynamic skill-selection implementations changed and an implicit-invocation test surface was removed.",
+      "surfaceMatches": ["instructions"],
+      "evidence": ["codex-rs/ext/skills/src/dynamic_skill_selector/*", "codex-rs/ext/skills/tests/implicit_invocation.rs removed"],
+      "localContractImpact": "Review instruction-chain, skill namespace, discovery, and invocation contracts before adoption."
+    },
+    {
+      "id": "main-auth-permissions-sandbox",
+      "channels": ["main"],
+      "severity": "critical",
+      "impactDecision": "blocking-gate",
+      "title": "Permission and sandbox surfaces changed",
+      "summary": "Protocol permissions, app-server schemas, config locking, sandbox transforms, and MCP tests changed.",
+      "surfaceMatches": ["authentication", "mcp-tools"],
+      "evidence": ["codex-rs/protocol/src/permissions.rs", "codex-rs/app-server-protocol/src/protocol/v2/permissions.rs", "codex-rs/sandboxing/src/policy_transforms.rs", "codex-rs/core/tests/suite/rmcp_client.rs"],
+      "localContractImpact": "Review authorization, approval, sandbox, and MCP lifecycle contracts before propagation."
+    }
+  ],
+  "high": [
+    {
+      "id": "main-multi-agent-protocol",
+      "channels": ["main"],
+      "severity": "high",
+      "impactDecision": "contract-update",
+      "title": "Multi-agent lifecycle surface changed",
+      "summary": "Agent roles, jobs, spawn handlers, tool specs, environment waiting, and notification tests changed.",
+      "surfaceMatches": ["agent-messages"],
+      "evidence": ["codex-rs/core/src/tools/handlers/multi_agents*", "codex-rs/core/tests/suite/subagent_notifications.rs"],
+      "localContractImpact": "Agent message envelope and lifecycle contracts may require updates."
+    },
+    {
+      "id": "main-config-context-compaction",
+      "channels": ["main"],
+      "severity": "high",
+      "impactDecision": "contract-update",
+      "title": "Configuration and context surfaces changed",
+      "summary": "Config parsing, aliases, schema, environment and turn context, and compaction tests changed.",
+      "surfaceMatches": ["configuration", "context-fragments"],
+      "evidence": ["codex-rs/config/src/config_toml.rs", "codex-rs/core/config.schema.json", "codex-rs/core/src/context/environment_context.rs", "codex-rs/app-server/tests/suite/v2/compaction.rs"],
+      "localContractImpact": "Configuration layering, context injection, and compaction contracts require comparison."
+    }
+  ],
+  "notes": [
+    {
+      "id": "alpha-release-channel-divergence",
+      "channels": ["main", "latest-alpha-cli"],
+      "severity": "note",
+      "impactDecision": "note",
+      "title": "Main and alpha refs are divergent",
+      "summary": "Alpha is one commit ahead and ten behind main; preserve independent baselines.",
+      "surfaceMatches": ["release-channel"],
+      "evidence": ["main head 41efc6333e3ed476ce824aa729656f97503c10b8", "alpha head dd1363c67cbf530e362ea8e4c623d66fe97a5bc5"],
+      "localContractImpact": "Do not infer alpha state from main or main state from alpha."
+    }
+  ],
+  "noLocalAction": [],
+  "validationNotes": {
+    "authorityRead": true,
+    "channelsKeptDistinct": true,
+    "publicationPlanRead": true,
+    "forbiddenAttractorsChecked": true,
+    "cueExecution": "not_available_to_github_app"
+  },
+  "terminal_state": "terminal_success"
+}
