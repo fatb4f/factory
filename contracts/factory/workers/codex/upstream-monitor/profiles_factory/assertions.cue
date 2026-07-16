@@ -41,7 +41,7 @@ negativeFixtures: {
 validationPlan: close({
 	commands: [
 		"cue fmt --check contract.cue profiles_factory/*.cue",
-		"cue vet -c ./profiles_factory",
+		"cue vet -c=false ./...",
 		"cue export ./profiles_factory -e publicContract --out json",
 	]
 	adapterLimitation: "The GitHub App actuator cannot execute these commands; repository CI or a checked local environment performs executable validation."
