@@ -31,12 +31,18 @@ jobs:
       - name: Vet monitor authority
         working-directory: contracts/factory/workers/codex/upstream-monitor
         run: cue vet ./...
-      - name: Export public contract
+      - name: Export factory profile
         working-directory: contracts/factory/workers/codex/upstream-monitor
-        run: cue export -e publicContract --out json > "$RUNNER_TEMP/upstream-monitor.public.json"
+        run: cue export -e publicContract --out json > "$RUNNER_TEMP/upstream-monitor.factory.public.json"
+      - name: Export cuestrap profile
+        working-directory: contracts/factory/workers/codex/upstream-monitor
+        run: cue export -e cuestrapPublicContract --out json > "$RUNNER_TEMP/upstream-monitor.cuestrap.public.json"
       - name: Check actuator ingress
         run: |
           test -f contracts/upstream-monitor/AGENTS.md
           test -f contracts/upstream-monitor/codex/AGENTS.md
           test -f contracts/upstream-monitor/codex/contract-surface/AGENTS.md
           test -f contracts/upstream-monitor/codex/contract-surface/output/report-template.md
+          test -f contracts/upstream-monitor/codex/cuestrap-contract-surface/AGENTS.md
+          test -f contracts/upstream-monitor/codex/cuestrap-contract-surface/output/report-template.md
+          test -f contracts/upstream-monitor/codex/cuestrap-contract-surface/chatgpt-task-prompt.md
