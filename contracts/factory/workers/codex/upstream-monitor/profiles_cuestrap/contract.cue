@@ -135,7 +135,7 @@ cuestrapWorkflow: close({
 		{from: "tracking_issue_append", to: "terminal_success"},
 	]
 	failureStates: ["terminal_abort", "terminal_deferred", "coverage_gap"]
-	terminal:      "terminal_success"
+	terminal: "terminal_success"
 	terminalAudit: close({
 		target:            "runLog"
 		mutation:          "append_comment"
