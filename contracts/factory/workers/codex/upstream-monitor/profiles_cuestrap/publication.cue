@@ -25,7 +25,7 @@ cuestrapPublicationPlan: close({
 			runPattern: "reports/upstream-monitor/codex/runs/<run_id>.codex-impact.md"
 			latestPath: "reports/upstream-monitor/codex/latest.codex-impact.md"
 		})
-		contentPolicy: "byte_equivalent_to_factory_report"
+		contentPolicy:   "byte_equivalent_to_factory_report"
 		evidenceAllowed: false
 		plumbingAllowed: false
 	})
@@ -51,13 +51,13 @@ cuestrapPublicationPlan: close({
 }
 
 cuestrapPublicationAdmission: close({
-	factoryReportsEnabled: true
-	factoryEvidenceEnabled: true
+	factoryReportsEnabled:       true
+	factoryEvidenceEnabled:      true
 	cuestrapReportMirrorEnabled: true
-	cuestrapEvidenceEnabled: false
-	cuestrapPlumbingEnabled: false
-	issueUpdatesEnabled: false
-	requireOperationalContract: true
-	requireFixedTemplate: true
-	requireMirrorDigestMatch: true
+	cuestrapEvidenceEnabled:     false
+	cuestrapPlumbingEnabled:     false
+	issueUpdatesEnabled:         false
+	requireOperationalContract:  true
+	requireFixedTemplate:        true
+	requireMirrorDigestMatch:    true
 })
