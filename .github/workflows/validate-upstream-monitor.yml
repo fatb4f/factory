@@ -25,17 +25,9 @@ jobs:
       - uses: cue-lang/setup-cue@v1.0.0
         with:
           version: v0.16.0
-      - name: Format sources
+      - name: Format check
         working-directory: contracts/factory/workers/codex/upstream-monitor
-        run: cue fmt contract.cue profiles_factory/*.cue profiles_cuestrap/*.cue
-      - name: Upload formatted CUE sources
-        uses: actions/upload-artifact@v4
-        with:
-          name: formatted-upstream-monitor-cue
-          path: |
-            contracts/factory/workers/codex/upstream-monitor/contract.cue
-            contracts/factory/workers/codex/upstream-monitor/profiles_factory/*.cue
-            contracts/factory/workers/codex/upstream-monitor/profiles_cuestrap/*.cue
+        run: cue fmt --check contract.cue profiles_factory/*.cue profiles_cuestrap/*.cue
       - name: Vet monitor authority
         working-directory: contracts/factory/workers/codex/upstream-monitor
         run: cue vet -c=false ./...
