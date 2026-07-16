@@ -3,17 +3,17 @@ package factoryprofile
 import core "github.com/fatb4f/factory/contracts/factory/workers/codex/upstream-monitor:upstreammonitor"
 
 #AcceptedSignal: close({
-	signal_id:  "loop_bootstrap_request"
+	signal_id:   "loop_bootstrap_request"
 	target_repo: "fatb4f/factory"
-	entrypoint: "contracts/upstream-monitor/codex/contract-surface/AGENTS.md"
-	adapter:    "github_app"
+	entrypoint:  "contracts/upstream-monitor/codex/contract-surface/AGENTS.md"
+	adapter:     "github_app"
 })
 
 acceptedSignal: #AcceptedSignal & {
-	signal_id:  "loop_bootstrap_request"
+	signal_id:   "loop_bootstrap_request"
 	target_repo: "fatb4f/factory"
-	entrypoint: "contracts/upstream-monitor/codex/contract-surface/AGENTS.md"
-	adapter:    "github_app"
+	entrypoint:  "contracts/upstream-monitor/codex/contract-surface/AGENTS.md"
+	adapter:     "github_app"
 }
 
 authorityModel: close({
@@ -33,7 +33,7 @@ authorityModel: close({
 	]
 })
 
-channels: core.Channels
+channels:        core.Channels
 chatgptActuator: core.ChatGPTActuator
 
 workflow: close({
@@ -59,7 +59,7 @@ workflow: close({
 		{from: "publication", to: "terminal_success"},
 	]
 	failureStates: ["terminal_abort", "terminal_deferred", "coverage_gap"]
-	terminal:       "terminal_success"
+	terminal: "terminal_success"
 })
 
 operational: true
