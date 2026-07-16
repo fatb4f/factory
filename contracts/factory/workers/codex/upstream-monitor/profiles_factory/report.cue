@@ -7,6 +7,7 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/codex/upstream-
 	kind:       "CodexImpactReport"
 	loop:       "codex-contract-surface"
 	signal_id:  "loop_bootstrap_request"
+	profile_id: "factory"
 	run_id:     core.#NonEmptyString
 	channels: close({
 		main: core.#ChannelObservation & {channel: "main"}
@@ -16,11 +17,21 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/codex/upstream-
 	high: [...core.#ReportItem]
 	notes: [...core.#ReportItem]
 	noLocalAction: [...core.#ReportItem]
+	bundle: close({
+		path:              core.#NonEmptyString
+		manifestPath:      core.#NonEmptyString
+		latestPointerPath: core.#NonEmptyString
+		exportUnit:        "directory"
+		complete:          bool
+	})
 	validationNotes: close({
 		authorityRead:              bool
 		channelsKeptDistinct:       bool
 		publicationPlanRead:        bool
 		forbiddenAttractorsChecked: bool
+		runArtifactsCoLocated:      bool
+		bundleManifestSealed:       bool
+		latestPointerOnly:          bool
 		cueExecution:               "not_available_to_github_app" | "executed_elsewhere"
 	})
 })
@@ -35,8 +46,24 @@ upstreamCodexImpactReportTemplate: close({
 		"High",
 		"Notes",
 		"No local action",
+		"Publication",
 		"Validation notes",
 	]
 	requireSeparateChannelState:   true
 	requireUnresolvedPreservation: true
+})
+
+upstreamCodexRunSummaryTemplate: close({
+	filename:  "summary.md"
+	mediaType: "text/markdown"
+	sections: [
+		"Run identity",
+		"Channel delta",
+		"Impact decisions",
+		"Run bundle",
+		"Validation",
+	]
+	requireChannelHeads:  true
+	requireImpactCounts:  true
+	requireTerminalState: true
 })
