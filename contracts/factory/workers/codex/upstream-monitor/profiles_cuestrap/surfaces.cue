@@ -2,7 +2,7 @@ package cuestrapprofile
 
 import core "github.com/fatb4f/factory/contracts/factory/workers/codex/upstream-monitor:upstreammonitor"
 
-#Surface: close({
+#CuestrapSurface: close({
 	id:                core.#NonEmptyString
 	terms:             [_, ...core.#NonEmptyString]
 	classes:           [_, ...core.#SurfaceClass]
@@ -12,7 +12,7 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/codex/upstream-
 	localPaths:        [_, ...core.#NonEmptyString]
 })
 
-surfaceCatalogue: [
+cuestrapSurfaceCatalogue: [
 	{
 		id: "codex-hook-ingress"
 		terms: ["PreToolUse", "PostToolUse", "hook_event_name", "hookSpecificOutput", "permissionDecision", "tool_use_id"]
@@ -105,7 +105,7 @@ surfaceCatalogue: [
 	},
 ]
 
-classificationPolicy: close({
+cuestrapClassificationPolicy: close({
 	requireSurfaceMatch:          true
 	requireLocalImpactForReport:  true
 	requirePurposeAssignment:     true
