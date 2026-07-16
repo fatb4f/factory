@@ -25,11 +25,20 @@ jobs:
       - uses: cue-lang/setup-cue@v1.0.0
         with:
           version: v0.16.0
+      - name: Format contract sources
+        working-directory: contracts/factory/workers/codex/upstream-monitor
+        run: cue fmt contract.cue profiles_factory/*.cue profiles_cuestrap/*.cue
+      - name: Upload formatted contract sources
+        uses: actions/upload-artifact@v4
+        with:
+          name: formatted-upstream-monitor
+          path: |
+            contracts/factory/workers/codex/upstream-monitor/contract.cue
+            contracts/factory/workers/codex/upstream-monitor/profiles_factory/*.cue
+            contracts/factory/workers/codex/upstream-monitor/profiles_cuestrap/*.cue
       - name: Format check
         working-directory: contracts/factory/workers/codex/upstream-monitor
-        run: |
-          cue fmt contract.cue profiles_factory/*.cue profiles_cuestrap/*.cue
-          git diff --exit-code -- contract.cue profiles_factory profiles_cuestrap
+        run: git diff --exit-code -- contract.cue profiles_factory profiles_cuestrap
       - name: Vet monitor authority
         working-directory: contracts/factory/workers/codex/upstream-monitor
         run: cue vet ./...
