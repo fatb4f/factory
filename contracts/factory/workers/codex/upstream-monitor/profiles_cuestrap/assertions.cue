@@ -2,7 +2,7 @@ package cuestrapprofile
 
 import core "github.com/fatb4f/factory/contracts/factory/workers/codex/upstream-monitor:upstreammonitor"
 
-forbiddenAttractors: [
+cuestrapForbiddenAttractors: [
 	"fatb4f/cuestrap repository state treated as monitor authority",
 	"openai/codex treated as authority",
 	"ChatGPT output treated as authority",
@@ -19,7 +19,7 @@ forbiddenAttractors: [
 	"claimant-supplied admission boolean",
 ]
 
-validationAssertions: close({
+cuestrapValidationAssertions: close({
 	acceptedSignalExact:             true
 	profileIDExact:                  true
 	contextRepositoryExact:          true
@@ -42,7 +42,7 @@ validationAssertions: close({
 	workflowClosed:                   true
 })
 
-negativeFixtures: {
+cuestrapNegativeFixtures: {
 	collapseChannels: close({main: "latest-alpha-cli", alpha: "latest-alpha-cli"})
 	promoteUpstreamAuthority: close({authority: "openai/codex"})
 	promoteContextAuthority: close({authority: "fatb4f/cuestrap"})
@@ -56,7 +56,7 @@ negativeFixtures: {
 	undeclaredIssueMutation: close({target: int & >0, declared: false})
 }
 
-validationPlan: close({
+cuestrapValidationPlan: close({
 	commands: [
 		"cue fmt --check contract.cue profiles_cuestrap/*.cue",
 		"cue vet -c ./profiles_cuestrap",
