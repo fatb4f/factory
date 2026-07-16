@@ -15,10 +15,9 @@ cuestrapForbiddenAttractors: [
 	"bundle manifest published before required artifacts",
 	"mutable latest report or evidence copy",
 	"legacy report or evidence path used for a new write",
+	"monitor artifact file written to fatb4f/cuestrap",
 	"evidence artifact written to fatb4f/cuestrap",
 	"CUE or AGENTS plumbing written to fatb4f/cuestrap",
-	"cuestrap report or summary copy differs from factory source",
-	"mirror projection manifest not bound to factory bundle",
 	"terminal run without a tracking issue comment",
 	"duplicate tracking issue comment for one run ID",
 	"tracking issue body mutated instead of appending a comment",
@@ -40,14 +39,11 @@ cuestrapValidationAssertions: close({
 	factoryRunArtifactsCoLocated:        true
 	factoryBundleExportUnitDirectory:    true
 	factoryBundleManifestSealsArtifacts: true
-	mirrorRunArtifactsCoLocated:         true
-	mirrorBundleExportUnitDirectory:     true
 	latestPointersOnly:                  true
 	legacyPathsReadOnly:                 true
+	cuestrapRepositoryArtifactsForbidden: true
 	cuestrapEvidenceForbidden:           true
 	cuestrapPlumbingForbidden:           true
-	mirrorContentEqualityRequired:       true
-	mirrorManifestSourceBindingRequired: true
 	trackingIssueTargetExact:            true
 	trackingIssueAppendOnly:             true
 	trackingIssueUpdatedEveryRun:        true
@@ -66,14 +62,11 @@ cuestrapNegativeFixtures: {
 	inferUnresolvedHead: close({status: "unresolved", inferred_head: core.#CommitSHA})
 	scatteredFactoryRun: close({reportDirectory: core.#NonEmptyString, evidenceDirectory: core.#NonEmptyString, sameDirectory: false})
 	unbundledFactoryArtifact: close({path: string & !~"^contracts/upstream-monitor/codex/cuestrap-contract-surface/runs/[^/]+/"})
-	unbundledMirrorArtifact: close({path: string & !~"^reports/upstream-monitor/codex/runs/[^/]+/"})
 	manifestBeforeArtifacts: close({manifestWritten: true, requiredArtifactsComplete: false})
 	mutableFactoryLatestCopy: close({path: string & =~"^contracts/upstream-monitor/codex/cuestrap-contract-surface/(reports|evidence)/latest"})
-	mutableMirrorLatestCopy: close({path: "reports/upstream-monitor/codex/latest.codex-impact.md", write: true})
+	cuestrapArtifactWrite: close({repository: "fatb4f/cuestrap", kind: "report" | "summary" | "evidence" | "manifest" | "latest_pointer"})
 	cuestrapEvidenceWrite: close({repository: "fatb4f/cuestrap", kind: "evidence"})
 	cuestrapPlumbingWrite: close({repository: "fatb4f/cuestrap", kind: "authority" | "instruction" | "actuator"})
-	mismatchedMirror: close({factoryDigest: core.#NonEmptyString, mirrorDigest: core.#NonEmptyString, equal: false})
-	unboundMirrorManifest: close({sourceBundlePath: "", projection: "report_summary_only"})
 	missingTrackingComment: close({terminalState: core.#TerminalState, matchingComments: 0})
 	duplicateTrackingComment: close({run_id: core.#NonEmptyString, matchingComments: int & >1})
 	trackingIssueBodyMutation: close({repository: "fatb4f/cuestrap", issue: 9, mutation: "body_edit"})
