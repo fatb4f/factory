@@ -55,6 +55,15 @@
 - Report content equivalent: `{{report_content_equivalent}}`
 - Summary content equivalent: `{{summary_content_equivalent}}`
 
+## Tracking issue
+
+- Target: `fatb4f/cuestrap#9`
+- Update policy: `every_run`
+- Mutation: `append_comment`
+- Tracking identity: `cuestrap-codex-contract-surface/{{run_id}}`
+- Comment: `{{tracking_issue_comment_url}}`
+- Duplicate suppressed: `{{tracking_issue_duplicate_suppressed}}`
+
 ## Validation notes
 
 {{validation_notes}}
