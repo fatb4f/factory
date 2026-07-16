@@ -1,6 +1,6 @@
 package upstreammonitor
 
-#NonEmptyString: string & !=""
+#NonEmptyString: string &!=""
 #NonEmptyStringList: [...#NonEmptyString] & [_, ...]
 #CommitSHA:       string & =~"^[0-9a-f]{40}$"
 #GitObjectSHA:    string & =~"^[0-9a-f]{40}$"
@@ -11,6 +11,7 @@ package upstreammonitor
 #Severity:        "none" | "note" | "high" | "critical"
 #SurfaceClass:    "protocol" | "adapter" | "storage" | "policy" | "ui" | "docs" | "context-window" | "multi-agent" | "rollout-trace" | "mcp" | "config" | "security" | "release"
 #RunArtifactKind: "report" | "summary" | "evidence"
+#IssueUpdatePolicy: "minimum_impact" | "every_run"
 
 #RunBundleArtifact: close({
 	kind:       #RunArtifactKind
@@ -69,9 +70,13 @@ package upstreammonitor
 })
 
 #IssueTarget: close({
-	repo:          #NonEmptyString
-	number:        int & >0
-	minimumImpact: "note" | "contract-update" | "blocking-gate"
+	repo:             #NonEmptyString
+	number:           int & >0
+	updatePolicy:     #IssueUpdatePolicy
+	minimumImpact?:   "note" | "contract-update" | "blocking-gate"
+	mutation:         "append_comment"
+	dedupeKeyPattern: #NonEmptyString
+	terminalStates?: [_, ...#TerminalState]
 })
 
 Channels: close({
