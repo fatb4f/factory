@@ -1,0 +1,8 @@
+{
+  "apiVersion": "factory.upstream-monitor.latest-run/v1",
+  "kind": "LatestUpstreamMonitorRun",
+  "run_id": "20260717T161922Z",
+  "profile_id": "factory",
+  "bundle_path": "contracts/upstream-monitor/codex/contract-surface/runs/20260717T161922Z/",
+  "manifest_path": "contracts/upstream-monitor/codex/contract-surface/runs/20260717T161922Z/manifest.json"
+}
