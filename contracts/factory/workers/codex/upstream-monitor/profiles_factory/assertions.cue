@@ -38,16 +38,16 @@ validationAssertions: close({
 })
 
 negativeFixtures: {
-	collapseChannels: close({main: "latest-alpha-cli", alpha: "latest-alpha-cli"})
+	collapseChannels:         close({main: "latest-alpha-cli", alpha: "latest-alpha-cli"})
 	promoteUpstreamAuthority: close({authority: "openai/codex"})
-	inferUnresolvedHead: close({status: "unresolved", inferred_head: core.#CommitSHA})
-	scatteredRunArtifacts: close({reportDirectory: core.#NonEmptyString, evidenceDirectory: core.#NonEmptyString, sameDirectory: false})
-	unbundledRunArtifact: close({path: string & !~"^contracts/upstream-monitor/codex/contract-surface/runs/[^/]+/"})
-	manifestBeforeArtifacts: close({manifestWritten: true, requiredArtifactsComplete: false})
-	mutableLatestCopy: close({path: string & =~"^contracts/upstream-monitor/codex/contract-surface/(reports|evidence)/latest"})
-	legacyPathPresent: close({path: "contracts/upstream-monitor/codex/contract-surface/reports" | "contracts/upstream-monitor/codex/contract-surface/evidence", present: true})
-	legacyWrite: close({path: "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md" | "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json", write: true})
-	undeclaredIssueMutation: close({target: int & >0, declared: false})
+	inferUnresolvedHead:      close({status: "unresolved", inferred_head: core.#CommitSHA})
+	scatteredRunArtifacts:    close({reportDirectory: core.#NonEmptyString, evidenceDirectory: core.#NonEmptyString, sameDirectory: false})
+	unbundledRunArtifact:     close({path: string & !~"^contracts/upstream-monitor/codex/contract-surface/runs/[^/]+/"})
+	manifestBeforeArtifacts:  close({manifestWritten: true, requiredArtifactsComplete: false})
+	mutableLatestCopy:        close({path: string & =~"^contracts/upstream-monitor/codex/contract-surface/(reports|evidence)/latest"})
+	legacyPathPresent:        close({path: "contracts/upstream-monitor/codex/contract-surface/reports" | "contracts/upstream-monitor/codex/contract-surface/evidence", present: true})
+	legacyWrite:              close({path: "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md" | "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json", write: true})
+	undeclaredIssueMutation:  close({target: int & >0, declared: false})
 }
 
 validationPlan: close({
