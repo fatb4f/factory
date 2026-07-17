@@ -1,0 +1,28 @@
+{
+  "apiVersion": "factory.upstream-monitor.run-bundle/v1",
+  "kind": "UpstreamMonitorRunBundle",
+  "run_id": "20260717T161922Z",
+  "profile_id": "factory",
+  "terminal_state": "terminal_success",
+  "export_unit": "directory",
+  "artifacts": [
+    {
+      "kind": "report",
+      "filename": "report.md",
+      "mediaType": "text/markdown",
+      "gitBlobSHA": "5278a012459cc8367b77127c3fb28fa64c40519d"
+    },
+    {
+      "kind": "summary",
+      "filename": "summary.md",
+      "mediaType": "text/markdown",
+      "gitBlobSHA": "5650cbc1618f2446c8b553e3dcb317a576d5c1d7"
+    },
+    {
+      "kind": "evidence",
+      "filename": "evidence.json",
+      "mediaType": "application/json",
+      "gitBlobSHA": "0cf8b292a1fc4fe66f50c6db8f368769733fe2f9"
+    }
+  ]
+}
