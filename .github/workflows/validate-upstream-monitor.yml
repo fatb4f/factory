@@ -48,7 +48,9 @@ jobs:
           jq -e '.publicationPlan.bundle.artifacts.evidence.filename == "evidence.json"' "$factory"
           jq -e '.publicationPlan.bundle.manifest.filename == "manifest.json"' "$factory"
           jq -e '.publicationPlan.latestPointer.path == "contracts/upstream-monitor/codex/contract-surface/latest.json"' "$factory"
-          jq -e '.publicationPlan.requireRunBundle and .publicationPlan.requireBundleManifestLast and .publicationPlan.forbidRunArtifactsOutsideBundle and .publicationPlan.forbidMutableLatestArtifactCopies' "$factory"
+          jq -e '(.publicationPlan | has("legacyReadOnly")) | not' "$factory"
+          jq -e '.publicationPlan.requireRunBundle and .publicationPlan.requireBundleManifestLast and .publicationPlan.forbidRunArtifactsOutsideBundle and .publicationPlan.forbidMutableLatestArtifactCopies and .publicationPlan.forbidLegacyPathsPresent' "$factory"
+          jq -e '.publicationAdmission.legacyLedgersPruned and .publicationAdmission.requireCompleteRunBundle' "$factory"
 
           jq -e '.publicationPlan.factory.bundle.directoryPattern == "contracts/upstream-monitor/codex/cuestrap-contract-surface/runs/<run_id>/"' "$cuestrap"
           jq -e '.publicationPlan.factory.bundle.artifacts.report.filename == "report.md"' "$cuestrap"
@@ -70,6 +72,19 @@ jobs:
           jq -e '.publicationPlan.issueAudit.target == "runLog" and .publicationPlan.issueAudit.bodyMutation == "forbidden"' "$cuestrap"
           jq -e '.publicationPlan.requireTrackingIssueOpen and .publicationPlan.requireIssueCommentEveryRun and .publicationPlan.requireIssueCommentDedupe and .publicationPlan.forbidIssueBodyMutation' "$cuestrap"
           jq -e '.publicationAdmission.issueUpdatesEnabled and .publicationAdmission.requireRunLogComment' "$cuestrap"
+      - name: Check normalized factory run ledger
+        run: |
+          root=contracts/upstream-monitor/codex/contract-surface
+          run=20260717T161922Z
+          test -f "$root/runs/$run/report.md"
+          test -f "$root/runs/$run/summary.md"
+          test -f "$root/runs/$run/evidence.json"
+          test -f "$root/runs/$run/manifest.json"
+          jq -e --arg run "$run" '.run_id == $run and .profile_id == "factory" and .export_unit == "directory" and (.artifacts | length) == 3' "$root/runs/$run/manifest.json"
+          test -f "$root/latest.json"
+          jq -e --arg run "$run" '.run_id == $run and .bundle_path == ("contracts/upstream-monitor/codex/contract-surface/runs/" + $run + "/")' "$root/latest.json"
+          test ! -e "$root/reports"
+          test ! -e "$root/evidence"
       - name: Check migrated cuestrap run ledger
         run: |
           root=contracts/upstream-monitor/codex/cuestrap-contract-surface
@@ -101,6 +116,7 @@ jobs:
           test -f contracts/upstream-monitor/codex/cuestrap-contract-surface/output/report-template.md
           test -f contracts/upstream-monitor/codex/cuestrap-contract-surface/chatgpt-task-prompt.md
           grep -q 'runs/<run_id>/' contracts/upstream-monitor/codex/contract-surface/AGENTS.md
+          grep -q 'former `reports/` and `evidence/` ledgers are forbidden' contracts/upstream-monitor/codex/contract-surface/AGENTS.md
           grep -q 'manifest.json' contracts/upstream-monitor/codex/cuestrap-contract-surface/AGENTS.md
           grep -q 'former `reports/` and `evidence/` ledgers are forbidden' contracts/upstream-monitor/codex/cuestrap-contract-surface/AGENTS.md
           grep -q 'No monitor artifact file may be written to `fatb4f/cuestrap`' contracts/upstream-monitor/codex/cuestrap-contract-surface/AGENTS.md
