@@ -39,10 +39,6 @@ upstreamCodexPublicationPlan: close({
 		apiVersion: "factory.upstream-monitor.latest-run/v1"
 		kind:       "LatestUpstreamMonitorRun"
 	})
-	legacyReadOnly: close({
-		reportLatestPath:   "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md"
-		evidenceLatestPath: "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json"
-	})
 	issueTargets: [string]: #IssueTarget
 	writeOrder: [
 		"bundle_report",
@@ -60,6 +56,7 @@ upstreamCodexPublicationPlan: close({
 	forbidRunArtifactsOutsideBundle:   true
 	forbidMutableLatestArtifactCopies: true
 	forbidLegacyWrites:                true
+	forbidLegacyPathsPresent:          true
 	forbidUndeclaredIssueUpdates:      true
 }) & {
 	issueTargets: {}
@@ -71,6 +68,7 @@ publicationAdmission: close({
 	evidenceEnabled:            true
 	manifestsEnabled:           true
 	latestPointersEnabled:      true
+	legacyLedgersPruned:        true
 	issueUpdatesEnabled:        false
 	requireOperationalContract: true
 	requireFixedTemplate:       true
