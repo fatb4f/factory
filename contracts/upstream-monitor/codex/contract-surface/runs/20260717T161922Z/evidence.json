@@ -1,0 +1,161 @@
+{
+  "apiVersion": "factory.upstream-monitor.codex/v1",
+  "kind": "CodexImpactReport",
+  "loop": "codex-contract-surface",
+  "signal_id": "loop_bootstrap_request",
+  "profile_id": "factory",
+  "run_id": "20260717T161922Z",
+  "target_repo": "fatb4f/factory",
+  "target_revision": {
+    "status": "unresolved",
+    "reason": "GitHub App file reads did not expose the main branch commit SHA"
+  },
+  "prior_state": {
+    "source": "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json",
+    "mode": "legacy_read_only",
+    "run_id": "20260716T181509Z"
+  },
+  "channels": {
+    "main": {
+      "channel": "main",
+      "status": "unresolved",
+      "prior_head_commit": "726b6378d2513c25e5e59b1371326be2fe194be4",
+      "evidence": [
+        "compare 726b6378d2513c25e5e59b1371326be2fe194be4...main returned status ahead",
+        "ahead_by=25",
+        "behind_by=0",
+        "exact current head SHA not exposed and not inferred"
+      ]
+    },
+    "latest-alpha-cli": {
+      "channel": "latest-alpha-cli",
+      "status": "unresolved",
+      "prior_head_commit": "dd1363c67cbf530e362ea8e4c623d66fe97a5bc5",
+      "evidence": [
+        "compare dd1363c67cbf530e362ea8e4c623d66fe97a5bc5...latest-alpha-cli returned status diverged",
+        "ahead_by=27",
+        "behind_by=1",
+        "merge_base=800715d201651a2a07c2706dca10400109dae3d3",
+        "exact current head SHA not exposed and not inferred"
+      ]
+    }
+  },
+  "critical": [
+    {
+      "id": "channel-instruction-environment-loading",
+      "channels": ["main", "latest-alpha-cli"],
+      "severity": "critical",
+      "impactDecision": "blocking-gate",
+      "title": "Instruction and skill-loading environment semantics changed",
+      "summary": "Environment-aware skill loading and AGENTS/context behavior changed across the observed channel deltas.",
+      "surfaceMatches": ["instructions"],
+      "evidence": [
+        "codex-rs/core/src/agents_md.rs",
+        "codex-rs/core-skills/src/loader/environment.rs",
+        "codex-rs/core-skills/tests/environment_loader.rs",
+        "codex-rs/core/src/context/multi_agent_mode_instructions.rs"
+      ],
+      "localContractImpact": "Validate factory instruction-chain and skill-discovery assumptions before adopting either channel."
+    }
+  ],
+  "high": [
+    {
+      "id": "channel-installed-app-runtime-projection",
+      "channels": ["main"],
+      "severity": "high",
+      "impactDecision": "contract-update",
+      "title": "Installed-app and connector runtime projection expanded",
+      "summary": "Main adds installed-app protocol and runtime connector projection state.",
+      "surfaceMatches": ["mcp-tools"],
+      "evidence": [
+        "codex-rs/app-server-protocol/schema/json/v2/AppsInstalledParams.json",
+        "codex-rs/app-server-protocol/schema/json/v2/AppsInstalledResponse.json",
+        "codex-rs/app-server/src/request_processors/apps_processor/installed.rs",
+        "codex-rs/connectors/src/runtime_projection.rs"
+      ],
+      "localContractImpact": "Extend MCP and connector lifecycle projections to installed-app state and runtime tool projection."
+    },
+    {
+      "id": "main-exec-capability-discovery",
+      "channels": ["main"],
+      "severity": "high",
+      "impactDecision": "contract-update",
+      "title": "Capability discovery entered the execution-server protocol",
+      "summary": "Main adds execution-server capability discovery and caching.",
+      "surfaceMatches": ["mcp-tools", "configuration"],
+      "evidence": [
+        "codex-rs/exec-server/src/capability_discovery.rs",
+        "codex-rs/exec-server/src/capability_discovery_cache.rs",
+        "codex-rs/exec-server-protocol/src/protocol.rs"
+      ],
+      "localContractImpact": "Review adapter contracts that assume static or bootstrap-only capability discovery."
+    },
+    {
+      "id": "main-realtime-delegation-lifecycle",
+      "channels": ["main"],
+      "severity": "high",
+      "impactDecision": "contract-update",
+      "title": "Realtime delegation and multi-agent lifecycle changed",
+      "summary": "Main changes delegation context, agent spawning, notifications, and thread/session routing.",
+      "surfaceMatches": ["agent-messages", "context-fragments"],
+      "evidence": [
+        "codex-rs/core/src/context/realtime_delegation.rs",
+        "codex-rs/core/src/realtime_conversation.rs",
+        "codex-rs/core/src/agent/control/spawn.rs",
+        "codex-rs/core/tests/suite/subagent_notifications.rs"
+      ],
+      "localContractImpact": "Review agent envelope, ownership, delegation lifecycle, notification, and context contracts."
+    },
+    {
+      "id": "alpha-protocol-permissions-mcp-delta",
+      "channels": ["latest-alpha-cli"],
+      "severity": "high",
+      "impactDecision": "contract-update",
+      "title": "Alpha carries protocol, permissions, and MCP changes on its independent line",
+      "summary": "Alpha-specific evidence includes app-read protocol, connector metadata, permissions, MCP discovery, and response-item changes.",
+      "surfaceMatches": ["mcp-tools", "authentication", "response-items"],
+      "evidence": [
+        "codex-rs/app-server-protocol/schema/json/v2/AppsReadResponse.json",
+        "codex-rs/connectors/src/metadata_store.rs",
+        "codex-rs/protocol/src/permissions.rs",
+        "codex-rs/ext/mcp/src/executor_plugin/discovery.rs",
+        "codex-rs/app-server-protocol/schema/json/v2/RawResponseCompletedNotification.json"
+      ],
+      "localContractImpact": "Preserve alpha-specific protocol, authorization, MCP, and response-item review."
+    }
+  ],
+  "notes": [
+    {
+      "id": "release-channel-divergence-unresolved-heads",
+      "channels": ["main", "latest-alpha-cli"],
+      "severity": "note",
+      "impactDecision": "note",
+      "title": "Channel divergence increased and both current heads remain unresolved",
+      "summary": "Both channels moved materially from their own prior baselines, but current head SHAs were not available.",
+      "surfaceMatches": ["release-channel"],
+      "evidence": ["main ahead 25 behind 0", "alpha ahead 27 behind 1"],
+      "localContractImpact": "Retain separate baselines and require concrete ref evidence before recording new heads."
+    }
+  ],
+  "noLocalAction": [],
+  "bundle": {
+    "path": "contracts/upstream-monitor/codex/contract-surface/runs/20260717T161922Z/",
+    "manifestPath": "contracts/upstream-monitor/codex/contract-surface/runs/20260717T161922Z/manifest.json",
+    "latestPointerPath": "contracts/upstream-monitor/codex/contract-surface/latest.json",
+    "exportUnit": "directory",
+    "complete": true
+  },
+  "validationNotes": {
+    "authorityRead": true,
+    "channelsKeptDistinct": true,
+    "publicationPlanRead": true,
+    "forbiddenAttractorsChecked": true,
+    "runArtifactsCoLocated": true,
+    "bundleManifestSealed": true,
+    "latestPointerOnly": true,
+    "cueExecution": "not_available_to_github_app",
+    "issueTargets": {},
+    "crossRepositoryMutations": []
+  },
+  "terminal_state": "terminal_success"
+}
