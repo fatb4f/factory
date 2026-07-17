@@ -45,8 +45,8 @@ The ChatGPT scheduled task is the actuator. Keep reasoning in ChatGPT, constrain
 2. Read `upstreamCodexImpactReportTemplate`, `upstreamCodexRunSummaryTemplate`, and `upstreamCodexPublicationPlan`.
 3. Validate the exact accepted signal.
 4. Resolve the current target-repository revision when available.
-5. Resolve prior profile state through the declared `latest.json`, its manifest, and bundled `evidence.json`.
-6. If `latest.json` is absent, read only the exact legacy evidence path declared by `legacyReadOnly`; never write it.
+5. Resolve prior profile state only through the declared `latest.json`, its manifest, and bundled `evidence.json`.
+6. Confirm the former `reports/` and `evidence/` ledgers are absent. Their presence terminates as `terminal_deferred` before artifact writes.
 7. Acquire concrete evidence for `openai/codex@main`.
 8. Separately acquire concrete evidence for `openai/codex@latest-alpha-cli`.
 9. Compare each channel with its own prior recorded state. Do not use alpha state as the main baseline or vice versa.
@@ -82,7 +82,7 @@ It must contain exactly the publication-plan artifacts for that run. The only mu
 contracts/upstream-monitor/codex/contract-surface/latest.json
 ```
 
-Legacy paths under `reports/` and `evidence/` are read-only migration inputs. No new report, summary, evidence, manifest, or latest content may be written there. `issueTargets: {}` means no issue update.
+The former `reports/` and `evidence/` ledgers are forbidden. They must not exist and may not be used as fallback state. `issueTargets: {}` means no issue update.
 
 ## Validation notes
 
