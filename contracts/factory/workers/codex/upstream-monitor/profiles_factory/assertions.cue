@@ -13,6 +13,7 @@ forbiddenAttractors: [
 	"run artifact written outside its runs/<run_id>/ bundle",
 	"bundle manifest published before required artifacts",
 	"mutable latest report or evidence copy",
+	"legacy report or evidence path present",
 	"legacy report or evidence path used for a new write",
 	"issue update without publication target",
 	"claimant-supplied admission boolean",
@@ -29,7 +30,8 @@ validationAssertions: close({
 	bundleExportUnitIsDirectory:     true
 	bundleManifestSealsArtifacts:    true
 	latestIsPointerOnly:             true
-	legacyPathsReadOnly:             true
+	legacyPathsAbsent:               true
+	legacyWritesForbidden:           true
 	undeclaredIssueUpdatesForbidden: true
 	unresolvedEvidencePreserved:     true
 	workflowClosed:                  true
@@ -43,6 +45,7 @@ negativeFixtures: {
 	unbundledRunArtifact: close({path: string & !~"^contracts/upstream-monitor/codex/contract-surface/runs/[^/]+/"})
 	manifestBeforeArtifacts: close({manifestWritten: true, requiredArtifactsComplete: false})
 	mutableLatestCopy: close({path: string & =~"^contracts/upstream-monitor/codex/contract-surface/(reports|evidence)/latest"})
+	legacyPathPresent: close({path: "contracts/upstream-monitor/codex/contract-surface/reports" | "contracts/upstream-monitor/codex/contract-surface/evidence", present: true})
 	legacyWrite: close({path: "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md" | "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json", write: true})
 	undeclaredIssueMutation: close({target: int & >0, declared: false})
 }
