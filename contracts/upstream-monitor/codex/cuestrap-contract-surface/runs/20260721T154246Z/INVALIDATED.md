@@ -1,0 +1,1 @@
+This run is not authoritative. A post-manifest marker was written and removed, violating the immutable-bundle rule. Use run `20260721T154846Z`, referenced by `contracts/upstream-monitor/codex/cuestrap-contract-surface/latest.json`.
