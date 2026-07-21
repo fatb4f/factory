@@ -97,7 +97,7 @@ cuestrapPublicationAdmission: close({
 	summariesEnabled:                     true
 	manifestsEnabled:                     true
 	latestPointersEnabled:                true
-	legacyLedgersPruned:                   true
+	legacyLedgersPruned:                  true
 	cuestrapRepositoryArtifactsEnabled:   false
 	cuestrapEvidenceEnabled:              false
 	cuestrapPlumbingEnabled:              false

@@ -4,6 +4,7 @@ let selectedOperational = operational
 let selectedChannels = channels
 let selectedWorkflow = workflow
 let selectedPublicationAdmission = publicationAdmission
+let selectedEvidenceModel = evidenceModel
 let selectedForbiddenAttractors = forbiddenAttractors
 let selectedValidationAssertions = validationAssertions
 let selectedValidationPlan = validationPlan
@@ -19,6 +20,7 @@ publicContract: close({
 	workflow:    _
 	surfaces: [...#Surface]
 	classification:       _
+	evidenceModel:        _
 	reportTemplate:       _
 	summaryTemplate:      _
 	publicationPlan:      _
@@ -37,6 +39,7 @@ publicContract: close({
 	workflow:             selectedWorkflow
 	surfaces:             surfaceCatalogue
 	classification:       classificationPolicy
+	evidenceModel:        selectedEvidenceModel
 	reportTemplate:       upstreamCodexImpactReportTemplate
 	summaryTemplate:      upstreamCodexRunSummaryTemplate
 	publicationPlan:      upstreamCodexPublicationPlan

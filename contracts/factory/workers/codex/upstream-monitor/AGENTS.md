@@ -15,7 +15,7 @@ This directory is the authoritative contract for the ChatGPT-actuated Codex upst
 
 ## Actuator model
 
-The actuator is a scheduled ChatGPT task using the GitHub App. Keep this model. ChatGPT performs bounded acquisition, semantic classification, report and summary rendering, bundle sealing, and admitted GitHub writes. It must read the shared vocabulary, selected profile authority, and selected publication plan before inspecting upstream evidence.
+The actuator is a scheduled ChatGPT task using the GitHub App. Keep this model. ChatGPT performs bounded acquisition, semantic classification, report and summary rendering, bundle sealing, and admitted GitHub writes. It must read the shared vocabulary, selected profile authority, selected evidence model, and selected publication plan before inspecting upstream evidence.
 
 The GitHub App cannot execute CUE. Record this limitation in validation notes. Do not replace CUE validation with claimant-supplied booleans or prior generated evidence.
 
@@ -31,6 +31,7 @@ entrypoint: contracts/upstream-monitor/codex/contract-surface/AGENTS.md
 signal: acceptedSignal
 surfaces: surfaceCatalogue
 classification: classificationPolicy
+evidence: evidenceModel
 report: upstreamCodexImpactReportTemplate
 summary: upstreamCodexRunSummaryTemplate
 publication: upstreamCodexPublicationPlan
@@ -71,6 +72,8 @@ authority_read
 → profile-required context acquisition, when declared
 → main_acquisition
 → alpha_acquisition
+→ surface_coverage
+→ classification_ledger
 → semantic_classification
 → report_render
 → summary_render
@@ -95,7 +98,7 @@ openai/codex@latest-alpha-cli
 
 Never substitute one channel's commit, version, changed paths, prior state, or conclusions for the other. An unresolved head SHA remains unresolved unless concrete branch, ref, tag, or commit evidence is available. Concrete content evidence may be recorded while the exact ref SHA remains unresolved.
 
-## Classification
+## Classification and evidence
 
 Classify only against the selected profile's surface catalogue. A reportable item requires:
 
@@ -103,13 +106,26 @@ Classify only against the selected profile's surface catalogue. A reportable ite
 - concrete upstream evidence;
 - an admitted impact decision;
 - a stated local contract impact for `note`, `contract-update`, or `blocking-gate`;
-- any profile-required context or purpose assignment.
+- any profile-required context or purpose assignment;
+- a classified observation ledger entry created before aggregation;
+- a typed evidence binding for each declared channel and surface;
+- claims that reference only observations bound to that report item.
+
+For every declared surface, persist a coverage entry proving both channels were scanned and enumerating every matching observation ID. An empty observation list is valid only when the surface was scanned and no match was found.
+
+Evidence strings are compatibility display fields. They cannot serve as the sole semantic proof for a factory report item.
 
 Do not create semantic classification scripts. ChatGPT is the semantic actuator constrained by the selected CUE vocabulary.
 
-## Run bundles and publication
+## Projection rendering
 
-Use only the selected profile's report template, summary contract, and publication plan.
+For profiles that declare projection-only rendering, `evidence.json` is the semantic source for report and summary output. Markdown may format, order, and condense typed claims, but it must not introduce an independent factual or impact claim.
+
+A report item's declared channels and surfaces must equal the channels and surfaces represented by its typed evidence bindings. A claim may cite only observation IDs present in those bindings.
+
+## Run bundles, corrections, and publication
+
+Use only the selected profile's report template, summary contract, evidence model, and publication plan.
 
 The canonical export unit for one run is exactly one immutable directory:
 
@@ -126,6 +142,8 @@ Rules:
 - report, summary, and evidence must be written into the same run directory;
 - `manifest.json` is written only after every required artifact exists and records their exact Git blob identities;
 - the manifest seals the directory as a complete exportable run bundle;
+- a sealed run directory must never be mutated in place;
+- a correction requires a new run, with correction lineage in evidence and manifest naming the superseded run, bundle, manifest, and reason;
 - `latest.json` is a pointer to the sealed run directory and manifest, never a mutable copy of report or evidence content;
 - prior state is resolved through `latest.json` and then the referenced bundle manifest and evidence;
 - a publication plan may declare exact legacy latest paths as read-only migration inputs when no `latest.json` exists;
@@ -141,9 +159,13 @@ Every run records:
 - current factory revision when available;
 - profile-required context repository revision and reads;
 - separate `main` and `latest-alpha-cli` resolution state;
+- whether every declared surface was scanned on both channels;
+- classified observation and typed binding completeness;
+- whether report and summary were rendered as evidence projections only;
 - whether CUE execution was available;
 - selected forbidden-attractor checks;
 - the canonical run-bundle path and artifact inventory;
 - manifest seal and latest-pointer state;
+- correction lineage or an explicit statement that the run is not a correction;
 - cross-repository mutation state;
 - issue update targets, or an explicit statement that none were declared.

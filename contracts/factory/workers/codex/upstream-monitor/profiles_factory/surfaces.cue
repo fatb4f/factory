@@ -4,28 +4,38 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/codex/upstream-
 
 #Surface: close({
 	id: core.#NonEmptyString
-	terms: [_, ...core.#NonEmptyString]
-	classes: [_, ...core.#SurfaceClass]
+	terms: [...core.#NonEmptyString] & [_, ...]
+	classes: [...core.#SurfaceClass] & [_, ...]
 	impactFloor:       core.#ImpactDecision
 	localContractHint: core.#NonEmptyString
 })
 
 surfaceCatalogue: [
-	{id: "response-items", terms: ["ResponseItem", "TurnItem", "thread history", "image generation"], classes: ["protocol"], impactFloor: "contract-update", localContractHint: "response and thread item schemas"},
-	{id: "agent-messages", terms: ["AgentMessage", "InterAgentCommunication", "NEW_TASK", "FINAL_ANSWER"], classes: ["protocol", "multi-agent"], impactFloor: "contract-update", localContractHint: "agent message envelope and lifecycle contracts"},
-	{id: "context-fragments", terms: ["session_prefix", "context fragment", "compact", "compaction"], classes: ["context-window", "adapter"], impactFloor: "contract-update", localContractHint: "context injection, compaction, and prompt-fragment contracts"},
-	{id: "rollout-trace", terms: ["rollout_trace", "thread_store", "rollout store"], classes: ["rollout-trace", "storage"], impactFloor: "note", localContractHint: "thread, rollout, and replay evidence contracts"},
-	{id: "mcp-tools", terms: ["MCP", "tools/call", "approval metadata", "elicitation", "connector"], classes: ["mcp", "adapter", "policy"], impactFloor: "contract-update", localContractHint: "MCP tool lifecycle and policy contracts"},
-	{id: "instructions", terms: ["AGENTS.md", "developer instructions", "skill namespace", "plugin manifest"], classes: ["policy", "docs"], impactFloor: "blocking-gate", localContractHint: "instruction chain and skill discovery contracts"},
+	{id: "response-items", terms: ["ResponseItem", "TurnItem", "thread history", "image generation", "raw response", "realtime item"], classes: ["protocol"], impactFloor: "contract-update", localContractHint: "response and thread item schemas"},
+	{id: "agent-messages", terms: ["AgentMessage", "InterAgentCommunication", "NEW_TASK", "FINAL_ANSWER", "delegation", "subagent notification"], classes: ["protocol", "multi-agent"], impactFloor: "contract-update", localContractHint: "agent message envelope and lifecycle contracts"},
+	{id: "context-fragments", terms: ["session_prefix", "context fragment", "compact", "compaction", "additionalContext", "transcript_delta"], classes: ["context-window", "adapter"], impactFloor: "contract-update", localContractHint: "context injection, compaction, and prompt-fragment contracts"},
+	{id: "rollout-trace", terms: ["rollout_trace", "thread_store", "rollout store", "thread inventory"], classes: ["rollout-trace", "storage"], impactFloor: "note", localContractHint: "thread, rollout, and replay evidence contracts"},
+	{id: "mcp-tools", terms: ["MCP", "tools/call", "approval metadata", "elicitation", "connector", "installed app", "code mode"], classes: ["mcp", "adapter", "policy"], impactFloor: "contract-update", localContractHint: "MCP tool lifecycle and policy contracts"},
+	{id: "instructions", terms: ["AGENTS.md", "developer instructions", "skill namespace", "plugin manifest", "environment-scoped skill"], classes: ["policy", "docs"], impactFloor: "blocking-gate", localContractHint: "instruction chain and skill discovery contracts"},
 	{id: "configuration", terms: ["feature flag", "config", "managed layers", "system_overlay", "experimental"], classes: ["config"], impactFloor: "note", localContractHint: "configuration layering and rollout-gate contracts"},
-	{id: "authentication", terms: ["auth", "token", "login", "account", "permissions", "sandbox"], classes: ["security", "policy"], impactFloor: "blocking-gate", localContractHint: "authentication, authorization, sandbox, and approval contracts"},
+	{id: "hook-lifecycle", terms: ["HookEventName", "HookStarted", "HookCompleted", "PermissionRequest", "SessionEnd", "additionalContextLimit", "hook metadata"], classes: ["policy", "config", "context-window"], impactFloor: "contract-update", localContractHint: "hook event, policy, context-spill, and lifecycle contracts"},
+	{id: "authentication", terms: ["auth", "token", "login", "account", "GetAccountResponse", "credentialSource", "usesCodexManagedCredentials", "permissions", "sandbox"], classes: ["security", "policy"], impactFloor: "blocking-gate", localContractHint: "authentication, authorization, account, sandbox, and approval contracts"},
 	{id: "release-channel", terms: ["workspace.package.version", "latest-alpha-cli", "release", "alpha"], classes: ["release", "config"], impactFloor: "note", localContractHint: "main versus alpha release-channel evidence"},
 ]
 
 classificationPolicy: close({
-	requireSurfaceMatch:         true
-	requireLocalImpactForReport: true
-	upstreamRole:                "evidence_only"
+	requireSurfaceMatch:            true
+	requireLocalImpactForReport:    true
+	requireTypedEvidenceBindings:   true
+	requireChannelEvidenceCoverage: true
+	requireSurfaceEvidenceCoverage: true
+	requireClaimsBoundToEvidence:   true
+	requireObservationLedger:       true
+	requireSurfaceCoverageLedger:   true
+	requireUniqueObservationIDs:    true
+	requireUniqueReportItemIDs:     true
+	requireBindingClaimCoverage:    true
+	upstreamRole:                   "evidence_only"
 	allowedDecisions: ["none", "note", "contract-update", "blocking-gate"]
 	severityMap: {
 		none:              "none"

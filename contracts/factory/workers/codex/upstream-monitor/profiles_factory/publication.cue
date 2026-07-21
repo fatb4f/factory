@@ -43,6 +43,13 @@ upstreamCodexPublicationPlan: close({
 		reportLatestPath:   "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md"
 		evidenceLatestPath: "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json"
 	})
+	corrections: close({
+		sealedBundlesImmutable:        true
+		requireSupersedingRun:         true
+		requireCorrectionLineage:      true
+		manifestCarriesLineage:        true
+		latestMayAdvanceOnlyAfterSeal: true
+	})
 	issueTargets: [string]: #IssueTarget
 	writeOrder: [
 		"bundle_report",
@@ -61,18 +68,21 @@ upstreamCodexPublicationPlan: close({
 	forbidMutableLatestArtifactCopies: true
 	forbidLegacyWrites:                true
 	forbidUndeclaredIssueUpdates:      true
+	forbidSealedRunMutation:           true
 }) & {
 	issueTargets: {}
 }
 
 publicationAdmission: close({
-	reportsEnabled:             true
-	summariesEnabled:           true
-	evidenceEnabled:            true
-	manifestsEnabled:           true
-	latestPointersEnabled:      true
-	issueUpdatesEnabled:        false
-	requireOperationalContract: true
-	requireFixedTemplate:       true
-	requireCompleteRunBundle:   true
+	reportsEnabled:              true
+	summariesEnabled:            true
+	evidenceEnabled:             true
+	manifestsEnabled:            true
+	latestPointersEnabled:       true
+	issueUpdatesEnabled:         false
+	requireOperationalContract:  true
+	requireFixedTemplate:        true
+	requireCompleteRunBundle:    true
+	requireTypedEvidenceModel:   true
+	requireProjectionOnlyRender: true
 })
