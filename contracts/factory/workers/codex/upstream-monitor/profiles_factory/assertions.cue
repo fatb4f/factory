@@ -10,6 +10,10 @@ forbiddenAttractors: [
 	"main evidence assigned to latest-alpha-cli",
 	"unresolved ref populated from inference",
 	"untyped evidence strings used as sole report proof",
+	"non-empty typed list with an unconstrained first element",
+	"duplicate observation, report-item, binding, or claim identity",
+	"observation decision or severity diverges from its report-item bucket",
+	"evidence binding not referenced by any typed claim",
 	"declared channel without a channel-bound evidence observation",
 	"declared surface without a surface-bound evidence observation",
 	"claim references evidence outside its report item",
@@ -35,6 +39,13 @@ validationAssertions: close({
 	upstreamEvidenceOnly:            true
 	chatgptIsActuatorNotAuthority:   true
 	typedEvidenceBindingsRequired:   true
+	typedNonEmptyListsExact:         true
+	observationIDsUnique:            true
+	reportItemIDsUnique:             true
+	bindingObservationIDsUnique:     true
+	claimIDsUnique:                  true
+	bindingDecisionSeverityAligned:  true
+	everyBindingReferencedByAClaim:  true
 	declaredChannelEvidenceCovered:  true
 	declaredSurfaceEvidenceCovered:  true
 	claimsReferenceBoundEvidence:    true
@@ -61,6 +72,10 @@ negativeFixtures: {
 	promoteUpstreamAuthority: close({authority: "openai/codex"})
 	inferUnresolvedHead:      close({status: "unresolved", inferred_head: core.#CommitSHA})
 	untypedEvidenceOnly:      close({evidence: [core.#NonEmptyString], evidenceBindingsPresent: false})
+	partiallyTypedList:       close({firstElementTyped: false, remainingElementsTyped: true})
+	duplicateObservationID:   close({observationIDs: [core.#ObservationID, core.#ObservationID], unique: false})
+	decisionSeverityDrift:    close({observationDecision: "note", reportDecision: "contract-update", aligned: false})
+	unclaimedBinding:         close({observationID: core.#ObservationID, referencedByClaim: false})
 	missingChannelBinding:    close({channels: ["main", "latest-alpha-cli"], evidenceChannels: ["main"]})
 	missingSurfaceBinding:    close({surfaces: ["mcp-tools", "configuration"], evidenceSurfaces: ["mcp-tools"]})
 	unboundClaim:             close({claimObservationRef: core.#ObservationID, bound: false})
