@@ -2,19 +2,19 @@ package upstreammonitor
 
 import "list"
 
-#NonEmptyString:     string & !=""
+#NonEmptyString: string & !=""
 #NonEmptyStringList: [...#NonEmptyString] & [_, ...]
-#CommitSHA:          string & =~"^[0-9a-f]{40}$"
-#GitObjectSHA:       string & =~"^[0-9a-f]{40}$"
-#TerminalState:      "terminal_success" | "terminal_abort" | "terminal_deferred" | "coverage_gap"
-#ChannelID:          "main" | "latest-alpha-cli"
-#ChannelStatus:      "resolved" | "unresolved"
-#ImpactDecision:     "none" | "note" | "contract-update" | "blocking-gate"
-#Severity:           "none" | "note" | "high" | "critical"
-#SurfaceClass:       "protocol" | "adapter" | "storage" | "policy" | "ui" | "docs" | "context-window" | "multi-agent" | "rollout-trace" | "mcp" | "config" | "security" | "release"
-#RunArtifactKind:    "report" | "summary" | "evidence"
-#IssueUpdatePolicy:  "minimum_impact" | "every_run"
-#ObservationID:      #NonEmptyString
+#CommitSHA:         string & =~"^[0-9a-f]{40}$"
+#GitObjectSHA:      string & =~"^[0-9a-f]{40}$"
+#TerminalState:     "terminal_success" | "terminal_abort" | "terminal_deferred" | "coverage_gap"
+#ChannelID:         "main" | "latest-alpha-cli"
+#ChannelStatus:     "resolved" | "unresolved"
+#ImpactDecision:    "none" | "note" | "contract-update" | "blocking-gate"
+#Severity:          "none" | "note" | "high" | "critical"
+#SurfaceClass:      "protocol" | "adapter" | "storage" | "policy" | "ui" | "docs" | "context-window" | "multi-agent" | "rollout-trace" | "mcp" | "config" | "security" | "release"
+#RunArtifactKind:   "report" | "summary" | "evidence"
+#IssueUpdatePolicy: "minimum_impact" | "every_run"
+#ObservationID:     #NonEmptyString
 
 #CorrectionLineage: close({
 	supersedes_run_id:        #NonEmptyString
@@ -39,7 +39,7 @@ import "list"
 	export_unit:         "directory"
 	source_bundle_path?: #NonEmptyString
 	correction?:         #CorrectionLineage
-	artifacts:           [...#RunBundleArtifact] & [_, ...]
+	artifacts: [...#RunBundleArtifact] & [_, ...]
 })
 
 #LatestRunPointer: close({
@@ -63,69 +63,69 @@ import "list"
 	status:             #ChannelStatus
 	head_commit?:       #CommitSHA
 	workspace_version?: #NonEmptyString
-	evidence:           [...#NonEmptyString] & [_, ...]
+	evidence: [...#NonEmptyString] & [_, ...]
 })
 
 #ClassifiedObservationBase: close({
-	id:             #ObservationID
-	reportItemID:   #NonEmptyString
-	channel:        #ChannelID
-	path:           #NonEmptyString
+	id:           #ObservationID
+	reportItemID: #NonEmptyString
+	channel:      #ChannelID
+	path:         #NonEmptyString
 	surfaceMatches: [...#NonEmptyString] & [_, ...]
-	observation:    #NonEmptyString
-	decision:       #ImpactDecision
-	severity:       #Severity
+	observation: #NonEmptyString
+	decision:    #ImpactDecision
+	severity:    #Severity
 })
 
 #ClassifiedObservation:
 	(#ClassifiedObservationBase & {decision: "none", severity: "none"}) |
-		(#ClassifiedObservationBase & {decision: "note", severity: "note"}) |
-		(#ClassifiedObservationBase & {decision: "contract-update", severity: "high"}) |
-		(#ClassifiedObservationBase & {decision: "blocking-gate", severity: "critical"})
+	(#ClassifiedObservationBase & {decision: "note", severity: "note"}) |
+	(#ClassifiedObservationBase & {decision: "contract-update", severity: "high"}) |
+	(#ClassifiedObservationBase & {decision: "blocking-gate", severity: "critical"})
 
 #EvidenceBinding: close({
-	observationID:  #ObservationID
-	reportItemID:   #NonEmptyString
-	channel:        #ChannelID
-	path:           #NonEmptyString
+	observationID: #ObservationID
+	reportItemID:  #NonEmptyString
+	channel:       #ChannelID
+	path:          #NonEmptyString
 	surfaceMatches: [...#NonEmptyString] & [_, ...]
-	observation:    #NonEmptyString
+	observation: #NonEmptyString
 })
 
 #EvidenceClaim: close({
-	id:              #NonEmptyString
-	text:            #NonEmptyString
+	id:   #NonEmptyString
+	text: #NonEmptyString
 	observationRefs: [...#ObservationID] & [_, ...]
 })
 
 #SurfaceCoverage: close({
-	surfaceID:       #NonEmptyString
+	surfaceID: #NonEmptyString
 	channelsScanned: [...#ChannelID] & [_, ...]
 	observationRefs: [...#ObservationID]
 })
 
 #ReportItem: close({
-	id:                     #NonEmptyString
-	channels:               [...#ChannelID] & [_, ...]
-	severity:               #Severity
-	impactDecision:         #ImpactDecision
-	title:                  #NonEmptyString
-	summary:                #NonEmptyString
-	surfaceMatches:         [...#NonEmptyString] & [_, ...]
-	evidence:               [...#NonEmptyString] & [_, ...]
-	evidenceBindings?:      [...#EvidenceBinding] & [_, ...]
-	claims?:                [...#EvidenceClaim] & [_, ...]
-	localContractImpact?:   #NonEmptyString
+	id: #NonEmptyString
+	channels: [...#ChannelID] & [_, ...]
+	severity:       #Severity
+	impactDecision: #ImpactDecision
+	title:          #NonEmptyString
+	summary:        #NonEmptyString
+	surfaceMatches: [...#NonEmptyString] & [_, ...]
+	evidence: [...#NonEmptyString] & [_, ...]
+	evidenceBindings?: [...#EvidenceBinding] & [_, ...]
+	claims?: [...#EvidenceClaim] & [_, ...]
+	localContractImpact?: #NonEmptyString
 	suggestedLocalTargets?: [...#NonEmptyString]
-	trackedIssueRefs?:      [...int]
+	trackedIssueRefs?: [...int]
 })
 
 #EvidenceBackedReportItem: #ReportItem & {
-	id:               #NonEmptyString
-	channels:         [...#ChannelID] & [_, ...]
-	surfaceMatches:   [...#NonEmptyString] & [_, ...]
+	id: #NonEmptyString
+	channels: [...#ChannelID] & [_, ...]
+	surfaceMatches: [...#NonEmptyString] & [_, ...]
 	evidenceBindings: [...#EvidenceBinding] & [_, ...]
-	claims:           [...#EvidenceClaim] & [_, ...]
+	claims: [...#EvidenceClaim] & [_, ...]
 
 	let ItemID = id
 	let ItemChannels = channels
@@ -158,7 +158,7 @@ import "list"
 	_surfacesUnique: list.UniqueItems(ItemSurfaces)
 	_surfacesUnique: true
 
-	_bindingObservationIDs:       [for binding in evidenceBindings {binding.observationID}]
+	_bindingObservationIDs: [for binding in evidenceBindings {binding.observationID}]
 	_bindingObservationIDsUnique: list.UniqueItems(_bindingObservationIDs)
 	_bindingObservationIDsUnique: true
 	_bindingItemOwnership: [for binding in evidenceBindings {
@@ -166,9 +166,9 @@ import "list"
 	}]
 	_bindingItemOwnership: [...true]
 
-	_claimIDs:            [for claim in claims {claim.id}]
-	_claimIDsUnique:      list.UniqueItems(_claimIDs)
-	_claimIDsUnique:      true
+	_claimIDs: [for claim in claims {claim.id}]
+	_claimIDsUnique: list.UniqueItems(_claimIDs)
+	_claimIDsUnique: true
 	_claimObservationIDs: [for claim in claims for observationRef in claim.observationRefs {observationRef}]
 	_claimReferencesBound: [for observationRef in _claimObservationIDs {
 		list.Contains(_bindingObservationIDs, observationRef)
@@ -187,7 +187,7 @@ import "list"
 	minimumImpact?:   "note" | "contract-update" | "blocking-gate"
 	mutation:         "append_comment"
 	dedupeKeyPattern: #NonEmptyString
-	terminalStates?:  [...#TerminalState] & [_, ...]
+	terminalStates?: [...#TerminalState] & [_, ...]
 })
 
 Channels: close({
