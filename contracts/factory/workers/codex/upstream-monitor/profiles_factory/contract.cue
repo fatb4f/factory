@@ -69,7 +69,7 @@ workflow: close({
 		{from: "latest_pointer_update", to: "terminal_success"},
 	]
 	failureStates: ["terminal_abort", "terminal_deferred", "coverage_gap"]
-	terminal:      "terminal_success"
+	terminal: "terminal_success"
 })
 
 operational: true
