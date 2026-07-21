@@ -4,8 +4,8 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/codex/upstream-
 
 #Surface: close({
 	id:                core.#NonEmptyString
-	terms:             [_, ...core.#NonEmptyString]
-	classes:           [_, ...core.#SurfaceClass]
+	terms:             [...core.#NonEmptyString] & [_, ...]
+	classes:           [...core.#SurfaceClass] & [_, ...]
 	impactFloor:       core.#ImpactDecision
 	localContractHint: core.#NonEmptyString
 })
@@ -32,6 +32,9 @@ classificationPolicy: close({
 	requireClaimsBoundToEvidence:   true
 	requireObservationLedger:       true
 	requireSurfaceCoverageLedger:   true
+	requireUniqueObservationIDs:    true
+	requireUniqueReportItemIDs:     true
+	requireBindingClaimCoverage:    true
 	upstreamRole:                   "evidence_only"
 	allowedDecisions:               ["none", "note", "contract-update", "blocking-gate"]
 	severityMap: {
