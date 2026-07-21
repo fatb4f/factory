@@ -39,7 +39,7 @@ import "list"
 	export_unit:         "directory"
 	source_bundle_path?: #NonEmptyString
 	correction?:         #CorrectionLineage
-	artifacts:           [_, ...#RunBundleArtifact]
+	artifacts:           [...#RunBundleArtifact] & [_, ...]
 })
 
 #LatestRunPointer: close({
@@ -63,7 +63,7 @@ import "list"
 	status:             #ChannelStatus
 	head_commit?:       #CommitSHA
 	workspace_version?: #NonEmptyString
-	evidence:           [_, ...#NonEmptyString]
+	evidence:           [...#NonEmptyString] & [_, ...]
 })
 
 #ClassifiedObservationBase: close({
@@ -71,7 +71,7 @@ import "list"
 	reportItemID:   #NonEmptyString
 	channel:        #ChannelID
 	path:           #NonEmptyString
-	surfaceMatches: [_, ...#NonEmptyString]
+	surfaceMatches: [...#NonEmptyString] & [_, ...]
 	observation:    #NonEmptyString
 	decision:       #ImpactDecision
 	severity:       #Severity
@@ -88,33 +88,33 @@ import "list"
 	reportItemID:   #NonEmptyString
 	channel:        #ChannelID
 	path:           #NonEmptyString
-	surfaceMatches: [_, ...#NonEmptyString]
+	surfaceMatches: [...#NonEmptyString] & [_, ...]
 	observation:    #NonEmptyString
 })
 
 #EvidenceClaim: close({
 	id:              #NonEmptyString
 	text:            #NonEmptyString
-	observationRefs: [_, ...#ObservationID]
+	observationRefs: [...#ObservationID] & [_, ...]
 })
 
 #SurfaceCoverage: close({
 	surfaceID:       #NonEmptyString
-	channelsScanned: [_, ...#ChannelID]
+	channelsScanned: [...#ChannelID] & [_, ...]
 	observationRefs: [...#ObservationID]
 })
 
 #ReportItem: close({
 	id:                     #NonEmptyString
-	channels:               [_, ...#ChannelID]
+	channels:               [...#ChannelID] & [_, ...]
 	severity:               #Severity
 	impactDecision:         #ImpactDecision
 	title:                  #NonEmptyString
 	summary:                #NonEmptyString
-	surfaceMatches:         [_, ...#NonEmptyString]
-	evidence:               [_, ...#NonEmptyString]
-	evidenceBindings?:      [_, ...#EvidenceBinding]
-	claims?:                [_, ...#EvidenceClaim]
+	surfaceMatches:         [...#NonEmptyString] & [_, ...]
+	evidence:               [...#NonEmptyString] & [_, ...]
+	evidenceBindings?:      [...#EvidenceBinding] & [_, ...]
+	claims?:                [...#EvidenceClaim] & [_, ...]
 	localContractImpact?:   #NonEmptyString
 	suggestedLocalTargets?: [...#NonEmptyString]
 	trackedIssueRefs?:      [...int]
@@ -122,10 +122,10 @@ import "list"
 
 #EvidenceBackedReportItem: #ReportItem & {
 	id:               #NonEmptyString
-	channels:         [_, ...#ChannelID]
-	surfaceMatches:   [_, ...#NonEmptyString]
-	evidenceBindings: [_, ...#EvidenceBinding]
-	claims:           [_, ...#EvidenceClaim]
+	channels:         [...#ChannelID] & [_, ...]
+	surfaceMatches:   [...#NonEmptyString] & [_, ...]
+	evidenceBindings: [...#EvidenceBinding] & [_, ...]
+	claims:           [...#EvidenceClaim] & [_, ...]
 
 	let ItemID = id
 	let ItemChannels = channels
@@ -153,16 +153,31 @@ import "list"
 	}]
 	_bindingSurfaceAdmission: [...true]
 
-	_bindingObservationIDs: [for binding in evidenceBindings {binding.observationID}]
+	_channelsUnique: list.UniqueItems(ItemChannels)
+	_channelsUnique: true
+	_surfacesUnique: list.UniqueItems(ItemSurfaces)
+	_surfacesUnique: true
+
+	_bindingObservationIDs:       [for binding in evidenceBindings {binding.observationID}]
+	_bindingObservationIDsUnique: list.UniqueItems(_bindingObservationIDs)
+	_bindingObservationIDsUnique: true
 	_bindingItemOwnership: [for binding in evidenceBindings {
 		binding.reportItemID == ItemID
 	}]
 	_bindingItemOwnership: [...true]
 
-	_claimReferencesBound: [for claim in claims for observationRef in claim.observationRefs {
+	_claimIDs:            [for claim in claims {claim.id}]
+	_claimIDsUnique:      list.UniqueItems(_claimIDs)
+	_claimIDsUnique:      true
+	_claimObservationIDs: [for claim in claims for observationRef in claim.observationRefs {observationRef}]
+	_claimReferencesBound: [for observationRef in _claimObservationIDs {
 		list.Contains(_bindingObservationIDs, observationRef)
 	}]
 	_claimReferencesBound: [...true]
+	_bindingClaimCoverage: [for observationID in _bindingObservationIDs {
+		list.Contains(_claimObservationIDs, observationID)
+	}]
+	_bindingClaimCoverage: [...true]
 }
 
 #IssueTarget: close({
@@ -172,7 +187,7 @@ import "list"
 	minimumImpact?:   "note" | "contract-update" | "blocking-gate"
 	mutation:         "append_comment"
 	dedupeKeyPattern: #NonEmptyString
-	terminalStates?:  [_, ...#TerminalState]
+	terminalStates?:  [...#TerminalState] & [_, ...]
 })
 
 Channels: close({
