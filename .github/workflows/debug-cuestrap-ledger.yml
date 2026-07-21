@@ -1,0 +1,30 @@
+name: Debug CUEstrap ledger
+
+on:
+  pull_request:
+    paths:
+      - "contracts/upstream-monitor/codex/cuestrap-contract-surface/**"
+      - ".github/workflows/debug-cuestrap-ledger.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inventory CUEstrap ledger
+        run: |
+          root=contracts/upstream-monitor/codex/cuestrap-contract-surface
+          {
+            find "$root" -maxdepth 4 -type f -printf '%P\n' | sort
+            printf '\nSHA256\n'
+            find "$root" -maxdepth 4 -type f -print0 | sort -z | xargs -0 sha256sum
+          } > "$RUNNER_TEMP/cuestrap-ledger-inventory.txt"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cuestrap-ledger-inventory
+          path: ${{ runner.temp }}/cuestrap-ledger-inventory.txt
+          if-no-files-found: error
