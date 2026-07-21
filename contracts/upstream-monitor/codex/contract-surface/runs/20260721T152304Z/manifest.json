@@ -1,0 +1,34 @@
+{
+  "apiVersion": "factory.upstream-monitor.run-bundle/v1",
+  "kind": "UpstreamMonitorRunBundle",
+  "run_id": "20260721T152304Z",
+  "profile_id": "factory",
+  "terminal_state": "terminal_success",
+  "export_unit": "directory",
+  "correction": {
+    "supersedes_run_id": "20260721T135622Z",
+    "superseded_bundle_path": "contracts/upstream-monitor/codex/contract-surface/runs/20260721T135622Z/",
+    "superseded_manifest_path": "contracts/upstream-monitor/codex/contract-surface/runs/20260721T135622Z/manifest.json",
+    "reason": "Re-evaluate the original channel baselines under the strengthened typed-evidence contract, correct omitted account and hook-configuration evidence, and include main changes through the current head."
+  },
+  "artifacts": [
+    {
+      "kind": "report",
+      "filename": "report.md",
+      "mediaType": "text/markdown",
+      "gitBlobSHA": "4592636d0b75b7e0edc4189ce12c9451e6e85d1e"
+    },
+    {
+      "kind": "summary",
+      "filename": "summary.md",
+      "mediaType": "text/markdown",
+      "gitBlobSHA": "2e99e6d988ca5f4ce082b3055e6ef1e7f5fff5db"
+    },
+    {
+      "kind": "evidence",
+      "filename": "evidence.json",
+      "mediaType": "application/json",
+      "gitBlobSHA": "18b79385c470af623dffdb7134e3ddd944183ef7"
+    }
+  ]
+}
