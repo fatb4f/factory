@@ -71,7 +71,7 @@ The ChatGPT scheduled task is the actuator. Keep reasoning in ChatGPT, constrain
 - A multi-channel item requires channel-bound evidence for every declared channel.
 - A multi-surface item requires surface-bound evidence for every declared surface.
 - Evidence strings are compatibility display data only; they are never sufficient without typed bindings.
-- Every report claim must reference observations bound to the same report item.
+- Every report claim must reference observations bound to the same report item, and every binding must be referenced by at least one claim. Observation, report-item, binding, and claim IDs must be unique within the run.
 - Every declared surface must have a complete two-channel coverage record, including an empty observation list when no match exists.
 - Markdown reports and summaries are projections only; `evidence.json` is the sealed semantic source.
 
