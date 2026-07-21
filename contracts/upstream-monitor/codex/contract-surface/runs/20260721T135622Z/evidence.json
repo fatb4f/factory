@@ -1,0 +1,213 @@
+{
+  "apiVersion": "factory.upstream-monitor.codex/v1",
+  "kind": "CodexImpactReport",
+  "loop": "codex-contract-surface",
+  "signal_id": "loop_bootstrap_request",
+  "profile_id": "factory",
+  "run_id": "20260721T135622Z",
+  "channels": {
+    "main": {
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "6915bac7ba2753277cfb6679b547c03e4fe567ed",
+      "workspace_version": "0.0.0",
+      "evidence": [
+        "baseline 726b6378d2513c25e5e59b1371326be2fe194be4",
+        "compare status ahead; ahead_by=155; behind_by=0",
+        "https://github.com/openai/codex/compare/726b6378d2513c25e5e59b1371326be2fe194be4...6915bac7ba2753277cfb6679b547c03e4fe567ed"
+      ]
+    },
+    "latest-alpha-cli": {
+      "channel": "latest-alpha-cli",
+      "status": "resolved",
+      "head_commit": "5d724b1bc65073572298c78b031e3b7e4dc2724e",
+      "workspace_version": "0.145.0-alpha.29",
+      "evidence": [
+        "baseline dd1363c67cbf530e362ea8e4c623d66fe97a5bc5",
+        "compare status diverged; ahead_by=163; behind_by=1",
+        "https://github.com/openai/codex/compare/dd1363c67cbf530e362ea8e4c623d66fe97a5bc5...5d724b1bc65073572298c78b031e3b7e4dc2724e"
+      ]
+    }
+  },
+  "critical": [
+    {
+      "id": "instruction-skill-environment-contracts",
+      "channels": [
+        "main",
+        "latest-alpha-cli"
+      ],
+      "severity": "critical",
+      "impactDecision": "blocking-gate",
+      "title": "Instruction and skill-loading contracts changed",
+      "summary": "Environment-scoped skill loading, AGENTS processing, and multi-agent instruction injection changed across the independent channel deltas.",
+      "surfaceMatches": [
+        "instructions"
+      ],
+      "evidence": [
+        "codex-rs/core/src/agents_md.rs",
+        "codex-rs/core-skills/src/loader/environment.rs",
+        "codex-rs/core-skills/tests/environment_loader.rs",
+        "codex-rs/core/src/context/multi_agent_mode_instructions.rs"
+      ],
+      "localContractImpact": "Requalify factory instruction-chain, environment-selection, skill-discovery, and multi-agent instruction assumptions before adopting either channel.",
+      "suggestedLocalTargets": [
+        "contracts/upstream-monitor/AGENTS.md",
+        "contracts/upstream-monitor/codex/AGENTS.md",
+        "contracts/factory/workers/codex/upstream-monitor/"
+      ]
+    },
+    {
+      "id": "permission-approval-hook-envelopes",
+      "channels": [
+        "main",
+        "latest-alpha-cli"
+      ],
+      "severity": "critical",
+      "impactDecision": "blocking-gate",
+      "title": "Permission, approval, and hook envelopes changed",
+      "summary": "Approval response schemas, hook notifications and metadata, and alpha permission protocol paths changed.",
+      "surfaceMatches": [
+        "authentication"
+      ],
+      "evidence": [
+        "codex-rs/app-server-protocol/schema/json/ApplyPatchApprovalResponse.json",
+        "codex-rs/app-server-protocol/schema/json/ExecCommandApprovalResponse.json",
+        "codex-rs/app-server-protocol/schema/json/v2/HookStartedNotification.json",
+        "codex-rs/app-server-protocol/schema/json/v2/HookCompletedNotification.json",
+        "codex-rs/app-server-protocol/src/protocol/v2/permissions.rs"
+      ],
+      "localContractImpact": "Requalify authorization, sandbox, approval, and hook-policy contracts independently for main and alpha.",
+      "suggestedLocalTargets": [
+        "contracts/factory/workers/codex/upstream-monitor/contract.cue"
+      ]
+    }
+  ],
+  "high": [
+    {
+      "id": "response-thread-turn-schema-expansion",
+      "channels": [
+        "main",
+        "latest-alpha-cli"
+      ],
+      "severity": "high",
+      "impactDecision": "contract-update",
+      "title": "Response, thread, and turn schemas expanded",
+      "summary": "Both deltas change v2 item, thread, turn, realtime, raw-response, and thread-history projections.",
+      "surfaceMatches": [
+        "response-items"
+      ],
+      "evidence": [
+        "codex-rs/app-server-protocol/src/protocol/v2/item.rs",
+        "codex-rs/app-server-protocol/src/protocol/v2/thread.rs",
+        "codex-rs/app-server-protocol/src/protocol/v2/turn.rs",
+        "codex-rs/app-server-protocol/src/protocol/thread_history.rs"
+      ],
+      "localContractImpact": "Update response-item, thread-history, and turn-lifecycle projections."
+    },
+    {
+      "id": "mcp-connector-code-mode-runtime",
+      "channels": [
+        "main",
+        "latest-alpha-cli"
+      ],
+      "severity": "high",
+      "impactDecision": "contract-update",
+      "title": "MCP, connector, installed-app, and code-mode runtime surfaces changed",
+      "summary": "MCP connection management and elicitation, connector runtime projection, installed-app handling, and code-mode values changed.",
+      "surfaceMatches": [
+        "mcp-tools",
+        "configuration"
+      ],
+      "evidence": [
+        "codex-rs/codex-mcp/src/connection_manager.rs",
+        "codex-rs/codex-mcp/src/elicitation.rs",
+        "codex-rs/connectors/src/runtime_projection.rs",
+        "codex-rs/app-server/src/request_processors/apps_processor/installed.rs",
+        "codex-rs/code-mode/src/runtime/value.rs"
+      ],
+      "localContractImpact": "Extend connector projection, MCP lifecycle, elicitation, installed-app, and code-mode result contracts."
+    },
+    {
+      "id": "realtime-delegation-agent-context",
+      "channels": [
+        "main",
+        "latest-alpha-cli"
+      ],
+      "severity": "high",
+      "impactDecision": "contract-update",
+      "title": "Realtime delegation and agent/context lifecycle changed",
+      "summary": "Delegation, collaboration/realtime world state, agent spawning, notifications, and thread/session routing changed.",
+      "surfaceMatches": [
+        "agent-messages",
+        "context-fragments"
+      ],
+      "evidence": [
+        "codex-rs/core/src/context/realtime_delegation.rs",
+        "codex-rs/core/src/context/world_state/realtime.rs",
+        "codex-rs/core/src/agent/control/spawn.rs",
+        "codex-rs/app-server/src/request_processors/thread_lifecycle.rs"
+      ],
+      "localContractImpact": "Review agent ownership, notification envelopes, delegation, compaction, and context boundaries."
+    }
+  ],
+  "notes": [
+    {
+      "id": "rollout-thread-store-movement",
+      "channels": [
+        "main",
+        "latest-alpha-cli"
+      ],
+      "severity": "note",
+      "impactDecision": "note",
+      "title": "Rollout and thread-store surfaces moved",
+      "summary": "Both deltas include rollout, remote thread-store, thread inventory, and thread-history changes.",
+      "surfaceMatches": [
+        "rollout-trace"
+      ],
+      "evidence": [
+        "codex-rs/app-server/tests/common/rollout.rs",
+        "codex-rs/app-server/tests/suite/v2/remote_thread_store.rs",
+        "codex-rs/cli/src/doctor/thread_inventory.rs"
+      ],
+      "localContractImpact": "Keep replay, rollout, and storage evidence contracts under observation."
+    },
+    {
+      "id": "release-channel-divergence",
+      "channels": [
+        "main",
+        "latest-alpha-cli"
+      ],
+      "severity": "note",
+      "impactDecision": "note",
+      "title": "Release channels remain materially divergent",
+      "summary": "Main reports workspace version 0.0.0 while latest-alpha-cli reports 0.145.0-alpha.29 and remains one commit behind its merge line.",
+      "surfaceMatches": [
+        "release-channel"
+      ],
+      "evidence": [
+        "main head 6915bac7ba2753277cfb6679b547c03e4fe567ed",
+        "latest-alpha-cli head 5d724b1bc65073572298c78b031e3b7e4dc2724e",
+        "codex-rs/Cargo.toml"
+      ],
+      "localContractImpact": "Retain separate channel baselines and qualification decisions."
+    }
+  ],
+  "noLocalAction": [],
+  "bundle": {
+    "path": "contracts/upstream-monitor/codex/contract-surface/runs/20260721T135622Z/",
+    "manifestPath": "contracts/upstream-monitor/codex/contract-surface/runs/20260721T135622Z/manifest.json",
+    "latestPointerPath": "contracts/upstream-monitor/codex/contract-surface/latest.json",
+    "exportUnit": "directory",
+    "complete": true
+  },
+  "validationNotes": {
+    "authorityRead": true,
+    "channelsKeptDistinct": true,
+    "publicationPlanRead": true,
+    "forbiddenAttractorsChecked": true,
+    "runArtifactsCoLocated": true,
+    "bundleManifestSealed": true,
+    "latestPointerOnly": true,
+    "cueExecution": "not_available_to_github_app"
+  }
+}
