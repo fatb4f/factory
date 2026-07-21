@@ -66,7 +66,7 @@ import "list"
 	evidence:           [_, ...#NonEmptyString]
 })
 
-#ClassifiedObservation: {
+#ClassifiedObservationBase: close({
 	id:             #ObservationID
 	reportItemID:   #NonEmptyString
 	channel:        #ChannelID
@@ -74,21 +74,14 @@ import "list"
 	surfaceMatches: [_, ...#NonEmptyString]
 	observation:    #NonEmptyString
 	decision:       #ImpactDecision
-	let Decision = decision
-	severity: #Severity
-	if Decision == "none" {
-		severity: "none"
-	}
-	if Decision == "note" {
-		severity: "note"
-	}
-	if Decision == "contract-update" {
-		severity: "high"
-	}
-	if Decision == "blocking-gate" {
-		severity: "critical"
-	}
-}
+	severity:       #Severity
+})
+
+#ClassifiedObservation:
+	(#ClassifiedObservationBase & {decision: "none", severity: "none"}) |
+		(#ClassifiedObservationBase & {decision: "note", severity: "note"}) |
+		(#ClassifiedObservationBase & {decision: "contract-update", severity: "high"}) |
+		(#ClassifiedObservationBase & {decision: "blocking-gate", severity: "critical"})
 
 #EvidenceBinding: close({
 	observationID:  #ObservationID
