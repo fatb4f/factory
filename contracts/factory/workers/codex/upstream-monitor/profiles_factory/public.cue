@@ -10,22 +10,22 @@ let selectedValidationAssertions = validationAssertions
 let selectedValidationPlan = validationPlan
 
 publicContract: close({
-	apiVersion:           "factory.upstream-monitor.codex/v1"
-	kind:                 "CodexContractSurfaceMonitor"
-	operational:          bool
-	signal:               #AcceptedSignal
-	authority:            _
-	channels:             _
-	actuator:             _
-	workflow:             _
-	surfaces:             [...#Surface]
+	apiVersion:  "factory.upstream-monitor.codex/v1"
+	kind:        "CodexContractSurfaceMonitor"
+	operational: bool
+	signal:      #AcceptedSignal
+	authority:   _
+	channels:    _
+	actuator:    _
+	workflow:    _
+	surfaces: [...#Surface]
 	classification:       _
 	evidenceModel:        _
 	reportTemplate:       _
 	summaryTemplate:      _
 	publicationPlan:      _
 	publicationAdmission: _
-	forbiddenAttractors:  [...string]
+	forbiddenAttractors: [...string]
 	validationAssertions: _
 	validationPlan:       _
 }) & {
