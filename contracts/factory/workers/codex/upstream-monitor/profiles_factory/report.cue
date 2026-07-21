@@ -15,14 +15,14 @@ import (
 	terminal_state: core.#TerminalState
 	correction?:    core.#CorrectionLineage
 	channels: close({
-		main:               core.#ChannelObservation & {channel: "main"}
+		main: core.#ChannelObservation & {channel: "main"}
 		"latest-alpha-cli": core.#ChannelObservation & {channel: "latest-alpha-cli"}
 	})
 	observations: [...core.#ClassifiedObservation]
 	surfaceCoverage: close({
 		for surface in surfaceCatalogue {
 			(surface.id): core.#SurfaceCoverage & {
-				surfaceID:       surface.id
+				surfaceID: surface.id
 				channelsScanned: ["main", "latest-alpha-cli"]
 			}
 		}
@@ -68,13 +68,13 @@ import (
 		cueExecution:               "not_available_to_github_app" | "executed_elsewhere"
 	})
 
-	_allItems:              list.Concat([critical, high, notes, noLocalAction])
-	_observationIDs:        [for observation in observations {observation.id}]
-	_observationIDsUnique:  list.UniqueItems(_observationIDs)
-	_observationIDsUnique:  true
-	_reportItemIDs:         [for item in _allItems {item.id}]
-	_reportItemIDsUnique:   list.UniqueItems(_reportItemIDs)
-	_reportItemIDsUnique:   true
+	_allItems: list.Concat([critical, high, notes, noLocalAction])
+	_observationIDs: [for observation in observations {observation.id}]
+	_observationIDsUnique: list.UniqueItems(_observationIDs)
+	_observationIDsUnique: true
+	_reportItemIDs: [for item in _allItems {item.id}]
+	_reportItemIDsUnique: list.UniqueItems(_reportItemIDs)
+	_reportItemIDsUnique: true
 	_bindingObservationIDs: [for item in _allItems for binding in item.evidenceBindings {binding.observationID}]
 
 	_observationsByID: {
