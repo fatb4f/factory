@@ -3,9 +3,9 @@ package factoryprofile
 import core "github.com/fatb4f/factory/contracts/factory/workers/codex/upstream-monitor:upstreammonitor"
 
 #Surface: close({
-	id:                core.#NonEmptyString
-	terms:             [...core.#NonEmptyString] & [_, ...]
-	classes:           [...core.#SurfaceClass] & [_, ...]
+	id: core.#NonEmptyString
+	terms: [...core.#NonEmptyString] & [_, ...]
+	classes: [...core.#SurfaceClass] & [_, ...]
 	impactFloor:       core.#ImpactDecision
 	localContractHint: core.#NonEmptyString
 })
@@ -36,7 +36,7 @@ classificationPolicy: close({
 	requireUniqueReportItemIDs:     true
 	requireBindingClaimCoverage:    true
 	upstreamRole:                   "evidence_only"
-	allowedDecisions:               ["none", "note", "contract-update", "blocking-gate"]
+	allowedDecisions: ["none", "note", "contract-update", "blocking-gate"]
 	severityMap: {
 		none:              "none"
 		note:              "note"
