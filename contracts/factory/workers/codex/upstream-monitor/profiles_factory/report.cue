@@ -18,7 +18,7 @@ import (
 		main:               core.#ChannelObservation & {channel: "main"}
 		"latest-alpha-cli": core.#ChannelObservation & {channel: "latest-alpha-cli"}
 	})
-	observations: [_, ...core.#ClassifiedObservation]
+	observations: [...core.#ClassifiedObservation]
 	surfaceCoverage: close({
 		for surface in surfaceCatalogue {
 			(surface.id): core.#SurfaceCoverage & {
@@ -28,16 +28,19 @@ import (
 		}
 	})
 	critical: [...core.#EvidenceBackedReportItem & {
-		severity:       "critical"
-		impactDecision: "blocking-gate"
+		severity:            "critical"
+		impactDecision:      "blocking-gate"
+		localContractImpact: core.#NonEmptyString
 	}]
 	high: [...core.#EvidenceBackedReportItem & {
-		severity:       "high"
-		impactDecision: "contract-update"
+		severity:            "high"
+		impactDecision:      "contract-update"
+		localContractImpact: core.#NonEmptyString
 	}]
 	notes: [...core.#EvidenceBackedReportItem & {
-		severity:       "note"
-		impactDecision: "note"
+		severity:            "note"
+		impactDecision:      "note"
+		localContractImpact: core.#NonEmptyString
 	}]
 	noLocalAction: [...core.#EvidenceBackedReportItem & {
 		severity:       "none"
@@ -67,7 +70,11 @@ import (
 
 	_allItems:              list.Concat([critical, high, notes, noLocalAction])
 	_observationIDs:        [for observation in observations {observation.id}]
+	_observationIDsUnique:  list.UniqueItems(_observationIDs)
+	_observationIDsUnique:  true
 	_reportItemIDs:         [for item in _allItems {item.id}]
+	_reportItemIDsUnique:   list.UniqueItems(_reportItemIDs)
+	_reportItemIDsUnique:   true
 	_bindingObservationIDs: [for item in _allItems for binding in item.evidenceBindings {binding.observationID}]
 
 	_observationsByID: {
@@ -98,6 +105,8 @@ import (
 			path:           binding.path
 			surfaceMatches: binding.surfaceMatches
 			observation:    binding.observation
+			decision:       item.impactDecision
+			severity:       item.severity
 		}
 	}]
 
@@ -122,7 +131,9 @@ evidenceModel: close({
 	reportItems:               "typed_evidence_bindings"
 	observationLedger:         "required"
 	surfaceCoverageLedger:     "required_for_every_declared_surface"
-	claims:                    "bound_to_observation_refs"
+	claims:                    "bound_to_observation_refs_and_cover_all_bindings"
+	identities:                "unique_observation_report_item_binding_and_claim_ids"
+	decisionSeverityAlignment: "ledger_binding_and_bucket_exact"
 	markdownProjectionSource:  "evidence.json"
 	independentMarkdownClaims: false
 	sealedRunMutation:         false
