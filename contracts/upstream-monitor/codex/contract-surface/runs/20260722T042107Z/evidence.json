@@ -1,0 +1,543 @@
+{
+  "apiVersion": "factory.upstream-monitor.codex/v1",
+  "kind": "CodexImpactReport",
+  "loop": "codex-contract-surface",
+  "signal_id": "loop_bootstrap_request",
+  "profile_id": "factory",
+  "run_id": "20260722T042107Z",
+  "terminal_state": "terminal_success",
+  "channels": {
+    "main": {
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "21db216db05d13713f09189fc44872d22cf47fc4",
+      "workspace_version": "0.0.0",
+      "evidence": [
+        "prior channel head 0b175e6439a8608ba7726ee153fd8590619e8f34",
+        "compare status ahead; ahead_by=40; behind_by=0",
+        "current main head independently resolved from openai/codex@main"
+      ]
+    },
+    "latest-alpha-cli": {
+      "channel": "latest-alpha-cli",
+      "status": "resolved",
+      "head_commit": "3b61fac9b7d7b003183ff1b73c28df6abeb062a4",
+      "workspace_version": "0.145.0-alpha.30",
+      "evidence": [
+        "prior channel head 5d724b1bc65073572298c78b031e3b7e4dc2724e",
+        "compare status diverged; ahead_by=8; behind_by=150",
+        "current alpha head independently resolved from openai/codex@latest-alpha-cli"
+      ]
+    }
+  },
+  "observations": [
+    {
+      "id": "main-skill-injection-1",
+      "reportItemID": "main-skill-injection",
+      "channel": "main",
+      "path": "codex-rs/core-skills/src/injection.rs",
+      "surfaceMatches": [
+        "instructions"
+      ],
+      "observation": "Main changes host skill prompt and WorldState catalog injection ownership and duplicate suppression.",
+      "decision": "blocking-gate",
+      "severity": "critical"
+    },
+    {
+      "id": "permission-sandbox-contracts-1",
+      "reportItemID": "permission-sandbox-contracts",
+      "channel": "main",
+      "path": "codex-rs/config/src/config_requirements.rs",
+      "surfaceMatches": [
+        "authentication"
+      ],
+      "observation": "Main changes effective approval, permission-profile, sandbox, filesystem, and network requirement structures.",
+      "decision": "blocking-gate",
+      "severity": "critical"
+    },
+    {
+      "id": "permission-sandbox-contracts-2",
+      "reportItemID": "permission-sandbox-contracts",
+      "channel": "latest-alpha-cli",
+      "path": "codex-rs/prompts/src/permissions_instructions.rs",
+      "surfaceMatches": [
+        "authentication",
+        "instructions"
+      ],
+      "observation": "Latest alpha changes developer-instruction projection of permission, sandbox, denied-read, writable-root, and automatic-review state.",
+      "decision": "blocking-gate",
+      "severity": "critical"
+    },
+    {
+      "id": "main-managed-configuration-1",
+      "reportItemID": "main-managed-configuration",
+      "channel": "main",
+      "path": "codex-rs/config/src/requirements_layers/layer.rs",
+      "surfaceMatches": [
+        "configuration"
+      ],
+      "observation": "Main changes composable requirements layers and domain merging for rules, hooks, permissions, paths, and remote sandbox configuration.",
+      "decision": "contract-update",
+      "severity": "high"
+    },
+    {
+      "id": "mcp-code-mode-runtime-1",
+      "reportItemID": "mcp-code-mode-runtime",
+      "channel": "main",
+      "path": "codex-rs/codex-mcp/src/binding.rs",
+      "surfaceMatches": [
+        "mcp-tools"
+      ],
+      "observation": "Main introduces an immutable per-sampling MCP binding for exact tool catalogs, clients, metadata, and prepared calls.",
+      "decision": "contract-update",
+      "severity": "high"
+    },
+    {
+      "id": "mcp-code-mode-runtime-2",
+      "reportItemID": "mcp-code-mode-runtime",
+      "channel": "latest-alpha-cli",
+      "path": "codex-rs/code-mode/src/service.rs",
+      "surfaceMatches": [
+        "mcp-tools"
+      ],
+      "observation": "Latest alpha changes code-mode yield observation by adding a one-second grace period for yields of at least ten seconds.",
+      "decision": "contract-update",
+      "severity": "high"
+    },
+    {
+      "id": "main-thread-item-rollout-1",
+      "reportItemID": "main-thread-item-rollout",
+      "channel": "main",
+      "path": "codex-rs/app-server/tests/suite/v2/thread_inject_items.rs",
+      "surfaceMatches": [
+        "response-items",
+        "rollout-trace"
+      ],
+      "observation": "Main changes thread item injection ordering and rollout persistence for injected raw response items.",
+      "decision": "contract-update",
+      "severity": "high"
+    },
+    {
+      "id": "release-channel-delta-1",
+      "reportItemID": "release-channel-delta",
+      "channel": "main",
+      "path": "codex-rs/Cargo.toml",
+      "surfaceMatches": [
+        "release-channel"
+      ],
+      "observation": "Main resolves at workspace version 0.0.0 and head 21db216db05d13713f09189fc44872d22cf47fc4.",
+      "decision": "note",
+      "severity": "note"
+    },
+    {
+      "id": "release-channel-delta-2",
+      "reportItemID": "release-channel-delta",
+      "channel": "latest-alpha-cli",
+      "path": "codex-rs/Cargo.toml",
+      "surfaceMatches": [
+        "release-channel"
+      ],
+      "observation": "Latest alpha resolves at workspace version 0.145.0-alpha.30 and head 3b61fac9b7d7b003183ff1b73c28df6abeb062a4.",
+      "decision": "note",
+      "severity": "note"
+    }
+  ],
+  "surfaceCoverage": {
+    "response-items": {
+      "surfaceID": "response-items",
+      "channelsScanned": [
+        "main",
+        "latest-alpha-cli"
+      ],
+      "observationRefs": [
+        "main-thread-item-rollout-1"
+      ]
+    },
+    "agent-messages": {
+      "surfaceID": "agent-messages",
+      "channelsScanned": [
+        "main",
+        "latest-alpha-cli"
+      ],
+      "observationRefs": []
+    },
+    "context-fragments": {
+      "surfaceID": "context-fragments",
+      "channelsScanned": [
+        "main",
+        "latest-alpha-cli"
+      ],
+      "observationRefs": []
+    },
+    "rollout-trace": {
+      "surfaceID": "rollout-trace",
+      "channelsScanned": [
+        "main",
+        "latest-alpha-cli"
+      ],
+      "observationRefs": [
+        "main-thread-item-rollout-1"
+      ]
+    },
+    "mcp-tools": {
+      "surfaceID": "mcp-tools",
+      "channelsScanned": [
+        "main",
+        "latest-alpha-cli"
+      ],
+      "observationRefs": [
+        "mcp-code-mode-runtime-1",
+        "mcp-code-mode-runtime-2"
+      ]
+    },
+    "instructions": {
+      "surfaceID": "instructions",
+      "channelsScanned": [
+        "main",
+        "latest-alpha-cli"
+      ],
+      "observationRefs": [
+        "main-skill-injection-1",
+        "permission-sandbox-contracts-2"
+      ]
+    },
+    "configuration": {
+      "surfaceID": "configuration",
+      "channelsScanned": [
+        "main",
+        "latest-alpha-cli"
+      ],
+      "observationRefs": [
+        "main-managed-configuration-1"
+      ]
+    },
+    "hook-lifecycle": {
+      "surfaceID": "hook-lifecycle",
+      "channelsScanned": [
+        "main",
+        "latest-alpha-cli"
+      ],
+      "observationRefs": []
+    },
+    "authentication": {
+      "surfaceID": "authentication",
+      "channelsScanned": [
+        "main",
+        "latest-alpha-cli"
+      ],
+      "observationRefs": [
+        "permission-sandbox-contracts-1",
+        "permission-sandbox-contracts-2"
+      ]
+    },
+    "release-channel": {
+      "surfaceID": "release-channel",
+      "channelsScanned": [
+        "main",
+        "latest-alpha-cli"
+      ],
+      "observationRefs": [
+        "release-channel-delta-1",
+        "release-channel-delta-2"
+      ]
+    }
+  },
+  "critical": [
+    {
+      "id": "main-skill-injection",
+      "channels": [
+        "main"
+      ],
+      "severity": "critical",
+      "impactDecision": "blocking-gate",
+      "title": "Main skill-injection ownership changed",
+      "summary": "Host skill prompt and catalog injection ownership changed on main.",
+      "surfaceMatches": [
+        "instructions"
+      ],
+      "evidence": [
+        "codex-rs/core-skills/src/injection.rs"
+      ],
+      "evidenceBindings": [
+        {
+          "observationID": "main-skill-injection-1",
+          "reportItemID": "main-skill-injection",
+          "channel": "main",
+          "path": "codex-rs/core-skills/src/injection.rs",
+          "surfaceMatches": [
+            "instructions"
+          ],
+          "observation": "Main changes host skill prompt and WorldState catalog injection ownership and duplicate suppression."
+        }
+      ],
+      "claims": [
+        {
+          "id": "main-skill-injection-claim-1",
+          "text": "Main changed host-skill prompt and catalog injection ownership, including duplicate suppression between legacy and extension-owned paths.",
+          "observationRefs": [
+            "main-skill-injection-1"
+          ]
+        }
+      ],
+      "localContractImpact": "Requalify skill discovery, explicit skill injection, WorldState catalog ownership, and duplicate-suppression invariants."
+    },
+    {
+      "id": "permission-sandbox-contracts",
+      "channels": [
+        "main",
+        "latest-alpha-cli"
+      ],
+      "severity": "critical",
+      "impactDecision": "blocking-gate",
+      "title": "Permission, sandbox, and permission-instruction contracts changed",
+      "summary": "Permission structures changed on main and their developer-instruction projection changed on latest alpha.",
+      "surfaceMatches": [
+        "authentication",
+        "instructions"
+      ],
+      "evidence": [
+        "codex-rs/config/src/config_requirements.rs",
+        "codex-rs/prompts/src/permissions_instructions.rs"
+      ],
+      "evidenceBindings": [
+        {
+          "observationID": "permission-sandbox-contracts-1",
+          "reportItemID": "permission-sandbox-contracts",
+          "channel": "main",
+          "path": "codex-rs/config/src/config_requirements.rs",
+          "surfaceMatches": [
+            "authentication"
+          ],
+          "observation": "Main changes effective approval, permission-profile, sandbox, filesystem, and network requirement structures."
+        },
+        {
+          "observationID": "permission-sandbox-contracts-2",
+          "reportItemID": "permission-sandbox-contracts",
+          "channel": "latest-alpha-cli",
+          "path": "codex-rs/prompts/src/permissions_instructions.rs",
+          "surfaceMatches": [
+            "authentication",
+            "instructions"
+          ],
+          "observation": "Latest alpha changes developer-instruction projection of permission, sandbox, denied-read, writable-root, and automatic-review state."
+        }
+      ],
+      "claims": [
+        {
+          "id": "permission-sandbox-contracts-claim-1",
+          "text": "Main changed effective approval, permission-profile, sandbox, filesystem, and network requirement structures; latest alpha changed the developer-instruction projection of permission, sandbox, denied-read, writable-root, and automatic-review state.",
+          "observationRefs": [
+            "permission-sandbox-contracts-1",
+            "permission-sandbox-contracts-2"
+          ]
+        }
+      ],
+      "localContractImpact": "Requalify authorization, sandbox, approval, denied-read, writable-root, and permission-instruction projections independently for both channels."
+    }
+  ],
+  "high": [
+    {
+      "id": "main-managed-configuration",
+      "channels": [
+        "main"
+      ],
+      "severity": "high",
+      "impactDecision": "contract-update",
+      "title": "Main managed-configuration composition changed",
+      "summary": "Composable requirements-layer semantics changed on main.",
+      "surfaceMatches": [
+        "configuration"
+      ],
+      "evidence": [
+        "codex-rs/config/src/requirements_layers/layer.rs"
+      ],
+      "evidenceBindings": [
+        {
+          "observationID": "main-managed-configuration-1",
+          "reportItemID": "main-managed-configuration",
+          "channel": "main",
+          "path": "codex-rs/config/src/requirements_layers/layer.rs",
+          "surfaceMatches": [
+            "configuration"
+          ],
+          "observation": "Main changes composable requirements layers and domain merging for rules, hooks, permissions, paths, and remote sandbox configuration."
+        }
+      ],
+      "claims": [
+        {
+          "id": "main-managed-configuration-claim-1",
+          "text": "Main changed composable requirements layers and domain-specific merging for rules, hooks, permissions, paths, and remote sandbox configuration.",
+          "observationRefs": [
+            "main-managed-configuration-1"
+          ]
+        }
+      ],
+      "localContractImpact": "Update configuration-layer provenance, composition, path materialization, remote-sandbox, and domain-merge contracts."
+    },
+    {
+      "id": "mcp-code-mode-runtime",
+      "channels": [
+        "main",
+        "latest-alpha-cli"
+      ],
+      "severity": "high",
+      "impactDecision": "contract-update",
+      "title": "MCP sampling bindings and alpha code-mode timing changed",
+      "summary": "Main adds exact per-sampling MCP bindings while alpha changes long-yield observation timing.",
+      "surfaceMatches": [
+        "mcp-tools"
+      ],
+      "evidence": [
+        "codex-rs/codex-mcp/src/binding.rs",
+        "codex-rs/code-mode/src/service.rs"
+      ],
+      "evidenceBindings": [
+        {
+          "observationID": "mcp-code-mode-runtime-1",
+          "reportItemID": "mcp-code-mode-runtime",
+          "channel": "main",
+          "path": "codex-rs/codex-mcp/src/binding.rs",
+          "surfaceMatches": [
+            "mcp-tools"
+          ],
+          "observation": "Main introduces an immutable per-sampling MCP binding for exact tool catalogs, clients, metadata, and prepared calls."
+        },
+        {
+          "observationID": "mcp-code-mode-runtime-2",
+          "reportItemID": "mcp-code-mode-runtime",
+          "channel": "latest-alpha-cli",
+          "path": "codex-rs/code-mode/src/service.rs",
+          "surfaceMatches": [
+            "mcp-tools"
+          ],
+          "observation": "Latest alpha changes code-mode yield observation by adding a one-second grace period for yields of at least ten seconds."
+        }
+      ],
+      "claims": [
+        {
+          "id": "mcp-code-mode-runtime-claim-1",
+          "text": "Main introduced immutable per-sampling MCP bindings for exact catalogs, clients, metadata, and calls; latest alpha changed code-mode yield observation by adding a grace period for longer yields.",
+          "observationRefs": [
+            "mcp-code-mode-runtime-1",
+            "mcp-code-mode-runtime-2"
+          ]
+        }
+      ],
+      "localContractImpact": "Extend MCP catalog/call binding and code-mode execute/wait timing contracts while keeping channel-specific behavior distinct."
+    },
+    {
+      "id": "main-thread-item-rollout",
+      "channels": [
+        "main"
+      ],
+      "severity": "high",
+      "impactDecision": "contract-update",
+      "title": "Main thread-item injection and rollout persistence changed",
+      "summary": "Injected raw response items now have explicit ordering and rollout persistence behavior.",
+      "surfaceMatches": [
+        "response-items",
+        "rollout-trace"
+      ],
+      "evidence": [
+        "codex-rs/app-server/tests/suite/v2/thread_inject_items.rs"
+      ],
+      "evidenceBindings": [
+        {
+          "observationID": "main-thread-item-rollout-1",
+          "reportItemID": "main-thread-item-rollout",
+          "channel": "main",
+          "path": "codex-rs/app-server/tests/suite/v2/thread_inject_items.rs",
+          "surfaceMatches": [
+            "response-items",
+            "rollout-trace"
+          ],
+          "observation": "Main changes thread item injection ordering and rollout persistence for injected raw response items."
+        }
+      ],
+      "claims": [
+        {
+          "id": "main-thread-item-rollout-claim-1",
+          "text": "Main changed thread item injection ordering and persistence so injected raw response items are recorded in rollout history and sent between initial context and the next user prompt.",
+          "observationRefs": [
+            "main-thread-item-rollout-1"
+          ]
+        }
+      ],
+      "localContractImpact": "Update raw-response item, thread injection ordering, rollout persistence, replay, and next-turn projection contracts."
+    }
+  ],
+  "notes": [
+    {
+      "id": "release-channel-delta",
+      "channels": [
+        "main",
+        "latest-alpha-cli"
+      ],
+      "severity": "note",
+      "impactDecision": "note",
+      "title": "Release channels remain materially divergent",
+      "summary": "Main and latest-alpha-cli retain independent heads and workspace versions.",
+      "surfaceMatches": [
+        "release-channel"
+      ],
+      "evidence": [
+        "codex-rs/Cargo.toml"
+      ],
+      "evidenceBindings": [
+        {
+          "observationID": "release-channel-delta-1",
+          "reportItemID": "release-channel-delta",
+          "channel": "main",
+          "path": "codex-rs/Cargo.toml",
+          "surfaceMatches": [
+            "release-channel"
+          ],
+          "observation": "Main resolves at workspace version 0.0.0 and head 21db216db05d13713f09189fc44872d22cf47fc4."
+        },
+        {
+          "observationID": "release-channel-delta-2",
+          "reportItemID": "release-channel-delta",
+          "channel": "latest-alpha-cli",
+          "path": "codex-rs/Cargo.toml",
+          "surfaceMatches": [
+            "release-channel"
+          ],
+          "observation": "Latest alpha resolves at workspace version 0.145.0-alpha.30 and head 3b61fac9b7d7b003183ff1b73c28df6abeb062a4."
+        }
+      ],
+      "claims": [
+        {
+          "id": "release-channel-delta-claim-1",
+          "text": "Main is at 21db216db05d13713f09189fc44872d22cf47fc4 with workspace version 0.0.0, while latest-alpha-cli is at 3b61fac9b7d7b003183ff1b73c28df6abeb062a4 with workspace version 0.145.0-alpha.30.",
+          "observationRefs": [
+            "release-channel-delta-1",
+            "release-channel-delta-2"
+          ]
+        }
+      ],
+      "localContractImpact": "Retain independent channel baselines and qualification decisions."
+    }
+  ],
+  "noLocalAction": [],
+  "bundle": {
+    "path": "contracts/upstream-monitor/codex/contract-surface/runs/20260722T042107Z/",
+    "manifestPath": "contracts/upstream-monitor/codex/contract-surface/runs/20260722T042107Z/manifest.json",
+    "latestPointerPath": "contracts/upstream-monitor/codex/contract-surface/latest.json",
+    "exportUnit": "directory",
+    "complete": true
+  },
+  "validationNotes": {
+    "authorityRead": true,
+    "channelsKeptDistinct": true,
+    "publicationPlanRead": true,
+    "forbiddenAttractorsChecked": true,
+    "runArtifactsCoLocated": true,
+    "bundleManifestSealed": true,
+    "latestPointerOnly": true,
+    "typedEvidenceBound": true,
+    "observationLedgerComplete": true,
+    "surfaceCoverageComplete": true,
+    "projectionOnlyRendering": true,
+    "cueExecution": "not_available_to_github_app"
+  }
+}
