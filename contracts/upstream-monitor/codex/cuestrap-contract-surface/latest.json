@@ -1,8 +1,8 @@
 {
   "apiVersion": "factory.upstream-monitor.latest-run/v1",
   "kind": "LatestUpstreamMonitorRun",
-  "run_id": "20260721T155431Z",
+  "run_id": "20260722T042019Z",
   "profile_id": "cuestrap",
-  "bundle_path": "contracts/upstream-monitor/codex/cuestrap-contract-surface/runs/20260721T155431Z/",
-  "manifest_path": "contracts/upstream-monitor/codex/cuestrap-contract-surface/runs/20260721T155431Z/manifest.json"
+  "bundle_path": "contracts/upstream-monitor/codex/cuestrap-contract-surface/runs/20260722T042019Z/",
+  "manifest_path": "contracts/upstream-monitor/codex/cuestrap-contract-surface/runs/20260722T042019Z/manifest.json"
 }
