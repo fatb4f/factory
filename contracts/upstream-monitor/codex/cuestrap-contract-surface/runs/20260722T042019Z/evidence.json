@@ -1,0 +1,483 @@
+{
+  "apiVersion": "factory.upstream-monitor.codex.cuestrap/v1",
+  "kind": "CuestrapCodexImpactReport",
+  "loop": "cuestrap-codex-contract-surface",
+  "signal_id": "loop_bootstrap_request",
+  "profile_id": "cuestrap",
+  "run_id": "20260722T042019Z",
+  "factory_revision": "a80569adc33287c56805dd5549ba6d062e747b08",
+  "cuestrap_revision": "781801e6500bcef92169b8748ae82166bae56c88",
+  "channels": {
+    "main": {
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "21db216db05d13713f09189fc44872d22cf47fc4",
+      "workspace_version": "0.0.0",
+      "evidence": [
+        "prior main head 0b175e6439a8608ba7726ee153fd8590619e8f34",
+        "current main head 21db216db05d13713f09189fc44872d22cf47fc4",
+        "main is 40 commits ahead and 0 behind its prior independent baseline",
+        "300 changed paths scanned against all 10 declared surfaces"
+      ]
+    },
+    "latest-alpha-cli": {
+      "channel": "latest-alpha-cli",
+      "status": "resolved",
+      "head_commit": "3b61fac9b7d7b003183ff1b73c28df6abeb062a4",
+      "workspace_version": "0.145.0-alpha.30",
+      "evidence": [
+        "prior alpha head 5d724b1bc65073572298c78b031e3b7e4dc2724e",
+        "current alpha head 3b61fac9b7d7b003183ff1b73c28df6abeb062a4",
+        "alpha is 8 commits ahead and 150 behind its prior independent baseline",
+        "18 changed paths scanned independently against all 10 declared surfaces"
+      ]
+    }
+  },
+  "purposeImpact": {
+    "supervisorySessionController": {
+      "purpose": "supervisory-session-controller",
+      "impactDecision": "blocking-gate",
+      "summary": "Requalify managed requirements/session replay, request-scoped MCP dispatch, instruction projection, thread identity, and alpha unified-exec permission/process behavior.",
+      "surfaceMatches": [
+        "session-turn-identity",
+        "tool-dispatch-classification",
+        "permission-sandbox-approval",
+        "mcp-code-mode",
+        "tool-result-error-semantics",
+        "instruction-skill-policy",
+        "context-turn-lifecycle",
+        "release-channel"
+      ]
+    },
+    "idiomaticCueWorkbookHarness": {
+      "purpose": "idiomatic-cue-workbook-harness",
+      "impactDecision": "contract-update",
+      "summary": "Update MCP binding and alpha code-mode runtime qualification while preserving independent channel baselines.",
+      "surfaceMatches": [
+        "mcp-code-mode",
+        "tool-result-error-semantics",
+        "instruction-skill-policy",
+        "context-turn-lifecycle",
+        "release-channel"
+      ]
+    }
+  },
+  "critical": [
+    {
+      "id": "main-managed-config-session-lock",
+      "channels": [
+        "main"
+      ],
+      "severity": "critical",
+      "impactDecision": "blocking-gate",
+      "title": "Managed configuration and session replay changed on main",
+      "summary": "Main adds layered requirement provenance and exact requirement application across approvals, sandbox, permissions, MCP, and hooks, while session lock replay persists resolved permission, collaboration, environment, and agent settings.",
+      "surfaceMatches": [
+        "permission-sandbox-approval",
+        "session-turn-identity"
+      ],
+      "evidence": [
+        "main:codex-rs/config/src/config_requirements.rs — ConfigRequirements now binds approval reviewer, sandbox mode, permission profile, MCP requirements, managed hooks, and composite requirement-source provenance.",
+        "main:codex-rs/core/src/session/config_lock.rs — Session config-lock export/replay persists resolved model, permission/app/collaboration/environment fields and agent concurrency/depth."
+      ],
+      "evidenceBindings": [
+        {
+          "observationID": "main-config-requirements",
+          "reportItemID": "main-managed-config-session-lock",
+          "channel": "main",
+          "path": "codex-rs/config/src/config_requirements.rs",
+          "surfaceMatches": [
+            "permission-sandbox-approval"
+          ],
+          "observation": "ConfigRequirements now binds approval reviewer, sandbox mode, permission profile, MCP requirements, managed hooks, and composite requirement-source provenance."
+        },
+        {
+          "observationID": "main-session-config-lock",
+          "reportItemID": "main-managed-config-session-lock",
+          "channel": "main",
+          "path": "codex-rs/core/src/session/config_lock.rs",
+          "surfaceMatches": [
+            "session-turn-identity",
+            "permission-sandbox-approval"
+          ],
+          "observation": "Session config-lock export/replay persists resolved model, permission/app/collaboration/environment fields and agent concurrency/depth."
+        }
+      ],
+      "claims": [
+        {
+          "id": "main-managed-config-session-lock-claim",
+          "text": "Main adds layered requirement provenance and exact requirement application across approvals, sandbox, permissions, MCP, and hooks, while session lock replay persists resolved permission, collaboration, environment, and agent settings.",
+          "observationRefs": [
+            "main-config-requirements",
+            "main-session-config-lock"
+          ]
+        }
+      ],
+      "localContractImpact": "Extend and requalify the CUE/Pydantic controller contract for requirement provenance, replay identity, and effective permission state.",
+      "suggestedLocalTargets": [
+        "src/cue-workbook/supervisory_hooks/contracts.cue",
+        "src/cue-workbook/supervisory_hooks/models.py",
+        "src/cue-workbook/supervisory_hooks/supervisor.py"
+      ]
+    },
+    {
+      "id": "main-request-scoped-mcp-binding",
+      "channels": [
+        "main"
+      ],
+      "severity": "critical",
+      "impactDecision": "blocking-gate",
+      "title": "MCP dispatch is request-scoped on main",
+      "summary": "Main introduces a frozen MCP tool catalogue, exact execution handles, and resource clients for one model sampling request.",
+      "surfaceMatches": [
+        "tool-dispatch-classification",
+        "mcp-code-mode"
+      ],
+      "evidence": [
+        "main:codex-rs/codex-mcp/src/binding.rs — McpBinding freezes the advertised tool catalog and binds calls/resources to exact clients and connection sets for one sampling request."
+      ],
+      "evidenceBindings": [
+        {
+          "observationID": "main-mcp-binding",
+          "reportItemID": "main-request-scoped-mcp-binding",
+          "channel": "main",
+          "path": "codex-rs/codex-mcp/src/binding.rs",
+          "surfaceMatches": [
+            "tool-dispatch-classification",
+            "mcp-code-mode"
+          ],
+          "observation": "McpBinding freezes the advertised tool catalog and binds calls/resources to exact clients and connection sets for one sampling request."
+        }
+      ],
+      "claims": [
+        {
+          "id": "main-request-scoped-mcp-binding-claim",
+          "text": "Main introduces a frozen MCP tool catalogue, exact execution handles, and resource clients for one model sampling request.",
+          "observationRefs": [
+            "main-mcp-binding"
+          ]
+        }
+      ],
+      "localContractImpact": "Bind controller classification and pending operations to request-scoped advertised tool/resource identity.",
+      "suggestedLocalTargets": [
+        ".codex/config.toml",
+        "src/cue-workbook/supervisory_hooks/contracts.cue",
+        "src/cue-workbook/supervisory_hooks/policy.py",
+        "src/cue-workbook/cue-workbook.py"
+      ]
+    },
+    {
+      "id": "main-skill-plugin-projection",
+      "channels": [
+        "main"
+      ],
+      "severity": "critical",
+      "impactDecision": "blocking-gate",
+      "title": "Skill and plugin instruction projection changed on main",
+      "summary": "Main changes skill metadata/context budgets and plugin/config-requirement protocol projections.",
+      "surfaceMatches": [
+        "instruction-skill-policy",
+        "context-turn-lifecycle"
+      ],
+      "evidence": [
+        "main:codex-rs/ext/skills/src/render.rs — Skill rendering declares metadata and main-prompt budgets tied to context-window sizing.",
+        "main:codex-rs/app-server-protocol/schema/json/v2/PluginListParams.json — Plugin list request schema changed in the main delta."
+      ],
+      "evidenceBindings": [
+        {
+          "observationID": "main-skill-render",
+          "reportItemID": "main-skill-plugin-projection",
+          "channel": "main",
+          "path": "codex-rs/ext/skills/src/render.rs",
+          "surfaceMatches": [
+            "instruction-skill-policy",
+            "context-turn-lifecycle"
+          ],
+          "observation": "Skill rendering declares metadata and main-prompt budgets tied to context-window sizing."
+        },
+        {
+          "observationID": "main-plugin-list-schema",
+          "reportItemID": "main-skill-plugin-projection",
+          "channel": "main",
+          "path": "codex-rs/app-server-protocol/schema/json/v2/PluginListParams.json",
+          "surfaceMatches": [
+            "instruction-skill-policy"
+          ],
+          "observation": "Plugin list request schema changed in the main delta."
+        }
+      ],
+      "claims": [
+        {
+          "id": "main-skill-plugin-projection-claim",
+          "text": "Main changes skill metadata/context budgets and plugin/config-requirement protocol projections.",
+          "observationRefs": [
+            "main-skill-render",
+            "main-plugin-list-schema"
+          ]
+        }
+      ],
+      "localContractImpact": "Requalify repository phase instructions, skill/plugin selection, and context-budget assumptions before supervisory enforcement.",
+      "suggestedLocalTargets": [
+        ".codex/AGENTS.md",
+        ".codex/config.toml",
+        "src/cue-workbook/supervisory_hooks/supervisor.py"
+      ]
+    },
+    {
+      "id": "alpha-unified-exec-permission-process",
+      "channels": [
+        "latest-alpha-cli"
+      ],
+      "severity": "critical",
+      "impactDecision": "blocking-gate",
+      "title": "Alpha unified-exec permission and process semantics changed",
+      "summary": "Alpha changes write_stdin polling/interaction emission, permission-profile environment injection, sandbox retries, and process management.",
+      "surfaceMatches": [
+        "tool-dispatch-classification",
+        "permission-sandbox-approval",
+        "tool-result-error-semantics"
+      ],
+      "evidence": [
+        "latest-alpha-cli:codex-rs/core/src/tools/handlers/unified_exec/write_stdin.rs — Empty stdin is treated as a background poll and terminal interaction emission now depends on live process state; non-empty stdin remains visible after completion.",
+        "latest-alpha-cli:codex-rs/core/src/unified_exec/process_manager.rs — Unified exec injects permission-profile state, distinguishes sandbox retry executor processes, and changes process lifecycle management.",
+        "latest-alpha-cli:codex-rs/prompts/src/permissions_instructions.rs — Permission instructions project approval reviewer, sandbox mode, permission profile, and request-permission capability."
+      ],
+      "evidenceBindings": [
+        {
+          "observationID": "alpha-write-stdin",
+          "reportItemID": "alpha-unified-exec-permission-process",
+          "channel": "latest-alpha-cli",
+          "path": "codex-rs/core/src/tools/handlers/unified_exec/write_stdin.rs",
+          "surfaceMatches": [
+            "tool-dispatch-classification",
+            "tool-result-error-semantics"
+          ],
+          "observation": "Empty stdin is treated as a background poll and terminal interaction emission now depends on live process state; non-empty stdin remains visible after completion."
+        },
+        {
+          "observationID": "alpha-process-manager",
+          "reportItemID": "alpha-unified-exec-permission-process",
+          "channel": "latest-alpha-cli",
+          "path": "codex-rs/core/src/unified_exec/process_manager.rs",
+          "surfaceMatches": [
+            "permission-sandbox-approval",
+            "tool-result-error-semantics"
+          ],
+          "observation": "Unified exec injects permission-profile state, distinguishes sandbox retry executor processes, and changes process lifecycle management."
+        },
+        {
+          "observationID": "alpha-permission-instructions",
+          "reportItemID": "alpha-unified-exec-permission-process",
+          "channel": "latest-alpha-cli",
+          "path": "codex-rs/prompts/src/permissions_instructions.rs",
+          "surfaceMatches": [
+            "permission-sandbox-approval"
+          ],
+          "observation": "Permission instructions project approval reviewer, sandbox mode, permission profile, and request-permission capability."
+        }
+      ],
+      "claims": [
+        {
+          "id": "alpha-unified-exec-permission-process-claim",
+          "text": "Alpha changes write_stdin polling/interaction emission, permission-profile environment injection, sandbox retries, and process management.",
+          "observationRefs": [
+            "alpha-write-stdin",
+            "alpha-process-manager",
+            "alpha-permission-instructions"
+          ]
+        }
+      ],
+      "localContractImpact": "Requalify alpha dispatch classification, post-tool correlation, permission projection, and terminal outcome normalization independently.",
+      "suggestedLocalTargets": [
+        "src/cue-workbook/supervisory_hooks/contracts.cue",
+        "src/cue-workbook/supervisory_hooks/models.py",
+        "src/cue-workbook/supervisory_hooks/policy.py",
+        "src/cue-workbook/supervisory_hooks/supervisor.py"
+      ]
+    }
+  ],
+  "high": [
+    {
+      "id": "alpha-code-mode-session-runtime",
+      "channels": [
+        "latest-alpha-cli"
+      ],
+      "severity": "high",
+      "impactDecision": "contract-update",
+      "title": "Alpha code-mode session runtime changed",
+      "summary": "Alpha changes the in-process code-mode session service, nested tool delegation, task-failure handling, and execute/wait outcome handling.",
+      "surfaceMatches": [
+        "mcp-code-mode",
+        "tool-result-error-semantics"
+      ],
+      "evidence": [
+        "latest-alpha-cli:codex-rs/code-mode/src/service.rs — The code-mode service exposes nested tool delegation, in-process session providers, task-failure handling, and typed execute/wait pending outcomes."
+      ],
+      "evidenceBindings": [
+        {
+          "observationID": "alpha-code-mode-service",
+          "reportItemID": "alpha-code-mode-session-runtime",
+          "channel": "latest-alpha-cli",
+          "path": "codex-rs/code-mode/src/service.rs",
+          "surfaceMatches": [
+            "mcp-code-mode",
+            "tool-result-error-semantics"
+          ],
+          "observation": "The code-mode service exposes nested tool delegation, in-process session providers, task-failure handling, and typed execute/wait pending outcomes."
+        }
+      ],
+      "claims": [
+        {
+          "id": "alpha-code-mode-session-runtime-claim",
+          "text": "Alpha changes the in-process code-mode session service, nested tool delegation, task-failure handling, and execute/wait outcome handling.",
+          "observationRefs": [
+            "alpha-code-mode-service"
+          ]
+        }
+      ],
+      "localContractImpact": "Update Marimo/code-mode qualification and structured error projection for the alpha channel.",
+      "suggestedLocalTargets": [
+        "src/cue-workbook/cue-workbook.py",
+        "src/cue-workbook/workbook_cli.py",
+        "src/cue-workbook/harness.py"
+      ]
+    },
+    {
+      "id": "main-thread-fork-identity",
+      "channels": [
+        "main"
+      ],
+      "severity": "high",
+      "impactDecision": "contract-update",
+      "title": "Main thread-fork identity contract changed",
+      "summary": "Main expands thread-fork behavior and explicitly serializes sessionId on the forked thread object.",
+      "surfaceMatches": [
+        "session-turn-identity",
+        "context-turn-lifecycle"
+      ],
+      "evidence": [
+        "main:codex-rs/app-server/tests/suite/v2/thread_fork.rs — Thread-fork tests require the forked thread object to serialize sessionId and exercise parent/thread/turn lifecycle state."
+      ],
+      "evidenceBindings": [
+        {
+          "observationID": "main-thread-fork",
+          "reportItemID": "main-thread-fork-identity",
+          "channel": "main",
+          "path": "codex-rs/app-server/tests/suite/v2/thread_fork.rs",
+          "surfaceMatches": [
+            "session-turn-identity",
+            "context-turn-lifecycle"
+          ],
+          "observation": "Thread-fork tests require the forked thread object to serialize sessionId and exercise parent/thread/turn lifecycle state."
+        }
+      ],
+      "claims": [
+        {
+          "id": "main-thread-fork-identity-claim",
+          "text": "Main expands thread-fork behavior and explicitly serializes sessionId on the forked thread object.",
+          "observationRefs": [
+            "main-thread-fork"
+          ]
+        }
+      ],
+      "localContractImpact": "Preserve parent/fork/session/turn binding in controller ledgers and workbook context boundaries.",
+      "suggestedLocalTargets": [
+        "src/cue-workbook/supervisory_hooks/models.py",
+        "src/cue-workbook/supervisory_hooks/ledger.py",
+        "src/cue-workbook/supervisory_hooks/supervisor.py",
+        "src/cue-workbook/cue-workbook.py"
+      ]
+    }
+  ],
+  "notes": [
+    {
+      "id": "release-channel-divergence",
+      "channels": [
+        "main",
+        "latest-alpha-cli"
+      ],
+      "severity": "note",
+      "impactDecision": "note",
+      "title": "Main and alpha baselines diverged further",
+      "summary": "Main advanced 40 commits at workspace version 0.0.0; latest-alpha-cli moved to 0.145.0-alpha.30 and diverged 8 ahead/150 behind its prior alpha head.",
+      "surfaceMatches": [
+        "release-channel"
+      ],
+      "evidence": [
+        "main:codex-rs/Cargo.toml — main workspace.package.version is 0.0.0 at 21db216db05d13713f09189fc44872d22cf47fc4.",
+        "latest-alpha-cli:codex-rs/Cargo.toml — latest-alpha-cli workspace.package.version is 0.145.0-alpha.30 at 3b61fac9b7d7b003183ff1b73c28df6abeb062a4."
+      ],
+      "evidenceBindings": [
+        {
+          "observationID": "main-release",
+          "reportItemID": "release-channel-divergence",
+          "channel": "main",
+          "path": "codex-rs/Cargo.toml",
+          "surfaceMatches": [
+            "release-channel"
+          ],
+          "observation": "main workspace.package.version is 0.0.0 at 21db216db05d13713f09189fc44872d22cf47fc4."
+        },
+        {
+          "observationID": "alpha-release",
+          "reportItemID": "release-channel-divergence",
+          "channel": "latest-alpha-cli",
+          "path": "codex-rs/Cargo.toml",
+          "surfaceMatches": [
+            "release-channel"
+          ],
+          "observation": "latest-alpha-cli workspace.package.version is 0.145.0-alpha.30 at 3b61fac9b7d7b003183ff1b73c28df6abeb062a4."
+        }
+      ],
+      "claims": [
+        {
+          "id": "release-channel-divergence-claim",
+          "text": "Main advanced 40 commits at workspace version 0.0.0; latest-alpha-cli moved to 0.145.0-alpha.30 and diverged 8 ahead/150 behind its prior alpha head.",
+          "observationRefs": [
+            "main-release",
+            "alpha-release"
+          ]
+        }
+      ],
+      "localContractImpact": "Maintain independent fixtures, baselines, and support claims for main and latest-alpha-cli.",
+      "suggestedLocalTargets": [
+        ".codex/config.toml",
+        "README.md"
+      ]
+    }
+  ],
+  "noLocalAction": [],
+  "bundle": {
+    "factoryPath": "contracts/upstream-monitor/codex/cuestrap-contract-surface/runs/20260722T042019Z/",
+    "factoryManifestPath": "contracts/upstream-monitor/codex/cuestrap-contract-surface/runs/20260722T042019Z/manifest.json",
+    "factoryLatestPointerPath": "contracts/upstream-monitor/codex/cuestrap-contract-surface/latest.json",
+    "exportUnit": "directory",
+    "factoryComplete": true
+  },
+  "trackingIssue": {
+    "repository": "fatb4f/cuestrap",
+    "number": 9,
+    "updatePolicy": "every_run",
+    "mutation": "append_comment",
+    "dedupeKey": "cuestrap-codex-contract-surface/20260722T042019Z",
+    "appended": true,
+    "duplicateSuppressed": false
+  },
+  "validationNotes": {
+    "authorityRead": true,
+    "cuestrapContextRead": true,
+    "channelsKeptDistinct": true,
+    "publicationPlanRead": true,
+    "forbiddenAttractorsChecked": true,
+    "factoryRunBundlePublished": true,
+    "factoryBundleManifestSealed": true,
+    "latestPointerUpdated": true,
+    "noCuestrapRepositoryArtifactsWritten": true,
+    "noCuestrapPlumbingWritten": true,
+    "trackingIssueResolved": true,
+    "trackingIssueAppended": true,
+    "trackingIssueDeduplicated": true,
+    "trackingIssueBodyUnchanged": true,
+    "cueExecution": "not_available_to_github_app"
+  }
+}
