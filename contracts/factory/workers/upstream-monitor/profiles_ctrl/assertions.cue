@@ -11,6 +11,10 @@ ctrlForbiddenAttractors: [
 	"CPython source change classified without dependency-graph binding",
 	"CPython regrtest pass treated as ctrl qualification",
 	"test.libregrtest imported as a stable ctrl dependency",
+	"Astral static analyzer output treated as CPython runtime/compiler authority",
+	"Ruff and ty analyzer observations collapsed into CPython observations",
+	"unresolved Astral symbol or import resolution promoted to a runtime fact",
+	"Astral main forecast treated as the lock-selected ctrl analyzer baseline",
 	"Marimo notebook state treated as workflow or qualification authority",
 	"pydantic-graph treated as semantic graph authority",
 	"claimant-supplied probe verdict substituted for normalized observation",
@@ -29,6 +33,11 @@ ctrlValidationAssertions: close({
 	codexChannelsDistinct: true
 	cpythonChannelsDistinct: true
 	cuePinAndForecastDistinct: true
+	astralSourceExplicit: true
+	astralAnalyzerEvidenceOnly: true
+	astralLockBaselineDistinctFromMainForecast: true
+	astralCpythonCorrelationExplicit: true
+	cpythonEvidencePrecedenceOnConflict: true
 	codexProjectionEdgesExplicit: true
 	cpythonDependencyEdgesExplicit: true
 	regrtestUpstreamEvidenceOnly: true
@@ -50,5 +59,5 @@ ctrlValidationPlan: close({
 		"cue vet -c=false ./...",
 		"cue export ./profiles_ctrl -e publicContract --out json",
 	]
-	adapterLimitation: "The GitHub App actuator cannot execute CUE, CPython regrtest, local probes, Marimo, or pydantic-graph. Executable validation belongs to repository CI or a checked local environment."
+	adapterLimitation: "The GitHub App actuator cannot execute CUE, CPython regrtest, local probes, Astral analyzer correlation, Marimo, or pydantic-graph. Executable validation belongs to repository CI or a checked local environment."
 })
