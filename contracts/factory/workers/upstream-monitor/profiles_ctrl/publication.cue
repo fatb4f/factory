@@ -1,0 +1,56 @@
+package ctrlprofile
+
+ctrlPublicationPlan: close({
+	factoryRepository: "fatb4f/factory"
+	bundle: close({
+		directoryPattern: "contracts/upstream-monitor/ctrl/contract-surface/runs/<run_id>/"
+		artifacts: close({
+			report: {filename: "report.md", mediaType: "text/markdown"}
+			summary: {filename: "summary.md", mediaType: "text/markdown"}
+			evidence: {filename: "evidence.json", mediaType: "application/json"}
+		})
+		manifest: close({
+			filename: "manifest.json"
+			mediaType: "application/json"
+			apiVersion: "factory.upstream-monitor.run-bundle/v2"
+			kind: "UpstreamMonitorRunBundle"
+			profile_id: "ctrl"
+		})
+		exportUnit: "directory"
+	})
+	latestPointer: close({
+		path: "contracts/upstream-monitor/ctrl/contract-surface/latest.json"
+		mediaType: "application/json"
+		apiVersion: "factory.upstream-monitor.latest-run/v2"
+		kind: "LatestUpstreamMonitorRun"
+	})
+	writeOrder: [
+		"bundle_report",
+		"bundle_summary",
+		"bundle_evidence",
+		"bundle_manifest",
+		"latest_pointer",
+	]
+	requireAuthorityRead: true
+	requireCurrentCtrlContext: true
+	requireRequiredSourcesResolvedOrExplicitlyUnresolved: true
+	requireRunBundle: true
+	requireBundleManifestLast: true
+	requireLatestPointerAfterManifest: true
+	forbidRunArtifactsOutsideBundle: true
+	forbidMutableLatestArtifactCopies: true
+	forbidCrossRepositoryWrites: true
+	forbidUndeclaredIssueUpdates: true
+})
+
+ctrlPublicationAdmission: close({
+	factoryRunBundleEnabled: true
+	evidenceEnabled: true
+	summariesEnabled: true
+	manifestsEnabled: true
+	latestPointersEnabled: true
+	issueUpdatesEnabled: false
+	requireOperationalContract: true
+	requireFixedTemplate: true
+	requireCompleteBundle: true
+})
