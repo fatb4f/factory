@@ -1,0 +1,55 @@
+package ctrlprofile
+
+publicContract: close({
+	apiVersion: "factory.upstream-monitor.ctrl/v1"
+	kind: "CtrlMultiSourceUpstreamMonitor"
+	operational: bool
+	signal: _
+	authority: _
+	context: _
+	sources: _
+	sourcePolicy: _
+	actuator: _
+	workflow: _
+	surfaces: [...#CtrlSurface]
+	classification: _
+	graphNodes: _
+	graphEdges: _
+	testBindings: _
+	probeBindings: _
+	executionGraph: _
+	evidenceModel: _
+	reportTemplate: _
+	summaryTemplate: _
+	publicationPlan: _
+	publicationAdmission: _
+	forbiddenAttractors: [...string]
+	validationAssertions: _
+	validationPlan: _
+}) & {
+	apiVersion: "factory.upstream-monitor.ctrl/v1"
+	kind: "CtrlMultiSourceUpstreamMonitor"
+	operational: ctrlOperational
+	signal: ctrlAcceptedSignal
+	authority: ctrlAuthorityModel
+	context: ctrlContext
+	sources: ctrlSources
+	sourcePolicy: ctrlSourcePolicy
+	actuator: chatgptActuator
+	workflow: ctrlWorkflow
+	surfaces: ctrlSurfaceCatalogue
+	classification: ctrlClassificationPolicy
+	graphNodes: ctrlGraphNodes
+	graphEdges: ctrlGraphEdges
+	testBindings: ctrlTestBindings
+	probeBindings: ctrlProbeBindings
+	executionGraph: ctrlExecutionGraphContract
+	evidenceModel: ctrlEvidenceModel
+	reportTemplate: ctrlImpactReportTemplate
+	summaryTemplate: ctrlRunSummaryTemplate
+	publicationPlan: ctrlPublicationPlan
+	publicationAdmission: ctrlPublicationAdmission
+	forbiddenAttractors: ctrlForbiddenAttractors
+	validationAssertions: ctrlValidationAssertions
+	validationPlan: ctrlValidationPlan
+}
