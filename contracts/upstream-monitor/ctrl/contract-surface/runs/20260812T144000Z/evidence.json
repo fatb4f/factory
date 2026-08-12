@@ -1,0 +1,163 @@
+{
+  "apiVersion": "factory.upstream-monitor.ctrl.evidence/v1",
+  "kind": "CtrlUpstreamEvidence",
+  "run_id": "20260812T144000Z",
+  "profile_id": "ctrl",
+  "terminal_state": "terminal_success",
+  "factory_revision": "0f5bc48c5e2d3156352079f8a498a49803dd1c24",
+  "ctrl_revision": "b5f82c3a5e33d08d1f5d07cb2c9724c7679c7538",
+  "bootstrap_baseline": true,
+  "sources": [
+    {"source":"codex","channel":"main","status":"resolved","head_commit":"eb752e43d9b7bd7dc5965ea20642bcf7f1a492d8","evidence":["openai/codex@main resolved to eb752e43d9b7bd7dc5965ea20642bcf7f1a492d8"]},
+    {"source":"codex","channel":"latest-alpha-cli","status":"resolved","head_commit":"9392c3fa5bcda342b5b96a1a04d67b2f781617c2","evidence":["openai/codex@latest-alpha-cli resolved to 9392c3fa5bcda342b5b96a1a04d67b2f781617c2"]},
+    {"source":"cpython","channel":"3.14","status":"resolved","head_commit":"b842ab829fa265df7c00a9034d007f4bbfd95577","version":"3.14","evidence":["python/cpython@3.14 resolved to b842ab829fa265df7c00a9034d007f4bbfd95577","CPython remains the compiler/runtime semantic evidence plane"]},
+    {"source":"cpython","channel":"main","status":"resolved","head_commit":"b11e749f7590e9a0907db908fa3e7e76c772c28f","evidence":["python/cpython@main resolved to b11e749f7590e9a0907db908fa3e7e76c772c28f","forecast evidence only"]},
+    {"source":"astral-python","channel":"main","status":"resolved","head_commit":"a9663e243a571b4aed032ee243da25189d2bc95b","evidence":["astral-sh/ruff@main resolved to a9663e243a571b4aed032ee243da25189d2bc95b","workspace exposes ruff_db, ruff_index, ruff_python_parser, ruff_python_ast, ruff_python_semantic, ty_module_resolver, ty_python_core, ty_python_semantic, ty_ide, and ty_server","ty_python_semantic Cargo manifest depends on Ruff database/index/parser/AST infrastructure plus ty module resolver, site-packages, Python core and static vocabulary","Ruff semantic and ty semantic implementations are preserved as analyzer evidence, not CPython authority"]},
+    {"source":"cue","channel":"pinned","status":"resolved","head_commit":"806821e40fae070318600a264d311517e596353b","version":"module target v0.18.0","evidence":["ctrl pinned CUE evaluator revision remains 806821e40fae070318600a264d311517e596353b"]},
+    {"source":"cue","channel":"master","status":"resolved","head_commit":"f356f8f46cedb8e853ed200fb46ab49a68bfe357","evidence":["cue-lang/cue@master forecast remains distinct from the pinned evaluator"]},
+    {"source":"uv","channel":"main","status":"resolved","head_commit":"c2681564218e41a73e99cc448ba0b25459920444","evidence":["astral-sh/uv@main release-watch evidence","ctrl uv.lock is the installed analyzer/tool baseline context"]},
+    {"source":"jj","channel":"main","status":"resolved","head_commit":"3a81f836030b00bea85e66c4070d054c555af8b2","evidence":["jj-vcs/jj@main release-watch evidence only"]}
+  ],
+  "graph": {
+    "nodesObserved": [
+      "cpython-parser","cpython-ast","cpython-symtable","cpython-importlib","cpython-probes","cpython-control-graph",
+      "astral-db-index","astral-parser","astral-ast","astral-ruff-semantic","astral-module-resolver","astral-ty-core","astral-ty-semantic","astral-ide","astral-cpython-correlation"
+    ],
+    "edgesEvaluated": [
+      "astral-parser-ast","astral-ast-ruff-semantic","astral-db-ty-semantic","astral-ast-ty-semantic","astral-resolver-ty-semantic","astral-core-ty-semantic","astral-ty-ide","astral-ruff-correlation","astral-ty-correlation","cpython-ast-correlation","cpython-symtable-correlation","cpython-import-correlation","astral-correlation-probes"
+    ],
+    "testBindingsEvaluated": [],
+    "probeBindingsEvaluated": ["probe-astral-ast-correlation","probe-astral-binding-correlation","probe-astral-import-correlation"]
+  },
+  "items": [
+    {
+      "id": "astral-rust-semantic-plane",
+      "title": "Admit Astral Rust machinery as the static Python evidence plane",
+      "decision": "contract-update",
+      "severity": "high",
+      "sources": ["astral-python","cpython"],
+      "nodes": ["astral-db-index","astral-parser","astral-ast","astral-ruff-semantic","astral-module-resolver","astral-ty-core","astral-ty-semantic","astral-cpython-correlation","cpython-ast","cpython-symtable","cpython-importlib"],
+      "summary": "Astral's Ruff/ty workspace already provides Rust parser, AST, incremental database/index, semantic, module-resolution and type-analysis machinery. ctrl should consume and correlate these observations instead of recreating solved static-analysis infrastructure, while retaining CPython as the compiler/runtime semantic authority.",
+      "localContractImpact": "Add an Astral analyzer adapter family to the future CPython control/python-intel implementation; map analyzer observations into the same typed evidence graph and dispatch CPython probes for material static/dynamic disagreements.",
+      "observations": [
+        {
+          "id": "obs-astral-workspace-main",
+          "reportItemID": "astral-rust-semantic-plane",
+          "source": "astral-python",
+          "channel": "main",
+          "kind": "analyzer",
+          "path": "crates/",
+          "nodeMatches": ["astral-db-index","astral-parser","astral-ast","astral-ruff-semantic","astral-module-resolver","astral-ty-core","astral-ty-semantic","astral-ide"],
+          "observation": "astral-sh/ruff@a9663e243a571b4aed032ee243da25189d2bc95b contains the Rust parser/AST/index/semantic crates and the ty resolver/core/semantic/IDE crates required for a reusable static Python analysis substrate.",
+          "decision": "contract-update",
+          "severity": "high"
+        },
+        {
+          "id": "obs-astral-ty-deps-main",
+          "reportItemID": "astral-rust-semantic-plane",
+          "source": "astral-python",
+          "channel": "main",
+          "kind": "dependency",
+          "path": "crates/ty_python_semantic/Cargo.toml",
+          "nodeMatches": ["astral-db-index","astral-ast","astral-module-resolver","astral-ty-core","astral-ty-semantic"],
+          "observation": "ty_python_semantic depends on ruff_db, Salsa-enabled ruff_index, ruff_python_ast, ruff_python_parser, ty_module_resolver, ty_site_packages, ty_python_core and ty_static, establishing an explicit reusable Rust dependency graph.",
+          "decision": "contract-update",
+          "severity": "high"
+        },
+        {
+          "id": "obs-astral-ruff-semantic-deps-main",
+          "reportItemID": "astral-rust-semantic-plane",
+          "source": "astral-python",
+          "channel": "main",
+          "kind": "dependency",
+          "path": "crates/ruff_python_semantic/Cargo.toml",
+          "nodeMatches": ["astral-parser","astral-ast","astral-ruff-semantic"],
+          "observation": "ruff_python_semantic separately consumes Ruff AST/parser/index infrastructure, so Ruff lint semantics and ty type semantics remain distinct analyzer observations over shared machinery.",
+          "decision": "contract-update",
+          "severity": "high"
+        },
+        {
+          "id": "obs-cpython-authority-correlation",
+          "reportItemID": "astral-rust-semantic-plane",
+          "source": "cpython",
+          "channel": "3.14",
+          "kind": "context",
+          "path": "Python/compile.c",
+          "nodeMatches": ["cpython-ast","cpython-symtable"],
+          "observation": "CPython 3.14 compiler evidence remains the authority for lexical/compiler behavior; Astral results are correlated analyzer observations and disagreement triggers probes rather than authority promotion.",
+          "decision": "contract-update",
+          "severity": "high"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-astral-reuse",
+          "text": "ctrl should reuse Astral's Rust static-analysis substrate rather than implement another Python parser/index/resolver/type engine.",
+          "observationRefs": ["obs-astral-workspace-main","obs-astral-ty-deps-main","obs-astral-ruff-semantic-deps-main"]
+        },
+        {
+          "id": "claim-astral-authority-boundary",
+          "text": "Astral analyzer observations remain evidence-only; contradictory CPython compiler/runtime evidence is preserved and takes semantic precedence for CPython behavior.",
+          "observationRefs": ["obs-astral-ty-deps-main","obs-cpython-authority-correlation"]
+        }
+      ]
+    },
+    {
+      "id": "astral-baseline-identity",
+      "title": "Keep Astral main separate from ctrl's lock-selected analyzer baseline",
+      "decision": "note",
+      "severity": "note",
+      "sources": ["astral-python","uv"],
+      "nodes": ["astral-db-index","astral-ty-semantic"],
+      "summary": "The monitor watches astral-sh/ruff@main as forecast evidence. The actually realized Ruff/ty versions used by ctrl remain selected by ctrl's uv.lock and must be resolved separately before analyzer output can qualify a concrete ctrl revision.",
+      "localContractImpact": "Future analyzer execution should record both uv.lock package identity and Astral source/release provenance instead of treating main as the installed baseline.",
+      "observations": [
+        {
+          "id": "obs-astral-main-forecast",
+          "reportItemID": "astral-baseline-identity",
+          "source": "astral-python",
+          "channel": "main",
+          "kind": "source",
+          "path": "crates/",
+          "nodeMatches": ["astral-db-index","astral-ty-semantic"],
+          "observation": "astral-sh/ruff@main is admitted as forecast source identity a9663e243a571b4aed032ee243da25189d2bc95b, not as the installed ctrl analyzer baseline.",
+          "decision": "note",
+          "severity": "note"
+        },
+        {
+          "id": "obs-ctrl-lock-baseline",
+          "reportItemID": "astral-baseline-identity",
+          "source": "uv",
+          "channel": "main",
+          "kind": "context",
+          "path": "fatb4f/ctrl/uv.lock",
+          "nodeMatches": ["astral-db-index","astral-ty-semantic"],
+          "observation": "ctrl's committed uv.lock remains the realized dependency baseline context for Ruff and ty execution.",
+          "decision": "note",
+          "severity": "note"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-astral-baseline",
+          "text": "Analyzer qualification must bind the lock-selected Ruff/ty artifacts to source provenance before comparing them with Astral main.",
+          "observationRefs": ["obs-astral-main-forecast","obs-ctrl-lock-baseline"]
+        }
+      ]
+    }
+  ],
+  "validation": {
+    "authorityRead": true,
+    "ctrlContextRead": true,
+    "sourceChannelsDistinct": true,
+    "graphModelRead": true,
+    "publicationPlanRead": true,
+    "forbiddenAttractorsChecked": true,
+    "cueExecution": "not_available_to_github_app",
+    "executableCpythonProbes": "not_executed_bootstrap",
+    "executableRegrtest": "not_executed_bootstrap",
+    "executableAstralCorrelation": "not_executed_bootstrap",
+    "reportProjectionOnly": true,
+    "summaryProjectionOnly": true
+  }
+}
