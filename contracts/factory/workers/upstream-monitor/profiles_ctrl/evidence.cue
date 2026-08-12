@@ -29,6 +29,7 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/upstream-monito
 		cueExecution: "not_available_to_github_app" | "executed_elsewhere"
 		executableCpythonProbes: "not_executed_bootstrap" | "executed"
 		executableRegrtest: "not_executed_bootstrap" | "executed"
+		executableAstralCorrelation: "not_executed_bootstrap" | "executed"
 		reportProjectionOnly: bool
 		summaryProjectionOnly: bool
 	})
@@ -40,7 +41,11 @@ ctrlEvidenceModel: close({
 	requireSourceAndChannelOnEveryObservation: true
 	requireGraphNodeBindingForCpythonItems: true
 	requireProjectionEdgeBindingForCodexSchemaSDKItems: true
+	requireAnalyzerGraphBindingForAstralItems: true
+	requireAnalyzerAndCpythonEvidenceSeparated: true
 	requireUpstreamTestAndLocalProbeDistinction: true
+	forbidAnalyzerVerdictAsRuntimeTruth: true
+	forbidAnalyzerOverrideOfCpythonEvidence: true
 	forbidUpstreamTestVerdictAsQualification: true
 	bootstrapMayEstablishBaselineWithoutHistoricalDelta: true
 })
