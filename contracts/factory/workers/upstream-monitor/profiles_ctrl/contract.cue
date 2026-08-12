@@ -37,6 +37,7 @@ ctrlContext: close({
 		"README.md",
 		"AGENTS.md",
 		"pyproject.toml",
+		"uv.lock",
 		".python-version",
 		"control/components.cue",
 		"spec/README.md",
@@ -58,6 +59,7 @@ ctrlAuthorityModel: close({
 	evidenceOnly: [
 		"openai/codex",
 		"python/cpython",
+		"astral-sh/ruff",
 		"cue-lang/cue",
 		"astral-sh/uv",
 		"jj-vcs/jj",
