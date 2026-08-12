@@ -1,0 +1,54 @@
+package ctrlprofile
+
+ctrlForbiddenAttractors: [
+	"fatb4f/ctrl repository state treated as monitor authority",
+	"upstream repository state treated as factory authority",
+	"source channel compared without source identity",
+	"cpython/main forecast treated as active Python 3.14 baseline",
+	"CUE master treated as the pinned evaluator revision",
+	"Codex Rust protocol, generated schema, Python SDK, and runtime collapsed into one observation",
+	"rollout evidence treated as equivalent to live runtime without declared reconstruction correlation",
+	"CPython source change classified without dependency-graph binding",
+	"CPython regrtest pass treated as ctrl qualification",
+	"test.libregrtest imported as a stable ctrl dependency",
+	"Marimo notebook state treated as workflow or qualification authority",
+	"pydantic-graph treated as semantic graph authority",
+	"claimant-supplied probe verdict substituted for normalized observation",
+	"run artifact written outside runs/<run_id>/",
+	"manifest published before report, summary, and evidence",
+	"latest pointer updated before manifest seal",
+	"cross-repository write",
+]
+
+ctrlValidationAssertions: close({
+	acceptedSignalExact: true
+	profileIDExact: true
+	contextRepositoryExact: true
+	ctrlSpecAuthorityPreserved: true
+	sourceQualifiedEvidenceRequired: true
+	codexChannelsDistinct: true
+	cpythonChannelsDistinct: true
+	cuePinAndForecastDistinct: true
+	codexProjectionEdgesExplicit: true
+	cpythonDependencyEdgesExplicit: true
+	regrtestUpstreamEvidenceOnly: true
+	localProbesSeparateFromRegrtest: true
+	marimoProjectionOnly: true
+	executorReplaceable: true
+	libregrtestLibraryDependencyForbidden: true
+	factoryRunArtifactsCoLocated: true
+	bundleManifestSealsArtifacts: true
+	latestPointerOnly: true
+	crossRepositoryWritesForbidden: true
+	issueUpdatesForbidden: true
+	workflowClosed: true
+})
+
+ctrlValidationPlan: close({
+	commands: [
+		"cue fmt --check contract.cue profiles_ctrl/*.cue",
+		"cue vet -c=false ./...",
+		"cue export ./profiles_ctrl -e publicContract --out json",
+	]
+	adapterLimitation: "The GitHub App actuator cannot execute CUE, CPython regrtest, local probes, Marimo, or pydantic-graph. Executable validation belongs to repository CI or a checked local environment."
+})
