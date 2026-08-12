@@ -23,6 +23,14 @@ ctrlSources: {
 			main: {id: "main", ref: "main", mode: "forecast", required: true}
 		}
 	}
+	"astral-python": {
+		id: "astral-python"
+		repository: "astral-sh/ruff"
+		role: "upstream_evidence_only"
+		channels: {
+			main: {id: "main", ref: "main", mode: "forecast", required: true}
+		}
+	}
 	cue: {
 		id: "cue"
 		repository: "cue-lang/cue"
@@ -54,8 +62,11 @@ ctrlSourcePolicy: close({
 	requireSourceQualifiedObservations: true
 	activeRuntimeSource: "cpython/3.14"
 	cpythonForecastSource: "cpython/main"
+	astralStaticSource: "astral-python/main"
+	astralInstalledBaselineSource: "fatb4f/ctrl@main uv.lock"
 	codexChannelsDistinct: true
 	cpythonChannelsDistinct: true
 	cuePinnedDistinctFromForecast: true
+	astralAnalyzerIsEvidenceOnly: true
 	optionalSatellitesCannotBlockWithoutLocalConsumer: true
 })
