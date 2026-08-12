@@ -27,6 +27,16 @@ ctrlGraphNodes: {
 	"cpython-probes": {id: "cpython-probes", domain: "ctrl", kind: "local-probe-family", upstreamPaths: [], localConsumers: ["spec/profiles", "packages/qualification-workflow"]}
 	"cpython-control-graph": {id: "cpython-control-graph", domain: "ctrl", kind: "execution-graph", upstreamPaths: [], localConsumers: ["spec/profiles", "packages/qualification-workflow"]}
 	"cpython-marimo-workbench": {id: "cpython-marimo-workbench", domain: "ctrl", kind: "interactive-projection", upstreamPaths: [], localConsumers: ["packages/qualification-workflow"]}
+
+	"astral-db-index": {id: "astral-db-index", domain: "astral-python", kind: "incremental-analysis-db", upstreamPaths: ["crates/ruff_db/", "crates/ruff_index/", "crates/ruff_python_index/"], localConsumers: ["packages/qualification-workflow", "spec/profiles"]}
+	"astral-parser": {id: "astral-parser", domain: "astral-python", kind: "rust-parser", upstreamPaths: ["crates/ruff_python_parser/"], localConsumers: ["packages/ppf", "packages/qualification-workflow"]}
+	"astral-ast": {id: "astral-ast", domain: "astral-python", kind: "rust-ast", upstreamPaths: ["crates/ruff_python_ast/"], localConsumers: ["packages/ppf", "packages/qualification-workflow"]}
+	"astral-ruff-semantic": {id: "astral-ruff-semantic", domain: "astral-python", kind: "static-semantic", upstreamPaths: ["crates/ruff_python_semantic/"], localConsumers: ["packages/ppf", "packages/qualification-workflow"]}
+	"astral-module-resolver": {id: "astral-module-resolver", domain: "astral-python", kind: "module-resolver", upstreamPaths: ["crates/ty_module_resolver/", "crates/ty_site_packages/", "crates/ruff_python_importer/"], localConsumers: ["packages/qualification-workflow", "spec/profiles"]}
+	"astral-ty-core": {id: "astral-ty-core", domain: "astral-python", kind: "type-core", upstreamPaths: ["crates/ty_python_core/", "crates/ty_static/"], localConsumers: ["packages/qualification-workflow", "spec/profiles"]}
+	"astral-ty-semantic": {id: "astral-ty-semantic", domain: "astral-python", kind: "type-semantic", upstreamPaths: ["crates/ty_python_semantic/"], localConsumers: ["packages/qualification-workflow", "spec/profiles"]}
+	"astral-ide": {id: "astral-ide", domain: "astral-python", kind: "ide-projection", upstreamPaths: ["crates/ty_ide/", "crates/ty_server/", "crates/ruff_server/"], localConsumers: ["packages/qualification-workflow"]}
+	"astral-cpython-correlation": {id: "astral-cpython-correlation", domain: "ctrl", kind: "static-dynamic-correlation", upstreamPaths: [], localConsumers: ["packages/qualification-workflow", "spec/profiles"]}
 }
 
 ctrlGraphEdges: [...core.#GraphEdge] & [_, ...]
@@ -49,6 +59,20 @@ ctrlGraphEdges: [
 	{id: "cpython-dag-regrtest", from: "cpython-control-graph", to: "cpython-regrtest", kind: "validated-by", rationale: "dependency closure selects the upstream regression-test slice"},
 	{id: "cpython-dag-probes", from: "cpython-control-graph", to: "cpython-probes", kind: "validated-by", rationale: "dependency closure selects local executable witnesses"},
 	{id: "cpython-probes-workbench", from: "cpython-probes", to: "cpython-marimo-workbench", kind: "consumed-by", rationale: "Marimo projects typed operations and normalized observations; it is not authority"},
+
+	{id: "astral-parser-ast", from: "astral-parser", to: "astral-ast", kind: "projects-to", rationale: "Ruff parser projects source into its Rust Python AST"},
+	{id: "astral-ast-ruff-semantic", from: "astral-ast", to: "astral-ruff-semantic", kind: "consumed-by", rationale: "Ruff static semantic analysis consumes the shared Rust AST"},
+	{id: "astral-db-ty-semantic", from: "astral-db-index", to: "astral-ty-semantic", kind: "consumed-by", rationale: "ty semantic analysis depends on Ruff database/index machinery and Salsa-backed indices"},
+	{id: "astral-ast-ty-semantic", from: "astral-ast", to: "astral-ty-semantic", kind: "consumed-by", rationale: "ty semantic analysis consumes Ruff parser/AST infrastructure"},
+	{id: "astral-resolver-ty-semantic", from: "astral-module-resolver", to: "astral-ty-semantic", kind: "consumed-by", rationale: "ty semantic analysis consumes module and site-packages resolution"},
+	{id: "astral-core-ty-semantic", from: "astral-ty-core", to: "astral-ty-semantic", kind: "consumed-by", rationale: "ty semantic analysis consumes its Python type core and static vocabulary"},
+	{id: "astral-ty-ide", from: "astral-ty-semantic", to: "astral-ide", kind: "projects-to", rationale: "IDE/server surfaces project analyzer semantics into navigation and diagnostics"},
+	{id: "astral-ruff-correlation", from: "astral-ruff-semantic", to: "astral-cpython-correlation", kind: "consumed-by", rationale: "ctrl correlates Ruff static binding/scope observations without promoting them to CPython authority"},
+	{id: "astral-ty-correlation", from: "astral-ty-semantic", to: "astral-cpython-correlation", kind: "consumed-by", rationale: "ctrl correlates ty type/module observations without treating inferred types as runtime truth"},
+	{id: "cpython-ast-correlation", from: "cpython-ast", to: "astral-cpython-correlation", kind: "consumed-by", rationale: "CPython AST probes provide dynamic/compiler-side comparison evidence"},
+	{id: "cpython-symtable-correlation", from: "cpython-symtable", to: "astral-cpython-correlation", kind: "consumed-by", rationale: "CPython lexical binding classification remains authoritative when analyzer resolution differs"},
+	{id: "cpython-import-correlation", from: "cpython-importlib", to: "astral-cpython-correlation", kind: "consumed-by", rationale: "runtime module identity and origin qualify analyzer module-resolution observations"},
+	{id: "astral-correlation-probes", from: "astral-cpython-correlation", to: "cpython-probes", kind: "validated-by", rationale: "local probes validate material analyzer/runtime disagreements and preserve both observations"},
 ]
 
 ctrlTestBindings: [...core.#TestBinding] & [_, ...]
@@ -69,6 +93,9 @@ ctrlProbeBindings: [
 	{id: "probe-frame", node: "cpython-frames", probe: "frame-source-correlation", observations: ["frame/code/source linkage", "lasti/line correlation"], normalization: ["exclude object addresses"]},
 	{id: "probe-import", node: "cpython-importlib", probe: "module-spec", observations: ["ModuleSpec", "origin", "loader identity class"], normalization: ["normalize repository root"]},
 	{id: "probe-inspect", node: "cpython-inspect", probe: "inspect-source", observations: ["signature", "code/source identity", "source range"], normalization: ["normalize repository root"]},
+	{id: "probe-astral-ast-correlation", node: "astral-cpython-correlation", probe: "astral-cpython-ast", observations: ["parser acceptance", "node topology", "source ranges", "syntax-version disagreement"], normalization: ["normalize source paths", "preserve analyzer and CPython identities separately"]},
+	{id: "probe-astral-binding-correlation", node: "astral-cpython-correlation", probe: "astral-cpython-bindings", observations: ["Ruff/ty binding resolution", "CPython symtable classification", "disagreement class"], normalization: ["preserve unresolved analyzer state", "CPython evidence wins semantic conflicts"]},
+	{id: "probe-astral-import-correlation", node: "astral-cpython-correlation", probe: "astral-cpython-imports", observations: ["analyzer module resolution", "ModuleSpec", "origin", "site-packages identity"], normalization: ["normalize repository and environment roots"]},
 ]
 
 ctrlExecutionGraphContract: close({
@@ -76,17 +103,22 @@ ctrlExecutionGraphContract: close({
 	transportProjection: "Pydantic"
 	initialExecutorCandidate: "pydantic-graph"
 	interactiveProjectionCandidate: "marimo"
+	staticAnalyzerSubstrate: "Astral Rust: Ruff parser/AST/index plus ty resolver/semantic machinery"
 	marimoAuthority: false
 	executorAuthority: false
+	astralAnalyzerAuthority: false
+	cpythonSemanticPrecedenceOnConflict: true
 	operations: [
 		"ResolveRevision",
 		"ResolveBuild",
 		"MapChangedPaths",
+		"AcquireAstralAnalysis",
 		"ResolveSubsystemClosure",
 		"SelectRegrtests",
 		"SelectProbes",
 		"RunRegrtests",
 		"RunProbes",
+		"CorrelateStaticDynamic",
 		"NormalizeEvidence",
 		"CorrelateEvidence",
 		"Qualify",
