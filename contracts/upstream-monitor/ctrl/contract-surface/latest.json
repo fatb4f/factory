@@ -1,8 +1,8 @@
 {
   "apiVersion": "factory.upstream-monitor.latest-run/v2",
   "kind": "LatestUpstreamMonitorRun",
-  "run_id": "20260812T140347Z",
+  "run_id": "20260812T144000Z",
   "profile_id": "ctrl",
-  "bundle_path": "contracts/upstream-monitor/ctrl/contract-surface/runs/20260812T140347Z/",
-  "manifest_path": "contracts/upstream-monitor/ctrl/contract-surface/runs/20260812T140347Z/manifest.json"
+  "bundle_path": "contracts/upstream-monitor/ctrl/contract-surface/runs/20260812T144000Z/",
+  "manifest_path": "contracts/upstream-monitor/ctrl/contract-surface/runs/20260812T144000Z/manifest.json"
 }
