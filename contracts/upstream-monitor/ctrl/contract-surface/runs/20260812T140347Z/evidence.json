@@ -1,0 +1,451 @@
+{
+  "apiVersion": "factory.upstream-monitor.ctrl.evidence/v1",
+  "kind": "CtrlUpstreamEvidence",
+  "run_id": "20260812T140347Z",
+  "profile_id": "ctrl",
+  "terminal_state": "terminal_success",
+  "factory_revision": "cbb224d491e0a792b96bffb10ba70e3173fe6106",
+  "ctrl_revision": "b5f82c3a5e33d08d1f5d07cb2c9724c7679c7538",
+  "bootstrap_baseline": true,
+  "sources": [
+    {
+      "source": "codex",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "eb752e43d9b7bd7dc5965ea20642bcf7f1a492d8",
+      "evidence": [
+        "openai/codex@main resolved to eb752e43d9b7bd7dc5965ea20642bcf7f1a492d8",
+        "sdk/python/pyproject.toml blob a6ff55ee7480d98a1b4dd15d33a9aa5372285d33 declares openai-codex 0.0.0-dev and openai-codex-cli-bin==0.144.4",
+        "codex-rs/app-server-protocol/schema/json/ClientRequest.json blob f9907887a4a3ea6d75e54d3c93448b1ee5609255",
+        "sdk/python/src/openai_codex/generated/v2_all.py blob 43f32cad0897dd0d6042f6576aa055d6571fab62"
+      ]
+    },
+    {
+      "source": "codex",
+      "channel": "latest-alpha-cli",
+      "status": "resolved",
+      "head_commit": "9392c3fa5bcda342b5b96a1a04d67b2f781617c2",
+      "evidence": [
+        "openai/codex@latest-alpha-cli resolved to 9392c3fa5bcda342b5b96a1a04d67b2f781617c2",
+        "sdk/python/pyproject.toml is present with blob a6ff55ee7480d98a1b4dd15d33a9aa5372285d33"
+      ]
+    },
+    {
+      "source": "cpython",
+      "channel": "3.14",
+      "status": "resolved",
+      "head_commit": "b842ab829fa265df7c00a9034d007f4bbfd95577",
+      "version": "3.14",
+      "evidence": [
+        "python/cpython@3.14 resolved to b842ab829fa265df7c00a9034d007f4bbfd95577",
+        "Python/compile.c blob 6c5ef5329ffc3aaef424f47f7f67a99eddfbede0",
+        "Lib/test/regrtest.py blob 46a74fe276f55307b3e368b073661547e46de1c7",
+        "Lib/test/libregrtest/testresult.py blob 1820f354572521accb4ec7340942f8b13505d0e2",
+        "Python/instrumentation.c blob 0a7400c26993b32bf538fc15f892f63d1e02149f"
+      ]
+    },
+    {
+      "source": "cpython",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "b11e749f7590e9a0907db908fa3e7e76c772c28f",
+      "evidence": [
+        "python/cpython@main resolved to b11e749f7590e9a0907db908fa3e7e76c772c28f",
+        "channel is forecast evidence and cannot replace the ctrl Python 3.14 active baseline"
+      ]
+    },
+    {
+      "source": "cue",
+      "channel": "pinned",
+      "status": "resolved",
+      "head_commit": "806821e40fae070318600a264d311517e596353b",
+      "version": "module target v0.18.0",
+      "evidence": [
+        "fatb4f/ctrl spec/.codex/AGENTS.md declares cue-lang/cue@806821e40fae070318600a264d311517e596353b",
+        "the declared CUE commit resolves in cue-lang/cue"
+      ]
+    },
+    {
+      "source": "cue",
+      "channel": "master",
+      "status": "resolved",
+      "head_commit": "f356f8f46cedb8e853ed200fb46ab49a68bfe357",
+      "evidence": [
+        "cue-lang/cue@master resolved to f356f8f46cedb8e853ed200fb46ab49a68bfe357",
+        "master remains forecast evidence distinct from the pinned evaluator revision"
+      ]
+    },
+    {
+      "source": "uv",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "c2681564218e41a73e99cc448ba0b25459920444",
+      "evidence": [
+        "astral-sh/uv@main resolved to c2681564218e41a73e99cc448ba0b25459920444",
+        "release-watch satellite only; ctrl invokes uv through locked/exact/isolated command contracts"
+      ]
+    },
+    {
+      "source": "jj",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "3a81f836030b00bea85e66c4070d054c555af8b2",
+      "evidence": [
+        "jj-vcs/jj@main resolved to 3a81f836030b00bea85e66c4070d054c555af8b2",
+        "release-watch satellite limited to tdd-agent-skills; S0 qualification does not depend on Jujutsu policy"
+      ]
+    }
+  ],
+  "graph": {
+    "nodesObserved": [
+      "codex-rust-protocol",
+      "codex-json-schema",
+      "codex-python-sdk",
+      "codex-live-runtime",
+      "codex-rollout-store",
+      "codex-rollout-reconstruction",
+      "cpython-parser",
+      "cpython-ast",
+      "cpython-symtable",
+      "cpython-compiler",
+      "cpython-code-object",
+      "cpython-bytecode",
+      "cpython-eval",
+      "cpython-frames",
+      "cpython-monitoring",
+      "cpython-importlib",
+      "cpython-inspect",
+      "cpython-regrtest",
+      "cpython-probes",
+      "cpython-control-graph",
+      "cpython-marimo-workbench"
+    ],
+    "edgesEvaluated": [
+      "codex-protocol-schema",
+      "codex-schema-sdk",
+      "codex-protocol-runtime",
+      "codex-runtime-rollout",
+      "codex-rollout-replay",
+      "cpython-parser-ast",
+      "cpython-ast-symtable",
+      "cpython-symtable-compiler",
+      "cpython-compiler-code",
+      "cpython-code-bytecode",
+      "cpython-bytecode-eval",
+      "cpython-eval-frames",
+      "cpython-eval-monitoring",
+      "cpython-import-inspect",
+      "cpython-dag-regrtest",
+      "cpython-dag-probes",
+      "cpython-probes-workbench"
+    ],
+    "testBindingsEvaluated": [
+      "test-compiler",
+      "test-monitoring",
+      "test-import",
+      "test-inspect"
+    ],
+    "probeBindingsEvaluated": [
+      "probe-ast",
+      "probe-symtable",
+      "probe-compile",
+      "probe-dis",
+      "probe-monitoring",
+      "probe-frame",
+      "probe-import",
+      "probe-inspect"
+    ]
+  },
+  "items": [
+    {
+      "id": "codex-projection-chain",
+      "title": "Qualify Codex protocol to schema to Python SDK projection",
+      "decision": "contract-update",
+      "severity": "high",
+      "sources": ["codex"],
+      "nodes": ["codex-rust-protocol", "codex-json-schema", "codex-python-sdk"],
+      "summary": "Codex now exposes a concrete Python SDK whose generated Pydantic models are produced from a runtime-emitted aggregate v2 schema bundle. ctrl should qualify the projection chain instead of treating CLI behavior as an opaque surface.",
+      "localContractImpact": "Add Codex schema/SDK projection qualification to ctrl's OpenAI integration and future Python-native controller adapter.",
+      "observations": [
+        {
+          "id": "obs-codex-schema-main",
+          "reportItemID": "codex-projection-chain",
+          "source": "codex",
+          "channel": "main",
+          "kind": "schema",
+          "path": "codex-rs/app-server-protocol/schema/json/ClientRequest.json",
+          "nodeMatches": ["codex-json-schema"],
+          "observation": "Current main exports a draft-07 ClientRequest JSON schema; blob f9907887a4a3ea6d75e54d3c93448b1ee5609255.",
+          "decision": "contract-update",
+          "severity": "high"
+        },
+        {
+          "id": "obs-codex-sdk-pin-main",
+          "reportItemID": "codex-projection-chain",
+          "source": "codex",
+          "channel": "main",
+          "kind": "projection",
+          "path": "sdk/python/pyproject.toml",
+          "nodeMatches": ["codex-python-sdk"],
+          "observation": "The openai-codex Python SDK is present and pins openai-codex-cli-bin==0.144.4; blob a6ff55ee7480d98a1b4dd15d33a9aa5372285d33.",
+          "decision": "contract-update",
+          "severity": "high"
+        },
+        {
+          "id": "obs-codex-sdk-generator-main",
+          "reportItemID": "codex-projection-chain",
+          "source": "codex",
+          "channel": "main",
+          "kind": "projection",
+          "path": "sdk/python/scripts/update_sdk_artifacts.py",
+          "nodeMatches": ["codex-json-schema", "codex-python-sdk"],
+          "observation": "SDK artifact generation reads the exact runtime package pin and names codex_app_server_protocol.v2.schemas.json as the aggregate schema bundle emitted by the runtime binary; blob 33dfae57c2fa932e217e49d27551fc534d7cbe16.",
+          "decision": "contract-update",
+          "severity": "high"
+        },
+        {
+          "id": "obs-codex-sdk-generated-main",
+          "reportItemID": "codex-projection-chain",
+          "source": "codex",
+          "channel": "main",
+          "kind": "projection",
+          "path": "sdk/python/src/openai_codex/generated/v2_all.py",
+          "nodeMatches": ["codex-python-sdk"],
+          "observation": "Generated Pydantic models declare they were generated from codex_app_server_protocol.v2.schemas.json; blob 43f32cad0897dd0d6042f6576aa055d6571fab62.",
+          "decision": "contract-update",
+          "severity": "high"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-codex-projection",
+          "text": "The Python SDK is a first-class generated projection of runtime-emitted Codex app-server schemas and should be qualified as a projection edge.",
+          "observationRefs": ["obs-codex-schema-main", "obs-codex-sdk-pin-main", "obs-codex-sdk-generator-main", "obs-codex-sdk-generated-main"]
+        }
+      ]
+    },
+    {
+      "id": "codex-rollout-reduction",
+      "title": "Treat rollout bundles and reduced graphs as correlated runtime evidence",
+      "decision": "contract-update",
+      "severity": "high",
+      "sources": ["codex"],
+      "nodes": ["codex-live-runtime", "codex-rollout-store", "codex-rollout-reconstruction"],
+      "summary": "Codex rollout tracing explicitly records ordered raw runtime evidence and deterministically reduces it into a semantic graph. ctrl can use the pair as a replay/correlation surface but must preserve raw-versus-reduced identity.",
+      "localContractImpact": "Define rollout bundle identity, raw payload references, reduction/reconstruction correlation, lineage, and sensitive-evidence handling in ctrl.",
+      "observations": [
+        {
+          "id": "obs-codex-rollout-trace-main",
+          "reportItemID": "codex-rollout-reduction",
+          "source": "codex",
+          "channel": "main",
+          "kind": "rollout",
+          "path": "codex-rs/rollout-trace/README.md",
+          "nodeMatches": ["codex-rollout-store", "codex-rollout-reconstruction"],
+          "observation": "Rollout Trace documents local raw bundles, ordered trace.jsonl and payloads, and a deterministic replay_bundle reducer that produces a semantic graph while preserving raw payload references; blob 540a494638d8fe4f2968c49cef50cb81283d6381.",
+          "decision": "contract-update",
+          "severity": "high"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-rollout-evidence",
+          "text": "ctrl should model live runtime observations and reconstructed rollout observations as related but non-identical evidence planes.",
+          "observationRefs": ["obs-codex-rollout-trace-main"]
+        }
+      ]
+    },
+    {
+      "id": "codex-hook-boundary-baseline",
+      "title": "Establish hook/tool interception as a future blocking boundary",
+      "decision": "note",
+      "severity": "note",
+      "sources": ["codex"],
+      "nodes": ["codex-rust-protocol", "codex-live-runtime"],
+      "summary": "The current Codex hook model exposes session, turn, permission, tool, tool-use, transcript, mutation, blocking, and additional-context fields that directly intersect ctrl's configured PreToolUse/PostToolUse controller boundary.",
+      "localContractImpact": "Baseline only. Future incompatible changes to these hook identities or semantics should classify at blocking-gate for ctrl.",
+      "observations": [
+        {
+          "id": "obs-codex-pretool-main",
+          "reportItemID": "codex-hook-boundary-baseline",
+          "source": "codex",
+          "channel": "main",
+          "kind": "runtime",
+          "path": "codex-rs/hooks/src/events/pre_tool_use.rs",
+          "nodeMatches": ["codex-rust-protocol", "codex-live-runtime"],
+          "observation": "PreToolUseRequest includes session_id, turn_id, cwd, transcript_path, model, permission_mode, tool_name, tool_use_id and tool_input; outcome includes should_block, block_reason, additional contexts and updated input; blob 7233c014a96980a8b207b9d8cb7a1440197ef2fd.",
+          "decision": "note",
+          "severity": "note"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-hook-boundary",
+          "text": "Current hook semantics are sufficiently explicit to establish an exact ctrl baseline for future blocking-gate comparison.",
+          "observationRefs": ["obs-codex-pretool-main"]
+        }
+      ]
+    },
+    {
+      "id": "cpython-compiler-dag",
+      "title": "Use CPython's compiler pipeline as an executable dependency DAG",
+      "decision": "contract-update",
+      "severity": "high",
+      "sources": ["cpython"],
+      "nodes": ["cpython-ast", "cpython-symtable", "cpython-compiler", "cpython-code-object", "cpython-bytecode"],
+      "summary": "CPython 3.14's compiler source explicitly documents the AST-to-symbol-table-to-instruction-sequence-to-CFG-to-code-object pipeline. This is strong upstream evidence for a typed dependency DAG driving impact closure, regrtest selection, and local probes.",
+      "localContractImpact": "Implement the declared CPython DAG in ctrl and bind changed paths to reverse dependency closure plus selected test/probe operations.",
+      "observations": [
+        {
+          "id": "obs-cpython-compile-314",
+          "reportItemID": "cpython-compiler-dag",
+          "source": "cpython",
+          "channel": "3.14",
+          "kind": "dependency",
+          "path": "Python/compile.c",
+          "nodeMatches": ["cpython-ast", "cpython-symtable", "cpython-compiler", "cpython-code-object", "cpython-bytecode"],
+          "observation": "Python/compile.c states that _PyAST_Compile returns a PyCodeObject and enumerates passes for future checks, symbol table, instruction sequence/codegen, control-flow graph optimization, and final assembly; blob 6c5ef5329ffc3aaef424f47f7f67a99eddfbede0.",
+          "decision": "contract-update",
+          "severity": "high"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-cpython-dag",
+          "text": "The CPython compiler dependency graph can be grounded in upstream implementation structure rather than maintained as an unqualified local taxonomy.",
+          "observationRefs": ["obs-cpython-compile-314"]
+        }
+      ]
+    },
+    {
+      "id": "cpython-regrtest-control",
+      "title": "Operationalize CPython regrtest behind a process adapter",
+      "decision": "contract-update",
+      "severity": "high",
+      "sources": ["cpython"],
+      "nodes": ["cpython-regrtest", "cpython-control-graph", "cpython-probes"],
+      "summary": "CPython 3.14 exposes regrtest as the regression-suite runner and keeps detailed runner/result machinery under test.libregrtest. ctrl should select regrtest slices from the DAG but invoke them through the checked-out interpreter process, keeping internal runner modules observational rather than dependency APIs.",
+      "localContractImpact": "Implement ResolveRevision/ResolveBuild/SelectRegrtests/RunRegrtests plus normalized process-result observations, alongside a separate local-probe execution path.",
+      "observations": [
+        {
+          "id": "obs-cpython-regrtest-entry-314",
+          "reportItemID": "cpython-regrtest-control",
+          "source": "cpython",
+          "channel": "3.14",
+          "kind": "upstream-test",
+          "path": "Lib/test/regrtest.py",
+          "nodeMatches": ["cpython-regrtest"],
+          "observation": "Lib/test/regrtest.py identifies itself as the Python regression test runner and delegates to test.libregrtest.main; blob 46a74fe276f55307b3e368b073661547e46de1c7.",
+          "decision": "contract-update",
+          "severity": "high"
+        },
+        {
+          "id": "obs-cpython-regrtest-result-314",
+          "reportItemID": "cpython-regrtest-control",
+          "source": "cpython",
+          "channel": "3.14",
+          "kind": "upstream-test",
+          "path": "Lib/test/libregrtest/testresult.py",
+          "nodeMatches": ["cpython-regrtest"],
+          "observation": "libregrtest contains specialized regression result and capture logic, confirming that ctrl should observe its outputs without treating these internal modules as a stable library boundary; blob 1820f354572521accb4ec7340942f8b13505d0e2.",
+          "decision": "contract-update",
+          "severity": "high"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-regrtest-process",
+          "text": "The qualified ctrl adapter should invoke selected CPython regression tests through ./python -m test and normalize process evidence, while local probes remain a separate evidence family.",
+          "observationRefs": ["obs-cpython-regrtest-entry-314", "obs-cpython-regrtest-result-314"]
+        }
+      ]
+    },
+    {
+      "id": "cpython-monitoring-probe",
+      "title": "Bind sys.monitoring probes to interpreter instrumentation and frame/code state",
+      "decision": "contract-update",
+      "severity": "high",
+      "sources": ["cpython"],
+      "nodes": ["cpython-bytecode", "cpython-eval", "cpython-frames", "cpython-monitoring"],
+      "summary": "CPython 3.14 instrumentation directly maps opcodes to monitoring events and depends on code, frame, interpreter-frame, optimizer, and free-threaded runtime machinery. A ctrl monitoring probe should therefore preserve code/instruction/frame correlation and record runtime mode.",
+      "localContractImpact": "Implement normalized monitoring-event and frame-source probes with explicit runtime/build identity, including free-threaded mode as a distinct observation dimension.",
+      "observations": [
+        {
+          "id": "obs-cpython-instrumentation-314",
+          "reportItemID": "cpython-monitoring-probe",
+          "source": "cpython",
+          "channel": "3.14",
+          "kind": "probe",
+          "path": "Python/instrumentation.c",
+          "nodeMatches": ["cpython-bytecode", "cpython-eval", "cpython-frames", "cpython-monitoring"],
+          "observation": "Python/instrumentation.c maps instruction opcodes to monitoring events, uses code/frame/interpreter-frame internals, and contains separate free-threaded synchronization paths; blob 0a7400c26993b32bf538fc15f892f63d1e02149f.",
+          "decision": "contract-update",
+          "severity": "high"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-monitoring-correlation",
+          "text": "A useful monitoring witness must correlate monitoring events with code objects, instructions, frames, and runtime mode rather than emit an untyped callback log.",
+          "observationRefs": ["obs-cpython-instrumentation-314"]
+        }
+      ]
+    },
+    {
+      "id": "cue-pin-baseline",
+      "title": "Keep pinned CUE evaluator semantics distinct from master forecast",
+      "decision": "note",
+      "severity": "note",
+      "sources": ["cue"],
+      "nodes": ["cpython-control-graph"],
+      "summary": "ctrl declares CUE commit 806821e40fae070318600a264d311517e596353b as its native engine identity while CUE master has advanced to f356f8f46cedb8e853ed200fb46ab49a68bfe357. The monitor records this as an intentional pin-versus-forecast distinction, not an automatic upgrade request.",
+      "localContractImpact": "Add an explicit root toolchain identity contract in ctrl so executable qualification can assert the admitted CUE revision instead of merely checking for a cue binary.",
+      "observations": [
+        {
+          "id": "obs-cue-pin",
+          "reportItemID": "cue-pin-baseline",
+          "source": "cue",
+          "channel": "pinned",
+          "kind": "context",
+          "path": "cue-lang/cue@806821e40fae070318600a264d311517e596353b",
+          "nodeMatches": ["cpython-control-graph"],
+          "observation": "The ctrl-declared CUE revision resolves to an upstream commit dated July 2026.",
+          "decision": "note",
+          "severity": "note"
+        },
+        {
+          "id": "obs-cue-master",
+          "reportItemID": "cue-pin-baseline",
+          "source": "cue",
+          "channel": "master",
+          "kind": "source",
+          "path": "cue-lang/cue@master",
+          "nodeMatches": ["cpython-control-graph"],
+          "observation": "Current CUE master resolves to f356f8f46cedb8e853ed200fb46ab49a68bfe357 and remains forecast evidence only.",
+          "decision": "note",
+          "severity": "note"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-cue-pin",
+          "text": "Pinned evaluator identity and upstream forecast must remain separate evidence channels until ctrl intentionally changes its admitted CUE engine.",
+          "observationRefs": ["obs-cue-pin", "obs-cue-master"]
+        }
+      ]
+    }
+  ],
+  "validation": {
+    "authorityRead": true,
+    "ctrlContextRead": true,
+    "sourceChannelsDistinct": true,
+    "graphModelRead": true,
+    "publicationPlanRead": true,
+    "forbiddenAttractorsChecked": true,
+    "cueExecution": "not_available_to_github_app",
+    "executableCpythonProbes": "not_executed_bootstrap",
+    "executableRegrtest": "not_executed_bootstrap",
+    "reportProjectionOnly": true,
+    "summaryProjectionOnly": true
+  }
+}
