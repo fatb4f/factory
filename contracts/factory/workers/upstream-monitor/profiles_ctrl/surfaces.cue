@@ -34,9 +34,9 @@ ctrlSurfaceCatalogue: [
 	{id: "otel-contrib-providers", source: "otel-python-contrib", terms: ["instrumentation", "BaseInstrumentor", "opentelemetry-instrumentation", "requests", "asyncio", "threading", "sqlite", "sqlalchemy", "system metrics"], impactFloor: "contract-update", localContractHint: "generic provider adapters acquire runtime plumbing while custom ctrl probes focus on semantic gaps", localPaths: ["packages/qualification-workflow/", "packages/runtime/"]},
 	{id: "otel-genai-semantic-model", source: "otel-genai-semconv", terms: ["GenAI", "MCP", "OpenAI", "spans", "metrics", "events", "Weaver", "model", "YAML", "reference"], impactFloor: "contract-update", localContractHint: "machine-readable GenAI/MCP observation vocabulary and generation/compliance precedent for ctrl semantic telemetry extensions", localPaths: ["integrations/openai/", "spec/profiles/"]},
 	{id: "otel-python-genai-realization", source: "otel-python-genai", terms: ["opentelemetry-util-genai", "openai", "openai-agents", "spans", "metrics", "logs", "instrumentation"], impactFloor: "note", localContractHint: "Python realization template for agent/model/tool observations sharing trace context with qualification execution", localPaths: ["integrations/openai/", "packages/runtime/"]},
-	{id: "otel-arrow-otap", source: "otel-arrow", terms: ["OTAP", "OTLP", "Arrow", "record batch", "lossless", "star schema", "Arrow IPC"], impactFloor: "contract-update", localContractHint: "columnar telemetry transport preserving OpenTelemetry signal semantics without a bespoke SpanExporter-to-Arrow bridge", localPaths: ["packages/qualification-workflow/", "packages/runtime/", "spec/profiles/"]},
+	{id: "otel-arrow-otap", source: "otel-arrow", terms: ["OTAP", "OTLP", "Arrow", "record batch", "lossless", "star schema", "Arrow IPC"], impactFloor: "contract-update", localContractHint: "columnar telemetry transport preserving OpenTelemetry trace semantics without a bespoke SpanExporter-to-Arrow bridge", localPaths: ["packages/qualification-workflow/", "packages/runtime/", "spec/profiles/"]},
 	{id: "otel-arrow-dataflow", source: "otel-arrow", terms: ["Dataflow Engine", "embeddable", "DataFusion", "Parquet", "durable buffer", "routing", "sampling", "filtering", "transform"], impactFloor: "note", localContractHint: "optional embeddable telemetry acquisition/transform/persistence engine below ctrl evidence interpretation", localPaths: ["packages/runtime/", "spec/profiles/"]},
-	{id: "dlt-external-facts", source: "dlt", terms: ["pipeline", "source", "resource", "extract", "normalize", "load", "Arrow", "DuckDB"], impactFloor: "note", localContractHint: "external-data acquisition remains distinct from execution telemetry while converging on shared relational/Arrow facts", localPaths: ["packages/qualification-workflow/", "spec/profiles/"]},
+	{id: "dlt-external-observations", source: "dlt", terms: ["pipeline", "source", "resource", "extract", "normalize", "load", "Arrow", "DuckDB"], impactFloor: "note", localContractHint: "external records/claims are acquired observations requiring provenance and admission before fact status; they remain distinct from execution telemetry", localPaths: ["packages/qualification-workflow/", "spec/profiles/"]},
 
 	{id: "cue-evaluator", source: "cue", terms: ["unification", "explicitopen", "cue vet", "cue export", "closedness", "concreteness", "reference resolution"], impactFloor: "blocking-gate", localContractHint: "external evaluator semantics underlying ctrl/spec", localPaths: ["spec/"]},
 	{id: "uv-reproducibility", source: "uv", terms: ["uv lock", "--locked", "--exact", "--isolated", "workspace", "build --all-packages"], impactFloor: "note", localContractHint: "workspace lock, isolated test, and build reproducibility", localPaths: ["pyproject.toml", "uv.lock", "justfile"]},
@@ -53,7 +53,8 @@ ctrlClassificationPolicy: close({
 	requireAnalyzerAuthoritySeparation: true
 	requireTelemetryGraphBindingForOtel: true
 	requireTelemetryAuthoritySeparation: true
-	requireExternalFactAndExecutionObservationSeparation: true
+	requireExternalObservationAndExecutionObservationSeparation: true
+	requireAdmissionBeforeExternalRecordFactStatus: true
 	upstreamRole: "evidence_only"
 	allowedDecisions: ["none", "note", "contract-update", "blocking-gate"]
 	severityMap: {
