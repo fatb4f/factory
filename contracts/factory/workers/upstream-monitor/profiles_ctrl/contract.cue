@@ -32,6 +32,8 @@ ctrlContext: close({
 		"runtime-promptgen",
 		"tdd-agent-skills",
 		"openai-integration",
+		"observation-acquisition",
+		"telemetry-fabric",
 	]
 	requiredContextReads: [
 		"README.md",
@@ -60,6 +62,12 @@ ctrlAuthorityModel: close({
 		"openai/codex",
 		"python/cpython",
 		"astral-sh/ruff",
+		"open-telemetry/opentelemetry-python",
+		"open-telemetry/opentelemetry-python-contrib",
+		"open-telemetry/semantic-conventions-genai",
+		"open-telemetry/opentelemetry-python-genai",
+		"open-telemetry/otel-arrow",
+		"dlt-hub/dlt",
 		"cue-lang/cue",
 		"astral-sh/uv",
 		"jj-vcs/jj",
