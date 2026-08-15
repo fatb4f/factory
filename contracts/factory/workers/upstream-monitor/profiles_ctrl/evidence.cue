@@ -3,12 +3,15 @@ package ctrlprofile
 import core "github.com/fatb4f/factory/contracts/factory/workers/upstream-monitor:upstreammonitor"
 
 #CtrlRunEvidence: close({
-	apiVersion: "factory.upstream-monitor.ctrl.evidence/v1"
+	apiVersion: "factory.upstream-monitor.ctrl.evidence/v2"
 	kind: "CtrlUpstreamEvidence"
 	run_id: core.#NonEmptyString
 	profile_id: "ctrl"
 	terminal_state: core.#TerminalState
-	factory_revision: core.#CommitSHA
+	monitor_state: terminal_state
+	qualification_state: core.#QualificationState
+	authority_revision: core.#CommitSHA
+	publication_revision?: core.#CommitSHA
 	ctrl_revision: core.#CommitSHA
 	bootstrap_baseline: bool
 	sources: [...core.#SourceObservation] & [_, ...]
@@ -24,14 +27,15 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/upstream-monito
 		ctrlContextRead: bool
 		sourceChannelsDistinct: bool
 		graphModelRead: bool
+		correlationCarrierPolicyRead: bool
 		publicationPlanRead: bool
 		forbiddenAttractorsChecked: bool
 		cueExecution: "not_available_to_github_app" | "executed_elsewhere"
-		executableCpythonProbes: "not_executed_bootstrap" | "executed"
-		executableRegrtest: "not_executed_bootstrap" | "executed"
-		executableAstralCorrelation: "not_executed_bootstrap" | "executed"
-		executableOtelPipeline: "not_executed_bootstrap" | "executed"
-		executableOtlpOtapRoundtrip: "not_executed_bootstrap" | "executed"
+		executableCpythonProbes: "not_executed" | "executed"
+		executableRegrtest: "not_executed" | "executed"
+		executableAstralCorrelation: "not_executed" | "executed"
+		executableOtelPipeline: "not_executed" | "executed"
+		executableOtlpOtapRoundtrip: "not_executed" | "executed"
 		reportProjectionOnly: bool
 		summaryProjectionOnly: bool
 	})
@@ -47,16 +51,23 @@ ctrlEvidenceModel: close({
 	requireAnalyzerAndCpythonEvidenceSeparated: true
 	requireTelemetryGraphBindingForOtelItems: true
 	requireTelemetryAndSemanticEvidenceSeparated: true
-	requireExternalFactAndExecutionObservationSeparation: true
+	requireExternalObservationAndExecutionObservationSeparation: true
+	requireAdmissionBeforeExternalRecordFactStatus: true
 	requireTraceAndSemanticIdentitySeparation: true
+	requireTelemetryCarrierPolicy: true
 	requireOtlpOtapProjectionIdentity: true
+	requireOtlpOtapP0TraceOnly: true
 	requireUpstreamTestAndLocalProbeDistinction: true
+	requireQualificationStateIndependentOfMonitorState: true
 	forbidAnalyzerVerdictAsRuntimeTruth: true
 	forbidAnalyzerOverrideOfCpythonEvidence: true
 	forbidTelemetryVerdictAsQualification: true
 	forbidTelemetryAsStaticSemanticAuthority: true
 	forbidGenericInstrumentationAsDomainProbeReplacement: true
+	forbidBulkSemanticIdentityBaggageProjection: true
+	forbidSensitivePayloadTelemetryCarrier: true
 	forbidOtlpOtapSemanticEnrichmentByInference: true
+	forbidPhysicalArrowLayoutInP0SemanticComparator: true
 	forbidUpstreamTestVerdictAsQualification: true
 	bootstrapMayEstablishBaselineWithoutHistoricalDelta: true
 })
