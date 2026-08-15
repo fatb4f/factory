@@ -23,6 +23,9 @@ ctrlPublicationPlan: close({
 		mediaType: "application/json"
 		apiVersion: "factory.upstream-monitor.latest-run/v2"
 		kind: "LatestUpstreamMonitorRun"
+		recordAuthorityRevision: true
+		recordPublicationRevision: true
+		publicationRevisionMeaning: "commit that seals manifest.json; never the self-referential latest-pointer commit"
 	})
 	writeOrder: [
 		"bundle_report",
@@ -37,6 +40,9 @@ ctrlPublicationPlan: close({
 	requireRunBundle: true
 	requireBundleManifestLast: true
 	requireLatestPointerAfterManifest: true
+	requireAuthorityRevisionFromPrePublicationAuthoritySnapshot: true
+	requirePublicationRevisionFromManifestSealCommit: true
+	forbidSelfReferentialLatestPointerRevision: true
 	forbidRunArtifactsOutsideBundle: true
 	forbidMutableLatestArtifactCopies: true
 	forbidCrossRepositoryWrites: true
