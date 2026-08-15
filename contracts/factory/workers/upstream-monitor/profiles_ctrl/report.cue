@@ -31,6 +31,7 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/upstream-monito
 	validationNotes: close({
 		authorityRead: bool
 		ctrlContextRead: bool
+		projectTopologyRead: bool
 		allRequiredSourcesResolved: bool
 		graphModelRead: bool
 		correlationCarrierPolicyRead: bool
@@ -39,8 +40,10 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/upstream-monito
 		cueExecution: "not_available_to_github_app" | "executed_elsewhere"
 		regrtestExecution: "not_executed" | "executed"
 		probeExecution: "not_executed" | "executed"
+		scipCorrelationExecution: "not_executed" | "executed"
 		otelPipelineExecution: "not_executed" | "executed"
 		otlpOtapRoundtripExecution: "not_executed" | "executed"
+		relationalProjectionExecution: "not_executed" | "executed"
 	})
 })
 
@@ -49,10 +52,12 @@ ctrlImpactReportTemplate: close({
 	sections: [
 		"Run identity",
 		"Subject context",
+		"Project topology and ownership",
 		"Source state",
 		"Codex projection graph",
 		"Python semantic and operational graph",
 		"Observation and acquisition graph",
+		"Relational and diagnostic projection",
 		"Correlation carrier policy",
 		"P0 executable frontier",
 		"Critical",
@@ -62,13 +67,17 @@ ctrlImpactReportTemplate: close({
 		"Publication",
 		"Validation notes",
 	]
+	requireProjectTopologyState: true
+	requireComponentOwnershipState: true
 	requireSourceQualifiedState: true
 	requireCodexProjectionState: true
 	requireCpythonOperationalState: true
 	requireAstralStaticState: true
+	requireScipIdentityState: true
 	requireOtelAcquisitionState: true
 	requireOtelArrowProjectionState: true
 	requireExternalObservationState: true
+	requireRelationalProjectionState: true
 	requireCorrelationCarrierPolicy: true
 	requireQualificationState: true
 	requireP0TraceRoundtripScope: true
@@ -82,6 +91,7 @@ ctrlRunSummaryTemplate: close({
 	sections: [
 		"Run identity",
 		"Baseline",
+		"Project topology",
 		"Decisions",
 		"Qualification state",
 		"Operationalization gap",
@@ -90,6 +100,7 @@ ctrlRunSummaryTemplate: close({
 	]
 	requireMonitorState: true
 	requireQualificationState: true
+	requireProjectTopologyState: true
 	requireSourceHeads: true
 	requireDecisionCounts: true
 })
