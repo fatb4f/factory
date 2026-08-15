@@ -1,7 +1,7 @@
 package ctrlprofile
 
 publicContract: close({
-	apiVersion: "factory.upstream-monitor.ctrl/v1"
+	apiVersion: "factory.upstream-monitor.ctrl/v2"
 	kind: "CtrlMultiSourceUpstreamMonitor"
 	operational: bool
 	signal: _
@@ -18,6 +18,8 @@ publicContract: close({
 	testBindings: _
 	probeBindings: _
 	executionGraph: _
+	correlation: _
+	telemetryCarrierPolicy: _
 	evidenceModel: _
 	reportTemplate: _
 	summaryTemplate: _
@@ -27,7 +29,7 @@ publicContract: close({
 	validationAssertions: _
 	validationPlan: _
 }) & {
-	apiVersion: "factory.upstream-monitor.ctrl/v1"
+	apiVersion: "factory.upstream-monitor.ctrl/v2"
 	kind: "CtrlMultiSourceUpstreamMonitor"
 	operational: ctrlOperational
 	signal: ctrlAcceptedSignal
@@ -44,6 +46,8 @@ publicContract: close({
 	testBindings: ctrlTestBindings
 	probeBindings: ctrlProbeBindings
 	executionGraph: ctrlExecutionGraphContract
+	correlation: ctrlCorrelationContract
+	telemetryCarrierPolicy: ctrlTelemetryCarrierPolicy
 	evidenceModel: ctrlEvidenceModel
 	reportTemplate: ctrlImpactReportTemplate
 	summaryTemplate: ctrlRunSummaryTemplate
