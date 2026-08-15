@@ -111,7 +111,9 @@ ctrlTelemetryCarrierPolicy: close({
 })
 
 ctrlCorrelationContract: close({
-	identitySchema: #CorrelationIdentity
+	identitySchemaAuthority: "#CorrelationIdentity"
+	requiredIdentityFields: ["qualification_run_id", "repository_revision", "operation_id"]
+	optionalIdentityFields: ["probe_id", "symbol_id", "source_occurrence_id", "evidence_id"]
 	carrierPolicy: ctrlTelemetryCarrierPolicy
 	semanticIdentityDistinctFromTraceIdentity: true
 	traceIdentityAnswersCausalityOnly: true
