@@ -3,15 +3,18 @@ package ctrlprofile
 import core "github.com/fatb4f/factory/contracts/factory/workers/upstream-monitor:upstreammonitor"
 
 #CtrlImpactReport: close({
-	apiVersion: "factory.upstream-monitor.ctrl/v1"
+	apiVersion: "factory.upstream-monitor.ctrl/v2"
 	kind: "CtrlUpstreamImpactReport"
 	loop: "ctrl-upstream-contract-surface"
 	signal_id: "loop_bootstrap_request"
 	profile_id: "ctrl"
 	run_id: core.#NonEmptyString
-	factory_revision: core.#CommitSHA
+	authority_revision: core.#CommitSHA
+	publication_revision?: core.#CommitSHA
 	ctrl_revision: core.#CommitSHA
 	terminal_state: core.#TerminalState
+	monitor_state: terminal_state
+	qualification_state: core.#QualificationState
 	bootstrap_baseline: bool
 	sourceState: [...core.#SourceObservation] & [_, ...]
 	critical: [...core.#ReportItem]
@@ -30,11 +33,14 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/upstream-monito
 		ctrlContextRead: bool
 		allRequiredSourcesResolved: bool
 		graphModelRead: bool
+		correlationCarrierPolicyRead: bool
 		reportProjectedFromEvidence: bool
 		summaryProjectedFromEvidence: bool
 		cueExecution: "not_available_to_github_app" | "executed_elsewhere"
-		regrtestExecution: "not_executed_bootstrap" | "executed"
-		probeExecution: "not_executed_bootstrap" | "executed"
+		regrtestExecution: "not_executed" | "executed"
+		probeExecution: "not_executed" | "executed"
+		otelPipelineExecution: "not_executed" | "executed"
+		otlpOtapRoundtripExecution: "not_executed" | "executed"
 	})
 })
 
@@ -45,7 +51,10 @@ ctrlImpactReportTemplate: close({
 		"Subject context",
 		"Source state",
 		"Codex projection graph",
-		"CPython operational graph",
+		"Python semantic and operational graph",
+		"Observation and acquisition graph",
+		"Correlation carrier policy",
+		"P0 executable frontier",
 		"Critical",
 		"High",
 		"Notes",
@@ -56,6 +65,13 @@ ctrlImpactReportTemplate: close({
 	requireSourceQualifiedState: true
 	requireCodexProjectionState: true
 	requireCpythonOperationalState: true
+	requireAstralStaticState: true
+	requireOtelAcquisitionState: true
+	requireOtelArrowProjectionState: true
+	requireExternalObservationState: true
+	requireCorrelationCarrierPolicy: true
+	requireQualificationState: true
+	requireP0TraceRoundtripScope: true
 	requireBootstrapDisclosure: true
 	requireUnresolvedPreservation: true
 })
@@ -67,11 +83,13 @@ ctrlRunSummaryTemplate: close({
 		"Run identity",
 		"Baseline",
 		"Decisions",
+		"Qualification state",
 		"Operationalization gap",
 		"Bundle",
 		"Validation",
 	]
-	requireTerminalState: true
+	requireMonitorState: true
+	requireQualificationState: true
 	requireSourceHeads: true
 	requireDecisionCounts: true
 })
