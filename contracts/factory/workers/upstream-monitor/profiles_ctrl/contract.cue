@@ -25,6 +25,9 @@ ctrlContext: close({
 	branch: "main"
 	role: "subject_context_not_monitor_authority"
 	semanticAuthority: "spec/"
+	componentOwnershipSource: "control/components.cue"
+	architectureContract: "contracts/factory/workers/upstream-monitor/profiles_ctrl/topology.cue"
+	projectFolders: ["ctrl", "python-intel", "PyPI/wheel/PEP pipeline", "semagrams"]
 	components: [
 		"qualification-spec",
 		"qualification-workflow",
@@ -32,8 +35,6 @@ ctrlContext: close({
 		"runtime-promptgen",
 		"tdd-agent-skills",
 		"openai-integration",
-		"observation-acquisition",
-		"telemetry-fabric",
 	]
 	requiredContextReads: [
 		"README.md",
@@ -42,6 +43,7 @@ ctrlContext: close({
 		"uv.lock",
 		".python-version",
 		"control/components.cue",
+		"control/source-imports.cue",
 		"spec/README.md",
 		"spec/AGENTS.md",
 		"spec/.codex/AGENTS.md",
@@ -63,12 +65,18 @@ ctrlAuthorityModel: close({
 		"openai/codex",
 		"python/cpython",
 		"astral-sh/ruff",
+		"scip-code/scip",
 		"open-telemetry/opentelemetry-python",
 		"open-telemetry/opentelemetry-python-contrib",
 		"open-telemetry/semantic-conventions-genai",
 		"open-telemetry/opentelemetry-python-genai",
 		"open-telemetry/otel-arrow",
 		"dlt-hub/dlt",
+		"apache/arrow",
+		"duckdb/duckdb",
+		"ibis-project/ibis",
+		"marimo-team/marimo",
+		"pydantic/pydantic-ai",
 		"cue-lang/cue",
 		"astral-sh/uv",
 		"jj-vcs/jj",
@@ -84,6 +92,7 @@ ctrlWorkflow: close({
 		"authority_read",
 		"input_admission",
 		"context_acquisition",
+		"project_topology_read",
 		"source_acquisition",
 		"graph_projection",
 		"correlation_policy_read",

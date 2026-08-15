@@ -6,6 +6,11 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/upstream-monito
 	qualification_run_id: core.#NonEmptyString
 	repository_revision: core.#CommitSHA
 	operation_id: core.#NonEmptyString
+	agent_turn_id?: core.#NonEmptyString
+	tool_call_id?: core.#NonEmptyString
+	mcp_call_id?: core.#NonEmptyString
+	mutation_id?: core.#NonEmptyString
+	test_attempt_id?: core.#NonEmptyString
 	probe_id?: core.#NonEmptyString
 	symbol_id?: core.#NonEmptyString
 	source_occurrence_id?: core.#NonEmptyString
@@ -50,6 +55,46 @@ ctrlTelemetryCarrierPolicy: close({
 			baggage: "forbidden"
 			resource_attributes: false
 			constraints: []
+		}
+		agent_turn_id: #TelemetryCarrierRule & {
+			id: "agent_turn_id"
+			span_attributes: true
+			event_attributes: true
+			baggage: "forbidden"
+			resource_attributes: false
+			constraints: ["join agent/model trajectory by opaque identity; prompt content remains out-of-band"]
+		}
+		tool_call_id: #TelemetryCarrierRule & {
+			id: "tool_call_id"
+			span_attributes: true
+			event_attributes: true
+			baggage: "forbidden"
+			resource_attributes: false
+			constraints: []
+		}
+		mcp_call_id: #TelemetryCarrierRule & {
+			id: "mcp_call_id"
+			span_attributes: true
+			event_attributes: true
+			baggage: "forbidden"
+			resource_attributes: false
+			constraints: []
+		}
+		mutation_id: #TelemetryCarrierRule & {
+			id: "mutation_id"
+			span_attributes: true
+			event_attributes: true
+			baggage: "forbidden"
+			resource_attributes: false
+			constraints: ["mutation identity joins repository changes to predicted effects and qualification evidence"]
+		}
+		test_attempt_id: #TelemetryCarrierRule & {
+			id: "test_attempt_id"
+			span_attributes: true
+			event_attributes: true
+			baggage: "forbidden"
+			resource_attributes: false
+			constraints: ["attempt identity is distinct from test identity and qualification verdict"]
 		}
 		probe_id: #TelemetryCarrierRule & {
 			id: "probe_id"
@@ -113,11 +158,12 @@ ctrlTelemetryCarrierPolicy: close({
 ctrlCorrelationContract: close({
 	identitySchemaAuthority: "#CorrelationIdentity"
 	requiredIdentityFields: ["qualification_run_id", "repository_revision", "operation_id"]
-	optionalIdentityFields: ["probe_id", "symbol_id", "source_occurrence_id", "evidence_id"]
+	optionalIdentityFields: ["agent_turn_id", "tool_call_id", "mcp_call_id", "mutation_id", "test_attempt_id", "probe_id", "symbol_id", "source_occurrence_id", "evidence_id"]
 	carrierPolicy: ctrlTelemetryCarrierPolicy
 	semanticIdentityDistinctFromTraceIdentity: true
 	traceIdentityAnswersCausalityOnly: true
 	semanticIdentityAnswersSubjectIdentity: true
+	agentToolMutationLineageExplicit: true
 	baggageDenyByDefault: true
 	forbidBulkSemanticIdentityBaggageProjection: true
 	forbidSensitiveOrLargePayloadCarriers: true

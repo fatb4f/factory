@@ -7,6 +7,8 @@ publicContract: close({
 	signal: _
 	authority: _
 	context: _
+	projectFolders: _
+	architecturePolicy: _
 	sources: _
 	sourcePolicy: _
 	actuator: _
@@ -35,6 +37,8 @@ publicContract: close({
 	signal: ctrlAcceptedSignal
 	authority: ctrlAuthorityModel
 	context: ctrlContext
+	projectFolders: ctrlProjectFolders
+	architecturePolicy: ctrlArchitecturePolicy
 	sources: ctrlSources
 	sourcePolicy: ctrlSourcePolicy
 	actuator: chatgptActuator

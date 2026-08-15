@@ -12,6 +12,7 @@ contracts/factory/workers/upstream-monitor/AGENTS.md
 contracts/upstream-monitor/ctrl/contract-surface/AGENTS.md
 contracts/factory/workers/upstream-monitor/contract.cue
 contracts/factory/workers/upstream-monitor/profiles_ctrl/contract.cue
+contracts/factory/workers/upstream-monitor/profiles_ctrl/topology.cue
 contracts/factory/workers/upstream-monitor/profiles_ctrl/sources.cue
 contracts/factory/workers/upstream-monitor/profiles_ctrl/surfaces.cue
 contracts/factory/workers/upstream-monitor/profiles_ctrl/graph.cue
@@ -37,26 +38,43 @@ adapter: github_app
 
 ## Mission
 
-Maintain a versioned, graph-aware impact and operationalization view of upstream changes that intersect `fatb4f/ctrl@main`, while preserving source, semantic, causal, transport, and qualification authority boundaries.
+Maintain a versioned, graph-aware impact and operationalization view of upstream changes that intersect `fatb4f/ctrl@main`, while preserving project ownership, source, semantic, causal, transport, relational-projection, and qualification authority boundaries.
 
-Required evidence families:
+## Project topology
+
+Read `profiles_ctrl/topology.cue` before source classification. Preserve these roles:
+
+1. `ctrl`: concrete repo-backed Codex mutation-control and qualification experiment. Parent Codex is the sole adaptive inference authority; `codex-sdk`/app-server actuates; hooks and agent context provide feedback; `ctrl/spec` + CUE own qualification semantics.
+2. `python-intel`: architectural observation/evaluation substrate spanning static source, package/build metadata, and instrumented runtime observations. It is not itself an analyzer or qualification authority.
+3. PyPI/wheel/PEP pipeline: first concrete python-intel materialization through acquire -> normalize -> analyze -> correlate -> evaluate -> Arrow/DuckDB/Ibis -> Marimo.
+4. `semagrams`: future relational mutation-graph substrate. Treat its mutation-candidate model as design context only until admitted into `ctrl/spec`.
+
+Component-local ownership is mandatory. Each project/component owns its descriptors, outgoing dependency declarations, locks, observations, tests, artifacts, provenance, and local qualification. ctrl federation owns only pins, contract references, federation-only evaluations, compatibility scenarios, and assembly commands. Sibling checkout paths are never assembly identity.
+
+Adapters observe. CUE derives and gates. Scripts, provider adapters, relational projections, notebooks, and execution-graph implementations do not self-authorize facts, mutations, or qualification verdicts.
+
+## Required evidence families
 
 1. Codex: Rust protocol, exported schemas, Python `openai_codex` SDK, live app-server/tool/config semantics, rollout persistence/lineage/reconstruction.
 2. CPython: Python 3.14 active branch plus main forecast, subsystem dependency DAG, CPython regrtest as upstream behavioral evidence, and ctrl-local executable probes.
 3. Astral Rust: Ruff parser/AST/index/static semantics plus ty resolver/type/IDE machinery as analyzer evidence correlated against CPython, never compiler/runtime authority.
-4. OpenTelemetry Python core: API/SDK, context, traces and OTLP as execution-observation and causal transport substrate.
-5. OpenTelemetry Python contrib: generic integration instrumentors as provider adapters for runtime plumbing; they do not replace ctrl domain probes.
-6. GenAI semantic conventions and Python realization: agent/model/tool/MCP observation vocabulary and instrumentors, including OpenAI-facing behavior, without promotion to ctrl qualification authority.
-7. OTel-Arrow: OTLP/OTAP projection, Arrow record batches, dataflow, IPC/Parquet persistence, and the P0 traces-only round-trip preservation boundary.
-8. dlt: optional external-observation acquisition. Acquired records/claims require provenance and admission before any ctrl fact status; they remain distinct from OpenTelemetry execution observations.
-9. CUE: ctrl's pinned evaluator revision kept distinct from upstream master forecast.
-10. uv and Jujutsu: release-watch satellites limited to declared local consumers.
+4. SCIP: cross-file symbol/document/occurrence/relationship identity used as a correlation spine, never as CPython language/compiler/runtime truth.
+5. OpenTelemetry Python core: API/SDK, context, traces and OTLP as execution-observation and causal transport substrate.
+6. OpenTelemetry Python contrib: generic integration instrumentors as provider adapters for runtime plumbing; they do not replace ctrl domain probes.
+7. GenAI semantic conventions and Python realization: agent/model/tool/MCP observation vocabulary and instrumentors, including OpenAI-facing behavior, without promotion to ctrl qualification authority.
+8. OTel-Arrow: OTLP/OTAP projection, Arrow record batches, dataflow, IPC/Parquet persistence, and the P0 traces-only round-trip preservation boundary.
+9. dlt: optional external-observation acquisition. Acquired records/claims require provenance and admission before any ctrl fact status; they remain distinct from OpenTelemetry execution observations.
+10. Arrow, DuckDB, Ibis, Marimo, and pydantic-graph: optional projection/execution satellites. Arrow is typed interchange, DuckDB the relational substrate, Ibis the semantic query projection, Marimo the interactive diagnostic projection, and pydantic-graph a replaceable executor implementation.
+11. CUE: ctrl's pinned evaluator revision kept distinct from upstream master forecast.
+12. uv and Jujutsu: release-watch satellites limited to declared local consumers.
 
 ## Authority and identity boundaries
 
-`ctrl/spec` and CUE determine qualification meaning. CPython supplies compiler/runtime semantic evidence. Astral supplies static analyzer observations. OpenTelemetry supplies causal execution observations. OTel-Arrow supplies a physical/columnar telemetry projection. dlt supplies externally acquired observations. None of those acquisition or observation adapters may manufacture qualification verdicts.
+`ctrl/spec` and CUE determine qualification meaning. CPython supplies compiler/runtime semantic evidence. SCIP supplies cross-file semantic identity. Astral supplies static analyzer observations. OpenTelemetry supplies causal execution observations. OTel-Arrow supplies a physical/columnar telemetry projection. dlt supplies externally acquired observations. Arrow/DuckDB/Ibis/Marimo supply relational/diagnostic projections. None of those acquisition, observation, or projection adapters may manufacture qualification verdicts.
 
-Trace identity and semantic identity are distinct. Read `correlation.cue` and apply `ctrlTelemetryCarrierPolicy` before projecting ctrl identities into span attributes, event attributes, baggage, or resource attributes. Baggage is deny-by-default; source text, credentials, and large evidence payloads are forbidden carriers.
+Trace identity and semantic identity are distinct. Read `correlation.cue` and apply `ctrlTelemetryCarrierPolicy` before projecting ctrl identities into span attributes, event attributes, baggage, or resource attributes. Baggage is deny-by-default; source text, prompt content, credentials, and large evidence payloads are forbidden carriers.
+
+Correlate the generating trajectory explicitly when identities exist: agent turn -> tool/MCP call -> repository mutation -> test attempt/probe -> evidence -> qualification. Trace/span identity answers causality; semantic identities answer what subject was acted on.
 
 ## CPython operationalization
 
@@ -101,7 +119,7 @@ Use `authority_revision` for the pre-publication contract revision actually eval
 
 ## Bootstrap run
 
-If `latest.json` does not exist, establish a bootstrap baseline rather than inventing a historical delta. Resolve exact current source/channel revisions, verify required upstream surfaces exist, bind observations to declared graph nodes/edges, disclose unavailable executable validation, set the corresponding qualification state, and publish a normal sealed bundle.
+If `latest.json` does not exist, establish a bootstrap baseline rather than inventing a historical delta. Resolve exact current source/channel revisions, verify required upstream surfaces exist, bind observations to declared project topology and graph nodes/edges, disclose unavailable executable validation, set the corresponding qualification state, and publish a normal sealed bundle.
 
 ## Publication
 
