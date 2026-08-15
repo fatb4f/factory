@@ -117,13 +117,14 @@ ctrlSourcePolicy: close({
 	genaiSemanticSource: "otel-genai-semconv/main"
 	genaiPythonRealizationSource: "otel-python-genai/main"
 	columnarTelemetrySource: "otel-arrow/main"
-	externalFactAcquisitionSource: "dlt/devel"
+	externalObservationAcquisitionSource: "dlt/devel"
 	codexChannelsDistinct: true
 	cpythonChannelsDistinct: true
 	cuePinnedDistinctFromForecast: true
 	astralAnalyzerIsEvidenceOnly: true
 	otelTelemetryIsObservationOnly: true
 	otelArrowPreservesOTLPOTAPDistinction: true
-	dltFactsDistinctFromRuntimeObservations: true
+	dltAcquiredRecordsRequireAdmissionBeforeFactStatus: true
+	externalObservationsDistinctFromRuntimeObservations: true
 	optionalSatellitesCannotBlockWithoutLocalConsumer: true
 })
