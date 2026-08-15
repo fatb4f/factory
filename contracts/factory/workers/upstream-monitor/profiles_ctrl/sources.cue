@@ -31,6 +31,14 @@ ctrlSources: {
 			main: {id: "main", ref: "main", mode: "forecast", required: true}
 		}
 	}
+	scip: {
+		id: "scip"
+		repository: "scip-code/scip"
+		role: "upstream_evidence_only"
+		channels: {
+			main: {id: "main", ref: "main", mode: "forecast", required: true}
+		}
+	}
 	"otel-python-core": {
 		id: "otel-python-core"
 		repository: "open-telemetry/opentelemetry-python"
@@ -79,6 +87,46 @@ ctrlSources: {
 			devel: {id: "devel", ref: "devel", mode: "release-watch", required: false}
 		}
 	}
+	arrow: {
+		id: "arrow"
+		repository: "apache/arrow"
+		role: "upstream_evidence_only"
+		channels: {
+			main: {id: "main", ref: "main", mode: "release-watch", required: false}
+		}
+	}
+	duckdb: {
+		id: "duckdb"
+		repository: "duckdb/duckdb"
+		role: "upstream_evidence_only"
+		channels: {
+			main: {id: "main", ref: "main", mode: "release-watch", required: false}
+		}
+	}
+	ibis: {
+		id: "ibis"
+		repository: "ibis-project/ibis"
+		role: "upstream_evidence_only"
+		channels: {
+			main: {id: "main", ref: "main", mode: "release-watch", required: false}
+		}
+	}
+	marimo: {
+		id: "marimo"
+		repository: "marimo-team/marimo"
+		role: "upstream_evidence_only"
+		channels: {
+			main: {id: "main", ref: "main", mode: "release-watch", required: false}
+		}
+	}
+	"pydantic-graph": {
+		id: "pydantic-graph"
+		repository: "pydantic/pydantic-ai"
+		role: "upstream_evidence_only"
+		channels: {
+			main: {id: "main", ref: "main", mode: "release-watch", required: false}
+		}
+	}
 	cue: {
 		id: "cue"
 		repository: "cue-lang/cue"
@@ -112,19 +160,28 @@ ctrlSourcePolicy: close({
 	cpythonForecastSource: "cpython/main"
 	astralStaticSource: "astral-python/main"
 	astralInstalledBaselineSource: "fatb4f/ctrl@main uv.lock"
+	semanticIdentitySource: "scip/main"
 	telemetryCoreSource: "otel-python-core/main"
 	telemetryProviderSource: "otel-python-contrib/main"
 	genaiSemanticSource: "otel-genai-semconv/main"
 	genaiPythonRealizationSource: "otel-python-genai/main"
 	columnarTelemetrySource: "otel-arrow/main"
 	externalObservationAcquisitionSource: "dlt/devel"
+	columnarRelationSource: "arrow/main"
+	relationalSubstrateSource: "duckdb/main"
+	semanticQuerySource: "ibis/main"
+	diagnosticProjectionSource: "marimo/main"
+	executionGraphImplementationSource: "pydantic-graph/main"
 	codexChannelsDistinct: true
 	cpythonChannelsDistinct: true
 	cuePinnedDistinctFromForecast: true
 	astralAnalyzerIsEvidenceOnly: true
+	scipIdentityDoesNotOverrideCpythonSemantics: true
 	otelTelemetryIsObservationOnly: true
 	otelArrowPreservesOTLPOTAPDistinction: true
 	dltAcquiredRecordsRequireAdmissionBeforeFactStatus: true
 	externalObservationsDistinctFromRuntimeObservations: true
+	relationalAndWorkbenchProvidersAreProjectionOnly: true
+	executionGraphImplementationIsReplaceable: true
 	optionalSatellitesCannotBlockWithoutLocalConsumer: true
 })
