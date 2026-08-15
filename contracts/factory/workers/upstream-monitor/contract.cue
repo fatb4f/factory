@@ -9,7 +9,7 @@ package upstreammonitor
 #SourceRole: "upstream_evidence_only" | "pinned_external_semantics"
 #ChannelMode: "active-baseline" | "forecast" | "release-watch" | "pinned-authority"
 #ChannelStatus: "resolved" | "unresolved"
-#ObservationKind: "source" | "schema" | "projection" | "runtime" | "rollout" | "upstream-test" | "probe" | "dependency" | "context" | "analyzer"
+#ObservationKind: "source" | "schema" | "projection" | "runtime" | "rollout" | "upstream-test" | "probe" | "dependency" | "context" | "analyzer" | "telemetry" | "semantic-convention" | "transport" | "acquisition"
 #GraphEdgeKind: "depends-on" | "projects-to" | "observed-by" | "validated-by" | "consumed-by"
 #RunArtifactKind: "report" | "summary" | "evidence"
 
