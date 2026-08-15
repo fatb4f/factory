@@ -1,0 +1,319 @@
+{
+  "apiVersion": "factory.upstream-monitor.ctrl.evidence/v1",
+  "kind": "CtrlUpstreamEvidence",
+  "run_id": "20260815T132600Z",
+  "profile_id": "ctrl",
+  "terminal_state": "terminal_success",
+  "factory_revision": "91c4d7aed8c3a988e113f7dfed752b0fa7d4c6f8",
+  "ctrl_revision": "b5f82c3a5e33d08d1f5d07cb2c9724c7679c7538",
+  "bootstrap_baseline": false,
+  "sources": [
+    {"source":"codex","channel":"main","status":"resolved","head_commit":"a7edf37cb46b5fc4d50bd03df8e5999a86f602eb","evidence":["openai/codex@main resolved for the refreshed ctrl baseline"]},
+    {"source":"codex","channel":"latest-alpha-cli","status":"resolved","head_commit":"334c6ed7fd26cb96d9aa2849cf384ec8fb218f34","evidence":["openai/codex@latest-alpha-cli resolved separately from main"]},
+    {"source":"cpython","channel":"3.14","status":"resolved","head_commit":"3192cfdff70ef0771f39d2da046186d01951259c","version":"3.14","evidence":["python/cpython@3.14 resolved as ctrl active compiler/runtime evidence baseline"]},
+    {"source":"cpython","channel":"main","status":"resolved","head_commit":"948fd7e5c084274c3945d2004a7fffd19c907a15","evidence":["python/cpython@main resolved as forecast evidence only"]},
+    {"source":"astral-python","channel":"main","status":"resolved","head_commit":"36cc91ffb72adde11f0c4dfb76330a07481f6153","evidence":["astral-sh/ruff@main resolved as static-analyzer forecast evidence"]},
+    {"source":"otel-python-core","channel":"main","status":"resolved","head_commit":"aa8e7dbdfa4bd35c1d780d8c4cd5c7d6e3983ea8","evidence":["open-telemetry/opentelemetry-python@main resolved","repository contains OpenTelemetry Python API/SDK/configuration and OTLP test/export surfaces"]},
+    {"source":"otel-python-contrib","channel":"main","status":"resolved","head_commit":"1192425cdc7be548a1f50e59cef0c13424fdfbad","evidence":["open-telemetry/opentelemetry-python-contrib@main resolved","README states instrumentation packages are independently installable, instrumented libraries should depend on opentelemetry-api while applications choose the SDK, and contrib libraries are currently beta"]},
+    {"source":"otel-genai-semconv","channel":"main","status":"resolved","head_commit":"30182acd5ed78ab5f619041eaec5e95a4eb83a48","evidence":["open-telemetry/semantic-conventions-genai@main resolved","README defines GenAI spans, metrics and events for clients, MCP and provider-specific conventions including OpenAI","README states major human-readable docs are generated from YAML model definitions and Weaver manages dependency on core semantic conventions"]},
+    {"source":"otel-python-genai","channel":"main","status":"resolved","head_commit":"ae0343175a418e4d661e2508eec17dbd887ad5a3","evidence":["open-telemetry/opentelemetry-python-genai@main resolved","README states instrumentations build on OpenTelemetry Python SDK and contrib instrumentation, use opentelemetry-util-genai, and emit spans/metrics/logs according to GenAI semantic conventions","released OpenAI and OpenAI Agents instrumentations are listed at beta versions"]},
+    {"source":"otel-arrow","channel":"main","status":"resolved","head_commit":"5abeaf8efbd37b6c8519fc8edcd519281e988bbd","evidence":["open-telemetry/otel-arrow@main resolved","README defines OTAP as the column-oriented equivalent of OTLP with non-lossy bidirectional conversion","README describes multiple Arrow RecordBatches/star-schema telemetry, embeddable Rust dataflow, Arrow IPC durable buffering, DataFusion transforms and Parquet export"]},
+    {"source":"dlt","channel":"devel","status":"resolved","head_commit":"a4243c994b9fade227d23e4bb18dab70037507cf","evidence":["dlt-hub/dlt@devel resolved as optional external-fact acquisition evidence","README demonstrates declarative API acquisition with extraction, normalization and loading into DuckDB"]},
+    {"source":"cue","channel":"pinned","status":"resolved","head_commit":"806821e40fae070318600a264d311517e596353b","version":"module target v0.18.0","evidence":["ctrl pinned CUE evaluator revision remains the semantic evaluator baseline"]},
+    {"source":"cue","channel":"master","status":"resolved","head_commit":"f356f8f46cedb8e853ed200fb46ab49a68bfe357","evidence":["cue-lang/cue@master remains distinct forecast evidence"]},
+    {"source":"uv","channel":"main","status":"resolved","head_commit":"f1a42680ff5272232d65748acf338b19778dde24","evidence":["astral-sh/uv@main release-watch source resolved"]},
+    {"source":"jj","channel":"main","status":"resolved","head_commit":"7fa941edb45b62efdadff6b01f6f8674dbad9063","evidence":["jj-vcs/jj@main release-watch source resolved"]}
+  ],
+  "graph": {
+    "nodesObserved": [
+      "otel-python-api-sdk",
+      "otel-contrib-instrumentors",
+      "otel-genai-semconv-model",
+      "otel-python-genai-instrumentation",
+      "otel-otlp",
+      "otel-arrow-otap",
+      "otel-arrow-recordbatch",
+      "otel-arrow-dataflow",
+      "otel-arrow-storage",
+      "dlt-external-acquisition",
+      "ctrl-observation-context",
+      "ctrl-correlation-identity",
+      "ctrl-relational-ingress",
+      "codex-live-runtime",
+      "cpython-control-graph",
+      "cpython-probes",
+      "astral-cpython-correlation"
+    ],
+    "edgesEvaluated": [
+      "otel-core-observation",
+      "otel-contrib-observation",
+      "otel-genai-model-realization",
+      "otel-genai-observation",
+      "codex-otel-observation",
+      "cpython-otel-observation",
+      "probe-otel-observation",
+      "astral-otel-correlation",
+      "probe-correlation-identity",
+      "correlation-context",
+      "otel-context-otlp",
+      "otlp-otap",
+      "otap-recordbatch",
+      "recordbatch-dataflow",
+      "dataflow-storage",
+      "otel-relational-ingress",
+      "dlt-relational-ingress"
+    ],
+    "testBindingsEvaluated": [],
+    "probeBindingsEvaluated": ["probe-otel-causal-correlation","probe-otlp-otap-roundtrip"]
+  },
+  "items": [
+    {
+      "id": "otel-runtime-acquisition-fabric",
+      "title": "Use OpenTelemetry as ctrl's execution acquisition fabric",
+      "decision": "contract-update",
+      "severity": "high",
+      "sources": ["otel-python-core","otel-python-contrib"],
+      "nodes": ["otel-python-api-sdk","otel-contrib-instrumentors","ctrl-observation-context","ctrl-correlation-identity"],
+      "summary": "OpenTelemetry Python and contrib already provide the generic execution-observation, context propagation and provider-adapter layer that ctrl would otherwise need to build. ctrl-specific instrumentation should concentrate on CPython probes, regrtest, qualification operations and semantic join identities.",
+      "localContractImpact": "Add an observation adapter family around OpenTelemetry context/signals; reuse contrib instrumentors for generic Python plumbing and preserve custom semantic probes for domain evidence.",
+      "observations": [
+        {
+          "id": "obs-otel-core-main",
+          "reportItemID": "otel-runtime-acquisition-fabric",
+          "source": "otel-python-core",
+          "channel": "main",
+          "kind": "telemetry",
+          "path": "opentelemetry-sdk/",
+          "nodeMatches": ["otel-python-api-sdk","ctrl-observation-context"],
+          "observation": "OpenTelemetry Python main provides the API/SDK substrate and OTLP/export surfaces used as ctrl's generic causal execution-observation layer.",
+          "decision": "contract-update",
+          "severity": "high"
+        },
+        {
+          "id": "obs-otel-contrib-main",
+          "reportItemID": "otel-runtime-acquisition-fabric",
+          "source": "otel-python-contrib",
+          "channel": "main",
+          "kind": "telemetry",
+          "path": "README.md",
+          "nodeMatches": ["otel-contrib-instrumentors","ctrl-observation-context"],
+          "observation": "Contrib documents independently installable instrumentation packages, API-only dependencies for instrumented libraries, application-selected SDKs, and beta maturity.",
+          "decision": "contract-update",
+          "severity": "high"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-otel-provider-fabric",
+          "text": "Generic runtime plumbing should be acquired through OpenTelemetry provider/instrumentation packages while ctrl retains domain-specific CPython and qualification probes.",
+          "observationRefs": ["obs-otel-core-main","obs-otel-contrib-main"]
+        },
+        {
+          "id": "claim-otel-authority-boundary",
+          "text": "OpenTelemetry observations provide causal/runtime evidence only and cannot serve as AST, symbol, compiler, analyzer or qualification authority.",
+          "observationRefs": ["obs-otel-core-main","obs-otel-contrib-main"]
+        }
+      ]
+    },
+    {
+      "id": "otel-genai-causal-provenance",
+      "title": "Correlate agent and MCP execution with qualification traces",
+      "decision": "contract-update",
+      "severity": "high",
+      "sources": ["otel-genai-semconv","otel-python-genai"],
+      "nodes": ["otel-genai-semconv-model","otel-python-genai-instrumentation","ctrl-observation-context","ctrl-correlation-identity"],
+      "summary": "GenAI semantic conventions and their Python realization provide a ready-made observation family for model/client/MCP/provider activity that can share trace context with repository, analyzer, CPython and qualification operations.",
+      "localContractImpact": "Bind GenAI/MCP/OpenAI observations to qualification-run, repository-revision, tool, probe and evidence identities without making trace IDs semantic object identities.",
+      "observations": [
+        {
+          "id": "obs-genai-semconv-main",
+          "reportItemID": "otel-genai-causal-provenance",
+          "source": "otel-genai-semconv",
+          "channel": "main",
+          "kind": "semantic-convention",
+          "path": "README.md",
+          "nodeMatches": ["otel-genai-semconv-model"],
+          "observation": "The GenAI extension defines spans, metrics and events for GenAI clients, MCP and provider-specific conventions including OpenAI, with major documentation generated from YAML model definitions and Weaver-managed core-semconv dependencies.",
+          "decision": "contract-update",
+          "severity": "high"
+        },
+        {
+          "id": "obs-python-genai-main",
+          "reportItemID": "otel-genai-causal-provenance",
+          "source": "otel-python-genai",
+          "channel": "main",
+          "kind": "telemetry",
+          "path": "README.md",
+          "nodeMatches": ["otel-python-genai-instrumentation","ctrl-observation-context"],
+          "observation": "Python GenAI instrumentations build on the OpenTelemetry Python SDK/contrib substrate, emit according to GenAI semantic conventions, and include released OpenAI and OpenAI Agents instrumentations.",
+          "decision": "contract-update",
+          "severity": "high"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-genai-shared-trace",
+          "text": "Agent/model/tool/MCP operations can participate in the same causal trace as analysis and qualification while remaining a distinct observation family.",
+          "observationRefs": ["obs-genai-semconv-main","obs-python-genai-main"]
+        }
+      ]
+    },
+    {
+      "id": "otel-arrow-columnar-transport",
+      "title": "Adopt OTel-Arrow as the columnar telemetry projection",
+      "decision": "contract-update",
+      "severity": "high",
+      "sources": ["otel-arrow"],
+      "nodes": ["otel-otlp","otel-arrow-otap","otel-arrow-recordbatch","otel-arrow-dataflow","otel-arrow-storage","ctrl-relational-ingress"],
+      "summary": "OTel-Arrow already supplies the OTLP-to-columnar bridge: OTAP is defined as a non-lossy column-oriented OpenTelemetry protocol, represented as Arrow record batches, with an embeddable Rust dataflow engine and Arrow IPC/Parquet persistence paths.",
+      "localContractImpact": "Qualify OTLP/OTAP round-trip preservation and consume OTAP Arrow/Parquet outputs at ctrl's relational ingress before considering any bespoke SpanExporter-to-Arrow implementation.",
+      "observations": [
+        {
+          "id": "obs-otap-protocol-main",
+          "reportItemID": "otel-arrow-columnar-transport",
+          "source": "otel-arrow",
+          "channel": "main",
+          "kind": "transport",
+          "path": "README.md",
+          "nodeMatches": ["otel-arrow-otap","otel-arrow-recordbatch"],
+          "observation": "OTel-Arrow documents OTAP as the column-oriented equivalent of OTLP with straightforward non-lossy round trips and represents OTAP signals using multiple Arrow record batches in a star-schema arrangement.",
+          "decision": "contract-update",
+          "severity": "high"
+        },
+        {
+          "id": "obs-otap-dataflow-main",
+          "reportItemID": "otel-arrow-columnar-transport",
+          "source": "otel-arrow",
+          "channel": "main",
+          "kind": "transport",
+          "path": "rust/otap-dataflow/",
+          "nodeMatches": ["otel-arrow-dataflow","otel-arrow-storage"],
+          "observation": "The Rust OTAP Dataflow Engine is documented as embeddable and includes OTLP/OTAP I/O, routing/filtering/sampling, Arrow IPC durable buffering, DataFusion transforms and Parquet export.",
+          "decision": "contract-update",
+          "severity": "high"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-no-custom-arrow-bridge-first",
+          "text": "ctrl should first qualify and reuse the existing OTLP -> OTAP -> Arrow path rather than create an independent telemetry-to-Arrow semantic conversion layer.",
+          "observationRefs": ["obs-otap-protocol-main","obs-otap-dataflow-main"]
+        }
+      ]
+    },
+    {
+      "id": "dlt-otel-acquisition-separation",
+      "title": "Keep external facts separate from execution observations",
+      "decision": "note",
+      "severity": "note",
+      "sources": ["dlt","otel-python-core"],
+      "nodes": ["dlt-external-acquisition","ctrl-observation-context","ctrl-relational-ingress"],
+      "summary": "dlt and OpenTelemetry solve different acquisition problems: dlt acquires external data facts while OpenTelemetry acquires execution observations. Both may converge at Arrow/relational ingress without collapsing provenance.",
+      "localContractImpact": "Preserve acquisition-family identity in normalized facts and correlation joins.",
+      "observations": [
+        {
+          "id": "obs-dlt-declarative-acquisition",
+          "reportItemID": "dlt-otel-acquisition-separation",
+          "source": "dlt",
+          "channel": "devel",
+          "kind": "acquisition",
+          "path": "README.md",
+          "nodeMatches": ["dlt-external-acquisition","ctrl-relational-ingress"],
+          "observation": "dlt documents declarative API acquisition and extract/normalize/load pipelines with DuckDB as a local destination.",
+          "decision": "note",
+          "severity": "note"
+        },
+        {
+          "id": "obs-otel-execution-family",
+          "reportItemID": "dlt-otel-acquisition-separation",
+          "source": "otel-python-core",
+          "channel": "main",
+          "kind": "telemetry",
+          "path": "opentelemetry-sdk/",
+          "nodeMatches": ["ctrl-observation-context"],
+          "observation": "OpenTelemetry is bound in the ctrl profile to execution observations and causal context, not external domain-data acquisition.",
+          "decision": "note",
+          "severity": "note"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-acquisition-family-separation",
+          "text": "External facts and execution observations may share relational storage but must retain distinct acquisition provenance.",
+          "observationRefs": ["obs-dlt-declarative-acquisition","obs-otel-execution-family"]
+        }
+      ]
+    },
+    {
+      "id": "otel-maturity-boundary",
+      "title": "Treat telemetry maturity as qualification metadata, not authority",
+      "decision": "note",
+      "severity": "note",
+      "sources": ["otel-python-contrib","otel-python-genai","otel-arrow"],
+      "nodes": ["otel-contrib-instrumentors","otel-python-genai-instrumentation","otel-arrow-dataflow"],
+      "summary": "The selected telemetry ecosystem includes beta Python instrumentation and an actively developing OTAP Dataflow Engine. These are suitable experimental adapters but are not promoted into ctrl semantic authority.",
+      "localContractImpact": "Record component maturity/version in evidence and pin realized adapters before relying on them for reproducible qualification runs.",
+      "observations": [
+        {
+          "id": "obs-contrib-beta",
+          "reportItemID": "otel-maturity-boundary",
+          "source": "otel-python-contrib",
+          "channel": "main",
+          "kind": "context",
+          "path": "README.md",
+          "nodeMatches": ["otel-contrib-instrumentors"],
+          "observation": "Python contrib explicitly labels its instrumentation libraries beta.",
+          "decision": "note",
+          "severity": "note"
+        },
+        {
+          "id": "obs-genai-beta",
+          "reportItemID": "otel-maturity-boundary",
+          "source": "otel-python-genai",
+          "channel": "main",
+          "kind": "context",
+          "path": "README.md",
+          "nodeMatches": ["otel-python-genai-instrumentation"],
+          "observation": "Current released GenAI Python instrumentations shown in the repository are beta releases such as 1.0b0 and 1.0b1.",
+          "decision": "note",
+          "severity": "note"
+        },
+        {
+          "id": "obs-otap-development",
+          "reportItemID": "otel-maturity-boundary",
+          "source": "otel-arrow",
+          "channel": "main",
+          "kind": "context",
+          "path": "README.md",
+          "nodeMatches": ["otel-arrow-dataflow"],
+          "observation": "OTel-Arrow states it is completing the Dataflow Engine phase and does not currently provide pre-built Dataflow Engine releases.",
+          "decision": "note",
+          "severity": "note"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-maturity-boundary",
+          "text": "Experimental telemetry adapters may produce evidence but do not become ctrl semantic or qualification authority.",
+          "observationRefs": ["obs-contrib-beta","obs-genai-beta","obs-otap-development"]
+        }
+      ]
+    }
+  ],
+  "validation": {
+    "authorityRead": true,
+    "ctrlContextRead": true,
+    "sourceChannelsDistinct": true,
+    "graphModelRead": true,
+    "publicationPlanRead": true,
+    "forbiddenAttractorsChecked": true,
+    "cueExecution": "not_available_to_github_app",
+    "executableCpythonProbes": "not_executed_bootstrap",
+    "executableRegrtest": "not_executed_bootstrap",
+    "executableAstralCorrelation": "not_executed_bootstrap",
+    "executableOtelPipeline": "not_executed_bootstrap",
+    "executableOtlpOtapRoundtrip": "not_executed_bootstrap",
+    "reportProjectionOnly": true,
+    "summaryProjectionOnly": true
+  }
+}
