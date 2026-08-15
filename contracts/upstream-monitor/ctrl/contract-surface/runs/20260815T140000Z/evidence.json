@@ -1,0 +1,236 @@
+{
+  "apiVersion": "factory.upstream-monitor.ctrl.evidence/v2",
+  "kind": "CtrlUpstreamEvidence",
+  "run_id": "20260815T140000Z",
+  "profile_id": "ctrl",
+  "terminal_state": "terminal_success",
+  "monitor_state": "terminal_success",
+  "qualification_state": "observation_only",
+  "authority_revision": "a00ea5f2e1311bbae5aa47589eebd94c88ad6405",
+  "ctrl_revision": "b5f82c3a5e33d08d1f5d07cb2c9724c7679c7538",
+  "bootstrap_baseline": false,
+  "sources": [
+    {
+      "source": "factory-authority",
+      "channel": "ctrl-monitor-v2",
+      "status": "resolved",
+      "head_commit": "a00ea5f2e1311bbae5aa47589eebd94c88ad6405",
+      "evidence": [
+        "factory authority snapshot after public ingress, report template, correlation carrier, graph, evidence/report v2, and publication semantics corrections"
+      ]
+    },
+    {"source":"codex","channel":"main","status":"resolved","head_commit":"a7edf37cb46b5fc4d50bd03df8e5999a86f602eb","evidence":["required Codex active source resolved"]},
+    {"source":"codex","channel":"latest-alpha-cli","status":"resolved","head_commit":"334c6ed7fd26cb96d9aa2849cf384ec8fb218f34","evidence":["required Codex alpha forecast source resolved"]},
+    {"source":"cpython","channel":"3.14","status":"resolved","head_commit":"3192cfdff70ef0771f39d2da046186d01951259c","version":"3.14","evidence":["active CPython compiler/runtime baseline resolved"]},
+    {"source":"cpython","channel":"main","status":"resolved","head_commit":"948fd7e5c084274c3945d2004a7fffd19c907a15","evidence":["CPython forecast source resolved"]},
+    {"source":"astral-python","channel":"main","status":"resolved","head_commit":"36cc91ffb72adde11f0c4dfb76330a07481f6153","evidence":["Astral Rust analyzer forecast source resolved"]},
+    {"source":"otel-python-core","channel":"main","status":"resolved","head_commit":"aa8e7dbdfa4bd35c1d780d8c4cd5c7d6e3983ea8","evidence":["OpenTelemetry Python core source resolved","baggage API exposes context-scoped arbitrary name/value mapping via set_baggage/get_baggage"]},
+    {"source":"otel-python-contrib","channel":"main","status":"resolved","head_commit":"1192425cdc7be548a1f50e59cef0c13424fdfbad","evidence":["Python contrib provider-adapter source resolved"]},
+    {"source":"otel-genai-semconv","channel":"main","status":"resolved","head_commit":"30182acd5ed78ab5f619041eaec5e95a4eb83a48","evidence":["GenAI/MCP semantic-convention source resolved"]},
+    {"source":"otel-python-genai","channel":"main","status":"resolved","head_commit":"ae0343175a418e4d661e2508eec17dbd887ad5a3","evidence":["Python GenAI instrumentation source resolved"]},
+    {"source":"otel-arrow","channel":"main","status":"resolved","head_commit":"5abeaf8efbd37b6c8519fc8edcd519281e988bbd","evidence":["OTel-Arrow source resolved","OTAP remains specified as a non-lossy columnar projection of OTLP"]},
+    {"source":"dlt","channel":"devel","status":"resolved","head_commit":"a4243c994b9fade227d23e4bb18dab70037507cf","evidence":["dlt external acquisition release-watch source resolved","dlt documentation describes extract/normalize/load records rather than an epistemic truth authority"]},
+    {"source":"cue","channel":"pinned","status":"resolved","head_commit":"806821e40fae070318600a264d311517e596353b","evidence":["ctrl pinned CUE evaluator remains distinct from forecast"]},
+    {"source":"cue","channel":"master","status":"resolved","head_commit":"f356f8f46cedb8e853ed200fb46ab49a68bfe357","evidence":["CUE master forecast source resolved"]},
+    {"source":"uv","channel":"main","status":"resolved","head_commit":"f1a42680ff5272232d65748acf338b19778dde24","evidence":["optional uv release-watch source resolved"]},
+    {"source":"jj","channel":"main","status":"resolved","head_commit":"7fa941edb45b62efdadff6b01f6f8674dbad9063","evidence":["optional Jujutsu release-watch source resolved"]}
+  ],
+  "graph": {
+    "nodesObserved": [
+      "dlt-external-observations",
+      "ctrl-correlation-identity",
+      "ctrl-observation-context",
+      "otel-python-api-sdk",
+      "otel-otlp",
+      "otel-arrow-otap",
+      "otel-arrow-recordbatch",
+      "ctrl-relational-ingress"
+    ],
+    "edgesEvaluated": [
+      "correlation-context",
+      "otel-context-otlp",
+      "otlp-otap",
+      "otap-recordbatch",
+      "dlt-relational-ingress"
+    ],
+    "testBindingsEvaluated": [],
+    "probeBindingsEvaluated": [
+      "probe-otel-causal-correlation",
+      "probe-otlp-otap-roundtrip"
+    ]
+  },
+  "items": [
+    {
+      "id": "external-observation-terminology",
+      "title": "Treat dlt output as externally acquired observations, not facts",
+      "decision": "contract-update",
+      "severity": "high",
+      "sources": ["dlt"],
+      "nodes": ["dlt-external-observations","ctrl-relational-ingress"],
+      "summary": "dlt acquires and normalizes external records/claims. The ctrl graph no longer grants those records fact status at acquisition time; provenance, admission, correlation and qualification remain separate steps.",
+      "localContractImpact": "Rename dlt graph/operation vocabulary to external observations and require admission before fact status.",
+      "observations": [
+        {
+          "id": "obs-dlt-observation-boundary",
+          "reportItemID": "external-observation-terminology",
+          "source": "dlt",
+          "channel": "devel",
+          "kind": "external-observation",
+          "path": "README.md",
+          "nodeMatches": ["dlt-external-observations"],
+          "observation": "dlt presents extraction, normalization and loading as data-pipeline operations; ctrl now preserves acquired record/claim status until epistemic admission.",
+          "decision": "contract-update",
+          "severity": "high"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-dlt-observation",
+          "text": "Acquisition adapters do not establish truth; dlt records require ctrl admission before any fact status.",
+          "observationRefs": ["obs-dlt-observation-boundary"]
+        }
+      ]
+    },
+    {
+      "id": "telemetry-carrier-policy",
+      "title": "Constrain how ctrl semantic identities enter OpenTelemetry carriers",
+      "decision": "contract-update",
+      "severity": "high",
+      "sources": ["otel-python-core"],
+      "nodes": ["ctrl-correlation-identity","ctrl-observation-context","otel-python-api-sdk"],
+      "summary": "The new carrier policy separates semantic join identities from trace/span identity and denies baggage by default. Only explicitly admitted opaque identifiers may propagate; source text, credentials and large evidence payloads are forbidden.",
+      "localContractImpact": "Add #CorrelationIdentity and ctrlTelemetryCarrierPolicy; apply it before StartObservationContext or telemetry export.",
+      "observations": [
+        {
+          "id": "obs-otel-baggage-api",
+          "reportItemID": "telemetry-carrier-policy",
+          "source": "otel-python-core",
+          "channel": "main",
+          "kind": "telemetry",
+          "path": "opentelemetry-api/src/opentelemetry/baggage/__init__.py",
+          "nodeMatches": ["otel-python-api-sdk","ctrl-observation-context"],
+          "observation": "The OTel Python baggage API stores arbitrary name/value entries in Context, making an explicit ctrl propagation allowlist necessary.",
+          "decision": "contract-update",
+          "severity": "high"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-carrier-policy",
+          "text": "Semantic identity must be projected into telemetry carriers by declared policy rather than bulk baggage serialization.",
+          "observationRefs": ["obs-otel-baggage-api"]
+        }
+      ]
+    },
+    {
+      "id": "otlp-otap-p0-scope",
+      "title": "Constrain P0 OTLP OTAP qualification to trace semantics",
+      "decision": "contract-update",
+      "severity": "high",
+      "sources": ["otel-arrow"],
+      "nodes": ["otel-otlp","otel-arrow-otap","otel-arrow-recordbatch"],
+      "summary": "P0 now compares a canonical trace semantic representation before and after OTLP -> OTAP -> OTLP while excluding Arrow physical layout. Metrics and logs are deferred.",
+      "localContractImpact": "Keep the first executable transport witness narrow enough to establish semantic preservation without turning OTAP qualification into a generalized telemetry project.",
+      "observations": [
+        {
+          "id": "obs-otap-lossless-boundary",
+          "reportItemID": "otlp-otap-p0-scope",
+          "source": "otel-arrow",
+          "channel": "main",
+          "kind": "transport",
+          "path": "README.md",
+          "nodeMatches": ["otel-arrow-otap","otel-arrow-recordbatch"],
+          "observation": "OTel-Arrow defines OTAP as the column-oriented equivalent of OTLP with non-lossy bidirectional conversion and a physical representation based on multiple Arrow record batches.",
+          "decision": "contract-update",
+          "severity": "high"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-p0-roundtrip",
+          "text": "Trace semantic preservation can be qualified independently from Arrow batch layout and before metrics/logs are admitted to P0.",
+          "observationRefs": ["obs-otap-lossless-boundary"]
+        }
+      ]
+    },
+    {
+      "id": "orthogonal-qualification-state",
+      "title": "Separate monitor completion from executable qualification state",
+      "decision": "contract-update",
+      "severity": "high",
+      "sources": ["factory-authority"],
+      "nodes": ["ctrl-observation-context"],
+      "summary": "The v2 evidence/report contract preserves terminal_success for the monitor loop while independently recording observation_only, executable_validated, or executable_failed.",
+      "localContractImpact": "Prevent downstream consumers from reading successful publication as evidence that executable probes passed.",
+      "observations": [
+        {
+          "id": "obs-state-contract-v2",
+          "reportItemID": "orthogonal-qualification-state",
+          "source": "factory-authority",
+          "channel": "ctrl-monitor-v2",
+          "kind": "context",
+          "path": "contracts/factory/workers/upstream-monitor/profiles_ctrl/evidence.cue",
+          "nodeMatches": ["ctrl-observation-context"],
+          "observation": "v2 run evidence records monitor_state and qualification_state independently; this run is terminal_success plus observation_only.",
+          "decision": "contract-update",
+          "severity": "high"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-state-separation",
+          "text": "Monitor completion does not imply executable qualification success.",
+          "observationRefs": ["obs-state-contract-v2"]
+        }
+      ]
+    },
+    {
+      "id": "authority-publication-revision-semantics",
+      "title": "Disambiguate authority revision from publication revision",
+      "decision": "contract-update",
+      "severity": "high",
+      "sources": ["factory-authority"],
+      "nodes": ["ctrl-relational-ingress"],
+      "summary": "v2 report/evidence semantics use authority_revision for the pre-publication contract state. latest.json may separately record publication_revision as the manifest-seal commit, avoiding a recursive pointer hash.",
+      "localContractImpact": "Replace ambiguous factory_revision naming in v2 outputs and make publication identity non-recursive.",
+      "observations": [
+        {
+          "id": "obs-revision-contract-v2",
+          "reportItemID": "authority-publication-revision-semantics",
+          "source": "factory-authority",
+          "channel": "ctrl-monitor-v2",
+          "kind": "context",
+          "path": "contracts/factory/workers/upstream-monitor/profiles_ctrl/publication.cue",
+          "nodeMatches": ["ctrl-relational-ingress"],
+          "observation": "The publication contract defines authority_revision as the evaluated pre-publication contract commit and publication_revision as the manifest-seal commit recorded by the later latest pointer.",
+          "decision": "contract-update",
+          "severity": "high"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-revision-separation",
+          "text": "The run binds the authority it evaluated without recursively claiming the commit produced by latest-pointer publication.",
+          "observationRefs": ["obs-revision-contract-v2"]
+        }
+      ]
+    }
+  ],
+  "validation": {
+    "authorityRead": true,
+    "ctrlContextRead": true,
+    "sourceChannelsDistinct": true,
+    "graphModelRead": true,
+    "correlationCarrierPolicyRead": true,
+    "publicationPlanRead": true,
+    "forbiddenAttractorsChecked": true,
+    "cueExecution": "not_available_to_github_app",
+    "executableCpythonProbes": "not_executed",
+    "executableRegrtest": "not_executed",
+    "executableAstralCorrelation": "not_executed",
+    "executableOtelPipeline": "not_executed",
+    "executableOtlpOtapRoundtrip": "not_executed",
+    "reportProjectionOnly": true,
+    "summaryProjectionOnly": true
+  }
+}
