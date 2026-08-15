@@ -112,6 +112,8 @@ The comparator explicitly ignores record-batch partitioning, dictionary encoding
 
 The second P0 witness remains `otel-causal-correlation`: admitted semantic identity must survive execution observation without collapsing into trace/span identity or indiscriminate baggage.
 
+The implementation frontier is intentionally limited to one `RunProbe` operation, one normalized CPython observation, one OTel trace/event, OTLP -> OTAP -> Arrow/Parquet, one relational correlation query, and these two witnesses. Marimo remains deferred until those joins are executable.
+
 ## Run-state and publication semantics
 
 Decision: `contract-update`.
@@ -141,8 +143,7 @@ None.
 
 ## Notes
 
-- Architecture expansion is intentionally stopped for this slice. The next qualification work is the smallest end-to-end realization, not another provider.
-- Marimo remains deferred until the relation containing semantic, static, causal, and qualification identities is executable and joinable.
+None.
 
 ## No local action
 
