@@ -4,12 +4,13 @@ package upstreammonitor
 #CommitSHA: string & =~ "^[0-9a-f]{40}$"
 #GitObjectSHA: string & =~ "^[0-9a-f]{40}$"
 #TerminalState: "terminal_success" | "terminal_abort" | "terminal_deferred" | "coverage_gap"
+#QualificationState: "observation_only" | "executable_validated" | "executable_failed"
 #ImpactDecision: "none" | "note" | "contract-update" | "blocking-gate"
 #Severity: "none" | "note" | "high" | "critical"
 #SourceRole: "upstream_evidence_only" | "pinned_external_semantics"
 #ChannelMode: "active-baseline" | "forecast" | "release-watch" | "pinned-authority"
 #ChannelStatus: "resolved" | "unresolved"
-#ObservationKind: "source" | "schema" | "projection" | "runtime" | "rollout" | "upstream-test" | "probe" | "dependency" | "context" | "analyzer" | "telemetry" | "semantic-convention" | "transport" | "acquisition"
+#ObservationKind: "source" | "schema" | "projection" | "runtime" | "rollout" | "upstream-test" | "probe" | "dependency" | "context" | "analyzer" | "telemetry" | "semantic-convention" | "transport" | "acquisition" | "external-observation"
 #GraphEdgeKind: "depends-on" | "projects-to" | "observed-by" | "validated-by" | "consumed-by"
 #RunArtifactKind: "report" | "summary" | "evidence"
 
@@ -123,6 +124,8 @@ package upstreammonitor
 	profile_id: #NonEmptyString
 	bundle_path: #NonEmptyString
 	manifest_path: #NonEmptyString
+	authority_revision?: #CommitSHA
+	publication_revision?: #CommitSHA
 })
 
 ChatGPTActuator: close({
