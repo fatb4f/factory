@@ -23,9 +23,13 @@ cuestrap:
 ctrl:
   worker: contracts/factory/workers/upstream-monitor/AGENTS.md
   entrypoint: contracts/upstream-monitor/ctrl/contract-surface/AGENTS.md
+
+epistemic-plant-bootstrap:
+  worker: contracts/factory/workers/upstream-monitor/AGENTS.md
+  entrypoint: contracts/upstream-monitor/epistemic-plant-bootstrap/contract-surface/AGENTS.md
 ```
 
-Do not combine worker vocabularies, profile catalogues, graphs, context reads, prior evidence, templates, publication plans, or output paths. Existing `factory` and `cuestrap` remain on the Codex-only worker; `ctrl` uses the generic source-qualified worker.
+Do not combine worker vocabularies, profile catalogues, graphs, context reads, prior evidence, templates, publication plans, or output paths. Existing `factory` and `cuestrap` remain on the Codex-only worker; `ctrl` and `epistemic-plant-bootstrap` use the generic source-qualified worker.
 
 ## Control doctrine
 
