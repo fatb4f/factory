@@ -37,6 +37,20 @@ ctrlGraphNodes: {
 	"astral-ty-semantic": {id: "astral-ty-semantic", domain: "astral-python", kind: "type-semantic", upstreamPaths: ["crates/ty_python_semantic/"], localConsumers: ["packages/qualification-workflow", "spec/profiles"]}
 	"astral-ide": {id: "astral-ide", domain: "astral-python", kind: "ide-projection", upstreamPaths: ["crates/ty_ide/", "crates/ty_server/", "crates/ruff_server/"], localConsumers: ["packages/qualification-workflow"]}
 	"astral-cpython-correlation": {id: "astral-cpython-correlation", domain: "ctrl", kind: "static-dynamic-correlation", upstreamPaths: [], localConsumers: ["packages/qualification-workflow", "spec/profiles"]}
+
+	"otel-python-api-sdk": {id: "otel-python-api-sdk", domain: "otel-python-core", kind: "telemetry-api-sdk", upstreamPaths: ["opentelemetry-api/", "opentelemetry-sdk/", "exporter/"], localConsumers: ["packages/qualification-workflow", "packages/runtime", "spec/profiles"]}
+	"otel-contrib-instrumentors": {id: "otel-contrib-instrumentors", domain: "otel-python-contrib", kind: "provider-adapters", upstreamPaths: ["opentelemetry-instrumentation/", "instrumentation/"], localConsumers: ["packages/qualification-workflow", "packages/runtime"]}
+	"otel-genai-semconv-model": {id: "otel-genai-semconv-model", domain: "otel-genai-semconv", kind: "semantic-convention-model", upstreamPaths: ["model/", "docs/", "reference/"], localConsumers: ["integrations/openai", "spec/profiles"]}
+	"otel-python-genai-instrumentation": {id: "otel-python-genai-instrumentation", domain: "otel-python-genai", kind: "genai-provider-adapters", upstreamPaths: ["instrumentation/", "util/opentelemetry-util-genai/"], localConsumers: ["integrations/openai", "packages/runtime"]}
+	"otel-otlp": {id: "otel-otlp", domain: "otel-python-core", kind: "telemetry-transport", upstreamPaths: ["exporter/"], localConsumers: ["packages/qualification-workflow", "packages/runtime"]}
+	"otel-arrow-otap": {id: "otel-arrow-otap", domain: "otel-arrow", kind: "columnar-telemetry-protocol", upstreamPaths: ["docs/otap-spec.md", "docs/data_model.md"], localConsumers: ["packages/qualification-workflow", "packages/runtime", "spec/profiles"]}
+	"otel-arrow-recordbatch": {id: "otel-arrow-recordbatch", domain: "otel-arrow", kind: "arrow-record-batches", upstreamPaths: ["docs/data_model.md", "rust/otap-dataflow/crates/pdata/"], localConsumers: ["packages/qualification-workflow", "packages/runtime"]}
+	"otel-arrow-dataflow": {id: "otel-arrow-dataflow", domain: "otel-arrow", kind: "embeddable-dataflow", upstreamPaths: ["rust/otap-dataflow/"], localConsumers: ["packages/runtime", "spec/profiles"]}
+	"otel-arrow-storage": {id: "otel-arrow-storage", domain: "otel-arrow", kind: "columnar-persistence", upstreamPaths: ["rust/otap-dataflow/", "docs/data_model.md"], localConsumers: ["packages/runtime", "packages/qualification-workflow"]}
+	"dlt-external-acquisition": {id: "dlt-external-acquisition", domain: "dlt", kind: "external-fact-acquisition", upstreamPaths: ["dlt/"], localConsumers: ["packages/qualification-workflow", "spec/profiles"]}
+	"ctrl-observation-context": {id: "ctrl-observation-context", domain: "ctrl", kind: "causal-observation-context", upstreamPaths: [], localConsumers: ["packages/qualification-workflow", "packages/runtime", "integrations/openai"]}
+	"ctrl-correlation-identity": {id: "ctrl-correlation-identity", domain: "ctrl", kind: "semantic-correlation-identity", upstreamPaths: [], localConsumers: ["packages/qualification-workflow", "spec/profiles", "integrations/openai"]}
+	"ctrl-relational-ingress": {id: "ctrl-relational-ingress", domain: "ctrl", kind: "arrow-relational-ingress", upstreamPaths: [], localConsumers: ["packages/qualification-workflow", "spec/profiles"]}
 }
 
 ctrlGraphEdges: [...core.#GraphEdge] & [_, ...]
@@ -73,6 +87,24 @@ ctrlGraphEdges: [
 	{id: "cpython-symtable-correlation", from: "cpython-symtable", to: "astral-cpython-correlation", kind: "consumed-by", rationale: "CPython lexical binding classification remains authoritative when analyzer resolution differs"},
 	{id: "cpython-import-correlation", from: "cpython-importlib", to: "astral-cpython-correlation", kind: "consumed-by", rationale: "runtime module identity and origin qualify analyzer module-resolution observations"},
 	{id: "astral-correlation-probes", from: "astral-cpython-correlation", to: "cpython-probes", kind: "validated-by", rationale: "local probes validate material analyzer/runtime disagreements and preserve both observations"},
+
+	{id: "otel-core-observation", from: "otel-python-api-sdk", to: "ctrl-observation-context", kind: "consumed-by", rationale: "ctrl uses OpenTelemetry API/SDK context and signals as the generic execution-observation substrate"},
+	{id: "otel-contrib-observation", from: "otel-contrib-instrumentors", to: "ctrl-observation-context", kind: "consumed-by", rationale: "generic Python integration instrumentors observe execution plumbing without replacing semantic probes"},
+	{id: "otel-genai-model-realization", from: "otel-genai-semconv-model", to: "otel-python-genai-instrumentation", kind: "projects-to", rationale: "Python GenAI instrumentations realize GenAI semantic conventions"},
+	{id: "otel-genai-observation", from: "otel-python-genai-instrumentation", to: "ctrl-observation-context", kind: "consumed-by", rationale: "agent/model/tool/MCP observations share the qualification run's trace context"},
+	{id: "codex-otel-observation", from: "codex-live-runtime", to: "ctrl-observation-context", kind: "observed-by", rationale: "Codex agent and tool execution can be captured in the same causal trace as analysis and qualification work"},
+	{id: "cpython-otel-observation", from: "cpython-control-graph", to: "ctrl-observation-context", kind: "observed-by", rationale: "CPython control operations emit execution observations without surrendering semantic authority"},
+	{id: "probe-otel-observation", from: "cpython-probes", to: "ctrl-observation-context", kind: "observed-by", rationale: "domain-specific CPython probes attach semantic identifiers to causal telemetry"},
+	{id: "astral-otel-correlation", from: "astral-cpython-correlation", to: "ctrl-correlation-identity", kind: "projects-to", rationale: "static/dynamic correlation emits stable semantic join identities separate from trace identity"},
+	{id: "probe-correlation-identity", from: "cpython-probes", to: "ctrl-correlation-identity", kind: "projects-to", rationale: "probe and source identities bridge semantic evidence into execution telemetry"},
+	{id: "correlation-context", from: "ctrl-correlation-identity", to: "ctrl-observation-context", kind: "consumed-by", rationale: "trace/span observations carry semantic join keys such as probe, symbol, source occurrence, revision, and qualification run identity"},
+	{id: "otel-context-otlp", from: "ctrl-observation-context", to: "otel-otlp", kind: "projects-to", rationale: "execution observations are exported through OTLP while retaining causal context"},
+	{id: "otlp-otap", from: "otel-otlp", to: "otel-arrow-otap", kind: "projects-to", rationale: "OTel-Arrow provides non-lossy bidirectional conversion between OTLP and the columnar OTAP representation"},
+	{id: "otap-recordbatch", from: "otel-arrow-otap", to: "otel-arrow-recordbatch", kind: "projects-to", rationale: "OTAP represents telemetry as multiple Arrow record batches arranged by signal"},
+	{id: "recordbatch-dataflow", from: "otel-arrow-recordbatch", to: "otel-arrow-dataflow", kind: "consumed-by", rationale: "the embeddable Rust dataflow engine operates directly on columnar telemetry"},
+	{id: "dataflow-storage", from: "otel-arrow-dataflow", to: "otel-arrow-storage", kind: "projects-to", rationale: "dataflow processors can persist durable Arrow IPC buffers and Parquet outputs"},
+	{id: "otel-relational-ingress", from: "otel-arrow-storage", to: "ctrl-relational-ingress", kind: "projects-to", rationale: "Arrow IPC/Parquet telemetry becomes queryable relational input without inventing another telemetry schema"},
+	{id: "dlt-relational-ingress", from: "dlt-external-acquisition", to: "ctrl-relational-ingress", kind: "projects-to", rationale: "external acquired facts and execution telemetry converge at the relational/Arrow boundary while preserving acquisition provenance"},
 ]
 
 ctrlTestBindings: [...core.#TestBinding] & [_, ...]
@@ -96,6 +128,8 @@ ctrlProbeBindings: [
 	{id: "probe-astral-ast-correlation", node: "astral-cpython-correlation", probe: "astral-cpython-ast", observations: ["parser acceptance", "node topology", "source ranges", "syntax-version disagreement"], normalization: ["normalize source paths", "preserve analyzer and CPython identities separately"]},
 	{id: "probe-astral-binding-correlation", node: "astral-cpython-correlation", probe: "astral-cpython-bindings", observations: ["Ruff/ty binding resolution", "CPython symtable classification", "disagreement class"], normalization: ["preserve unresolved analyzer state", "CPython evidence wins semantic conflicts"]},
 	{id: "probe-astral-import-correlation", node: "astral-cpython-correlation", probe: "astral-cpython-imports", observations: ["analyzer module resolution", "ModuleSpec", "origin", "site-packages identity"], normalization: ["normalize repository and environment roots"]},
+	{id: "probe-otel-causal-correlation", node: "ctrl-observation-context", probe: "otel-causal-correlation", observations: ["trace/span lineage", "qualification run identity", "probe identity", "agent/tool lineage", "source correlation keys"], normalization: ["preserve trace and semantic identities separately", "telemetry cannot manufacture missing semantic identity"]},
+	{id: "probe-otlp-otap-roundtrip", node: "otel-arrow-otap", probe: "otlp-otap-roundtrip", observations: ["resource/scope identity", "span/event/link attributes", "signal counts", "round-trip preservation"], normalization: ["compare telemetry semantics independently of Arrow record-batch layout"]},
 ]
 
 ctrlExecutionGraphContract: close({
@@ -104,25 +138,38 @@ ctrlExecutionGraphContract: close({
 	initialExecutorCandidate: "pydantic-graph"
 	interactiveProjectionCandidate: "marimo"
 	staticAnalyzerSubstrate: "Astral Rust: Ruff parser/AST/index plus ty resolver/semantic machinery"
+	executionObservationSubstrate: "OpenTelemetry Python API/SDK plus contrib and GenAI instrumentors"
+	columnarTelemetrySubstrate: "OTel-Arrow OTAP / Arrow RecordBatches / Arrow IPC / Parquet"
+	externalFactAcquisitionSubstrate: "dlt"
 	marimoAuthority: false
 	executorAuthority: false
 	astralAnalyzerAuthority: false
+	telemetryAuthority: false
 	cpythonSemanticPrecedenceOnConflict: true
 	operations: [
 		"ResolveRevision",
 		"ResolveBuild",
 		"MapChangedPaths",
+		"AcquireExternalFacts",
+		"StartObservationContext",
 		"AcquireAstralAnalysis",
 		"ResolveSubsystemClosure",
 		"SelectRegrtests",
 		"SelectProbes",
 		"RunRegrtests",
 		"RunProbes",
+		"EmitDomainObservations",
 		"CorrelateStaticDynamic",
+		"ExportOTLP",
+		"ProjectOTAP",
+		"PersistColumnarObservations",
 		"NormalizeEvidence",
 		"CorrelateEvidence",
 		"Qualify",
 	]
 	regrtestProcessBoundary: "./python -m test"
+	telemetryBoundary: "OTLP -> OTAP -> Arrow RecordBatches"
 	forbidLibregrtestLibraryDependency: true
+	forbidTelemetryAsQualificationVerdict: true
+	forbidOtelAsStaticSemanticAuthority: true
 })
