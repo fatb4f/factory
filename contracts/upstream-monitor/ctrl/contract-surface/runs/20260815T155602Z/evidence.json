@@ -1,0 +1,246 @@
+{
+  "apiVersion": "factory.upstream-monitor.ctrl.evidence/v2",
+  "kind": "CtrlUpstreamEvidence",
+  "run_id": "20260815T155602Z",
+  "profile_id": "ctrl",
+  "terminal_state": "terminal_success",
+  "monitor_state": "terminal_success",
+  "qualification_state": "observation_only",
+  "authority_revision": "0c5195d718d48baf1a787d36e1de4e6d20d67351",
+  "ctrl_revision": "b5f82c3a5e33d08d1f5d07cb2c9724c7679c7538",
+  "bootstrap_baseline": false,
+  "sources": [
+    {
+      "source": "factory-authority",
+      "channel": "ctrl-monitor-v2",
+      "status": "resolved",
+      "head_commit": "0c5195d718d48baf1a787d36e1de4e6d20d67351",
+      "evidence": [
+        "authority snapshot after rebinding to current main; selected ctrl profile unchanged from 70c4bb350ee3562c91ba001739c3a666d57ea23a; shared compatibility ingress only added sibling profile routing"
+      ]
+    },
+    {
+      "source": "codex",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "c4941302c73c6322b153bba13ac0a9f4396301d6",
+      "evidence": [
+        "ref=main; observed surfaces=codex protocol/tool-policy/rollout lineage; two commits ahead of prior baseline; changed exec persistence and workload-identity/shell-environment handling; no report item because the changed paths do not complete an admitted surface+graph+local-consumer trace"
+      ]
+    },
+    {
+      "source": "codex",
+      "channel": "latest-alpha-cli",
+      "status": "resolved",
+      "head_commit": "334c6ed7fd26cb96d9aa2849cf384ec8fb218f34",
+      "evidence": ["ref=latest-alpha-cli; observed surfaces=Codex alpha forecast projection; unchanged from prior admitted run"]
+    },
+    {
+      "source": "cpython",
+      "channel": "3.14",
+      "status": "resolved",
+      "head_commit": "3192cfdff70ef0771f39d2da046186d01951259c",
+      "version": "3.14",
+      "evidence": ["ref=3.14; observed surfaces=CPython source/regrtest/probe/dependency graph; unchanged active compiler/runtime baseline"]
+    },
+    {
+      "source": "cpython",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "948fd7e5c084274c3945d2004a7fffd19c907a15",
+      "evidence": ["ref=main; observed surfaces=CPython forecast source/regrtest/probe/dependency graph; unchanged from prior admitted run"]
+    },
+    {
+      "source": "astral-python",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "52ec0cf408d3cabbfc180434db750187c55d82d7",
+      "evidence": ["ref=main; observed surfaces=astral-type-semantics and astral-ide-observation; two commits ahead of prior baseline; ty now models exception-suppressing sync/async context managers and ty_server reduces notebook version logging to debug"]
+    },
+    {
+      "source": "scip",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "5890b2ac1c0970c5606b71c833b733cffd091c90",
+      "evidence": ["ref=main; observed surface=scip-semantic-identity; newly admitted channel in current profile, so this run establishes a per-channel baseline rather than inventing a historical delta"]
+    },
+    {
+      "source": "otel-python-core",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "aa8e7dbdfa4bd35c1d780d8c4cd5c7d6e3983ea8",
+      "evidence": ["ref=main; observed surface=otel-python-runtime; unchanged from prior admitted run"]
+    },
+    {
+      "source": "otel-python-contrib",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "1192425cdc7be548a1f50e59cef0c13424fdfbad",
+      "evidence": ["ref=main; observed surface=otel-contrib-providers; unchanged from prior admitted run"]
+    },
+    {
+      "source": "otel-genai-semconv",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "30182acd5ed78ab5f619041eaec5e95a4eb83a48",
+      "evidence": ["ref=main; observed surface=otel-genai-semantic-model; unchanged from prior admitted run"]
+    },
+    {
+      "source": "otel-python-genai",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "ae0343175a418e4d661e2508eec17dbd887ad5a3",
+      "evidence": ["ref=main; observed surface=otel-python-genai-realization; unchanged from prior admitted run"]
+    },
+    {
+      "source": "otel-arrow",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "5abeaf8efbd37b6c8519fc8edcd519281e988bbd",
+      "evidence": ["ref=main; observed surfaces=otel-arrow-otap and otel-arrow-dataflow; unchanged from prior admitted run"]
+    },
+    {
+      "source": "dlt",
+      "channel": "devel",
+      "status": "resolved",
+      "head_commit": "a4243c994b9fade227d23e4bb18dab70037507cf",
+      "evidence": ["ref=devel; observed surface=dlt-external-observations; optional release-watch unchanged from prior admitted run"]
+    },
+    {
+      "source": "arrow",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "e611f48081ec927e18e5bcb72fbd071c15c76b08",
+      "evidence": ["ref=main; observed surface=arrow-typed-relations; newly admitted optional release-watch channel, baseline only"]
+    },
+    {
+      "source": "duckdb",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "f8e1c96a535d54c6a2785a0b13c6fcdb148c067b",
+      "evidence": ["ref=main; observed surface=duckdb-relational-substrate; newly admitted optional release-watch channel, baseline only"]
+    },
+    {
+      "source": "ibis",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "799a2a9594060e2a14aa83a8c47d9ec22b8d9a81",
+      "evidence": ["ref=main; observed surface=ibis-semantic-query; newly admitted optional release-watch channel, baseline only"]
+    },
+    {
+      "source": "marimo",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "9e31b27eef6c3d35782513614382821f2f6bb97e",
+      "evidence": ["ref=main; observed surface=marimo-diagnostic-projection; newly admitted optional release-watch channel, baseline only"]
+    },
+    {
+      "source": "pydantic-graph",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "25a70926cfafdfc63b3d32c1b5f2c7f139e2c58c",
+      "evidence": ["ref=main; observed surface=pydantic-graph-executor; newly admitted optional release-watch channel, baseline only"]
+    },
+    {
+      "source": "cue",
+      "channel": "pinned",
+      "status": "resolved",
+      "head_commit": "806821e40fae070318600a264d311517e596353b",
+      "evidence": ["ref=806821e40fae070318600a264d311517e596353b; observed surface=cue-evaluator; pinned qualification semantics unchanged"]
+    },
+    {
+      "source": "cue",
+      "channel": "master",
+      "status": "resolved",
+      "head_commit": "f356f8f46cedb8e853ed200fb46ab49a68bfe357",
+      "evidence": ["ref=master; observed surface=cue-evaluator forecast; unchanged from prior admitted run and kept distinct from pinned authority"]
+    },
+    {
+      "source": "uv",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "f1a42680ff5272232d65748acf338b19778dde24",
+      "evidence": ["ref=main; observed surface=uv-reproducibility; optional release-watch unchanged from prior admitted run"]
+    },
+    {
+      "source": "jj",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "7fa941edb45b62efdadff6b01f6f8674dbad9063",
+      "evidence": ["ref=main; observed surface=jj-agent-change-control; optional release-watch unchanged from prior admitted run"]
+    }
+  ],
+  "graph": {
+    "nodesObserved": [
+      "codex-rust-protocol",
+      "astral-ty-core",
+      "astral-ty-semantic",
+      "astral-ide",
+      "astral-cpython-correlation",
+      "cpython-probes",
+      "ctrl-relational-ingress"
+    ],
+    "edgesEvaluated": [
+      "codex-protocol-runtime",
+      "astral-core-ty-semantic",
+      "astral-ty-ide",
+      "astral-ty-correlation",
+      "astral-correlation-probes"
+    ],
+    "testBindingsEvaluated": [],
+    "probeBindingsEvaluated": ["probe-ast", "probe-symtable", "probe-import"]
+  },
+  "items": [
+    {
+      "id": "astral-context-manager-semantics",
+      "title": "Track ty exception-suppressing context-manager semantics as forecast analyzer evidence",
+      "decision": "note",
+      "severity": "note",
+      "sources": ["astral-python"],
+      "nodes": ["astral-ty-core", "astral-ty-semantic", "astral-cpython-correlation"],
+      "summary": "Astral ty changed reachability/type semantics for synchronous and asynchronous context managers that may suppress exceptions. The profile binds these paths to ty analyzer nodes and then to the static/dynamic correlation node; CPython and local probes remain authoritative for runtime/compiler behavior.",
+      "localContractImpact": "No installed-baseline or qualification-contract update is admitted in this run. Keep the change as forecast evidence for future Astral/CPython correlation because fatb4f/ctrl@main and its lock state did not change.",
+      "observations": [
+        {
+          "id": "obs-astral-context-manager-suppression",
+          "reportItemID": "astral-context-manager-semantics",
+          "source": "astral-python",
+          "channel": "main",
+          "kind": "analyzer",
+          "path": "crates/ty_python_core/; crates/ty_python_semantic/",
+          "nodeMatches": ["astral-ty-core", "astral-ty-semantic"],
+          "observation": "Between 36cc91ffb72adde11f0c4dfb76330a07481f6153 and 52ec0cf408d3cabbfc180434db750187c55d82d7, ty added exception checkpoints and suppression predicates so with/async with control flow can preserve bindings after exceptions suppressed by context managers.",
+          "decision": "note",
+          "severity": "note"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-astral-context-manager-forecast",
+          "text": "This is analyzer-forecast evidence only; it must be correlated against CPython semantics and local probes before any runtime or qualification conclusion.",
+          "observationRefs": ["obs-astral-context-manager-suppression"]
+        }
+      ]
+    }
+  ],
+  "validation": {
+    "authorityRead": true,
+    "ctrlContextRead": true,
+    "projectTopologyRead": true,
+    "sourceChannelsDistinct": true,
+    "graphModelRead": true,
+    "correlationCarrierPolicyRead": true,
+    "publicationPlanRead": true,
+    "forbiddenAttractorsChecked": true,
+    "cueExecution": "not_available_to_github_app",
+    "executableCpythonProbes": "not_executed",
+    "executableRegrtest": "not_executed",
+    "executableAstralCorrelation": "not_executed",
+    "executableScipCorrelation": "not_executed",
+    "executableOtelPipeline": "not_executed",
+    "executableOtlpOtapRoundtrip": "not_executed",
+    "executableRelationalProjection": "not_executed",
+    "reportProjectionOnly": true,
+    "summaryProjectionOnly": true
+  }
+}
