@@ -30,6 +30,8 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/upstream-monito
 		executableCpythonProbes: "not_executed_bootstrap" | "executed"
 		executableRegrtest: "not_executed_bootstrap" | "executed"
 		executableAstralCorrelation: "not_executed_bootstrap" | "executed"
+		executableOtelPipeline: "not_executed_bootstrap" | "executed"
+		executableOtlpOtapRoundtrip: "not_executed_bootstrap" | "executed"
 		reportProjectionOnly: bool
 		summaryProjectionOnly: bool
 	})
@@ -43,9 +45,18 @@ ctrlEvidenceModel: close({
 	requireProjectionEdgeBindingForCodexSchemaSDKItems: true
 	requireAnalyzerGraphBindingForAstralItems: true
 	requireAnalyzerAndCpythonEvidenceSeparated: true
+	requireTelemetryGraphBindingForOtelItems: true
+	requireTelemetryAndSemanticEvidenceSeparated: true
+	requireExternalFactAndExecutionObservationSeparation: true
+	requireTraceAndSemanticIdentitySeparation: true
+	requireOtlpOtapProjectionIdentity: true
 	requireUpstreamTestAndLocalProbeDistinction: true
 	forbidAnalyzerVerdictAsRuntimeTruth: true
 	forbidAnalyzerOverrideOfCpythonEvidence: true
+	forbidTelemetryVerdictAsQualification: true
+	forbidTelemetryAsStaticSemanticAuthority: true
+	forbidGenericInstrumentationAsDomainProbeReplacement: true
+	forbidOtlpOtapSemanticEnrichmentByInference: true
 	forbidUpstreamTestVerdictAsQualification: true
 	bootstrapMayEstablishBaselineWithoutHistoricalDelta: true
 })
