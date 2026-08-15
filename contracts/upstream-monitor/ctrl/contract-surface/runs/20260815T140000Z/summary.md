@@ -12,7 +12,7 @@
 
 - Critical / blocking-gate: **0**
 - High / contract-update: **5**
-- Notes: **2**
+- Notes: **0**
 
 ### High
 
@@ -28,7 +28,7 @@
 
 ## Operationalization gap
 
-The next slice is intentionally narrow: one `RunProbe` operation, one normalized CPython observation, one OTel trace/event carrying admitted correlation identifiers, OTLP -> OTAP -> Arrow/Parquet, one relational correlation query, and exactly two executable witnesses (`otel-causal-correlation`, `otlp-otap-roundtrip`).
+The next slice is intentionally narrow: one `RunProbe` operation, one normalized CPython observation, one OTel trace/event carrying admitted correlation identifiers, OTLP -> OTAP -> Arrow/Parquet, one relational correlation query, and exactly two executable witnesses (`otel-causal-correlation`, `otlp-otap-roundtrip`). Marimo remains deferred until this relation is executable and joinable.
 
 ## Bundle
 
