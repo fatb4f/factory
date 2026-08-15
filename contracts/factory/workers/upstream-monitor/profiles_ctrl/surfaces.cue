@@ -30,6 +30,14 @@ ctrlSurfaceCatalogue: [
 	{id: "astral-type-semantics", source: "astral-python", terms: ["ty_python_core", "ty_python_semantic", "type inference", "diagnostic", "symbol", "constraint"], impactFloor: "note", localContractHint: "ty semantic/type evidence as an analyzer observation, never CPython semantic authority", localPaths: ["packages/qualification-workflow/", "spec/profiles/"]},
 	{id: "astral-ide-observation", source: "astral-python", terms: ["ty_ide", "ty_server", "ruff_server", "hover", "definition", "references", "document symbols"], impactFloor: "note", localContractHint: "IDE/LSP-facing projections for python-intel correlation and operator diagnostics", localPaths: ["packages/qualification-workflow/", "spec/profiles/"]},
 
+	{id: "otel-python-runtime", source: "otel-python-core", terms: ["trace", "span", "event", "metric", "log", "context", "OTLP", "TracerProvider", "MeterProvider"], impactFloor: "contract-update", localContractHint: "standard execution-observation and causal-context substrate for qualification runs", localPaths: ["packages/qualification-workflow/", "packages/runtime/", "spec/profiles/"]},
+	{id: "otel-contrib-providers", source: "otel-python-contrib", terms: ["instrumentation", "BaseInstrumentor", "opentelemetry-instrumentation", "requests", "asyncio", "threading", "sqlite", "sqlalchemy", "system metrics"], impactFloor: "contract-update", localContractHint: "generic provider adapters acquire runtime plumbing while custom ctrl probes focus on semantic gaps", localPaths: ["packages/qualification-workflow/", "packages/runtime/"]},
+	{id: "otel-genai-semantic-model", source: "otel-genai-semconv", terms: ["GenAI", "MCP", "OpenAI", "spans", "metrics", "events", "Weaver", "model", "YAML", "reference"], impactFloor: "contract-update", localContractHint: "machine-readable GenAI/MCP observation vocabulary and generation/compliance precedent for ctrl semantic telemetry extensions", localPaths: ["integrations/openai/", "spec/profiles/"]},
+	{id: "otel-python-genai-realization", source: "otel-python-genai", terms: ["opentelemetry-util-genai", "openai", "openai-agents", "spans", "metrics", "logs", "instrumentation"], impactFloor: "note", localContractHint: "Python realization template for agent/model/tool observations sharing trace context with qualification execution", localPaths: ["integrations/openai/", "packages/runtime/"]},
+	{id: "otel-arrow-otap", source: "otel-arrow", terms: ["OTAP", "OTLP", "Arrow", "record batch", "lossless", "star schema", "Arrow IPC"], impactFloor: "contract-update", localContractHint: "columnar telemetry transport preserving OpenTelemetry signal semantics without a bespoke SpanExporter-to-Arrow bridge", localPaths: ["packages/qualification-workflow/", "packages/runtime/", "spec/profiles/"]},
+	{id: "otel-arrow-dataflow", source: "otel-arrow", terms: ["Dataflow Engine", "embeddable", "DataFusion", "Parquet", "durable buffer", "routing", "sampling", "filtering", "transform"], impactFloor: "note", localContractHint: "optional embeddable telemetry acquisition/transform/persistence engine below ctrl evidence interpretation", localPaths: ["packages/runtime/", "spec/profiles/"]},
+	{id: "dlt-external-facts", source: "dlt", terms: ["pipeline", "source", "resource", "extract", "normalize", "load", "Arrow", "DuckDB"], impactFloor: "note", localContractHint: "external-data acquisition remains distinct from execution telemetry while converging on shared relational/Arrow facts", localPaths: ["packages/qualification-workflow/", "spec/profiles/"]},
+
 	{id: "cue-evaluator", source: "cue", terms: ["unification", "explicitopen", "cue vet", "cue export", "closedness", "concreteness", "reference resolution"], impactFloor: "blocking-gate", localContractHint: "external evaluator semantics underlying ctrl/spec", localPaths: ["spec/"]},
 	{id: "uv-reproducibility", source: "uv", terms: ["uv lock", "--locked", "--exact", "--isolated", "workspace", "build --all-packages"], impactFloor: "note", localContractHint: "workspace lock, isolated test, and build reproducibility", localPaths: ["pyproject.toml", "uv.lock", "justfile"]},
 	{id: "jj-agent-change-control", source: "jj", terms: ["workspace", "change id", "split", "conflict", "operation log"], impactFloor: "note", localContractHint: "TDD agent Jujutsu skills only; not S0 qualification authority", localPaths: ["agents/tdd/.codex/skills/"]},
@@ -43,6 +51,9 @@ ctrlClassificationPolicy: close({
 	requireProjectionBindingForCodexSchemasAndSDK: true
 	requireAnalyzerGraphBindingForAstral: true
 	requireAnalyzerAuthoritySeparation: true
+	requireTelemetryGraphBindingForOtel: true
+	requireTelemetryAuthoritySeparation: true
+	requireExternalFactAndExecutionObservationSeparation: true
 	upstreamRole: "evidence_only"
 	allowedDecisions: ["none", "note", "contract-update", "blocking-gate"]
 	severityMap: {
