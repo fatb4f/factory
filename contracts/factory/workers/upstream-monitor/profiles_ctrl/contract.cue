@@ -53,6 +53,7 @@ ctrlAuthorityModel: close({
 	authority: [
 		"contracts/factory/workers/upstream-monitor/contract.cue",
 		"contracts/factory/workers/upstream-monitor/profiles_ctrl/*.cue",
+		"contracts/factory/workers/upstream-monitor/profiles_ctrl/correlation.cue",
 		"contracts/factory/workers/upstream-monitor/AGENTS.md",
 		"contracts/upstream-monitor/ctrl/contract-surface/AGENTS.md",
 		"contracts/upstream-monitor/ctrl/contract-surface/output/report-template.md",
@@ -85,6 +86,7 @@ ctrlWorkflow: close({
 		"context_acquisition",
 		"source_acquisition",
 		"graph_projection",
+		"correlation_policy_read",
 		"test_probe_binding",
 		"semantic_classification",
 		"report_render",
