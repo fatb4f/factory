@@ -1,0 +1,238 @@
+{
+  "apiVersion": "factory.upstream-monitor.ctrl.evidence/v2",
+  "kind": "CtrlUpstreamEvidence",
+  "run_id": "20260818T160440Z",
+  "profile_id": "ctrl",
+  "terminal_state": "terminal_success",
+  "monitor_state": "terminal_success",
+  "qualification_state": "observation_only",
+  "authority_revision": "13fa7714653df86fd6367570fe8fe1e493c39ce8",
+  "ctrl_revision": "b5f82c3a5e33d08d1f5d07cb2c9724c7679c7538",
+  "bootstrap_baseline": false,
+  "sources": [
+    {"source":"factory-authority","channel":"ctrl-monitor-v2","status":"resolved","head_commit":"13fa7714653df86fd6367570fe8fe1e493c39ce8","evidence":["pre-publication factory authority; selected ctrl profile unchanged semantically since prior run"]},
+    {"source":"codex","channel":"main","status":"resolved","head_commit":"76ceaddb29444388fbbbae07c46f7e8849f9658b","evidence":["active Codex source; protocol/schema and permission/policy surfaces changed since prior run"]},
+    {"source":"codex","channel":"latest-alpha-cli","status":"resolved","head_commit":"deb7b8341349146516c324f81a66698db085c0ea","evidence":["forecast alpha CLI source resolved independently"]},
+    {"source":"cpython","channel":"3.14","status":"resolved","head_commit":"90a1f02b7da0c356d10a23f1faee7dc063f887ed","version":"3.14","evidence":["active Python 3.14 source; libregrtest/importlib/frame/flowgraph surfaces changed"]},
+    {"source":"cpython","channel":"main","status":"resolved","head_commit":"c612fd4cf363cf1af28bb67f11b4a11dca57507f","evidence":["CPython forecast source resolved independently; related monitored surfaces changed"]},
+    {"source":"astral-python","channel":"main","status":"resolved","head_commit":"ce46a36be796faff60d1ad5734e571bb1223c0a7","evidence":["Astral analyzer forecast; ty core/semantic/resolver/IDE surfaces advanced"]},
+    {"source":"scip","channel":"main","status":"resolved","head_commit":"8b8c4fc0dea66a4592f03c0d81b632780d49eed0","evidence":["SCIP identity source; observed delta limited to dependency/build metadata"]},
+    {"source":"otel-python-core","channel":"main","status":"resolved","head_commit":"c49f6f456406e3b2fe4dd993a007abe5bb5b3eb1","evidence":["OpenTelemetry Python core source resolved"]},
+    {"source":"otel-python-contrib","channel":"main","status":"resolved","head_commit":"7b794faf874169d78ad56ba0f4da8365aee75b5c","evidence":["OpenTelemetry Python contrib provider-adapter source resolved"]},
+    {"source":"otel-genai-semconv","channel":"main","status":"resolved","head_commit":"a685613a207a580163353b8e48a7ad88967e7b42","evidence":["GenAI semantic-convention source; reference scenario dependencies advanced without admitted model change"]},
+    {"source":"otel-python-genai","channel":"main","status":"resolved","head_commit":"8d11494c5417d13a1007f1546f1f16d5cae558df","evidence":["Python GenAI realization source resolved independently"]},
+    {"source":"otel-arrow","channel":"main","status":"resolved","head_commit":"7c4fb9a42b7f858d6e97bf08d8ffb2889a04f8e0","evidence":["OTel-Arrow source; rust/otap-dataflow internal telemetry changed"]},
+    {"source":"dlt","channel":"devel","status":"resolved","head_commit":"989d11d0cb69f8b014aa1868311e81726a599ec9","evidence":["optional external-observation acquisition source; incremental lag cursor behavior fixed"]},
+    {"source":"arrow","channel":"main","status":"resolved","head_commit":"892c73dc194dbc8e8881e9b90381029d1e956a57","evidence":["optional typed-interchange release-watch source; no source-owned ctrl graph node"]},
+    {"source":"duckdb","channel":"main","status":"resolved","head_commit":"a9ddce5a2ff36ee40aed4e38d0e76d7b5218e0eb","evidence":["optional relational-substrate release-watch source; no source-owned ctrl graph node"]},
+    {"source":"ibis","channel":"main","status":"resolved","head_commit":"799a2a9594060e2a14aa83a8c47d9ec22b8d9a81","evidence":["optional semantic-query release-watch source; unchanged"]},
+    {"source":"marimo","channel":"main","status":"resolved","head_commit":"c092a6722578d7ad500445fb3e89efbd656d88bc","evidence":["optional diagnostic-projection release-watch source; no source-owned ctrl graph node"]},
+    {"source":"pydantic-graph","channel":"main","status":"resolved","head_commit":"679756763ab85bff9e747ec6d5079c78a8af656c","evidence":["optional execution-graph release-watch source; current tip outside pydantic_graph surface and no source-owned ctrl graph node"]},
+    {"source":"cue","channel":"pinned","status":"resolved","head_commit":"806821e40fae070318600a264d311517e596353b","evidence":["pinned CUE evaluator semantics resolved and unchanged"]},
+    {"source":"cue","channel":"master","status":"resolved","head_commit":"f356f8f46cedb8e853ed200fb46ab49a68bfe357","evidence":["CUE master forecast resolved independently and unchanged"]},
+    {"source":"uv","channel":"main","status":"resolved","head_commit":"392e0a0aa39f7f03e2efb688e500ec23a1930d36","evidence":["optional uv reproducibility release-watch source resolved"]},
+    {"source":"jj","channel":"main","status":"resolved","head_commit":"a73aaa540b9c8fb80068b67f09dd809e490f2d7d","evidence":["optional Jujutsu change-control release-watch source resolved"]}
+  ],
+  "graph": {
+    "nodesObserved": ["codex-rust-protocol","codex-json-schema","codex-live-runtime","cpython-control-graph","cpython-regrtest","astral-ty-core","astral-ty-semantic","astral-cpython-correlation","otel-arrow-dataflow","otel-arrow-storage","dlt-external-observations","ctrl-relational-ingress"],
+    "edgesEvaluated": ["codex-protocol-schema","codex-protocol-runtime","cpython-dag-regrtest","astral-core-ty-semantic","astral-ty-correlation","dataflow-storage","dlt-relational-ingress"],
+    "testBindingsEvaluated": [],
+    "probeBindingsEvaluated": []
+  },
+  "items": [
+    {
+      "id": "codex-policy-boundary",
+      "title": "Gate Codex permission, sandbox, approval, and exec-policy compatibility",
+      "decision": "blocking-gate",
+      "severity": "critical",
+      "sources": ["codex"],
+      "nodes": ["codex-rust-protocol","codex-live-runtime"],
+      "summary": "Codex changed permission/path conversion plus sandbox, approval, exec-policy, and MCP-facing surfaces that the ctrl profile explicitly classifies as a blocking policy boundary.",
+      "localContractImpact": "Do not silently adopt the changed behavior in spec/.codex or TDD policy configuration until local executable compatibility validation is available.",
+      "observations": [
+        {
+          "id": "obs-codex-permission-policy",
+          "reportItemID": "codex-policy-boundary",
+          "source": "codex",
+          "channel": "main",
+          "kind": "runtime",
+          "path": "codex-rs/app-server-protocol/src/protocol/v2/permissions.rs; codex-rs/core/src/exec_policy*; codex-rs/core/src/tools/; codex-rs/config/",
+          "nodeMatches": ["codex-rust-protocol","codex-live-runtime"],
+          "observation": "Since c4941302c73c6322b153bba13ac0a9f4396301d6, Codex changed permission/sandbox/approval/exec-policy surfaces. The v2 file-system permission projection now uses Path URI conversion and only emits legacy read/write roots when richer entries are legacy-compatible.",
+          "decision": "blocking-gate",
+          "severity": "critical"
+        }
+      ],
+      "claims": [
+        {"id":"claim-codex-policy-gate","text":"The changed Codex policy boundary reaches declared spec/.codex and TDD consumers and requires compatibility evidence before local adoption.","observationRefs":["obs-codex-permission-policy"]}
+      ]
+    },
+    {
+      "id": "codex-protocol-schema",
+      "title": "Update Codex app-server protocol and schema assumptions",
+      "decision": "contract-update",
+      "severity": "high",
+      "sources": ["codex"],
+      "nodes": ["codex-rust-protocol","codex-json-schema"],
+      "summary": "Codex app-server protocol and generated JSON/config schemas changed together, including new project and strict-review notifications and thread/MCP schema changes.",
+      "localContractImpact": "Review ctrl Codex request/notification and generated-schema assumptions under spec/.codex and integrations/openai against the new exact source revision.",
+      "observations": [
+        {
+          "id": "obs-codex-protocol-schema",
+          "reportItemID": "codex-protocol-schema",
+          "source": "codex",
+          "channel": "main",
+          "kind": "schema",
+          "path": "codex-rs/app-server-protocol/src/protocol/; codex-rs/app-server-protocol/schema/json/; codex-rs/core/config.schema.json",
+          "nodeMatches": ["codex-rust-protocol","codex-json-schema"],
+          "observation": "Between c4941302c73c6322b153bba13ac0a9f4396301d6 and 76ceaddb29444388fbbbae07c46f7e8849f9658b, protocol sources and exported JSON/config schemas changed; StrictReviewRequiredNotification, ProjectChangedNotification and ThreadProjectUpdatedNotification were added.",
+          "decision": "contract-update",
+          "severity": "high"
+        }
+      ],
+      "claims": [
+        {"id":"claim-codex-schema-projection","text":"The declared codex-rust-protocol -> codex-json-schema projection has changed and local protocol/schema consumers must be reconciled against the new projection.","observationRefs":["obs-codex-protocol-schema"]}
+      ]
+    },
+    {
+      "id": "cpython-regrtest-env-reasons",
+      "title": "Preserve CPython regrtest environment-change reasons as behavioral evidence",
+      "decision": "contract-update",
+      "severity": "high",
+      "sources": ["cpython"],
+      "nodes": ["cpython-control-graph","cpython-regrtest"],
+      "summary": "CPython regrtest now retains per-test environment-change reasons and renders them individually; this changes the behavioral evidence available to local regrtest normalization.",
+      "localContractImpact": "The qualification-workflow regrtest adapter/normalizer must preserve or explicitly discard the new environment-change reason dimension; an upstream regrtest result still does not self-authorize qualification.",
+      "observations": [
+        {
+          "id": "obs-cpython-314-regrtest-reasons",
+          "reportItemID": "cpython-regrtest-env-reasons",
+          "source": "cpython",
+          "channel": "3.14",
+          "kind": "upstream-test",
+          "path": "Lib/test/libregrtest/results.py",
+          "nodeMatches": ["cpython-regrtest"],
+          "observation": "Compared with the prior 3.14 baseline, TestResults now records env_changed_reasons from TestResult and displays each reason beneath the affected test.",
+          "decision": "contract-update",
+          "severity": "high"
+        },
+        {
+          "id": "obs-cpython-main-regrtest-forecast",
+          "reportItemID": "cpython-regrtest-env-reasons",
+          "source": "cpython",
+          "channel": "main",
+          "kind": "upstream-test",
+          "path": "Lib/test/libregrtest/",
+          "nodeMatches": ["cpython-regrtest"],
+          "observation": "CPython main independently advanced across the same monitored regrtest family and remains forecast evidence distinct from the 3.14 active baseline.",
+          "decision": "contract-update",
+          "severity": "high"
+        }
+      ],
+      "claims": [
+        {"id":"claim-cpython-regrtest-evidence-shape","text":"The upstream behavioral oracle now exposes more structured environment-change evidence; ctrl must treat it as evidence input and not as a qualification verdict.","observationRefs":["obs-cpython-314-regrtest-reasons","obs-cpython-main-regrtest-forecast"]}
+      ]
+    },
+    {
+      "id": "astral-ty-forecast",
+      "title": "Track Astral ty generic/type-semantic changes as analyzer forecast",
+      "decision": "note",
+      "severity": "note",
+      "sources": ["astral-python"],
+      "nodes": ["astral-ty-core","astral-ty-semantic","astral-cpython-correlation"],
+      "summary": "Astral main advanced broadly across ty type/semantic/resolution machinery; the current tip simplifies generic protocol inference. Analyzer evidence remains subordinate to CPython semantic/runtime evidence.",
+      "localContractImpact": "Keep as forecast evidence for static/dynamic correlation and future probe selection; no runtime or qualification conclusion is admitted.",
+      "observations": [
+        {
+          "id": "obs-astral-ty-generic-inference",
+          "reportItemID": "astral-ty-forecast",
+          "source": "astral-python",
+          "channel": "main",
+          "kind": "analyzer",
+          "path": "crates/ty_python_core/; crates/ty_python_semantic/; crates/ty_module_resolver/; crates/ty_ide/",
+          "nodeMatches": ["astral-ty-core","astral-ty-semantic"],
+          "observation": "Astral advanced from 52ec0cf408d3cabbfc180434db750187c55d82d7 to ce46a36be796faff60d1ad5734e571bb1223c0a7 across declared analyzer nodes; the tip changes generic protocol inference.",
+          "decision": "note",
+          "severity": "note"
+        }
+      ],
+      "claims": [
+        {"id":"claim-astral-forecast-only","text":"Astral changes are analyzer observations only and require CPython/probe correlation before any semantic or qualification claim.","observationRefs":["obs-astral-ty-generic-inference"]}
+      ]
+    },
+    {
+      "id": "otel-arrow-dataflow-telemetry",
+      "title": "Track breaking OTel-Arrow dataflow internal telemetry changes",
+      "decision": "note",
+      "severity": "note",
+      "sources": ["otel-arrow"],
+      "nodes": ["otel-arrow-dataflow","otel-arrow-storage"],
+      "summary": "OTel-Arrow changed OTAP receiver/exporter internal metric names and bounded attribute dimensions under rust/otap-dataflow, while the profile's semantic OTAP node remains tied to docs/otap-spec.md and docs/data_model.md.",
+      "localContractImpact": "Treat as dataflow implementation evidence. Do not promote it to an OTLP/OTAP semantic-preservation contract change without a change on the declared OTAP semantic node.",
+      "observations": [
+        {
+          "id": "obs-otel-arrow-dataflow-metrics",
+          "reportItemID": "otel-arrow-dataflow-telemetry",
+          "source": "otel-arrow",
+          "channel": "main",
+          "kind": "telemetry",
+          "path": "rust/otap-dataflow/",
+          "nodeMatches": ["otel-arrow-dataflow","otel-arrow-storage"],
+          "observation": "The dataflow receiver/exporter telemetry now uses bounded signal/outcome/error.type dimensions, renamed receiver.otap.* and exporter.otap.* metrics, and fixed-memory timing aggregation; upstream marks the metric change breaking.",
+          "decision": "note",
+          "severity": "note"
+        }
+      ],
+      "claims": [
+        {"id":"claim-otel-arrow-dataflow-only","text":"This interval changes the optional dataflow implementation surface, not the declared OTAP semantic model used by the traces-only preservation witness.","observationRefs":["obs-otel-arrow-dataflow-metrics"]}
+      ]
+    },
+    {
+      "id": "dlt-incremental-zero",
+      "title": "Track dlt forward-only incremental cursor fix",
+      "decision": "note",
+      "severity": "note",
+      "sources": ["dlt"],
+      "nodes": ["dlt-external-observations","ctrl-relational-ingress"],
+      "summary": "dlt now treats persisted incremental last_value == 0 as present when lag is configured, preserving forward-only cursor progression.",
+      "localContractImpact": "Retain as external-observation acquisition correctness evidence; acquired records remain subject to provenance and admission before fact status.",
+      "observations": [
+        {
+          "id": "obs-dlt-zero-cursor",
+          "reportItemID": "dlt-incremental-zero",
+          "source": "dlt",
+          "channel": "devel",
+          "kind": "external-observation",
+          "path": "dlt/extract/incremental/__init__.py",
+          "nodeMatches": ["dlt-external-observations"],
+          "observation": "The incremental lag guard changed from truthiness to an explicit is-not-None check so a persisted zero cursor cannot cause a rewind on the next run.",
+          "decision": "note",
+          "severity": "note"
+        }
+      ],
+      "claims": [
+        {"id":"claim-dlt-acquisition-only","text":"The fix improves acquisition-state correctness but does not authorize acquired records as ctrl facts or qualification evidence by itself.","observationRefs":["obs-dlt-zero-cursor"]}
+      ]
+    }
+  ],
+  "validation": {
+    "authorityRead": true,
+    "ctrlContextRead": true,
+    "projectTopologyRead": true,
+    "sourceChannelsDistinct": true,
+    "graphModelRead": true,
+    "correlationCarrierPolicyRead": true,
+    "publicationPlanRead": true,
+    "forbiddenAttractorsChecked": true,
+    "cueExecution": "not_available_to_github_app",
+    "executableCpythonProbes": "not_executed",
+    "executableRegrtest": "not_executed",
+    "executableAstralCorrelation": "not_executed",
+    "executableScipCorrelation": "not_executed",
+    "executableOtelPipeline": "not_executed",
+    "executableOtlpOtapRoundtrip": "not_executed",
+    "executableRelationalProjection": "not_executed",
+    "reportProjectionOnly": true,
+    "summaryProjectionOnly": true
+  }
+}
