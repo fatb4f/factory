@@ -1,10 +1,10 @@
 {
   "apiVersion": "factory.upstream-monitor.latest-run/v2",
   "kind": "LatestUpstreamMonitorRun",
-  "run_id": "20260815T155602Z",
+  "run_id": "20260818T160440Z",
   "profile_id": "ctrl",
-  "bundle_path": "contracts/upstream-monitor/ctrl/contract-surface/runs/20260815T155602Z/",
-  "manifest_path": "contracts/upstream-monitor/ctrl/contract-surface/runs/20260815T155602Z/manifest.json",
-  "authority_revision": "0c5195d718d48baf1a787d36e1de4e6d20d67351",
-  "publication_revision": "47361a8800602564380b67aa187f5f0825c58ceb"
+  "bundle_path": "contracts/upstream-monitor/ctrl/contract-surface/runs/20260818T160440Z/",
+  "manifest_path": "contracts/upstream-monitor/ctrl/contract-surface/runs/20260818T160440Z/manifest.json",
+  "authority_revision": "13fa7714653df86fd6367570fe8fe1e493c39ce8",
+  "publication_revision": "0e0084bc3ee5a25e71bc01224c6a004b75a347d2"
 }
