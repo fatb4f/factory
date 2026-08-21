@@ -1,0 +1,351 @@
+{
+  "apiVersion": "factory.upstream-monitor.epistemic-plant-bootstrap.evidence/v2",
+  "kind": "EpistemicPlantBootstrapUpstreamEvidence",
+  "run_id": "20260821T161916Z",
+  "profile_id": "epistemic-plant-bootstrap",
+  "terminal_state": "terminal_success",
+  "monitor_state": "terminal_success",
+  "qualification_state": "executable_validated",
+  "authority_revision": "69c9689c88fe0daa2bab879dc4366e12549366f7",
+  "subject_revision": "9d8c1897a6617a5d3ec9cc42eb060ce4c2ac96fb",
+  "bootstrap_baseline": false,
+  "sources": [
+    {
+      "source": "guac",
+      "channel": "pinned",
+      "status": "resolved",
+      "head_commit": "a399a54801bfbffc36bc8748dd97d2d2b3bea378",
+      "version": "v1.1.0",
+      "evidence": [
+        "source=guac; channel=pinned; ref=v1.1.0; revision=a399a54801bfbffc36bc8748dd97d2d2b3bea378; observed_surface=IsDependency GraphQL contract, coordinate normalization inputs, GUAC build/runtime baseline",
+        "the declared v1.1.0 ref resolves to the expected pinned commit"
+      ]
+    },
+    {
+      "source": "guac",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "a9129548f714885b79cdc27169e1100eadb1af1d",
+      "evidence": [
+        "source=guac; channel=main; ref=main; revision=a9129548f714885b79cdc27169e1100eadb1af1d; observed_surface=IsDependency candidate production, GraphQL contract, assembler/runtime behavior",
+        "main advanced 2 commits from admitted head 51d9b1c420f2f65db1d15793da64a981bad9dfcd",
+        "incremental changes are dependency metadata plus pkg/emitter code/tests; no declared IsDependency schema or coordinate-normalization path changed",
+        "current IsDependency schema blob remains 8837ccd3adce68e19a3ad78831bd75250bfbfa2d",
+        "current main retains the previously admitted broader CycloneDX-to-IsDependency candidate-production ancestry"
+      ]
+    },
+    {
+      "source": "gemara",
+      "channel": "pinned",
+      "status": "resolved",
+      "head_commit": "4822ce0071b1f2ff478f8a9eece35c4636ba0c0b",
+      "version": "v1.4.1",
+      "evidence": [
+        "source=gemara; channel=pinned; ref=4822ce0071b1f2ff478f8a9eece35c4636ba0c0b; revision=4822ce0071b1f2ff478f8a9eece35c4636ba0c0b; observed_surface=#Evidence, #Result, #Datetime and collected-at semantics",
+        "the pinned external evidence/evaluation vocabulary is unchanged"
+      ]
+    },
+    {
+      "source": "gemara",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "9d36c253484d14922010252bfffe58bdcd49a144",
+      "evidence": [
+        "source=gemara; channel=main; ref=main; revision=9d36c253484d14922010252bfffe58bdcd49a144; observed_surface=#Evidence and assessment/result timing semantics",
+        "forecast head is unchanged from the admitted run and remains distinct from the pinned v1.4.1 vocabulary"
+      ]
+    },
+    {
+      "source": "cue",
+      "channel": "pinned",
+      "status": "resolved",
+      "head_commit": "fc6c0b2ecd3666da92f7053d13fcfbf009b7d7a3",
+      "version": "v0.17.1",
+      "evidence": [
+        "source=cue; channel=pinned; ref=fc6c0b2ecd3666da92f7053d13fcfbf009b7d7a3; revision=fc6c0b2ecd3666da92f7053d13fcfbf009b7d7a3; observed_surface=cue vet, unification, comprehension, schema closedness and reference resolution",
+        "subject cue.mod and CI continue to select CUE v0.17.1"
+      ]
+    },
+    {
+      "source": "cue",
+      "channel": "master",
+      "status": "resolved",
+      "head_commit": "2920479eca26e8377d4ae06a4c4d857e578095e3",
+      "evidence": [
+        "source=cue; channel=master; ref=master; revision=2920479eca26e8377d4ae06a4c4d857e578095e3; observed_surface=cue evaluator/compile/unification-adjacent forecast",
+        "master advanced 44 commits from admitted head f356f8f46cedb8e853ed200fb46ab49a68bfe357",
+        "delta touches internal/core/compile/predeclared.go, command/filetype unification and registry code, parser and encoding paths",
+        "forecast changes are observations only and cannot replace pinned v0.17.1 evaluator semantics"
+      ]
+    },
+    {
+      "source": "cyclonedx",
+      "channel": "master",
+      "status": "resolved",
+      "head_commit": "e02a34ae42a48239f54e04f75280b9000b29f1fb",
+      "evidence": [
+        "source=cyclonedx; channel=master; ref=master; revision=e02a34ae42a48239f54e04f75280b9000b29f1fb; observed_surface=bom-ref, purl, dependencies/dependsOn and metadata release-watch",
+        "release-watch head is unchanged and cannot rewrite digest-pinned subject fixture bytes"
+      ]
+    },
+    {
+      "source": "golang",
+      "channel": "pinned",
+      "status": "resolved",
+      "head_commit": "6e676ab2b809d46623acb5988248d95d1eb7939c",
+      "version": "1.25.0",
+      "evidence": [
+        "source=golang; channel=pinned; ref=go1.25.0; revision=6e676ab2b809d46623acb5988248d95d1eb7939c; observed_surface=Go 1.25.0 GUAC construction and go version -m verification",
+        "the subject CI continues to pin exact Go 1.25.0"
+      ]
+    },
+    {
+      "source": "golang",
+      "channel": "master",
+      "status": "resolved",
+      "head_commit": "f85791f6df0a17520de11df55b5cf5185f2a41fa",
+      "evidence": [
+        "source=golang; channel=master; ref=master; revision=f85791f6df0a17520de11df55b5cf5185f2a41fa; observed_surface=optional Go toolchain forecast for GUAC construction",
+        "master advanced 44 commits from admitted head 601d28a5b00dd633b3c3aca6b7a11a058bf1179b",
+        "delta is dominated by compiler/SSA, assembler, runtime, networking and SIMD work; no impact is demonstrated on the declared go install/go version -m/GOBIN consumer contract"
+      ]
+    },
+    {
+      "source": "uv",
+      "channel": "pinned",
+      "status": "resolved",
+      "head_commit": "b88d7c5c46cbe3c9896544f10255f85a8f0a8a5e",
+      "version": "0.12.0",
+      "evidence": [
+        "source=uv; channel=pinned; ref=b88d7c5c46cbe3c9896544f10255f85a8f0a8a5e; revision=b88d7c5c46cbe3c9896544f10255f85a8f0a8a5e; observed_surface=uv 0.12.0 frozen/locked environment",
+        "subject CI and command contract remain pinned to uv 0.12.0"
+      ]
+    },
+    {
+      "source": "uv",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "244bc3b99fcf24432a4ae2b5f0c437adb7487e90",
+      "evidence": [
+        "source=uv; channel=main; ref=main; revision=244bc3b99fcf24432a4ae2b5f0c437adb7487e90; observed_surface=release-watch for frozen/locked environment and resolver/lock/build implementation",
+        "main advanced 47 commits from admitted head 392e0a0aa39f7f03e2efb688e500ec23a1930d36",
+        "delta touches resolver, lock, build-backend, metadata and configuration internals",
+        "no executable effect is established on pinned uv 0.12.0, checked-in uv.lock, --frozen/--no-sync tasks, or uv sync --locked"
+      ]
+    }
+  ],
+  "graph": {
+    "nodesObserved": [
+      "pinned-source-documents",
+      "cyclonedx-source-extractor",
+      "guac-ingestion",
+      "guac-graphql-contract",
+      "guac-coordinate-normalizer",
+      "graph-generation",
+      "gemara-evidence",
+      "admission-policy",
+      "cue-qualification",
+      "admission-receipts",
+      "epistemic-observation",
+      "fresh-run-determinism",
+      "bootstrap-gate",
+      "promotion-gate"
+    ],
+    "edgesEvaluated": [
+      "source-spec-extractor",
+      "source-ingest",
+      "ingest-query",
+      "query-normalize",
+      "normalize-generation",
+      "source-admission",
+      "generation-admission",
+      "gemara-admission",
+      "admission-cue",
+      "admission-receipt",
+      "receipt-observation",
+      "generation-determinism",
+      "receipt-determinism",
+      "observation-determinism",
+      "bootstrap-qualification",
+      "qualification-promotion"
+    ],
+    "testBindingsEvaluated": [
+      "source-closure",
+      "guac-contract",
+      "admission-contract",
+      "qualification-contract",
+      "experiment-contract"
+    ],
+    "probeBindingsEvaluated": [
+      "bootstrap",
+      "quality",
+      "vet",
+      "eval",
+      "qualify"
+    ]
+  },
+  "items": [
+    {
+      "id": "critical-guac-forecast-candidate-production",
+      "title": "GUAC main remains capable of broader IsDependency candidate production than the v1.1.0 baseline",
+      "decision": "blocking-gate",
+      "severity": "critical",
+      "sources": ["guac/main@a9129548f714885b79cdc27169e1100eadb1af1d"],
+      "nodes": ["guac-ingestion", "guac-graphql-contract", "guac-coordinate-normalizer", "graph-generation", "admission-policy", "cue-qualification"],
+      "summary": "Current GUAC main retains broader pin-to-forecast candidate production while the two-commit incremental delta does not change the checked IsDependency schema or stable coordinate-normalization surface.",
+      "localContractImpact": "Do not advance the GUAC pin without replaying the digest-pinned corpus through query, normalization, graph generation, admission, CUE qualification and fresh-run determinism.",
+      "observations": [
+        {
+          "id": "obs-guac-main-head-delta-20260821",
+          "reportItemID": "critical-guac-forecast-candidate-production",
+          "source": "guac",
+          "channel": "main",
+          "kind": "source",
+          "path": "go.mod; go.sum; pkg/emitter/",
+          "nodeMatches": ["guac-ingestion", "guac-graphql-contract"],
+          "observation": "main advanced two commits; changed files are dependency metadata and emitter implementation/tests, with no incremental change to the declared IsDependency schema path",
+          "decision": "none",
+          "severity": "none"
+        },
+        {
+          "id": "obs-guac-isdependency-schema-stable-20260821",
+          "reportItemID": "critical-guac-forecast-candidate-production",
+          "source": "guac",
+          "channel": "main",
+          "kind": "schema",
+          "path": "pkg/assembler/graphql/schema/isDependency.graphql",
+          "nodeMatches": ["guac-graphql-contract"],
+          "observation": "current IsDependency schema Git blob is 8837ccd3adce68e19a3ad78831bd75250bfbfa2d, unchanged from the previously qualified comparison",
+          "decision": "blocking-gate",
+          "severity": "critical"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-guac-candidate-set-20260821",
+          "text": "The current pin-to-main forecast can alter candidate set because broader candidate-production behavior remains in ancestry; the incremental two-commit delta establishes no new stable candidate-identity change.",
+          "observationRefs": ["obs-guac-main-head-delta-20260821", "obs-guac-isdependency-schema-stable-20260821"]
+        },
+        {
+          "id": "claim-guac-authority-boundary-20260821",
+          "text": "No current evidence crosses the authority boundary: GUAC candidates and provenance remain observations below pinned source declarations and CUE-qualified admission.",
+          "observationRefs": ["obs-guac-isdependency-schema-stable-20260821"]
+        }
+      ]
+    },
+    {
+      "id": "critical-gemara-forecast-evidence-vocabulary",
+      "title": "Gemara main still differs from the pinned v1.4.1 evidence vocabulary",
+      "decision": "blocking-gate",
+      "severity": "critical",
+      "sources": ["gemara/main@9d36c253484d14922010252bfffe58bdcd49a144"],
+      "nodes": ["gemara-evidence", "admission-policy", "cue-qualification"],
+      "summary": "The unchanged Gemara forecast remains distinct from the pinned evidence/result vocabulary consumed by CUE-qualified admission.",
+      "localContractImpact": "Keep Gemara v1.4.1 pinned; any pin advance requires re-specialization and the declared bootstrap, CUE and experiment qualification gates.",
+      "observations": [
+        {
+          "id": "obs-gemara-main-unchanged-20260821",
+          "reportItemID": "critical-gemara-forecast-evidence-vocabulary",
+          "source": "gemara",
+          "channel": "main",
+          "kind": "schema",
+          "path": "auditlog.cue",
+          "nodeMatches": ["gemara-evidence"],
+          "observation": "forecast head is unchanged at 9d36c253484d14922010252bfffe58bdcd49a144 and remains semantically distinct from the pinned v1.4.1 vocabulary",
+          "decision": "blocking-gate",
+          "severity": "critical"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-gemara-pin-preserved-20260821",
+          "text": "Gemara main remains forecast evidence only; v1.4.1 remains the selected external vocabulary until explicit requalification.",
+          "observationRefs": ["obs-gemara-main-unchanged-20260821"]
+        }
+      ]
+    },
+    {
+      "id": "critical-cue-forecast-evaluator-delta",
+      "title": "CUE master advanced across evaluator-adjacent surfaces while v0.17.1 remains qualification authority",
+      "decision": "blocking-gate",
+      "severity": "critical",
+      "sources": ["cue/master@2920479eca26e8377d4ae06a4c4d857e578095e3"],
+      "nodes": ["cue-qualification", "admission-receipts", "fresh-run-determinism", "promotion-gate"],
+      "summary": "CUE master advanced 44 commits and touches compile/predeclared plus filetype unification/registry and related command/parser/encoding surfaces; these changes are forecast observations and cannot replace pinned v0.17.1 semantics.",
+      "localContractImpact": "Keep v0.17.1 pinned; before any advance select an explicit release-line revision and rerun bootstrap specialization, CUE vet/source closure, experiment evaluation and determinism qualification.",
+      "observations": [
+        {
+          "id": "obs-cue-master-evaluator-delta-20260821",
+          "reportItemID": "critical-cue-forecast-evaluator-delta",
+          "source": "cue",
+          "channel": "master",
+          "kind": "schema",
+          "path": "internal/core/compile/predeclared.go; internal/filetypes/; cmd/cue/cmd/; cue/parser/; internal/encoding/",
+          "nodeMatches": ["cue-qualification"],
+          "observation": "master advanced 44 commits from f356f8f46cedb8e853ed200fb46ab49a68bfe357 and changed evaluator-adjacent compile, unification/registry, command, parser and encoding implementation",
+          "decision": "blocking-gate",
+          "severity": "critical"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-cue-forecast-not-authority-20260821",
+          "text": "The new CUE master head is a forecast requiring executable requalification before adoption; the unchanged subject continues to select v0.17.1 as semantic evaluator authority.",
+          "observationRefs": ["obs-cue-master-evaluator-delta-20260821"]
+        }
+      ]
+    },
+    {
+      "id": "note-uv-release-watch",
+      "title": "uv main moved across lock/resolver/build internals without changing the pinned 0.12.0 subject realization",
+      "decision": "note",
+      "severity": "note",
+      "sources": ["uv/main@244bc3b99fcf24432a4ae2b5f0c437adb7487e90"],
+      "nodes": ["bootstrap-gate"],
+      "summary": "The release-watch delta intersects lock/resolver/build implementation, but no effect is established on the subject's exact uv 0.12.0 locked/frozen realization.",
+      "localContractImpact": "No adoption action; retain the pinned uv 0.12.0 environment and checked-in lock until explicitly requalified.",
+      "observations": [
+        {
+          "id": "obs-uv-main-release-watch-20260821",
+          "reportItemID": "note-uv-release-watch",
+          "source": "uv",
+          "channel": "main",
+          "kind": "dependency",
+          "path": "crates/uv-resolver/; crates/uv-build-backend/; crates/uv-pypi-types/; uv.lock",
+          "nodeMatches": ["bootstrap-gate"],
+          "observation": "main advanced 47 commits and changes lock/resolver/build/metadata internals while the subject continues to execute pinned uv 0.12.0 with locked/frozen commands",
+          "decision": "note",
+          "severity": "note"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-uv-pin-isolation-20260821",
+          "text": "The release-watch delta does not change admitted subject behavior without an explicit uv pin advance and executable requalification.",
+          "observationRefs": ["obs-uv-main-release-watch-20260821"]
+        }
+      ]
+    }
+  ],
+  "authoritySeparation": {
+    "pinnedSourceRemainsOracle": true,
+    "guacRemainsObservationOnly": true,
+    "cueRemainsQualificationAuthority": true,
+    "operationalFailureRemainsInconclusive": true
+  },
+  "validation": {
+    "authorityRead": true,
+    "subjectContextRead": true,
+    "allRequiredSourcesResolved": true,
+    "graphModelRead": true,
+    "correlationModelRead": true,
+    "publicationPlanRead": true,
+    "forbiddenAttractorsChecked": true,
+    "cueExecution": "executed_elsewhere",
+    "bootstrapExecution": "executed",
+    "unitExecution": "executed",
+    "experimentExecution": "executed",
+    "reportProjectionOnly": true,
+    "summaryProjectionOnly": true
+  }
+}
