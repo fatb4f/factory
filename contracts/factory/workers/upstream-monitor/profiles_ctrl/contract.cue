@@ -27,6 +27,7 @@ ctrlContext: close({
 	semanticAuthority: "spec/"
 	componentOwnershipSource: "control/components.cue"
 	architectureContract: "contracts/factory/workers/upstream-monitor/profiles_ctrl/topology.cue"
+	semanticKernelContract: "contracts/factory/workers/upstream-monitor/profiles_ctrl/semantic-kernel.cue"
 	projectFolders: ["ctrl", "python-intel", "PyPI/wheel/PEP pipeline", "semagrams"]
 	components: [
 		"qualification-spec",
@@ -55,6 +56,7 @@ ctrlAuthorityModel: close({
 	authority: [
 		"contracts/factory/workers/upstream-monitor/contract.cue",
 		"contracts/factory/workers/upstream-monitor/profiles_ctrl/*.cue",
+		"contracts/factory/workers/upstream-monitor/profiles_ctrl/semantic-kernel.cue",
 		"contracts/factory/workers/upstream-monitor/profiles_ctrl/correlation.cue",
 		"contracts/factory/workers/upstream-monitor/AGENTS.md",
 		"contracts/upstream-monitor/ctrl/contract-surface/AGENTS.md",
@@ -71,10 +73,13 @@ ctrlAuthorityModel: close({
 		"open-telemetry/semantic-conventions-genai",
 		"open-telemetry/opentelemetry-python-genai",
 		"open-telemetry/otel-arrow",
+		"open-telemetry/weaver",
 		"dlt-hub/dlt",
+		"fsspec/filesystem_spec",
 		"apache/arrow",
 		"duckdb/duckdb",
 		"ibis-project/ibis",
+		"pola-rs/polars",
 		"marimo-team/marimo",
 		"pydantic/pydantic-ai",
 		"cue-lang/cue",
@@ -93,9 +98,11 @@ ctrlWorkflow: close({
 		"input_admission",
 		"context_acquisition",
 		"project_topology_read",
+		"semantic_kernel_read",
 		"source_acquisition",
 		"graph_projection",
 		"correlation_policy_read",
+		"interface_boundary_read",
 		"test_probe_binding",
 		"semantic_classification",
 		"report_render",
