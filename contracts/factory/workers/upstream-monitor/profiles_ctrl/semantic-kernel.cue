@@ -16,15 +16,17 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/upstream-monito
 #CtrlUpstreamBindingRole: "semantic-identity" | "semantic-interface" | "address-space" | "typed-interchange" | "relational-execution" | "diagnostic-projection" | "execution-implementation" | "qualification-engine"
 
 #CtrlUpstreamBinding: close({
-	id:                            core.#NonEmptyString
-	sourceNode:                    core.#NonEmptyString
-	localNode:                     core.#NonEmptyString
-	role:                          #CtrlUpstreamBindingRole
-	relation:                      "consumed-by" | "projects-to" | "validated-by"
-	materialization:               "current" | "projected" | "optional"
-	requiredForCurrentFrontier:    bool
-	mayBlockWithoutLocalConsumer:  false
-	rationale:                     core.#NonEmptyString
+	id:                           core.#NonEmptyString
+	sourceNode:                   core.#NonEmptyString
+	localNode:                    core.#NonEmptyString
+	from:                         core.#NonEmptyString
+	to:                           core.#NonEmptyString
+	kind:                         "consumed-by" | "projects-to" | "validated-by"
+	role:                         #CtrlUpstreamBindingRole
+	materialization:              "current" | "projected" | "optional"
+	requiredForCurrentFrontier:   bool
+	mayBlockWithoutLocalConsumer: false
+	rationale:                    core.#NonEmptyString
 })
 
 // These nodes extend the source/operational graph with the profile-local
@@ -73,16 +75,16 @@ ctrlKernelRelations: [
 
 ctrlUpstreamBindings: [...#CtrlUpstreamBinding] & [_, ...]
 ctrlUpstreamBindings: [
-	{id: "scip-correlation-binding", sourceNode: "scip-semantic-index", localNode: "ctrl-correlation-identity", role: "semantic-identity", relation: "consumed-by", materialization: "projected", requiredForCurrentFrontier: true, mayBlockWithoutLocalConsumer: false, rationale: "SCIP provides the cross-file symbol/source-occurrence identity spine but cannot manufacture CPython semantics"},
-	{id: "weaver-feedback-binding", sourceNode: "weaver-registry-interface", localNode: "ctrl-diagnostic-packet", role: "semantic-interface", relation: "validated-by", materialization: "projected", requiredForCurrentFrontier: true, mayBlockWithoutLocalConsumer: false, rationale: "the first shared-interface experiment validates and projects DiagnosticPacket without moving authority from CUE"},
-	{id: "fsspec-acquisition-binding", sourceNode: "fsspec-address-space", localNode: "ctrl-relational-ingress", role: "address-space", relation: "consumed-by", materialization: "optional", requiredForCurrentFrontier: false, mayBlockWithoutLocalConsumer: false, rationale: "fsspec is an optional address-space abstraction for acquired observations"},
-	{id: "arrow-ingress-binding", sourceNode: "arrow-columnar-interchange", localNode: "ctrl-relational-ingress", role: "typed-interchange", relation: "projects-to", materialization: "optional", requiredForCurrentFrontier: false, mayBlockWithoutLocalConsumer: false, rationale: "Arrow carries typed relations without acquiring semantic authority"},
-	{id: "duckdb-dpi-binding", sourceNode: "duckdb-relational-engine", localNode: "ctrl-dpi-relations", role: "relational-execution", relation: "consumed-by", materialization: "optional", requiredForCurrentFrontier: false, mayBlockWithoutLocalConsumer: false, rationale: "DuckDB may execute/persist lowered relations but implementation choice does not define DPI semantics"},
-	{id: "ibis-dpi-binding", sourceNode: "ibis-expression-layer", localNode: "ctrl-dpi-relations", role: "relational-execution", relation: "projects-to", materialization: "optional", requiredForCurrentFrontier: false, mayBlockWithoutLocalConsumer: false, rationale: "Ibis may project composable relational expressions over DPI-compatible relations"},
-	{id: "polars-dpi-binding", sourceNode: "polars-dataframe-engine", localNode: "ctrl-dpi-relations", role: "relational-execution", relation: "consumed-by", materialization: "optional", requiredForCurrentFrontier: false, mayBlockWithoutLocalConsumer: false, rationale: "Polars remains an optional eager/lazy dataframe execution substrate"},
-	{id: "marimo-diagnostic-binding", sourceNode: "marimo-diagnostic-runtime", localNode: "ctrl-diagnostic-relation", role: "diagnostic-projection", relation: "consumed-by", materialization: "optional", requiredForCurrentFrontier: false, mayBlockWithoutLocalConsumer: false, rationale: "Marimo projects live diagnostics and never becomes workflow or qualification authority"},
-	{id: "pydantic-graph-executor-binding", sourceNode: "pydantic-graph-upstream", localNode: "cpython-control-graph", role: "execution-implementation", relation: "consumed-by", materialization: "optional", requiredForCurrentFrontier: false, mayBlockWithoutLocalConsumer: false, rationale: "pydantic-graph remains a replaceable execution implementation beneath CUE-defined operation semantics"},
-	{id: "cue-qualification-binding", sourceNode: "cue-evaluator-upstream", localNode: "ctrl-cue-qualification-gate", role: "qualification-engine", relation: "validated-by", materialization: "current", requiredForCurrentFrontier: true, mayBlockWithoutLocalConsumer: false, rationale: "the pinned CUE evaluator realizes ctrl/spec qualification semantics while remaining external semantics rather than factory authority"},
+	{id: "scip-correlation-binding", sourceNode: "scip-semantic-index", localNode: "ctrl-correlation-identity", from: "scip-semantic-index", to: "ctrl-correlation-identity", kind: "consumed-by", role: "semantic-identity", materialization: "projected", requiredForCurrentFrontier: true, mayBlockWithoutLocalConsumer: false, rationale: "SCIP provides the cross-file symbol/source-occurrence identity spine but cannot manufacture CPython semantics"},
+	{id: "weaver-feedback-binding", sourceNode: "weaver-registry-interface", localNode: "ctrl-diagnostic-packet", from: "ctrl-diagnostic-packet", to: "weaver-registry-interface", kind: "validated-by", role: "semantic-interface", materialization: "projected", requiredForCurrentFrontier: true, mayBlockWithoutLocalConsumer: false, rationale: "DiagnosticPacket is validated/projected by Weaver without moving authority from CUE"},
+	{id: "fsspec-acquisition-binding", sourceNode: "fsspec-address-space", localNode: "ctrl-relational-ingress", from: "fsspec-address-space", to: "ctrl-relational-ingress", kind: "consumed-by", role: "address-space", materialization: "optional", requiredForCurrentFrontier: false, mayBlockWithoutLocalConsumer: false, rationale: "fsspec is an optional address-space abstraction consumed by external-observation acquisition/ingress"},
+	{id: "arrow-ingress-binding", sourceNode: "arrow-columnar-interchange", localNode: "ctrl-relational-ingress", from: "arrow-columnar-interchange", to: "ctrl-relational-ingress", kind: "projects-to", role: "typed-interchange", materialization: "optional", requiredForCurrentFrontier: false, mayBlockWithoutLocalConsumer: false, rationale: "Arrow carries typed relations into relational ingress without acquiring semantic authority"},
+	{id: "duckdb-dpi-binding", sourceNode: "duckdb-relational-engine", localNode: "ctrl-dpi-relations", from: "ctrl-dpi-relations", to: "duckdb-relational-engine", kind: "consumed-by", role: "relational-execution", materialization: "optional", requiredForCurrentFrontier: false, mayBlockWithoutLocalConsumer: false, rationale: "DuckDB may consume/execute lowered relations but implementation choice does not define DPI semantics"},
+	{id: "ibis-dpi-binding", sourceNode: "ibis-expression-layer", localNode: "ctrl-dpi-relations", from: "ibis-expression-layer", to: "ctrl-dpi-relations", kind: "projects-to", role: "relational-execution", materialization: "optional", requiredForCurrentFrontier: false, mayBlockWithoutLocalConsumer: false, rationale: "Ibis may project composable relational expressions used to realize DPI-compatible operations"},
+	{id: "polars-dpi-binding", sourceNode: "polars-dataframe-engine", localNode: "ctrl-dpi-relations", from: "ctrl-dpi-relations", to: "polars-dataframe-engine", kind: "consumed-by", role: "relational-execution", materialization: "optional", requiredForCurrentFrontier: false, mayBlockWithoutLocalConsumer: false, rationale: "Polars may consume lowered relations as an optional eager/lazy dataframe execution substrate"},
+	{id: "marimo-diagnostic-binding", sourceNode: "marimo-diagnostic-runtime", localNode: "ctrl-diagnostic-relation", from: "ctrl-diagnostic-relation", to: "marimo-diagnostic-runtime", kind: "consumed-by", role: "diagnostic-projection", materialization: "optional", requiredForCurrentFrontier: false, mayBlockWithoutLocalConsumer: false, rationale: "Marimo consumes/projects diagnostic relations and never becomes workflow or qualification authority"},
+	{id: "pydantic-graph-executor-binding", sourceNode: "pydantic-graph-upstream", localNode: "cpython-control-graph", from: "cpython-control-graph", to: "pydantic-graph-upstream", kind: "projects-to", role: "execution-implementation", materialization: "optional", requiredForCurrentFrontier: false, mayBlockWithoutLocalConsumer: false, rationale: "the CUE-defined operation graph may project to pydantic-graph as a replaceable execution implementation"},
+	{id: "cue-qualification-binding", sourceNode: "cue-evaluator-upstream", localNode: "ctrl-cue-qualification-gate", from: "ctrl-cue-qualification-gate", to: "cue-evaluator-upstream", kind: "validated-by", role: "qualification-engine", materialization: "current", requiredForCurrentFrontier: true, mayBlockWithoutLocalConsumer: false, rationale: "the pinned CUE evaluator realizes and validates ctrl/spec qualification semantics while remaining external evaluator semantics rather than factory authority"},
 ]
 
 ctrlSemanticKernel: close({
@@ -121,6 +123,11 @@ ctrlSemanticKernel: close({
 		telemetryIsObservationOnly: true
 		relationalExecutionIsNotAuthority: true
 		weaverIsInterfaceRealizationOnly: true
+	})
+	futureAdmissionContext: close({
+		profile: "epistemic-plant-bootstrap"
+		status: "future_no_dependency"
+		role: "candidate evidence-admission semantics only if the current ctrl qualification chain demonstrates the need; never imported as ctrl authority merely because a sibling profile exists"
 	})
 	firstSharedInterfaceExperiment: "Weaver-backed DiagnosticPacket"
 	currentFrontier: [
