@@ -3,7 +3,7 @@ package ctrlprofile
 import core "github.com/fatb4f/factory/contracts/factory/workers/upstream-monitor:upstreammonitor"
 
 #CtrlRunEvidence: close({
-	apiVersion: "factory.upstream-monitor.ctrl.evidence/v2"
+	apiVersion: "factory.upstream-monitor.ctrl.evidence/v3"
 	kind: "CtrlUpstreamEvidence"
 	run_id: core.#NonEmptyString
 	profile_id: "ctrl"
@@ -18,6 +18,8 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/upstream-monito
 	graph: close({
 		nodesObserved: [...core.#NonEmptyString] & [_, ...]
 		edgesEvaluated: [...core.#NonEmptyString] & [_, ...]
+		kernelRelationsEvaluated: [...core.#NonEmptyString]
+		upstreamBindingsEvaluated: [...core.#NonEmptyString]
 		testBindingsEvaluated: [...core.#NonEmptyString]
 		probeBindingsEvaluated: [...core.#NonEmptyString]
 	})
@@ -26,9 +28,11 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/upstream-monito
 		authorityRead: bool
 		ctrlContextRead: bool
 		projectTopologyRead: bool
+		semanticKernelRead: bool
 		sourceChannelsDistinct: bool
 		graphModelRead: bool
 		correlationCarrierPolicyRead: bool
+		interfaceBoundaryRead: bool
 		publicationPlanRead: bool
 		forbiddenAttractorsChecked: bool
 		cueExecution: "not_available_to_github_app" | "executed_elsewhere"
@@ -39,6 +43,8 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/upstream-monito
 		executableOtelPipeline: "not_executed" | "executed"
 		executableOtlpOtapRoundtrip: "not_executed" | "executed"
 		executableRelationalProjection: "not_executed" | "executed"
+		executableSemanticKernel: "not_executed" | "executed"
+		executableWeaverProjection: "not_executed" | "executed"
 		reportProjectionOnly: bool
 		summaryProjectionOnly: bool
 	})
@@ -50,6 +56,8 @@ ctrlEvidenceModel: close({
 	requireSourceAndChannelOnEveryObservation: true
 	requireProjectTopologyBindingForCrossProjectClaims: true
 	requireComponentOwnershipBoundary: true
+	requireSemanticKernelBindingForKernelClaims: true
+	requireUpstreamBindingForScipAndProjectionSources: true
 	requireGraphNodeBindingForCpythonItems: true
 	requireProjectionEdgeBindingForCodexSchemaSDKItems: true
 	requireAnalyzerGraphBindingForAstralItems: true
@@ -59,12 +67,24 @@ ctrlEvidenceModel: close({
 	requireTelemetryAndSemanticEvidenceSeparated: true
 	requireExternalObservationAndExecutionObservationSeparation: true
 	requireAdmissionBeforeExternalRecordFactStatus: true
+	requireEvaluationWorldIdentityOnKernelCorrelation: true
 	requireTraceAndSemanticIdentitySeparation: true
 	requireAgentToolMutationLineage: true
 	requireTelemetryCarrierPolicy: true
 	requireOtlpOtapProjectionIdentity: true
 	requireOtlpOtapP0TraceOnly: true
 	requireRelationalProjectionAuthoritySeparation: true
+	requireRelationalExecutionSeparatedFromDpiSemantics: true
+	requireWeaverInterfaceAuthoritySeparation: true
+	requireWorldScopedEvaluation: true
+	requireMeaningPreservingDpiLowering: true
+	requireComputedClosureAndQualifiedFixpointSeparation: true
+	requireExternalCueQualificationGate: true
+	requireSealedBundleImmutability: true
+	requireNewWorldOnAdmittedInputOrParameterChange: true
+	requireNegativeKnowledgeClosureWitness: true
+	requireInferenceAndActuationOutsideQualificationKernel: true
+	requireFederatedQualifiedProjectionAdmission: true
 	requireUpstreamTestAndLocalProbeDistinction: true
 	requireQualificationStateIndependentOfMonitorState: true
 	forbidAnalyzerVerdictAsRuntimeTruth: true
@@ -74,6 +94,12 @@ ctrlEvidenceModel: close({
 	forbidTelemetryAsStaticSemanticAuthority: true
 	forbidGenericInstrumentationAsDomainProbeReplacement: true
 	forbidRelationalProjectionAsQualification: true
+	forbidRelationalExecutorAsDpiAuthority: true
+	forbidWeaverAsQualificationAuthority: true
+	forbidComputedClosureAsAutomaticQualification: true
+	forbidWorldMutationAfterInstantiation: true
+	forbidSealedBundleMutation: true
+	forbidAbsenceAsFalseWithoutClosure: true
 	forbidBulkSemanticIdentityBaggageProjection: true
 	forbidSensitivePayloadTelemetryCarrier: true
 	forbidOtlpOtapSemanticEnrichmentByInference: true
