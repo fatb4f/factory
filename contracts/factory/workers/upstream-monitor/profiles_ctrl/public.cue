@@ -1,7 +1,7 @@
 package ctrlprofile
 
 publicContract: close({
-	apiVersion: "factory.upstream-monitor.ctrl/v2"
+	apiVersion: "factory.upstream-monitor.ctrl/v3"
 	kind: "CtrlMultiSourceUpstreamMonitor"
 	operational: bool
 	signal: _
@@ -9,6 +9,9 @@ publicContract: close({
 	context: _
 	projectFolders: _
 	architecturePolicy: _
+	semanticKernel: _
+	kernelRelations: [...#CtrlKernelRelation]
+	upstreamBindings: [...#CtrlUpstreamBinding]
 	sources: _
 	sourcePolicy: _
 	actuator: _
@@ -31,7 +34,7 @@ publicContract: close({
 	validationAssertions: _
 	validationPlan: _
 }) & {
-	apiVersion: "factory.upstream-monitor.ctrl/v2"
+	apiVersion: "factory.upstream-monitor.ctrl/v3"
 	kind: "CtrlMultiSourceUpstreamMonitor"
 	operational: ctrlOperational
 	signal: ctrlAcceptedSignal
@@ -39,6 +42,9 @@ publicContract: close({
 	context: ctrlContext
 	projectFolders: ctrlProjectFolders
 	architecturePolicy: ctrlArchitecturePolicy
+	semanticKernel: ctrlSemanticKernel
+	kernelRelations: ctrlKernelRelations
+	upstreamBindings: ctrlUpstreamBindings
 	sources: ctrlSources
 	sourcePolicy: ctrlSourcePolicy
 	actuator: chatgptActuator
