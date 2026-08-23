@@ -79,12 +79,28 @@ ctrlSources: {
 			main: {id: "main", ref: "main", mode: "forecast", required: true}
 		}
 	}
+	weaver: {
+		id: "weaver"
+		repository: "open-telemetry/weaver"
+		role: "upstream_evidence_only"
+		channels: {
+			main: {id: "main", ref: "main", mode: "forecast", required: true}
+		}
+	}
 	dlt: {
 		id: "dlt"
 		repository: "dlt-hub/dlt"
 		role: "upstream_evidence_only"
 		channels: {
 			devel: {id: "devel", ref: "devel", mode: "release-watch", required: false}
+		}
+	}
+	fsspec: {
+		id: "fsspec"
+		repository: "fsspec/filesystem_spec"
+		role: "upstream_evidence_only"
+		channels: {
+			master: {id: "master", ref: "master", mode: "release-watch", required: false}
 		}
 	}
 	arrow: {
@@ -106,6 +122,14 @@ ctrlSources: {
 	ibis: {
 		id: "ibis"
 		repository: "ibis-project/ibis"
+		role: "upstream_evidence_only"
+		channels: {
+			main: {id: "main", ref: "main", mode: "release-watch", required: false}
+		}
+	}
+	polars: {
+		id: "polars"
+		repository: "pola-rs/polars"
 		role: "upstream_evidence_only"
 		channels: {
 			main: {id: "main", ref: "main", mode: "release-watch", required: false}
@@ -166,10 +190,13 @@ ctrlSourcePolicy: close({
 	genaiSemanticSource: "otel-genai-semconv/main"
 	genaiPythonRealizationSource: "otel-python-genai/main"
 	columnarTelemetrySource: "otel-arrow/main"
+	semanticInterfaceSource: "weaver/main"
 	externalObservationAcquisitionSource: "dlt/devel"
+	externalAddressSpaceSource: "fsspec/master"
 	columnarRelationSource: "arrow/main"
 	relationalSubstrateSource: "duckdb/main"
 	semanticQuerySource: "ibis/main"
+	dataframeExecutionSource: "polars/main"
 	diagnosticProjectionSource: "marimo/main"
 	executionGraphImplementationSource: "pydantic-graph/main"
 	codexChannelsDistinct: true
@@ -179,9 +206,13 @@ ctrlSourcePolicy: close({
 	scipIdentityDoesNotOverrideCpythonSemantics: true
 	otelTelemetryIsObservationOnly: true
 	otelArrowPreservesOTLPOTAPDistinction: true
+	weaverIsInterfaceRealizationOnly: true
+	weaverCannotQualifyWorlds: true
 	dltAcquiredRecordsRequireAdmissionBeforeFactStatus: true
 	externalObservationsDistinctFromRuntimeObservations: true
+	fsspecIsAddressSpaceOnly: true
 	relationalAndWorkbenchProvidersAreProjectionOnly: true
+	relationalExecutionCannotDefineDPISemantics: true
 	executionGraphImplementationIsReplaceable: true
 	optionalSatellitesCannotBlockWithoutLocalConsumer: true
 })
