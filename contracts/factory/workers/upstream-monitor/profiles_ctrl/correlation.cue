@@ -4,6 +4,7 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/upstream-monito
 
 #CorrelationIdentity: close({
 	qualification_run_id: core.#NonEmptyString
+	evaluation_world_id: core.#NonEmptyString
 	repository_revision: core.#CommitSHA
 	operation_id: core.#NonEmptyString
 	agent_turn_id?: core.#NonEmptyString
@@ -15,6 +16,9 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/upstream-monito
 	symbol_id?: core.#NonEmptyString
 	source_occurrence_id?: core.#NonEmptyString
 	evidence_id?: core.#NonEmptyString
+	sealed_bundle_id?: core.#NonEmptyString
+	trace_id?: core.#NonEmptyString
+	span_id?: core.#NonEmptyString
 })
 
 #BaggageDisposition: "allowed" | "conditional" | "forbidden"
@@ -39,6 +43,14 @@ ctrlTelemetryCarrierPolicy: close({
 			baggage: "allowed"
 			resource_attributes: false
 			constraints: ["propagate only the opaque identifier, never qualification payloads"]
+		}
+		evaluation_world_id: #TelemetryCarrierRule & {
+			id: "evaluation_world_id"
+			span_attributes: true
+			event_attributes: true
+			baggage: "forbidden"
+			resource_attributes: false
+			constraints: ["world identity binds execution to one immutable authority/parameter/input/closure context; do not use it to imply qualification"]
 		}
 		repository_revision: #TelemetryCarrierRule & {
 			id: "repository_revision"
@@ -128,6 +140,14 @@ ctrlTelemetryCarrierPolicy: close({
 			resource_attributes: false
 			constraints: ["carry identity only; evidence payload remains out-of-band"]
 		}
+		sealed_bundle_id: #TelemetryCarrierRule & {
+			id: "sealed_bundle_id"
+			span_attributes: false
+			event_attributes: true
+			baggage: "forbidden"
+			resource_attributes: false
+			constraints: ["bundle identity exists only after seal and must not be projected backward as if it caused the evaluated execution"]
+		}
 		source_text: #TelemetryCarrierRule & {
 			id: "source_text"
 			span_attributes: false
@@ -157,12 +177,15 @@ ctrlTelemetryCarrierPolicy: close({
 
 ctrlCorrelationContract: close({
 	identitySchemaAuthority: "#CorrelationIdentity"
-	requiredIdentityFields: ["qualification_run_id", "repository_revision", "operation_id"]
-	optionalIdentityFields: ["agent_turn_id", "tool_call_id", "mcp_call_id", "mutation_id", "test_attempt_id", "probe_id", "symbol_id", "source_occurrence_id", "evidence_id"]
+	requiredIdentityFields: ["qualification_run_id", "evaluation_world_id", "repository_revision", "operation_id"]
+	optionalIdentityFields: ["agent_turn_id", "tool_call_id", "mcp_call_id", "mutation_id", "test_attempt_id", "probe_id", "symbol_id", "source_occurrence_id", "evidence_id", "sealed_bundle_id", "trace_id", "span_id"]
 	carrierPolicy: ctrlTelemetryCarrierPolicy
 	semanticIdentityDistinctFromTraceIdentity: true
 	traceIdentityAnswersCausalityOnly: true
 	semanticIdentityAnswersSubjectIdentity: true
+	evaluationWorldIdentityAnswersEvaluationBoundary: true
+	sealedBundleIdentityAnswersCommittedResultOnly: true
+	traceAndSpanUseNativeTelemetryContext: true
 	agentToolMutationLineageExplicit: true
 	baggageDenyByDefault: true
 	forbidBulkSemanticIdentityBaggageProjection: true
