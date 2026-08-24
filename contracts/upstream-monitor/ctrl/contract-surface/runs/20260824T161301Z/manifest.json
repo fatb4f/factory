@@ -8,6 +8,6 @@
   "artifacts": [
     {"kind":"report","filename":"report.md","mediaType":"text/markdown","gitBlobSHA":"298aec32f69a50cbbeabaf88626cdc6d6fd7b12e"},
     {"kind":"summary","filename":"summary.md","mediaType":"text/markdown","gitBlobSHA":"0a8b2d79e509e1ead3870f859b6eba0b2afecde4"},
-    {"kind":"evidence","filename":"evidence.json","mediaType":"application/json","gitBlobSHA":"0f2ef24d348e742cd213b17b9bdc91e098b1f3b5"}
+    {"kind":"evidence","filename":"evidence.json","mediaType":"application/json","gitBlobSHA":"cbe1ddc1738c24d242dc63fbe8592ffe89b29858"}
   ]
 }
