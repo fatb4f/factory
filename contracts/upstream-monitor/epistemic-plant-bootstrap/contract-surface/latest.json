@@ -1,10 +1,10 @@
 {
   "apiVersion": "factory.upstream-monitor.latest-run/v2",
   "kind": "LatestUpstreamMonitorRun",
-  "run_id": "20260821T161916Z",
+  "run_id": "20260824T161302Z",
   "profile_id": "epistemic-plant-bootstrap",
-  "bundle_path": "contracts/upstream-monitor/epistemic-plant-bootstrap/contract-surface/runs/20260821T161916Z/",
-  "manifest_path": "contracts/upstream-monitor/epistemic-plant-bootstrap/contract-surface/runs/20260821T161916Z/manifest.json",
-  "authority_revision": "69c9689c88fe0daa2bab879dc4366e12549366f7",
-  "publication_revision": "0956ba32ef0a55c8c2e19543d755fe11de3b44d7"
+  "bundle_path": "contracts/upstream-monitor/epistemic-plant-bootstrap/contract-surface/runs/20260824T161302Z/",
+  "manifest_path": "contracts/upstream-monitor/epistemic-plant-bootstrap/contract-surface/runs/20260824T161302Z/manifest.json",
+  "authority_revision": "f97d97ea3e8aa9477b0605af51f402e99535addd",
+  "publication_revision": "35095e1032e2896b2759ef0d05c8b48d9bbe495a"
 }
