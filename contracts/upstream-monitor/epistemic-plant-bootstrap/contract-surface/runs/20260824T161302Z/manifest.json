@@ -1,0 +1,13 @@
+{
+  "apiVersion": "factory.upstream-monitor.run-bundle/v2",
+  "kind": "UpstreamMonitorRunBundle",
+  "run_id": "20260824T161302Z",
+  "profile_id": "epistemic-plant-bootstrap",
+  "terminal_state": "terminal_success",
+  "export_unit": "directory",
+  "artifacts": [
+    {"kind":"report","filename":"report.md","mediaType":"text/markdown","gitBlobSHA":"9b5f120b2d42439e1a5215b840abdf1c5a11b3de"},
+    {"kind":"summary","filename":"summary.md","mediaType":"text/markdown","gitBlobSHA":"b0a7b9c7194b5f8fe1b2e6f2eae781ff9b201d4b"},
+    {"kind":"evidence","filename":"evidence.json","mediaType":"application/json","gitBlobSHA":"9da0a3cef666fec4fff47613166299c6311c6da3"}
+  ]
+}
