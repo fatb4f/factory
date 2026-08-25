@@ -9,6 +9,7 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/upstream-monito
 	context_repo: "fatb4f/ctrl"
 	entrypoint: "contracts/upstream-monitor/ctrl/contract-surface/AGENTS.md"
 	adapter: "github_app"
+	dispatcher?: core.#DispatcherContext
 })
 
 ctrlAcceptedSignal: #CtrlAcceptedSignal & {

@@ -1,0 +1,46 @@
+name: Dispatcher preflight
+
+on:
+  workflow_dispatch:
+    inputs:
+      observed_at:
+        description: Observed ChatGPT tick as RFC3339
+        required: true
+        type: string
+      revision:
+        description: Full repository commit SHA
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.revision }}
+          persist-credentials: false
+      - uses: cue-lang/setup-cue@v1
+        with:
+          version: v0.16.1
+      - name: Validate contracts and resolved registry
+        run: cue vet ./...
+      - name: Resolve and admit due plan
+        env:
+          OBSERVED_AT: ${{ inputs.observed_at }}
+          REVISION: ${{ inputs.revision }}
+        run: |
+          python3 .agents/dispatcher/dispatcher.py plan \
+            --observed-at "$OBSERVED_AT" \
+            --revision "$REVISION" \
+            --output dispatcher-due-plan.json
+          python3 .agents/dispatcher/dispatcher.py verify-plan dispatcher-due-plan.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dispatcher-due-plan
+          path: dispatcher-due-plan.json
+          if-no-files-found: error
+          retention-days: 7

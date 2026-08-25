@@ -7,6 +7,7 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/upstream-monito
 	kind: "CtrlUpstreamEvidence"
 	run_id: core.#NonEmptyString
 	profile_id: "ctrl"
+	dispatcher?: core.#DispatcherContext
 	terminal_state: core.#TerminalState
 	monitor_state: terminal_state
 	qualification_state: core.#QualificationState

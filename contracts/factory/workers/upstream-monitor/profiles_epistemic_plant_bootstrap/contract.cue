@@ -9,6 +9,7 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/upstream-monito
 	context_repo: "fatb4f/epistemic-plant-bootstrap"
 	entrypoint: "contracts/upstream-monitor/epistemic-plant-bootstrap/contract-surface/AGENTS.md"
 	adapter: "github_app"
+	dispatcher?: core.#DispatcherContext
 })
 
 epistemicPlantAcceptedSignal: #EpistemicPlantAcceptedSignal

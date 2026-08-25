@@ -13,6 +13,14 @@ package upstreammonitor
 #ObservationKind: "source" | "schema" | "projection" | "runtime" | "rollout" | "upstream-test" | "probe" | "dependency" | "context" | "analyzer" | "telemetry" | "semantic-convention" | "transport" | "acquisition" | "external-observation"
 #GraphEdgeKind: "depends-on" | "projects-to" | "observed-by" | "validated-by" | "consumed-by"
 #RunArtifactKind: "report" | "summary" | "evidence"
+#DispatcherTaskID: "projects.ctrl.upstream-monitor" | "projects.epistemic-plant-bootstrap.upstream-monitor"
+
+#DispatcherContext: close({
+	task_id: #DispatcherTaskID
+	occurrence_id: string & =~ "^projects\\.(ctrl|epistemic-plant-bootstrap)\\.upstream-monitor/[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+	attempt_id: string & =~ "^projects\\.(ctrl|epistemic-plant-bootstrap)\\.upstream-monitor/[0-9]{4}-[0-9]{2}-[0-9]{2}/attempt-[1-9][0-9]*$"
+	due_plan_digest: string & =~ "^[0-9a-f]{64}$"
+})
 
 #UpstreamChannel: close({
 	id: #NonEmptyString
@@ -113,6 +121,7 @@ package upstreammonitor
 	run_id: #NonEmptyString
 	profile_id: #NonEmptyString
 	terminal_state: #TerminalState
+	dispatcher?: #DispatcherContext
 	export_unit: "directory"
 	artifacts: [...#RunBundleArtifact] & [_, ...]
 })
