@@ -15,9 +15,11 @@ the repository hierarchy or any unit's domain semantics.
 
 Introduce a CUE-admitted dispatcher overlay for the existing `ctrl` and
 `epistemic-plant-bootstrap` monitors without relocating their authorities.
-The single recurring ChatGPT task owns only the daily clock. Factory owns the
-schedule registry, due-task admission, task invocation, task-local execution,
-and result admission.
+The single recurring ChatGPT task owns only the daily clock. The Factory
+dispatcher owns the schedule registry, due-task admission, invocation
+orchestration, dispatcher attempt state, and dispatcher result admission. Each
+unit owns its domain authority, execution semantics, qualification, evidence,
+publication, and adapter normalization.
 
 The intended control flow is:
 
@@ -31,7 +33,7 @@ Factory dispatcher preflight
 CUE-admitted due occurrences
         |
         v
-task-local authority and execution
+task-owned adapter and unit-local execution
         |
         v
 admitted result / no change / deferred / coverage gap / failure
@@ -95,18 +97,73 @@ contracts/compatibility/
 The append-only execution tree is runtime state and evidence. It is never
 repository, schedule, domain, or admission authority.
 
+The control planes remain mechanically distinct:
+
+```text
+declarative authority
+    contract.cue / registry.cue / unit-local contracts
+
+        |
+        v
+
+derived control state
+    projected task references / dispatcher registrations / due plans /
+    resolved snapshots
+
+        |
+        v
+
+observed runtime state
+    attempts / task results / reports / execution ledger
+```
+
+Derived control state and runtime observations never become authority merely
+because the dispatcher produced or consumed them.
+
 ## Dispatcher contracts
 
 ### Task registration
 
-`#TaskRegistration` contains:
+`#TaskRegistration` binds an admitted root-registry task reference to
+**dispatcher-only** configuration:
 
-- stable task ID;
-- task authority and adapter references;
+- stable task reference;
 - enabled state and effective activation date;
 - explicit IANA timezone;
-- schedule and task-declared misfire policy;
+- schedule and task-declared misfire policy; and
 - a six-hour stale-attempt timeout.
+
+Conceptually:
+
+```cue
+#TaskRegistration: close({
+    task: #TaskRef
+
+    enabled: bool
+    activationDate: #CivilDate
+    timezone: #IANAZone
+    schedule: #Schedule
+    misfire: #MisfirePolicy
+    staleAttemptAfter: #Duration
+})
+```
+
+The root registry remains the identity/reference graph. Dispatcher registration
+must not independently redefine task authority, adapter path, publication
+contract, or domain identity. Any such values required at runtime are
+mechanically projected from the admitted task reference.
+
+```text
+root registry task reference
+        |
+        v
+mechanical dispatcher projection
+        +
+dispatcher-only schedule configuration
+```
+
+This prevents the dispatcher registry from becoming a second task registry or
+a competing semantic authority.
 
 The first candidate registrations are:
 
@@ -201,6 +258,30 @@ Task-local adapters own result normalization. For the two existing monitors:
 Task-specific qualification state remains orthogonal and is not reinterpreted
 by the dispatcher.
 
+### Compatibility adapters
+
+Compatibility adapters are invocation and result-shape translators only. They
+may reference canonical task authority and preserve a legacy invocation or
+publication surface during migration, but they must not define:
+
+- task identity;
+- schedule semantics;
+- domain qualification semantics; or
+- publication admission.
+
+Compatibility therefore flows toward canonical authority rather than creating
+a second authoritative path:
+
+```text
+legacy invocation
+        |
+        v
+compatibility adapter
+        |
+        v
+canonical task authority
+```
+
 ## Daily execution
 
 The daily ChatGPT task is configured for `12:05 America/Toronto` and follows
@@ -215,7 +296,9 @@ this sequence:
 4. Consume only a due plan whose CUE admission export is literally `true`.
 5. Commit append-only attempt claims for admitted due occurrences and wait for
    claim validation.
-6. Resolve and execute each task independently through its task-owned adapter.
+6. Resolve each admitted task through its root-registry reference and invoke it
+   independently through its task-owned adapter. Unit-local execution remains
+   governed by the unit's own contract.
 7. Validate and append each result before proceeding to the next independent
    occurrence.
 8. Return a compact dispatcher summary.
@@ -251,6 +334,10 @@ The implementation unit must cover:
   and terminal no-rerun behavior;
 - unchanged legacy direct monitor invocations and existing run bundles;
 - one failed task not preventing another admitted task from completing;
+- rejection of dispatcher registrations that independently redefine canonical
+  task authority, adapter, publication, or domain identity;
+- rejection of compatibility adapters that claim schedule, qualification, or
+  publication-admission authority; and
 - end-to-end tick submission, due-plan archive retrieval, claim validation,
   task execution, append-only completion, and summary rendering.
 
