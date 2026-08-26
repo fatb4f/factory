@@ -1,8 +1,8 @@
 # epistemic-plant-bootstrap dispatcher adapter
 
-1. Validate the dispatcher invocation against `contracts/factory/dispatcher/#TaskInvocation`.
+1. Validate the dispatcher invocation against `contracts/factory/dispatcher/#TaskInvocation` and bind it to the epistemic-plant-bootstrap profile's dispatcher context.
 2. Invoke the unchanged entrypoint at `contracts/upstream-monitor/epistemic-plant-bootstrap/contract-surface/AGENTS.md` with its exact accepted legacy signal.
 3. Include dispatcher `occurrence_id` and `attempt_id` as optional run context; do not change the legacy signal fields.
-4. Normalize `terminal_abort` to `failed`, `terminal_deferred` to `deferred`, and `coverage_gap` to `coverage_gap`.
-5. Normalize `terminal_success` to `no_change` only when the validated report contains no reportable items; otherwise use `success`.
-6. Return publication paths and exact digests. Never claim `due` or `admitted`.
+4. Seal the task-local run bundle with the same dispatcher context in `evidence.json` and `manifest.json`, then update `latest.json` according to the profile publication contract.
+5. Return `factory.dispatcher.task-completion/v1` with the exact immutable evidence, manifest, report, and summary paths and SHA-256 digests. Do not use mutable `latest.json` as result evidence or return a dispatcher state, `reportableItems`, `due`, or `admitted` claim.
+6. The typed adapter contract at `projects/epistemic-plant-bootstrap/upstream-monitor/contract.cue` validates the bundle and derives the dispatcher state.

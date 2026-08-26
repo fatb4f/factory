@@ -322,9 +322,9 @@ Register only admitted task references with the dispatcher. Preserve legacy
 callers during cutover. Remove a legacy authority, ingress, or publication path
 only after equivalence, retry safety, and rollback have been demonstrated.
 
-## First implementation unit
+## Foundational implementation unit and current status
 
-The next change is limited to:
+The intended first change was limited to:
 
 - `cue.mod/module.cue` for the root module;
 - `contracts/factory/unit.cue` for shared types;
@@ -332,8 +332,16 @@ The next change is limited to:
 - positive and build-tagged negative CUE fixtures; and
 - the dispatcher documentation correction.
 
-It does not create `projects/`, `academic/`, `world/`, `.agents/`, dispatcher
+It was not intended to create `projects/`, `academic/`, `world/`, `.agents/`, dispatcher
 contracts, compatibility adapters, or non-empty registry entries.
+
+Commit `26a3be4` combined this foundation with project mappings and dispatcher
+implementation before these ordering gates were independently admitted. The
+repository now corrects forward in reviewable stages: registrations remain
+disabled; task authority points to the existing worker profiles; project
+surfaces are typed mappings; task-local evidence projects into common results;
+ledger transitions are freshly admitted; and automatic qualification must pass
+before any separate cutover change may add activation dates.
 
 Acceptance requires:
 

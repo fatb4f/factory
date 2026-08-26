@@ -3,6 +3,8 @@ package upstreammonitor
 #NonEmptyString: string & != ""
 #CommitSHA: string & =~ "^[0-9a-f]{40}$"
 #GitObjectSHA: string & =~ "^[0-9a-f]{40}$"
+#Digest: string & =~ "^[0-9a-f]{64}$"
+#CivilDate: string & =~ "^[0-9]{4}-(0[1-9]|1[0-2])-([0-2][0-9]|3[01])$"
 #TerminalState: "terminal_success" | "terminal_abort" | "terminal_deferred" | "coverage_gap"
 #QualificationState: "observation_only" | "executable_validated" | "executable_failed"
 #ImpactDecision: "none" | "note" | "contract-update" | "blocking-gate"
@@ -13,13 +15,13 @@ package upstreammonitor
 #ObservationKind: "source" | "schema" | "projection" | "runtime" | "rollout" | "upstream-test" | "probe" | "dependency" | "context" | "analyzer" | "telemetry" | "semantic-convention" | "transport" | "acquisition" | "external-observation"
 #GraphEdgeKind: "depends-on" | "projects-to" | "observed-by" | "validated-by" | "consumed-by"
 #RunArtifactKind: "report" | "summary" | "evidence"
-#DispatcherTaskID: "projects.ctrl.upstream-monitor" | "projects.epistemic-plant-bootstrap.upstream-monitor"
-
 #DispatcherContext: close({
-	task_id: #DispatcherTaskID
-	occurrence_id: string & =~ "^projects\\.(ctrl|epistemic-plant-bootstrap)\\.upstream-monitor/[0-9]{4}-[0-9]{2}-[0-9]{2}$"
-	attempt_id: string & =~ "^projects\\.(ctrl|epistemic-plant-bootstrap)\\.upstream-monitor/[0-9]{4}-[0-9]{2}-[0-9]{2}/attempt-[1-9][0-9]*$"
-	due_plan_digest: string & =~ "^[0-9a-f]{64}$"
+	task_id:         #NonEmptyString
+	scheduled_date:  #CivilDate
+	occurrence_id:   "\(task_id)/\(scheduled_date)"
+	attempt_ordinal: int & >0
+	attempt_id:      "\(occurrence_id)/attempt-\(attempt_ordinal)"
+	due_plan_digest: #Digest
 })
 
 #UpstreamChannel: close({

@@ -8,6 +8,7 @@ import (
 #NonEmptyString:   string & !=""
 #Digest:           string & =~"^[0-9a-f]{64}$"
 #CommitSHA:        string & =~"^[0-9a-f]{40}$"
+#GitObjectSHA:     string & =~"^[0-9a-f]{40}$"
 #Timestamp:        string & time.Time
 #CivilDate:        string & =~"^[0-9]{4}-(0[1-9]|1[0-2])-([0-2][0-9]|3[01])$"
 #ClockTime:        string & =~"^([01][0-9]|2[0-3]):[0-5][0-9]$"
@@ -32,16 +33,26 @@ import (
 	})
 })
 
+#TaskRegistrationFields: {
+	id:        #TaskID
+	authority: #RepositoryPath & =~"contract\\.cue$"
+	adapter: close({
+		contract:  #RepositoryPath & =~"contract\\.cue$"
+		procedure: #RepositoryPath
+	})
+	timezone:      #Timezone
+	schedule:      #Schedule
+	misfirePolicy: #MisfirePolicy
+	staleAfter:    "6h"
+}
+
 #TaskRegistration: close({
-	id:             #TaskID
-	authority:      #RepositoryPath & =~"contract\\.cue$"
-	adapter:        #RepositoryPath
-	enabled:        bool
+	#TaskRegistrationFields
+	enabled:        true
 	activationDate: #CivilDate
-	timezone:       #Timezone
-	schedule:       #Schedule
-	misfirePolicy:  #MisfirePolicy
-	staleAfter:     "6h"
+}) | close({
+	#TaskRegistrationFields
+	enabled: false
 })
 
 #ResolvedTick: close({
@@ -81,6 +92,24 @@ import (
 	digest: #Digest
 })
 
+#PublicationObservation: close({
+	path:       #RepositoryPath
+	digest:     #Digest
+	gitBlobSHA: #GitObjectSHA
+})
+
+#TaskCompletion: close({
+	apiVersion:    "factory.dispatcher.task-completion/v1"
+	taskID:        #TaskID
+	occurrenceID:  #NonEmptyString
+	attemptID:     #NonEmptyString
+	scheduledDate: #CivilDate
+	completedAt:   #Timestamp
+	evidence:      #PublicationReference
+	manifest:      #PublicationReference
+	publications: [...#PublicationReference] & [_, ...]
+})
+
 #TaskResult: close({
 	taskID:             #TaskID
 	occurrenceID:       #NonEmptyString
@@ -91,36 +120,13 @@ import (
 	repositoryRevision: #CommitSHA
 	snapshotDigest:     #Digest
 	registryDigest:     #Digest
-	publications:       [...#PublicationReference]
-	evidence: close({
-		localTerminalState: "terminal_success" | "terminal_abort" | "terminal_deferred" | "coverage_gap"
-		reportableItems:    int & >=0
+	publications: [...#PublicationReference]
+	taskAdmission: close({
+		contract: #RepositoryPath & =~"contract\\.cue$"
+		evidence: #PublicationReference
+		manifest: #PublicationReference
 	})
 })
-
-#NormalizedTaskResult: {
-	state:    "failed"
-	evidence: {localTerminalState: "terminal_abort", ...}
-	...
-} | {
-	state:    "deferred"
-	evidence: {localTerminalState: "terminal_deferred", ...}
-	...
-} | {
-	state:    "coverage_gap"
-	evidence: {localTerminalState: "coverage_gap", ...}
-	...
-} | {
-	state:        "no_change"
-	evidence:     {localTerminalState: "terminal_success", reportableItems: 0, ...}
-	publications: [_, ...]
-	...
-} | {
-	state:        "success"
-	evidence:     {localTerminalState: "terminal_success", reportableItems: int & >0, ...}
-	publications: [_, ...]
-	...
-}
 
 #Attempt: close({
 	id:         #NonEmptyString
@@ -160,9 +166,20 @@ import (
 	disposition:   #Disposition
 })
 
+#DispositionAdmission: close({
+	occurrence: #Occurrence
+	record:     #DispositionRecord
+	record: {
+		taskID:        occurrence.taskID
+		occurrenceID:  occurrence.id
+		scheduledDate: occurrence.scheduledDate
+	}
+	admission: true
+})
+
 #OccurrenceRecord: close({
-	occurrence:   #Occurrence
-	attempts:     [...#Attempt]
+	occurrence: #Occurrence
+	attempts: [...#Attempt]
 	disposition?: #Disposition
 	_attemptOrdinals: [for i, attempt in attempts {
 		attempt & {
@@ -170,7 +187,7 @@ import (
 			id:      "\(occurrence.id)/attempt-\(i+1)"
 		}
 	}]
-	_terminalResults:     [for attempt in attempts if attempt.result != _|_ {attempt.result}]
+	_terminalResults: [for attempt in attempts if attempt.result != _|_ {attempt.result}]
 	_terminalResultLimit: list.MaxItems(_terminalResults, 1) & true
 	if disposition != _|_ && len(attempts) > 0 {
 		_invalidDispositionWithAttempts: _|_
@@ -196,6 +213,21 @@ import (
 	}
 })
 
+#ClaimLocationAdmission: close({
+	taskID:        #TaskID
+	occurrenceID:  #NonEmptyString
+	scheduledDate: #CivilDate
+	record:        #ClaimRecord
+	record: {
+		occurrence: {
+			taskID:        taskID
+			id:            occurrenceID
+			scheduledDate: scheduledDate
+		}
+	}
+	admission: true
+})
+
 #ResultAdmission: close({
 	registration: #TaskRegistration
 	occurrence:   #Occurrence
@@ -216,7 +248,32 @@ import (
 		repositoryRevision: invocation.repositoryRevision
 		snapshotDigest:     invocation.snapshotDigest
 		registryDigest:     invocation.registryDigest
+		taskAdmission: {
+			contract: registration.adapter.contract
+		}
 	}
-	_normalization: result & #NormalizedTaskResult
-	admission:      true
+	admission: true
+})
+
+#ResultTransitionAdmission: close({
+	registration: #TaskRegistration
+	occurrence:   #Occurrence
+	invocation:   #TaskInvocation
+	result:       #TaskResult
+	current:      #Candidate
+
+	_resultAdmission: #ResultAdmission & {
+		registration: registration
+		occurrence:   occurrence
+		invocation:   invocation
+		result:       result
+	}
+	_currentBinding: current & {
+		registration: registration
+		occurrence:   occurrence
+		attemptCount: invocation.attemptOrdinal
+		terminal:     false
+		disposed:     false
+	}
+	admission: true
 })

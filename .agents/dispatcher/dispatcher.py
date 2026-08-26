@@ -4,7 +4,9 @@
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager
 import datetime as dt
+import fcntl
 import hashlib
 import json
 import os
@@ -20,6 +22,7 @@ ROOT = Path(__file__).resolve().parents[2]
 CONTRACT = ROOT / "contracts/factory/dispatcher"
 EXECUTIONS = ROOT / ".agents/dispatcher/executions"
 WORKFLOW = ROOT / ".github/workflows/dispatcher-preflight.yml"
+CUE_DATA_TEMP = ROOT / ".agents/dispatcher"
 UTC = dt.timezone.utc
 
 
@@ -46,6 +49,10 @@ def timestamp(value: dt.datetime) -> str:
     return value.astimezone(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
+def utc_now() -> dt.datetime:
+    return dt.datetime.now(UTC).replace(microsecond=0)
+
+
 def run(*args: str, input_bytes: bytes | None = None) -> subprocess.CompletedProcess[bytes]:
     return subprocess.run(
         args,
@@ -64,32 +71,46 @@ def required_output(*args: str) -> bytes:
     return completed.stdout
 
 
-def cue_export(expression: str, data: dict[str, Any] | None = None) -> Any:
-    paths = ["cue", "export", str(CONTRACT), "-e", expression, "--out", "json"]
+def cue_cli_path(path: Path) -> str:
+    try:
+        relative = path.resolve().relative_to(ROOT.resolve())
+    except ValueError as exc:
+        raise DispatchError(f"CUE input is outside the repository: {path}") from exc
+    return f"./{relative}"
+
+
+def cue_export(
+    expression: str,
+    data: dict[str, Any] | None = None,
+    target: Path = CONTRACT,
+) -> Any:
+    paths = ["cue", "export", cue_cli_path(target), "-e", expression, "--out", "json"]
     temporary: Path | None = None
     try:
         if data is not None:
             with tempfile.NamedTemporaryFile(
-                mode="wb", suffix=".json", dir=ROOT, delete=False
+                mode="wb", suffix=".json", dir=CUE_DATA_TEMP, delete=False
             ) as handle:
                 handle.write(canonical_bytes(data))
                 temporary = Path(handle.name)
-            paths.insert(3, str(temporary))
+            paths.insert(3, cue_cli_path(temporary))
         return json.loads(required_output(*paths))
     finally:
         if temporary is not None:
             temporary.unlink(missing_ok=True)
 
 
-def cue_vet(schema: str, data: dict[str, Any]) -> None:
+def cue_vet(schema: str, data: dict[str, Any], target: Path = CONTRACT) -> None:
     temporary: Path | None = None
     try:
         with tempfile.NamedTemporaryFile(
-            mode="wb", suffix=".json", dir=ROOT, delete=False
+            mode="wb", suffix=".json", dir=CUE_DATA_TEMP, delete=False
         ) as handle:
             handle.write(canonical_bytes(data))
             temporary = Path(handle.name)
-        completed = run("cue", "vet", str(CONTRACT), str(temporary), "-d", schema)
+        completed = run(
+            "cue", "vet", cue_cli_path(target), cue_cli_path(temporary), "-d", schema
+        )
         if completed.returncode:
             raise DispatchError(completed.stderr.decode().strip() or f"CUE rejected {schema}")
     finally:
@@ -110,11 +131,95 @@ def registry() -> dict[str, Any]:
     for task_id, registration in registrations.items():
         if registration.get("id") != task_id:
             raise DispatchError(f"registry key/id mismatch: {task_id}")
-        for field in ("authority", "adapter"):
-            path = ROOT / registration[field]
+        paths = {
+            "authority": registration["authority"],
+            "adapter contract": registration["adapter"]["contract"],
+            "adapter procedure": registration["adapter"]["procedure"],
+        }
+        for field, value in paths.items():
+            path = ROOT / value
             if not path.is_file():
-                raise DispatchError(f"registered {field} does not exist: {registration[field]}")
+                raise DispatchError(f"registered {field} does not exist: {value}")
     return registrations
+
+
+def cue_admit(schema: str, data: dict[str, Any], target: Path = CONTRACT) -> dict[str, Any]:
+    cue_vet(schema, data, target)
+    admitted = cue_export(f"({schema} & data)", {"data": data}, target)
+    if admitted.get("admission") is not True:
+        raise DispatchError(f"CUE admission was not literally true: {schema}")
+    return admitted
+
+
+def repository_file(path_text: str) -> Path:
+    path = (ROOT / path_text).resolve()
+    try:
+        path.relative_to(ROOT.resolve())
+    except ValueError as exc:
+        raise DispatchError(f"repository path escapes the checkout: {path_text}") from exc
+    if not path.is_file():
+        raise DispatchError(f"referenced repository file does not exist: {path_text}")
+    return path
+
+
+def verify_reference(reference: dict[str, Any]) -> Path:
+    path = repository_file(reference["path"])
+    actual = hashlib.sha256(path.read_bytes()).hexdigest()
+    if actual != reference["digest"]:
+        raise DispatchError(f"publication digest mismatch: {reference['path']}")
+    return path
+
+
+def publication_observation(reference: dict[str, Any]) -> dict[str, Any]:
+    path = verify_reference(reference)
+    content = path.read_bytes()
+    header = f"blob {len(content)}\0".encode()
+    return {
+        "path": reference["path"],
+        "digest": reference["digest"],
+        "gitBlobSHA": hashlib.sha1(header + content).hexdigest(),
+    }
+
+
+def project_task_result(
+    registration: dict[str, Any],
+    invocation: dict[str, Any],
+    completion: dict[str, Any],
+) -> dict[str, Any]:
+    cue_vet("#TaskCompletion", completion)
+    observations = [
+        publication_observation(publication)
+        for publication in completion["publications"]
+    ]
+    evidence_path = verify_reference(completion["evidence"])
+    manifest_path = verify_reference(completion["manifest"])
+    target = repository_file(registration["adapter"]["contract"]).parent
+    data = {
+        "invocation": invocation,
+        "completion": completion,
+        "evidenceDocument": json.loads(evidence_path.read_text()),
+        "manifestDocument": json.loads(manifest_path.read_text()),
+        "publicationObservations": observations,
+    }
+    projected = cue_admit("#DispatcherResultProjection", data, target)
+    return projected["result"]
+
+
+def completion_from_result(
+    result: dict[str, Any], scheduled_date: str
+) -> dict[str, Any]:
+    admission = result["taskAdmission"]
+    return {
+        "apiVersion": "factory.dispatcher.task-completion/v1",
+        "taskID": result["taskID"],
+        "occurrenceID": result["occurrenceID"],
+        "attemptID": result["attemptID"],
+        "scheduledDate": scheduled_date,
+        "completedAt": result["completedAt"],
+        "evidence": admission["evidence"],
+        "manifest": admission["manifest"],
+        "publications": result["publications"],
+    }
 
 
 def scheduled_dates(registration: dict[str, Any], through: dt.date) -> list[tuple[int, dt.date]]:
@@ -196,8 +301,13 @@ def ledger_state(
         if not claim_path.is_file():
             raise DispatchError(f"missing claim: {claim_path}")
         claim = json.loads(claim_path.read_text())
-        cue_vet("#ClaimRecord", claim)
-        if claim["occurrence"]["id"] != item["id"] or claim["attempt"]["ordinal"] != ordinal:
+        cue_admit("#ClaimLocationAdmission", {
+            "taskID": task_id,
+            "occurrenceID": item["id"],
+            "scheduledDate": date,
+            "record": claim,
+        })
+        if claim["attempt"]["ordinal"] != ordinal:
             raise DispatchError(f"claim identity mismatch: {claim_path}")
         last_stale_at = claim["attempt"]["staleAt"]
         claimed_at = parse_timestamp(claim["attempt"]["claimedAt"])
@@ -206,18 +316,14 @@ def ledger_state(
         result_path = path / "result.json"
         if result_path.exists():
             result = json.loads(result_path.read_text())
-            admitted = cue_export(
-                "(#ResultAdmission & data)",
-                {"data": {
-                    "registration": registration,
-                    "occurrence": claim["occurrence"],
-                    "invocation": claim["attempt"]["invocation"],
-                    "result": result,
-                }},
+            projected = project_task_result(
+                registration,
+                claim["attempt"]["invocation"],
+                completion_from_result(result, date),
             )
-            if admitted.get("admission") is not True:
-                raise DispatchError(f"result is not CUE-admitted: {result_path}")
-            cue_vet("#ResultAdmission", {
+            if projected != result:
+                raise DispatchError(f"stored result differs from task projection: {result_path}")
+            cue_admit("#ResultAdmission", {
                 "registration": registration,
                 "occurrence": claim["occurrence"],
                 "invocation": claim["attempt"]["invocation"],
@@ -228,9 +334,10 @@ def ledger_state(
             terminal = True
     disposed = (base / "disposition.json").exists()
     if disposed:
-        cue_vet(
-            "#DispositionRecord", json.loads((base / "disposition.json").read_text())
-        )
+        cue_admit("#DispositionAdmission", {
+            "occurrence": item,
+            "record": json.loads((base / "disposition.json").read_text()),
+        })
     if disposed and attempts:
         raise DispatchError(f"disposition coexists with attempts under {base}")
     state: dict[str, Any] = {
@@ -282,6 +389,7 @@ def build_input(observed: dt.datetime, ci_now: dt.datetime, revision: str) -> di
             "localTime": local.strftime("%H:%M"),
             "timezone": "America/Toronto",
         },
+        "registry": registrations,
         "candidates": candidates,
     }
 
@@ -307,6 +415,23 @@ def display_path(path: Path) -> Path:
         return path.relative_to(ROOT)
     except ValueError:
         return path
+
+
+@contextmanager
+def task_transition_lock(task_id: str):
+    directory = EXECUTIONS / task_id
+    directory.mkdir(parents=True, exist_ok=True)
+    descriptor = os.open(directory, os.O_RDONLY)
+    try:
+        fcntl.flock(descriptor, fcntl.LOCK_EX)
+        yield
+    finally:
+        fcntl.flock(descriptor, fcntl.LOCK_UN)
+        os.close(descriptor)
+
+
+def current_input(plan: dict[str, Any], now: dt.datetime) -> dict[str, Any]:
+    return build_input(now, now, plan["repositoryRevision"])
 
 
 def load_archive(path: Path) -> dict[str, Any]:
@@ -339,12 +464,14 @@ def load_archive(path: Path) -> dict[str, Any]:
         raise DispatchError("due-plan registry digest mismatch")
     if plan["workflowDigest"] != hashlib.sha256(WORKFLOW.read_bytes()).hexdigest():
         raise DispatchError("due-plan workflow digest mismatch")
+    if plan["cueIdentity"] != cue_identity():
+        raise DispatchError("due-plan CUE identity mismatch")
     return archive
 
 
 def command_plan(args: argparse.Namespace) -> None:
     observed = parse_timestamp(args.observed_at)
-    ci_now = parse_timestamp(args.ci_observed_at) if args.ci_observed_at else dt.datetime.now(UTC)
+    ci_now = parse_timestamp(args.ci_observed_at) if args.ci_observed_at else utc_now()
     if observed > ci_now + dt.timedelta(minutes=5) or ci_now - observed > dt.timedelta(hours=24):
         raise DispatchError("observed tick is outside the admitted CI observation interval")
     revision = args.revision or git_value("rev-parse", "HEAD")
@@ -378,78 +505,101 @@ def command_claim(args: argparse.Namespace) -> None:
     plan = archive["plan"]
     ordinal = item["attemptOrdinal"]
     attempt_id = f"{item['occurrenceID']}/attempt-{ordinal}"
-    now = dt.datetime.now(UTC)
-    invocation = {
-        "taskID": item["taskID"],
-        "occurrenceID": item["occurrenceID"],
-        "attemptID": attempt_id,
-        "attemptOrdinal": ordinal,
-        "scheduledAt": item["occurrence"]["windowStart"],
-        "invokedAt": timestamp(now),
-        "duePlanDigest": archive["planDigest"],
-        "repositoryRevision": plan["repositoryRevision"],
-        "snapshotDigest": plan["snapshotDigest"],
-        "registryDigest": plan["registryDigest"],
-    }
-    claim = {
-        "apiVersion": "factory.dispatcher.claim/v1",
-        "occurrence": item["occurrence"],
-        "attempt": {
-            "id": attempt_id,
-            "ordinal": ordinal,
-            "claimedAt": timestamp(now),
-            "staleAt": timestamp(now + dt.timedelta(hours=6)),
-            "invocation": invocation,
-        },
-    }
-    cue_vet("#ClaimRecord", claim)
     date = item["scheduledDate"]
     path = EXECUTIONS / item["taskID"] / date / f"attempt-{ordinal}" / "claim.json"
-    if path.exists():
-        existing = json.loads(path.read_text())
-        if (
-            existing.get("occurrence") == item["occurrence"]
-            and existing.get("attempt", {}).get("ordinal") == ordinal
-            and existing.get("attempt", {}).get("invocation", {}).get("duePlanDigest")
-            == archive["planDigest"]
-        ):
-            print(display_path(path))
-            return
-        raise DispatchError(f"conflicting append-only claim already exists: {path}")
-    atomic_append(path, claim)
-    print(display_path(path))
+    with task_transition_lock(item["taskID"]):
+        if path.exists():
+            existing = json.loads(path.read_text())
+            ledger_state(item["occurrence"], utc_now(), registry()[item["taskID"]])
+            if (
+                existing.get("occurrence") == item["occurrence"]
+                and existing.get("attempt", {}).get("ordinal") == ordinal
+                and existing.get("attempt", {}).get("invocation", {}).get("duePlanDigest")
+                == archive["planDigest"]
+            ):
+                print(json.dumps({"status": "already_claimed", "path": str(display_path(path))}))
+                return
+            raise DispatchError(f"conflicting append-only claim already exists: {path}")
+        now = utc_now()
+        invocation = {
+            "taskID": item["taskID"],
+            "occurrenceID": item["occurrenceID"],
+            "attemptID": attempt_id,
+            "attemptOrdinal": ordinal,
+            "scheduledAt": item["occurrence"]["windowStart"],
+            "invokedAt": timestamp(now),
+            "duePlanDigest": archive["planDigest"],
+            "repositoryRevision": plan["repositoryRevision"],
+            "snapshotDigest": plan["snapshotDigest"],
+            "registryDigest": plan["registryDigest"],
+        }
+        claim = {
+            "apiVersion": "factory.dispatcher.claim/v1",
+            "occurrence": item["occurrence"],
+            "attempt": {
+                "id": attempt_id,
+                "ordinal": ordinal,
+                "claimedAt": timestamp(now),
+                "staleAt": timestamp(now + dt.timedelta(hours=6)),
+                "invocation": invocation,
+            },
+        }
+        cue_admit("#ClaimAdmission", {
+            "archivedPlan": plan,
+            "planDigest": archive["planDigest"],
+            "currentInput": current_input(plan, now),
+            "item": item,
+            "claim": claim,
+        })
+        atomic_append(path, claim)
+        print(json.dumps({"status": "created", "path": str(display_path(path))}))
 
 
 def command_dispositions(args: argparse.Namespace) -> None:
     archive = load_archive(args.archive)
-    now = timestamp(dt.datetime.now(UTC))
     for item in archive["plan"]["dispositions"]:
-        record = {
-            "apiVersion": "factory.dispatcher.disposition/v1",
-            "taskID": item["taskID"],
-            "occurrenceID": item["occurrenceID"],
-            "scheduledDate": item["scheduledDate"],
-            "disposition": {
-                "state": item["state"],
-                "classifiedAt": now,
-                "planDigest": archive["planDigest"],
-            },
-        }
-        cue_vet("#DispositionRecord", record)
         path = EXECUTIONS / item["taskID"] / item["scheduledDate"] / "disposition.json"
-        if path.exists():
-            existing = json.loads(path.read_text())
-            if (
-                existing.get("taskID") == item["taskID"]
-                and existing.get("occurrenceID") == item["occurrenceID"]
-                and existing.get("disposition", {}).get("state") == item["state"]
-                and existing.get("disposition", {}).get("planDigest") == archive["planDigest"]
-            ):
-                print(display_path(path))
-                continue
-            raise DispatchError(f"conflicting append-only disposition already exists: {path}")
-        atomic_append(path, record)
-        print(display_path(path))
+        with task_transition_lock(item["taskID"]):
+            now = utc_now()
+            fresh = current_input(archive["plan"], now)
+            occurrences = [
+                candidate["occurrence"] for candidate in fresh["candidates"]
+                if candidate["occurrence"]["id"] == item["occurrenceID"]
+            ]
+            if len(occurrences) != 1:
+                raise DispatchError(f"current occurrence is not uniquely resolved: {item['occurrenceID']}")
+            if path.exists():
+                existing = json.loads(path.read_text())
+                if (
+                    existing.get("taskID") == item["taskID"]
+                    and existing.get("occurrenceID") == item["occurrenceID"]
+                    and existing.get("disposition", {}).get("state") == item["state"]
+                    and existing.get("disposition", {}).get("planDigest") == archive["planDigest"]
+                ):
+                    print(json.dumps({"status": "already_disposed", "path": str(display_path(path))}))
+                    continue
+                raise DispatchError(f"conflicting append-only disposition already exists: {path}")
+            record = {
+                "apiVersion": "factory.dispatcher.disposition/v1",
+                "taskID": item["taskID"],
+                "occurrenceID": item["occurrenceID"],
+                "scheduledDate": item["scheduledDate"],
+                "disposition": {
+                    "state": item["state"],
+                    "classifiedAt": timestamp(now),
+                    "planDigest": archive["planDigest"],
+                },
+            }
+            cue_admit("#DispositionTransitionAdmission", {
+                "archivedPlan": archive["plan"],
+                "planDigest": archive["planDigest"],
+                "currentInput": fresh,
+                "item": item,
+                "occurrence": occurrences[0],
+                "record": record,
+            })
+            atomic_append(path, record)
+            print(json.dumps({"status": "created", "path": str(display_path(path))}))
 
 
 def command_result(args: argparse.Namespace) -> None:
@@ -457,43 +607,35 @@ def command_result(args: argparse.Namespace) -> None:
     item = selected_dispatch(archive, args.occurrence_id)
     ordinal = item["attemptOrdinal"]
     base = EXECUTIONS / item["taskID"] / item["scheduledDate"] / f"attempt-{ordinal}"
-    claim_path = base / "claim.json"
-    if not claim_path.is_file():
-        raise DispatchError(f"validated claim does not exist: {claim_path}")
-    claim = json.loads(claim_path.read_text())
-    result = json.loads(args.result.read_text())
-    publication_roots = {
-        "projects.ctrl.upstream-monitor": "contracts/upstream-monitor/ctrl/contract-surface/",
-        "projects.epistemic-plant-bootstrap.upstream-monitor": "contracts/upstream-monitor/epistemic-plant-bootstrap/contract-surface/",
-    }
-    expected_root = publication_roots[item["taskID"]]
-    if any(not publication["path"].startswith(expected_root) for publication in result["publications"]):
-        raise DispatchError("task result publication escapes its task-owned publication root")
-    for publication in result["publications"]:
-        publication_path = ROOT / publication["path"]
-        if not publication_path.is_file():
-            raise DispatchError(f"task result publication does not exist: {publication['path']}")
-        actual_digest = hashlib.sha256(publication_path.read_bytes()).hexdigest()
-        if actual_digest != publication["digest"]:
-            raise DispatchError(f"task result publication digest mismatch: {publication['path']}")
-    admission = {
-        "registration": registry()[item["taskID"]],
-        "occurrence": claim["occurrence"],
-        "invocation": claim["attempt"]["invocation"],
-        "result": result,
-    }
-    cue_vet("#ResultAdmission", admission)
-    validated = cue_export("(#ResultAdmission & data)", {"data": admission})
-    if validated.get("admission") is not True:
-        raise DispatchError("CUE result admission was not literally true")
     result_target = base / "result.json"
-    if result_target.exists():
-        if json.loads(result_target.read_text()) == result:
-            print(display_path(result_target))
-            return
-        raise DispatchError(f"conflicting terminal result already exists: {result_target}")
-    atomic_append(result_target, result)
-    print(display_path(result_target))
+    with task_transition_lock(item["taskID"]):
+        claim_path = base / "claim.json"
+        if not claim_path.is_file():
+            raise DispatchError(f"validated claim does not exist: {claim_path}")
+        claim = json.loads(claim_path.read_text())
+        completion = json.loads(args.completion.read_text())
+        registration = registry()[item["taskID"]]
+        result = project_task_result(registration, claim["attempt"]["invocation"], completion)
+        if result_target.exists():
+            if json.loads(result_target.read_text()) == result:
+                print(display_path(result_target))
+                return
+            raise DispatchError(f"conflicting terminal result already exists: {result_target}")
+        now = utc_now()
+        current = ledger_state(item["occurrence"], now, registration)
+        cue_admit("#ResultTransitionAdmission", {
+            "registration": registration,
+            "occurrence": claim["occurrence"],
+            "invocation": claim["attempt"]["invocation"],
+            "result": result,
+            "current": {
+                "registration": registration,
+                "occurrence": claim["occurrence"],
+                **current,
+            },
+        })
+        atomic_append(result_target, result)
+        print(display_path(result_target))
 
 
 def command_summary(args: argparse.Namespace) -> None:
@@ -507,6 +649,38 @@ def command_summary(args: argparse.Namespace) -> None:
         states[state] = states.get(state, 0) + 1
     rendered = ", ".join(f"{key}={states[key]}" for key in sorted(states)) or "no due tasks"
     print(f"{plan['tick']['localDate']}: {rendered}; dispositions={len(plan['dispositions'])}")
+
+
+def command_validate_ledger(_args: argparse.Namespace) -> None:
+    registrations = registry()
+    registry_digest = digest(registrations)
+    if EXECUTIONS.is_dir():
+        unknown = [
+            path.name for path in EXECUTIONS.iterdir()
+            if path.is_dir() and path.name not in registrations
+        ]
+        if unknown:
+            raise DispatchError(f"execution ledger contains unknown tasks: {', '.join(sorted(unknown))}")
+    count = 0
+    now = utc_now()
+    for task_id, registration in sorted(registrations.items()):
+        task_root = EXECUTIONS / task_id
+        if not task_root.is_dir():
+            continue
+        for date_root in sorted(path for path in task_root.iterdir() if path.is_dir()):
+            scheduled_date = dt.date.fromisoformat(date_root.name)
+            matches = [
+                (index, value) for index, value in scheduled_dates(registration, scheduled_date)
+                if value == scheduled_date
+            ]
+            if len(matches) != 1:
+                raise DispatchError(f"ledger date is not a scheduled occurrence: {date_root}")
+            resolved = occurrence(
+                registration, matches[0][0], scheduled_date, registry_digest
+            )
+            ledger_state(resolved, now, registration)
+            count += 1
+    print(f"validated {count} ledger occurrences")
 
 
 def parser() -> argparse.ArgumentParser:
@@ -531,11 +705,13 @@ def parser() -> argparse.ArgumentParser:
     result = commands.add_parser("record-result")
     result.add_argument("archive", type=Path)
     result.add_argument("occurrence_id")
-    result.add_argument("result", type=Path)
+    result.add_argument("completion", type=Path)
     result.set_defaults(handler=command_result)
     summary = commands.add_parser("summary")
     summary.add_argument("archive", type=Path)
     summary.set_defaults(handler=command_summary)
+    ledger = commands.add_parser("validate-ledger")
+    ledger.set_defaults(handler=command_validate_ledger)
     return value
 
 

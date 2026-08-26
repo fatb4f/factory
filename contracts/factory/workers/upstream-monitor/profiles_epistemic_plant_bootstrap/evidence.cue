@@ -7,7 +7,7 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/upstream-monito
 	kind: "EpistemicPlantBootstrapUpstreamEvidence"
 	run_id: core.#NonEmptyString
 	profile_id: "epistemic-plant-bootstrap"
-	dispatcher?: core.#DispatcherContext
+	dispatcher?: #EpistemicPlantDispatcherContext
 	terminal_state: core.#TerminalState
 	monitor_state: terminal_state
 	qualification_state: core.#QualificationState

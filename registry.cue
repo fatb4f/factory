@@ -11,8 +11,7 @@ units: close({
 		tasks: {
 			"upstream-monitor": {
 				id:        "projects.ctrl.upstream-monitor"
-				authority: "projects/ctrl/contract.cue"
-				adapter:   "projects/ctrl/.agents/adapters/upstream-monitor.md"
+				authority: "contracts/factory/workers/upstream-monitor/profiles_ctrl/contract.cue"
 			}
 		}
 		outputs: {}
@@ -25,8 +24,7 @@ units: close({
 		tasks: {
 			"upstream-monitor": {
 				id:        "projects.epistemic-plant-bootstrap.upstream-monitor"
-				authority: "projects/epistemic-plant-bootstrap/contract.cue"
-				adapter:   "projects/epistemic-plant-bootstrap/.agents/adapters/upstream-monitor.md"
+				authority: "contracts/factory/workers/upstream-monitor/profiles_epistemic_plant_bootstrap/contract.cue"
 			}
 		}
 		outputs: {}
@@ -35,7 +33,7 @@ units: close({
 
 _registryIdentity: [for id, registered in units {
 	let unitID = id
-	_id:    unitID & #UnitID
+	_id: unitID & #UnitID
 	_value: registered & {id: unitID}
 	if id =~ "^projects\\." {
 		_kind: registered & {kind: "project"}

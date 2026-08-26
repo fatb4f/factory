@@ -1,6 +1,10 @@
 name: Dispatcher preflight
 
 on:
+  pull_request:
+  push:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       observed_at:
@@ -16,7 +20,39 @@ permissions:
   contents: read
 
 jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.revision || github.sha }}
+          persist-credentials: false
+      - uses: cue-lang/setup-cue@v1
+        with:
+          version: v0.16.1
+      - name: Check scoped CUE formatting
+        run: >-
+          cue fmt --check
+          contract.cue registry.cue contracts/factory/unit.cue
+          contracts/factory/dispatcher/*.cue
+          projects/ctrl/contract.cue projects/ctrl/upstream-monitor/contract.cue
+          projects/epistemic-plant-bootstrap/contract.cue
+          projects/epistemic-plant-bootstrap/upstream-monitor/contract.cue
+      - name: Validate root contracts and resolved registry
+        run: cue vet ./...
+      - name: Validate shared upstream-monitor worker
+        run: cue vet ./contracts/factory/workers/upstream-monitor/...
+      - name: Validate nested Codex worker module
+        working-directory: contracts/factory/workers/codex/upstream-monitor
+        run: cue vet -c=false ./...
+      - name: Run dispatcher tests
+        run: python3 -m unittest discover -s contracts/factory/dispatcher -p 'test_*.py'
+      - name: Validate committed execution ledger
+        run: python3 .agents/dispatcher/dispatcher.py validate-ledger
+
   preflight:
+    if: github.event_name == 'workflow_dispatch'
+    needs: qualify
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,8 +62,6 @@ jobs:
       - uses: cue-lang/setup-cue@v1
         with:
           version: v0.16.1
-      - name: Validate contracts and resolved registry
-        run: cue vet ./...
       - name: Resolve and admit due plan
         env:
           OBSERVED_AT: ${{ inputs.observed_at }}

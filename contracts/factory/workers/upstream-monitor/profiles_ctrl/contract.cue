@@ -2,6 +2,10 @@ package ctrlprofile
 
 import core "github.com/fatb4f/factory/contracts/factory/workers/upstream-monitor:upstreammonitor"
 
+#CtrlDispatcherContext: core.#DispatcherContext & {
+	task_id: "projects.ctrl.upstream-monitor"
+}
+
 #CtrlAcceptedSignal: close({
 	signal_id: "loop_bootstrap_request"
 	profile_id: "ctrl"
@@ -9,7 +13,7 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/upstream-monito
 	context_repo: "fatb4f/ctrl"
 	entrypoint: "contracts/upstream-monitor/ctrl/contract-surface/AGENTS.md"
 	adapter: "github_app"
-	dispatcher?: core.#DispatcherContext
+	dispatcher?: #CtrlDispatcherContext
 })
 
 ctrlAcceptedSignal: #CtrlAcceptedSignal & {

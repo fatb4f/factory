@@ -14,7 +14,6 @@ package unit
 #TaskReference: close({
 	id:        #TaskID
 	authority: #AuthorityPath
-	adapter:   #RepositoryPath
 })
 
 #OutputReference: close({

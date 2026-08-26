@@ -2,6 +2,13 @@
 
 Status: proposed, non-authoritative design plan
 
+Implementation note (2026-08-25): commit `26a3be4` landed the foundation,
+unit mappings, dispatcher, and registrations in one change before the staged
+migration gates were satisfied. The registrations are therefore kept disabled
+with no activation date while authority, evidence projection, retry admission,
+and automatic qualification are corrected. This note records the exception;
+it does not retroactively treat the combined landing as an admitted cutover.
+
 This document records an implementation proposal. It does not amend the
 requirement graph, define repository authority, admit an implementation unit,
 or replace vetted CUE declarations.
@@ -140,7 +147,7 @@ Conceptually:
     task: #TaskRef
 
     enabled: bool
-    activationDate: #CivilDate
+    activationDate?: #CivilDate // required exactly when enabled
     timezone: #IANAZone
     schedule: #Schedule
     misfire: #MisfirePolicy
@@ -148,10 +155,13 @@ Conceptually:
 })
 ```
 
-The root registry remains the identity/reference graph. Dispatcher registration
-must not independently redefine task authority, adapter path, publication
-contract, or domain identity. Any such values required at runtime are
-mechanically projected from the admitted task reference.
+The root registry remains the identity/reference graph. A generic task
+reference contains only identity and domain authority. Project mappings import
+that authority and expose dispatcher-specific adapter contract and procedure
+metadata; dispatcher registration projects those values rather than placing an
+invocation adapter in the shared unit vocabulary. Registration must not
+independently redefine task authority, publication contract, or domain
+identity.
 
 ```text
 root registry task reference
@@ -243,17 +253,28 @@ produced a valid result may retry after its six-hour stale-attempt boundary.
 Attempt ordinals are contiguous, and no attempt may begin after a terminal
 result or dispatcher disposition.
 
-Task results provide publication references and digests. They never provide an
-`admitted` or `due` claim. CUE validates the referenced task-local evidence and
-computes dispatcher result admission.
+Task adapters return a common task-completion reference containing immutable
+sealed evidence, manifest, and publication paths with exact digests. Mutable
+`latest.json` pointers are operational discovery state, not durable result
+evidence.
+They do not supply dispatcher state, reportable-item counts, `admitted`, or
+`due`. The registered task adapter contract validates the profile-specific
+documents, binds their dispatcher context to the claim, and projects the
+common result. The generic dispatcher stores only that projected result and
+revalidates it whenever the ledger is read.
 
-Task-local adapters own result normalization. For the two existing monitors:
+Task-local adapter contracts own result projection. For the two existing monitors:
 
 - `terminal_abort` maps to `failed`;
 - `terminal_deferred` maps to `deferred`;
 - `coverage_gap` maps to `coverage_gap`;
-- `terminal_success` maps to `success` or `no_change` from the validated local
-  report content.
+- `terminal_success` maps to `success` when the validated local evidence has a
+  decision other than `none`, and to `no_change` otherwise. The evidence item
+  list remains the semantic source for report rendering.
+
+An actuator failure before sealed task-local evidence exists does not fabricate
+a terminal `failed` result. The claimed attempt remains incomplete and becomes
+retryable only after its stale boundary.
 
 Task-specific qualification state remains orthogonal and is not reinterpreted
 by the dispatcher.
@@ -294,8 +315,10 @@ this sequence:
 3. Publish a transient due-plan archive bound to the repository revision,
    registry digest, workflow digest, CUE identity, tick, and plan digest.
 4. Consume only a due plan whose CUE admission export is literally `true`.
-5. Commit append-only attempt claims for admitted due occurrences and wait for
-   claim validation.
+5. Recompute the current tick, ledger, and due projection under an
+   task-scoped transition lock. Append a claim only if the archived item
+   remains the exact current dispatch item; then commit it and wait for
+   qualification on that exact revision.
 6. Resolve each admitted task through its root-registry reference and invoke it
    independently through its task-owned adapter. Unit-local execution remains
    governed by the unit's own contract.
@@ -307,7 +330,12 @@ The ChatGPT environment's bundled CUE may be used for independent verification,
 but it does not replace the CI-produced admission artifact unless a later
 runtime-binding requirement explicitly admits that transition.
 
-A malformed root, registry, ledger, or due plan stops the entire dispatcher
+A due plan is a bound decision artifact, not a durable lease. Claims and
+dispositions are re-admitted immediately before each append, and dispositions
+are recomputed one at a time. A terminal result, existing disposition, newer
+attempt, or later coalescing occurrence invalidates a stale archived action.
+
+A malformed root, registry, ledger, transition, or due plan stops the entire dispatcher
 tick because task selection cannot be trusted. Once the due plan is admitted,
 a task-local failure is recorded and does not suppress unrelated occurrences.
 
@@ -342,19 +370,22 @@ The implementation unit must cover:
   task execution, append-only completion, and summary rendering.
 
 The implementation is admitted only through a canonical repository workflow
-that validates the root registry, dispatcher contracts, runtime binding, and
-task-local evidence. Any CUE-computed admission export must be literally
-`true`.
+that runs automatically for pull requests and pushes to `main`, validating the
+root registry, dispatcher contracts, Python scenarios, both worker modules,
+runtime ledger, and task-local evidence projection. Manual dispatch additionally
+produces the due-plan artifact. Any CUE-computed admission export must be
+literally `true`.
 
 ## Rollout and rollback
 
 1. Admit both unit-local task contracts and their root-registry references.
 2. Merge the dispatcher contracts and adapters with both registrations
-   disabled.
+   disabled and with `activationDate` absent.
 3. Configure the daily ChatGPT clock and prove a no-op preflight against the
    admitted registry.
-4. Enable the two registrations and disable the existing combined upstream
-   monitor scheduled task before the next three-day occurrence.
+4. In a separately approved, cadence-aligned cutover, add the actual future
+   `activationDate`, enable the two registrations, and disable the existing
+   combined upstream monitor scheduled task before that occurrence.
 5. Verify the first admitted due plan, both independent task outcomes, and the
    append-only dispatcher ledger.
 6. Roll back, if necessary, by disabling the registrations and re-enabling the

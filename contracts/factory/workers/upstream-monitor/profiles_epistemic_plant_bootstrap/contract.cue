@@ -2,6 +2,10 @@ package epistemicplantprofile
 
 import core "github.com/fatb4f/factory/contracts/factory/workers/upstream-monitor:upstreammonitor"
 
+#EpistemicPlantDispatcherContext: core.#DispatcherContext & {
+	task_id: "projects.epistemic-plant-bootstrap.upstream-monitor"
+}
+
 #EpistemicPlantAcceptedSignal: close({
 	signal_id: "loop_bootstrap_request"
 	profile_id: "epistemic-plant-bootstrap"
@@ -9,7 +13,7 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/upstream-monito
 	context_repo: "fatb4f/epistemic-plant-bootstrap"
 	entrypoint: "contracts/upstream-monitor/epistemic-plant-bootstrap/contract-surface/AGENTS.md"
 	adapter: "github_app"
-	dispatcher?: core.#DispatcherContext
+	dispatcher?: #EpistemicPlantDispatcherContext
 })
 
 epistemicPlantAcceptedSignal: #EpistemicPlantAcceptedSignal

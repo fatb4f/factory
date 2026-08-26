@@ -9,7 +9,7 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/upstream-monito
 	signal_id: "loop_bootstrap_request"
 	profile_id: "epistemic-plant-bootstrap"
 	run_id: core.#NonEmptyString
-	dispatcher?: core.#DispatcherContext
+	dispatcher?: #EpistemicPlantDispatcherContext
 	authority_revision: core.#CommitSHA
 	publication_revision?: core.#CommitSHA
 	subject_revision: core.#CommitSHA
