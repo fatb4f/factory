@@ -1,13 +1,16 @@
 # Dispatcher execution ledger
 
-This tree is append-only runtime evidence, not CUE or repository authority. Records use:
+This directory contains scheduler state only. It is not task, domain, evidence, qualification, or publication authority.
 
-```text
-<task-id>/<scheduled-civil-date>/
-├── disposition.json
-└── attempt-<ordinal>/
-    ├── claim.json
-    └── result.json
+Each enabled task may have one file named `<task-id>.json`:
+
+```json
+{
+  "task_id": "projects.ctrl.upstream-monitor",
+  "last_run_at": "2026-08-27T12:05:00-04:00",
+  "terminal_state": "terminal_success",
+  "run_id": "optional-task-run-id"
+}
 ```
 
-An occurrence has either one dispatcher disposition or one or more contiguous attempts. Exactly one attempt may have a terminal result. A result is valid only when it equals the registered task adapter's projection of sealed task-local evidence. Existing records are never edited; corrections and stale retries append a later attempt where fresh CUE transition admission permits it. Once a later attempt is claimed, a late result for an earlier attempt is rejected.
+`last_run_at` is used only to determine the next scheduled invocation. Git history preserves earlier scheduler states; the task's own publication surface preserves task evidence and run history.

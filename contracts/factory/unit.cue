@@ -1,37 +1,29 @@
 package unit
 
-#Name:      string & =~"^[a-z0-9]+(?:-[a-z0-9]+)*$"
-#Namespace: "projects" | "academic" | "world"
-#UnitKind:  "project" | "academic" | "world"
-#UnitID:    string & =~"^(projects|academic|world)\\.[a-z0-9]+(?:-[a-z0-9]+)*$"
-#TaskID:    string & =~"^(projects|academic|world)\\.[a-z0-9]+(?:-[a-z0-9]+)*\\.[a-z0-9]+(?:-[a-z0-9]+)*$"
-#OutputID:  #TaskID
+#Name:     string & =~"^[a-z0-9]+(?:-[a-z0-9]+)*$"
+#UnitKind: "project" | "academic" | "world"
+#UnitID:   string & =~"^(projects|academic|world)\\.[a-z0-9]+(?:-[a-z0-9]+)*$"
+#TaskID:   string & =~"^(projects|academic|world)\\.[a-z0-9]+(?:-[a-z0-9]+)*\\.[a-z0-9]+(?:-[a-z0-9]+)*$"
 
 #RepositoryPath: string & =~"^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$" & !~"(^|/)\\.{1,2}(/|$)"
 #AuthorityPath:  #RepositoryPath & =~"(^|/)contract\\.cue$"
 #AgentRootPath:  #RepositoryPath & =~"(^|/)\\.agents$"
-
-#TaskReference: close({
-	id:        #TaskID
-	authority: #AuthorityPath
-})
-
-#OutputReference: close({
-	id:        #OutputID
-	authority: #AuthorityPath
-	path:      #RepositoryPath
-})
+#AgentPath:      #RepositoryPath & =~"(^|/)\\.agents/.*AGENTS\\.md$"
 
 #Unit: close({
-	id:        #UnitID
-	kind:      #UnitKind
-	authority: #AuthorityPath
-	agents?:   #AgentRootPath
-	tasks: [#Name]:   #TaskReference
-	outputs: [#Name]: #OutputReference
+	id:     #UnitID
+	kind:   #UnitKind
+	agents: #AgentRootPath
 })
 
-#Registry: {
-	[string]: #Unit
-	...
-}
+#Task: close({
+	id:        #TaskID
+	name:      #Name
+	unit:      #UnitID
+	authority: #AuthorityPath
+	agent:     #AgentPath
+	enabled:   bool
+	cadence: close({
+		everyDays: int & >0
+	})
+})

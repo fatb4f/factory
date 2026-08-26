@@ -19,10 +19,6 @@ The actuator is ChatGPT using the GitHub App. It performs bounded acquisition, g
 
 The GitHub App cannot execute CUE or local binaries. Record that limitation rather than replacing executable validation with claimant-supplied booleans.
 
-The shared optional dispatcher context is relational vocabulary only: task ID,
-scheduled date, occurrence, attempt, and due-plan digest. It never enumerates
-Factory tasks. Each selected profile binds its own concrete task identity.
-
 ## Source-qualified evidence
 
 Every observation carries both `source` and `channel`. Channel names are scoped by source. Never compare or merge two observations solely because their channel strings match.

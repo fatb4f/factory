@@ -1,21 +1,16 @@
 package factory
 
-import factory "github.com/fatb4f/factory/contracts/factory:unit"
+import unit "github.com/fatb4f/factory/contracts/factory:unit"
 
-#UnitID:         factory.#UnitID
-#TaskID:         factory.#TaskID
-#OutputID:       factory.#OutputID
-#RepositoryPath: factory.#RepositoryPath
-#AuthorityPath:  factory.#AuthorityPath
-#TaskReference: {
-	factory.#TaskReference
-}
-#OutputReference: {
-	factory.#OutputReference
-}
+#UnitID:         unit.#UnitID
+#TaskID:         unit.#TaskID
+#RepositoryPath: unit.#RepositoryPath
+#AuthorityPath:  unit.#AuthorityPath
+#AgentRootPath:  unit.#AgentRootPath
+#AgentPath:      unit.#AgentPath
 #Unit: {
-	factory.#Unit
+	unit.#Unit
 }
-#Registry: {
-	factory.#Registry
+#Task: {
+	unit.#Task
 }

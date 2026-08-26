@@ -1,9 +1,15 @@
 # Factory daily dispatcher
 
-This directory contains the actuator procedure and append-only execution evidence. It is not repository, schedule, task, or admission authority. Canonical dispatcher authority is `contracts/factory/dispatcher/`; admitted task references come from root `registry.cue`.
+This surface is a scheduling procedure, not semantic authority. Root `registry.cue` says which tasks are enabled, their cadence, their authority path, and which task-local `AGENTS.md` to follow.
 
-Only consume a CI-produced due-plan archive when its `plan.admission` value is literally `true`, its repository revision is the checked-out revision, and its recomputed `planDigest` matches. A due plan is not a lease: recompute current tick and ledger admission before every claim or disposition. Process dispatch items independently in listed order. Invoke a task-owned adapter only when `claim` reports `created`; `already_claimed` is non-actionable. Commit the claim and wait for qualification on that exact revision before task execution.
+At each daily tick:
 
-Task adapters return a task-completion reference to an immutable sealed local run bundle, not a dispatcher state claim. The mutable `latest.json` pointer is never durable result evidence. The registered task adapter contract validates the sealed evidence and projects the common result. A failure before task-local evidence admission leaves the attempt incomplete and retryable after its stale boundary.
+1. Read current `registry.cue` from `fatb4f/factory@main`.
+2. For each enabled task, read `.agents/dispatcher/executions/<task-id>.json` when present.
+3. A task is due when it has no ledger entry or when at least `cadence.everyDays` calendar days have elapsed since `last_run_at` in `America/Toronto`.
+4. For each due task, read its declared `agent` file and execute that existing task workflow exactly as instructed. The task's own contract remains responsible for authority, evidence, qualification, publication, and terminal state.
+5. After the task reaches a terminal state, write or replace its single scheduler ledger file with the task ID, run time, terminal state, and run ID when available.
+6. Continue with other due tasks even when one task ends in failure, deferral, or coverage gap.
+7. Return a compact per-task summary.
 
-Never modify an existing claim, result, disposition, or sealed task publication. An invalid root, registry, ledger, transition, plan, or digest stops the tick. A task-local admitted failure is recorded and does not stop later dispatch items.
+Do not run a CUE CI job, generate due-plan archives, create claim/disposition records, or perform a second dispatcher-level result admission. The dispatcher only decides when to invoke a task and records when it ran.

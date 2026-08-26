@@ -9,7 +9,6 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/upstream-monito
 	signal_id: "loop_bootstrap_request"
 	profile_id: "ctrl"
 	run_id: core.#NonEmptyString
-	dispatcher?: #CtrlDispatcherContext
 	authority_revision: core.#CommitSHA
 	publication_revision?: core.#CommitSHA
 	ctrl_revision: core.#CommitSHA

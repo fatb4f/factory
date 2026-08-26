@@ -3,8 +3,6 @@ package upstreammonitor
 #NonEmptyString: string & != ""
 #CommitSHA: string & =~ "^[0-9a-f]{40}$"
 #GitObjectSHA: string & =~ "^[0-9a-f]{40}$"
-#Digest: string & =~ "^[0-9a-f]{64}$"
-#CivilDate: string & =~ "^[0-9]{4}-(0[1-9]|1[0-2])-([0-2][0-9]|3[01])$"
 #TerminalState: "terminal_success" | "terminal_abort" | "terminal_deferred" | "coverage_gap"
 #QualificationState: "observation_only" | "executable_validated" | "executable_failed"
 #ImpactDecision: "none" | "note" | "contract-update" | "blocking-gate"
@@ -15,14 +13,6 @@ package upstreammonitor
 #ObservationKind: "source" | "schema" | "projection" | "runtime" | "rollout" | "upstream-test" | "probe" | "dependency" | "context" | "analyzer" | "telemetry" | "semantic-convention" | "transport" | "acquisition" | "external-observation"
 #GraphEdgeKind: "depends-on" | "projects-to" | "observed-by" | "validated-by" | "consumed-by"
 #RunArtifactKind: "report" | "summary" | "evidence"
-#DispatcherContext: close({
-	task_id:         #NonEmptyString
-	scheduled_date:  #CivilDate
-	occurrence_id:   "\(task_id)/\(scheduled_date)"
-	attempt_ordinal: int & >0
-	attempt_id:      "\(occurrence_id)/attempt-\(attempt_ordinal)"
-	due_plan_digest: #Digest
-})
 
 #UpstreamChannel: close({
 	id: #NonEmptyString
@@ -123,7 +113,6 @@ package upstreammonitor
 	run_id: #NonEmptyString
 	profile_id: #NonEmptyString
 	terminal_state: #TerminalState
-	dispatcher?: #DispatcherContext
 	export_unit: "directory"
 	artifacts: [...#RunBundleArtifact] & [_, ...]
 })
