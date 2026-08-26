@@ -1,10 +1,10 @@
 # epistemic-plant-bootstrap upstream-monitor task
 
-This directory is execution procedure only. Semantic authority remains in `contracts/factory/workers/upstream-monitor/` and the selected `profiles_epistemic_plant_bootstrap/` package.
+This directory is execution procedure only. Semantic authority remains in `contracts/workers/upstream-monitor/` and the selected `profiles_epistemic_plant_bootstrap/` package.
 
 When invoked:
 
-1. Read `contracts/factory/workers/upstream-monitor/AGENTS.md`, `contract.cue`, and every current CUE file in `contracts/factory/workers/upstream-monitor/profiles_epistemic_plant_bootstrap/`.
+1. Read `contracts/workers/upstream-monitor/AGENTS.md`, `contract.cue`, and every current CUE file in `contracts/workers/upstream-monitor/profiles_epistemic_plant_bootstrap/`.
 2. Read `projects/epistemic-plant-bootstrap/.agents/report-template.md` and the current `projects/epistemic-plant-bootstrap/upstream-monitor/latest.json` when present.
 3. Read the current `fatb4f/epistemic-plant-bootstrap@main` subject context required by the profile.
 4. Submit the profile's accepted `loop_bootstrap_request` signal with this file as `entrypoint`.

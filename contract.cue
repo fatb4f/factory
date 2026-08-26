@@ -1,6 +1,6 @@
 package factory
 
-import unit "github.com/fatb4f/factory/contracts/factory:unit"
+import unit "github.com/fatb4f/factory/contracts:unit"
 
 #UnitID:         unit.#UnitID
 #TaskID:         unit.#TaskID

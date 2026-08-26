@@ -1,6 +1,6 @@
 package factory
 
-import unit "github.com/fatb4f/factory/contracts/factory:unit"
+import unit "github.com/fatb4f/factory/contracts:unit"
 
 units: close({
 	"projects.ctrl": unit.#Unit & {
@@ -20,7 +20,7 @@ tasks: close({
 		id:        "projects.ctrl.upstream-monitor"
 		name:      "upstream-monitor"
 		unit:      "projects.ctrl"
-		authority: "contracts/factory/workers/upstream-monitor/profiles_ctrl/contract.cue"
+		authority: "contracts/workers/upstream-monitor/profiles_ctrl/contract.cue"
 		agent:     "projects/ctrl/.agents/AGENTS.md"
 		enabled:   false
 		cadence: {
@@ -31,7 +31,7 @@ tasks: close({
 		id:        "projects.epistemic-plant-bootstrap.upstream-monitor"
 		name:      "upstream-monitor"
 		unit:      "projects.epistemic-plant-bootstrap"
-		authority: "contracts/factory/workers/upstream-monitor/profiles_epistemic_plant_bootstrap/contract.cue"
+		authority: "contracts/workers/upstream-monitor/profiles_epistemic_plant_bootstrap/contract.cue"
 		agent:     "projects/epistemic-plant-bootstrap/.agents/AGENTS.md"
 		enabled:   false
 		cadence: {

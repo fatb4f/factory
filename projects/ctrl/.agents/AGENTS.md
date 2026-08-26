@@ -1,10 +1,10 @@
 # ctrl upstream-monitor task
 
-This directory is execution procedure only. Semantic authority remains in `contracts/factory/workers/upstream-monitor/` and the selected `profiles_ctrl/` package.
+This directory is execution procedure only. Semantic authority remains in `contracts/workers/upstream-monitor/` and the selected `profiles_ctrl/` package.
 
 When invoked:
 
-1. Read `contracts/factory/workers/upstream-monitor/AGENTS.md`, `contract.cue`, and every current CUE file in `contracts/factory/workers/upstream-monitor/profiles_ctrl/`.
+1. Read `contracts/workers/upstream-monitor/AGENTS.md`, `contract.cue`, and every current CUE file in `contracts/workers/upstream-monitor/profiles_ctrl/`.
 2. Read `projects/ctrl/.agents/report-template.md` and the current `projects/ctrl/upstream-monitor/latest.json` when present.
 3. Read the current `fatb4f/ctrl@main` subject context required by the profile.
 4. Submit the profile's accepted `loop_bootstrap_request` signal with this file as `entrypoint`.

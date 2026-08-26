@@ -60,7 +60,7 @@ The task-local agent is the direct invocation surface. For ctrl:
 projects/ctrl/.agents/AGENTS.md
         |
         v
-contracts/factory/workers/upstream-monitor/
+contracts/workers/upstream-monitor/
         +
 profiles_ctrl/
         |
@@ -73,7 +73,7 @@ projects/ctrl/upstream-monitor/
 
 The epistemic-plant-bootstrap task follows the equivalent path under `projects/epistemic-plant-bootstrap/`.
 
-`contracts/factory/` contains semantic contracts. Project-local `.agents/` contains execution procedure and fixed templates. Project-local `upstream-monitor/` contains immutable run bundles and `latest.json`. There is no separate `contracts/upstream-monitor/` compatibility layer.
+`contracts/` contains semantic contracts. Project-local `.agents/` contains execution procedure and fixed templates. Project-local `upstream-monitor/` contains immutable run bundles and `latest.json`.
 
 The scheduler never translates `terminal_success`, `terminal_abort`, `terminal_deferred`, `coverage_gap`, qualification state, report content, or publication evidence into another dispatcher result schema. It records the task's existing terminal state only for scheduling history.
 
@@ -131,13 +131,13 @@ If a concrete operational failure later demonstrates the need for one of these m
 
 ## Cutover
 
-Cutover is separate from this repository simplification:
+Cutover is separate from the repository layout:
 
 1. keep the existing combined upstream-monitor automation active;
-2. validate the simplified registry and project-local task paths manually;
+2. validate the registry and project-local task paths manually;
 3. configure the daily dispatcher task;
-4. seed or record scheduler state from the last existing invocation as appropriate;
+4. seed scheduler state from the last existing invocation as appropriate;
 5. enable the two dispatcher registry entries; and
 6. disable the previous combined scheduled task.
 
-Until those steps are performed, the repository changes do not alter the current recurring monitor schedule.
+Until those steps are performed, repository changes do not alter the recurring monitor cadence.
