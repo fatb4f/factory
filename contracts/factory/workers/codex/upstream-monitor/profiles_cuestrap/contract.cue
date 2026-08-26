@@ -9,7 +9,7 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/codex/upstream-
 	profile_id:   "cuestrap"
 	target_repo:  "fatb4f/factory"
 	context_repo: "fatb4f/cuestrap"
-	entrypoint:   "contracts/upstream-monitor/codex/cuestrap-contract-surface/AGENTS.md"
+	entrypoint:   "projects/cuestrap/.agents/AGENTS.md"
 	adapter:      "github_app"
 })
 
@@ -18,7 +18,7 @@ cuestrapAcceptedSignal: #CuestrapAcceptedSignal & {
 	profile_id:   "cuestrap"
 	target_repo:  "fatb4f/factory"
 	context_repo: "fatb4f/cuestrap"
-	entrypoint:   "contracts/upstream-monitor/codex/cuestrap-contract-surface/AGENTS.md"
+	entrypoint:   "projects/cuestrap/.agents/AGENTS.md"
 	adapter:      "github_app"
 }
 
@@ -73,8 +73,8 @@ cuestrapAuthorityModel: close({
 		"contracts/factory/workers/codex/upstream-monitor/contract.cue",
 		"contracts/factory/workers/codex/upstream-monitor/profiles_cuestrap/*.cue",
 		"contracts/factory/workers/codex/upstream-monitor/AGENTS.md",
-		"contracts/upstream-monitor/codex/cuestrap-contract-surface/AGENTS.md",
-		"contracts/upstream-monitor/codex/cuestrap-contract-surface/output/report-template.md",
+		"projects/cuestrap/.agents/AGENTS.md",
+		"projects/cuestrap/.agents/report-template.md",
 	]
 	subjectContext: [
 		"fatb4f/cuestrap@main repository state",

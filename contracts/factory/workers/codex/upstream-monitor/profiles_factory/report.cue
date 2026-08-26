@@ -141,7 +141,7 @@ evidenceModel: close({
 })
 
 upstreamCodexImpactReportTemplate: close({
-	path: "contracts/upstream-monitor/codex/contract-surface/output/report-template.md"
+	path: "projects/factory/.agents/report-template.md"
 	sections: [
 		"Run identity",
 		"Correction lineage",

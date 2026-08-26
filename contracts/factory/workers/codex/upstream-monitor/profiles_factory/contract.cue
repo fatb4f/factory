@@ -5,14 +5,14 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/codex/upstream-
 #AcceptedSignal: close({
 	signal_id:   "loop_bootstrap_request"
 	target_repo: "fatb4f/factory"
-	entrypoint:  "contracts/upstream-monitor/codex/contract-surface/AGENTS.md"
+	entrypoint:  "projects/factory/.agents/AGENTS.md"
 	adapter:     "github_app"
 })
 
 acceptedSignal: #AcceptedSignal & {
 	signal_id:   "loop_bootstrap_request"
 	target_repo: "fatb4f/factory"
-	entrypoint:  "contracts/upstream-monitor/codex/contract-surface/AGENTS.md"
+	entrypoint:  "projects/factory/.agents/AGENTS.md"
 	adapter:     "github_app"
 }
 
@@ -21,8 +21,8 @@ authorityModel: close({
 		"contracts/factory/workers/codex/upstream-monitor/contract.cue",
 		"contracts/factory/workers/codex/upstream-monitor/profiles_factory/*.cue",
 		"contracts/factory/workers/codex/upstream-monitor/AGENTS.md",
-		"contracts/upstream-monitor/**/AGENTS.md",
-		"contracts/upstream-monitor/codex/contract-surface/output/report-template.md",
+		"projects/factory/.agents/AGENTS.md",
+		"projects/factory/.agents/report-template.md",
 	]
 	evidenceOnly: [
 		"openai/codex",

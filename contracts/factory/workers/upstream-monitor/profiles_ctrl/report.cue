@@ -52,7 +52,7 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/upstream-monito
 })
 
 ctrlImpactReportTemplate: close({
-	path: "contracts/upstream-monitor/ctrl/contract-surface/output/report-template.md"
+	path: "projects/ctrl/.agents/report-template.md"
 	sections: [
 		"Run identity",
 		"Subject context",

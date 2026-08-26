@@ -7,7 +7,7 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/upstream-monito
 	profile_id: "epistemic-plant-bootstrap"
 	target_repo: "fatb4f/factory"
 	context_repo: "fatb4f/epistemic-plant-bootstrap"
-	entrypoint: "contracts/upstream-monitor/epistemic-plant-bootstrap/contract-surface/AGENTS.md"
+	entrypoint: "projects/epistemic-plant-bootstrap/.agents/AGENTS.md"
 	adapter: "github_app"
 })
 
@@ -51,8 +51,8 @@ epistemicPlantAuthorityModel: close({
 		"contracts/factory/workers/upstream-monitor/contract.cue",
 		"contracts/factory/workers/upstream-monitor/profiles_epistemic_plant_bootstrap/*.cue",
 		"contracts/factory/workers/upstream-monitor/AGENTS.md",
-		"contracts/upstream-monitor/epistemic-plant-bootstrap/contract-surface/AGENTS.md",
-		"contracts/upstream-monitor/epistemic-plant-bootstrap/contract-surface/output/report-template.md",
+		"projects/epistemic-plant-bootstrap/.agents/AGENTS.md",
+		"projects/epistemic-plant-bootstrap/.agents/report-template.md",
 	]
 	subjectContext: ["fatb4f/epistemic-plant-bootstrap@main repository state"]
 	subjectSemanticAuthority: [

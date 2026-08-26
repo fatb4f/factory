@@ -2,7 +2,7 @@
 
 Status: active migration design
 
-Factory is organized as a small registry of independently owned work units rather than as one universal workflow schema.
+Factory is organized as a small registry of independently owned work units. Contracts define semantic authority; project directories own execution procedures and generated task state.
 
 ## Repository topology
 
@@ -15,88 +15,87 @@ factory/
 |   `-- factory/
 |       |-- unit.cue
 |       `-- workers/
+|           |-- upstream-monitor/
+|           `-- codex/upstream-monitor/
 |-- projects/
 |   |-- ctrl/
-|   |   `-- .agents/
-|   `-- epistemic-plant-bootstrap/
-|       `-- .agents/
+|   |   |-- .agents/
+|   |   `-- upstream-monitor/
+|   |-- epistemic-plant-bootstrap/
+|   |   |-- .agents/
+|   |   `-- upstream-monitor/
+|   |-- factory/
+|   |   |-- .agents/
+|   |   `-- upstream-monitor/
+|   `-- cuestrap/
+|       |-- .agents/
+|       `-- upstream-monitor/
 |-- academic/
-|   `-- <future units>/
 |-- world/
-|   `-- <future units>/
 `-- .agents/
     `-- dispatcher/
 ```
 
-Directory taxonomy classifies scope. It does not define semantic authority.
+There is no parallel `contracts/upstream-monitor/` compatibility/publication tree.
 
-## Shared vocabulary
+## Authority boundary
 
-`contracts/factory/unit.cue` defines only the shared repository concepts currently demonstrated across units:
+`contracts/factory/` contains semantic contracts only:
 
-- unit identity and kind;
-- repository-relative paths;
-- task identity;
-- task semantic-authority path;
-- task-local agent path;
-- enabled state; and
-- simple day cadence for recurring tasks.
+- shared unit vocabulary in `unit.cue`;
+- shared worker contracts;
+- profile-specific CUE authority.
 
-Do not promote domain schemas, evidence models, graph semantics, publication rules, or task-result semantics into this shared vocabulary merely because current units happen to resemble each other.
+Project-local surfaces have different roles:
+
+```text
+projects/<unit>/.agents/
+    execution instructions and fixed templates
+
+projects/<unit>/upstream-monitor/
+    latest pointer, immutable run bundles, and retained historical outputs
+```
+
+Neither `.agents/` nor generated run state becomes semantic authority.
 
 ## Root registry
 
-Root `registry.cue` is the discovery and scheduling index.
-
-```text
-unit
-  -> id
-  -> kind
-  -> .agents root
-
-task
-  -> id
-  -> owning unit
-  -> semantic authority
-  -> agent procedure
-  -> enabled
-  -> cadence
-```
-
-The registry does not replace the referenced task authority.
+Root `registry.cue` is the discovery and scheduling index. It records only unit identity, task identity, semantic-authority path, task-local agent path, enabled state, and simple day cadence.
 
 For the two current project monitors:
 
 ```text
 projects.ctrl.upstream-monitor
-    authority -> profiles_ctrl/contract.cue
+    authority -> contracts/factory/workers/upstream-monitor/profiles_ctrl/contract.cue
     agent     -> projects/ctrl/.agents/AGENTS.md
 
 projects.epistemic-plant-bootstrap.upstream-monitor
-    authority -> profiles_epistemic_plant_bootstrap/contract.cue
+    authority -> contracts/factory/workers/upstream-monitor/profiles_epistemic_plant_bootstrap/contract.cue
     agent     -> projects/epistemic-plant-bootstrap/.agents/AGENTS.md
 ```
 
-Their established upstream-monitor contracts remain unchanged.
+The registry does not replace the referenced task authority.
 
-## Unit-local `.agents`
+## Monitor topology
 
-`.agents/` contains execution instructions and task parameters only.
+The active monitor path is now direct:
 
 ```text
-semantic authority
+profile CUE authority
         |
         v
-unit-local AGENTS.md
+project-local .agents procedure
         |
         v
-agent / automation
+ChatGPT / GitHub actuator
         |
         v
-existing task evidence and publication
+project-local upstream-monitor runs + latest pointer
 ```
 
-Agent instructions may point to compatibility entrypoints and subject context, but they do not become semantic authority.
+The prior `contracts/upstream-monitor/` layer was compatibility ingress plus templates and generated state. Those responsibilities now live with their owning projects.
+
+Historical Factory Codex and CUEstrap run state is retained under `projects/factory/upstream-monitor/` and `projects/cuestrap/upstream-monitor/`; their semantic profiles remain under `contracts/factory/workers/codex/upstream-monitor/`.
 
 ## Semantic families
 
@@ -110,13 +109,13 @@ Each new unit should model its own sources, evidence, graph, decisions, and publ
 
 ## Dispatcher relationship
 
-The dispatcher is orthogonal to unit semantics:
+The dispatcher remains orthogonal to unit semantics:
 
 ```text
 registry schedule
       |
       v
-unit task agent
+project-local task agent
       |
       v
 existing task contract
@@ -124,23 +123,14 @@ existing task contract
 
 Factory does not wrap tasks in another admission or qualification protocol. The dispatcher only determines whether a task is due and records when it ran.
 
-See `factory-daily-dispatcher.md` for the scheduling procedure.
-
-## Migration sequence
-
-```text
-1. keep existing semantic authorities in place
-2. expose project/academic/world unit roots as needed
-3. colocate execution instructions under each unit's .agents/
-4. register only concrete tasks that already have a usable workflow
-5. migrate recurring clocks to the shared dispatcher when useful
-6. add UQAM and world units independently when their own contracts are ready
-```
-
-Compatibility surfaces remain until a concrete migration demonstrates that they can be removed safely.
-
 ## Current stage
 
-The current repository stage establishes the root unit/task registry and the two existing project task instruction surfaces. It intentionally removes the experimental dispatcher workflow engine, dispatcher-specific CUE admission package, and GitHub Actions qualification job.
+The repository now separates three planes cleanly:
 
-The two dispatcher task entries remain disabled until operational cutover. Existing `ctrl` and `epistemic-plant-bootstrap` scheduled workflows remain the running reference implementation in the meantime.
+```text
+contracts/factory/       semantic authority
+projects/*/.agents/      execution procedure and templates
+projects/*/upstream-monitor/ generated run state
+```
+
+The two dispatcher task entries remain disabled until operational cutover. Existing ctrl and epistemic-plant-bootstrap scheduled workflows remain the running reference implementation in the meantime.

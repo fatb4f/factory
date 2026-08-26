@@ -19,7 +19,7 @@ cuestrapPublicationPlan: close({
 	factoryRepository: "fatb4f/factory"
 	factory: close({
 		bundle: close({
-			directoryPattern: "contracts/upstream-monitor/codex/cuestrap-contract-surface/runs/<run_id>/"
+			directoryPattern: "projects/cuestrap/upstream-monitor/runs/<run_id>/"
 			artifacts: close({
 				report: close({
 					filename:  "report.md"
@@ -44,7 +44,7 @@ cuestrapPublicationPlan: close({
 			exportUnit: "directory"
 		})
 		latestPointer: close({
-			path:       "contracts/upstream-monitor/codex/cuestrap-contract-surface/latest.json"
+			path:       "projects/cuestrap/upstream-monitor/latest.json"
 			mediaType:  "application/json"
 			apiVersion: "factory.upstream-monitor.latest-run/v1"
 			kind:       "LatestUpstreamMonitorRun"

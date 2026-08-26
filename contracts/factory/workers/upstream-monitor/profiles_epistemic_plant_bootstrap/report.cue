@@ -49,7 +49,7 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/upstream-monito
 })
 
 epistemicPlantImpactReportTemplate: close({
-	path: "contracts/upstream-monitor/epistemic-plant-bootstrap/contract-surface/output/report-template.md"
+	path: "projects/epistemic-plant-bootstrap/.agents/report-template.md"
 	sections: [
 		"Run identity",
 		"Subject authority",

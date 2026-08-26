@@ -9,7 +9,7 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/codex/upstream-
 upstreamCodexPublicationPlan: close({
 	repository: "fatb4f/factory"
 	bundle: close({
-		directoryPattern: "contracts/upstream-monitor/codex/contract-surface/runs/<run_id>/"
+		directoryPattern: "projects/factory/upstream-monitor/runs/<run_id>/"
 		artifacts: close({
 			report: close({
 				filename:  "report.md"
@@ -34,14 +34,14 @@ upstreamCodexPublicationPlan: close({
 		exportUnit: "directory"
 	})
 	latestPointer: close({
-		path:       "contracts/upstream-monitor/codex/contract-surface/latest.json"
+		path:       "projects/factory/upstream-monitor/latest.json"
 		mediaType:  "application/json"
 		apiVersion: "factory.upstream-monitor.latest-run/v1"
 		kind:       "LatestUpstreamMonitorRun"
 	})
 	legacyReadOnly: close({
-		reportLatestPath:   "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md"
-		evidenceLatestPath: "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json"
+		reportLatestPath:   "projects/factory/upstream-monitor/legacy-reports/latest.codex-impact.md"
+		evidenceLatestPath: "projects/factory/upstream-monitor/legacy-evidence/latest.codex-impact.report.json"
 	})
 	corrections: close({
 		sealedBundlesImmutable:        true

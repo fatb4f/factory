@@ -61,10 +61,10 @@ cuestrapNegativeFixtures: {
 	promoteContextAuthority: close({authority: "fatb4f/cuestrap"})
 	inferUnresolvedHead: close({status: "unresolved", inferred_head: core.#CommitSHA})
 	scatteredFactoryRun: close({reportDirectory: core.#NonEmptyString, evidenceDirectory: core.#NonEmptyString, sameDirectory: false})
-	unbundledFactoryArtifact: close({path: string & !~"^contracts/upstream-monitor/codex/cuestrap-contract-surface/runs/[^/]+/"})
+	unbundledFactoryArtifact: close({path: string & !~"^projects/cuestrap/upstream-monitor/runs/[^/]+/"})
 	manifestBeforeArtifacts: close({manifestWritten: true, requiredArtifactsComplete: false})
-	mutableFactoryLatestCopy: close({path: string & =~"^contracts/upstream-monitor/codex/cuestrap-contract-surface/(reports|evidence)/latest"})
-	legacyLedgerPresent: close({path: string & =~"^contracts/upstream-monitor/codex/cuestrap-contract-surface/(reports|evidence)/", present: true})
+	mutableFactoryLatestCopy: close({path: string & =~"^projects/cuestrap/upstream-monitor/(reports|evidence)/latest"})
+	legacyLedgerPresent: close({path: string & =~"^projects/cuestrap/upstream-monitor/(reports|evidence)/", present: true})
 	cuestrapArtifactWrite: close({repository: "fatb4f/cuestrap", kind: "report" | "summary" | "evidence" | "manifest" | "latest_pointer"})
 	cuestrapEvidenceWrite: close({repository: "fatb4f/cuestrap", kind: "evidence"})
 	cuestrapPlumbingWrite: close({repository: "fatb4f/cuestrap", kind: "authority" | "instruction" | "actuator"})
@@ -81,5 +81,5 @@ cuestrapValidationPlan: close({
 		"cue vet -c=false ./...",
 		"cue export ./profiles_cuestrap -e publicContract --out json",
 	]
-	adapterLimitation: "The GitHub App actuator cannot execute these commands; repository CI or a checked local environment performs executable validation."
+	adapterLimitation: "The GitHub App actuator cannot execute these commands; a checked local environment may perform executable validation when needed."
 })

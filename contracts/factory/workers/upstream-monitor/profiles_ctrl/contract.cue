@@ -7,7 +7,7 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/upstream-monito
 	profile_id: "ctrl"
 	target_repo: "fatb4f/factory"
 	context_repo: "fatb4f/ctrl"
-	entrypoint: "contracts/upstream-monitor/ctrl/contract-surface/AGENTS.md"
+	entrypoint: "projects/ctrl/.agents/AGENTS.md"
 	adapter: "github_app"
 })
 
@@ -16,7 +16,7 @@ ctrlAcceptedSignal: #CtrlAcceptedSignal & {
 	profile_id: "ctrl"
 	target_repo: "fatb4f/factory"
 	context_repo: "fatb4f/ctrl"
-	entrypoint: "contracts/upstream-monitor/ctrl/contract-surface/AGENTS.md"
+	entrypoint: "projects/ctrl/.agents/AGENTS.md"
 	adapter: "github_app"
 }
 
@@ -59,8 +59,8 @@ ctrlAuthorityModel: close({
 		"contracts/factory/workers/upstream-monitor/profiles_ctrl/semantic-kernel.cue",
 		"contracts/factory/workers/upstream-monitor/profiles_ctrl/correlation.cue",
 		"contracts/factory/workers/upstream-monitor/AGENTS.md",
-		"contracts/upstream-monitor/ctrl/contract-surface/AGENTS.md",
-		"contracts/upstream-monitor/ctrl/contract-surface/output/report-template.md",
+		"projects/ctrl/.agents/AGENTS.md",
+		"projects/ctrl/.agents/report-template.md",
 	]
 	subjectContext: ["fatb4f/ctrl@main repository state"]
 	evidenceOnly: [

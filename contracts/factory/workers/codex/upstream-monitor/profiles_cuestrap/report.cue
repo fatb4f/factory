@@ -71,7 +71,7 @@ import core "github.com/fatb4f/factory/contracts/factory/workers/codex/upstream-
 })
 
 cuestrapCodexImpactReportTemplate: close({
-	path: "contracts/upstream-monitor/codex/cuestrap-contract-surface/output/report-template.md"
+	path: "projects/cuestrap/.agents/report-template.md"
 	sections: [
 		"Run identity",
 		"CUEstrap context state",

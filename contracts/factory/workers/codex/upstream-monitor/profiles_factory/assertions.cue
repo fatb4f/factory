@@ -83,12 +83,12 @@ negativeFixtures: {
 	unscannedSurface: close({surfaceID: core.#NonEmptyString, coverageDeclared: false})
 	independentMarkdownClaim: close({presentInEvidenceJSON: false, rendered: true})
 	scatteredRunArtifacts: close({reportDirectory: core.#NonEmptyString, evidenceDirectory: core.#NonEmptyString, sameDirectory: false})
-	unbundledRunArtifact: close({path: string & !~"^contracts/upstream-monitor/codex/contract-surface/runs/[^/]+/"})
+	unbundledRunArtifact: close({path: string & !~"^projects/factory/upstream-monitor/runs/[^/]+/"})
 	manifestBeforeArtifacts: close({manifestWritten: true, requiredArtifactsComplete: false})
-	mutableLatestCopy: close({path: string & =~"^contracts/upstream-monitor/codex/contract-surface/(reports|evidence)/latest"})
+	mutableLatestCopy: close({path: string & =~"^projects/factory/upstream-monitor/(legacy-reports|legacy-evidence)/latest"})
 	sealedRunMutation: close({sealed: true, mutation: true})
 	correctionWithoutLineage: close({correction: true, supersedes_run_id: ""})
-	legacyWrite: close({path: "contracts/upstream-monitor/codex/contract-surface/reports/latest.codex-impact.md" | "contracts/upstream-monitor/codex/contract-surface/evidence/latest.codex-impact.report.json", write: true})
+	legacyWrite: close({path: "projects/factory/upstream-monitor/legacy-reports/latest.codex-impact.md" | "projects/factory/upstream-monitor/legacy-evidence/latest.codex-impact.report.json", write: true})
 	undeclaredIssueMutation: close({target: int & >0, declared: false})
 }
 
@@ -98,5 +98,5 @@ validationPlan: close({
 		"cue vet -c=false ./...",
 		"cue export ./profiles_factory -e publicContract --out json",
 	]
-	adapterLimitation: "The GitHub App actuator cannot execute these commands; repository CI or a checked local environment performs executable validation."
+	adapterLimitation: "The GitHub App actuator cannot execute these commands; a checked local environment may perform executable validation when needed."
 })

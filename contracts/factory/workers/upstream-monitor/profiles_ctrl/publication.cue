@@ -3,7 +3,7 @@ package ctrlprofile
 ctrlPublicationPlan: close({
 	factoryRepository: "fatb4f/factory"
 	bundle: close({
-		directoryPattern: "contracts/upstream-monitor/ctrl/contract-surface/runs/<run_id>/"
+		directoryPattern: "projects/ctrl/upstream-monitor/runs/<run_id>/"
 		artifacts: close({
 			report: {filename: "report.md", mediaType: "text/markdown"}
 			summary: {filename: "summary.md", mediaType: "text/markdown"}
@@ -19,7 +19,7 @@ ctrlPublicationPlan: close({
 		exportUnit: "directory"
 	})
 	latestPointer: close({
-		path: "contracts/upstream-monitor/ctrl/contract-surface/latest.json"
+		path: "projects/ctrl/upstream-monitor/latest.json"
 		mediaType: "application/json"
 		apiVersion: "factory.upstream-monitor.latest-run/v2"
 		kind: "LatestUpstreamMonitorRun"

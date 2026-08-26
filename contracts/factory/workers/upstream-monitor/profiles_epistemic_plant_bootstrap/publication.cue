@@ -3,7 +3,7 @@ package epistemicplantprofile
 epistemicPlantPublicationPlan: close({
 	factoryRepository: "fatb4f/factory"
 	bundle: close({
-		directoryPattern: "contracts/upstream-monitor/epistemic-plant-bootstrap/contract-surface/runs/<run_id>/"
+		directoryPattern: "projects/epistemic-plant-bootstrap/upstream-monitor/runs/<run_id>/"
 		artifacts: close({
 			report: {filename: "report.md", mediaType: "text/markdown"}
 			summary: {filename: "summary.md", mediaType: "text/markdown"}
@@ -19,7 +19,7 @@ epistemicPlantPublicationPlan: close({
 		exportUnit: "directory"
 	})
 	latestPointer: close({
-		path: "contracts/upstream-monitor/epistemic-plant-bootstrap/contract-surface/latest.json"
+		path: "projects/epistemic-plant-bootstrap/upstream-monitor/latest.json"
 		mediaType: "application/json"
 		apiVersion: "factory.upstream-monitor.latest-run/v2"
 		kind: "LatestUpstreamMonitorRun"

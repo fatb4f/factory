@@ -2,14 +2,14 @@
 
 This directory is execution procedure only. Semantic authority remains in `contracts/factory/workers/upstream-monitor/` and the selected `profiles_ctrl/` package.
 
-When this task is invoked:
+When invoked:
 
-1. Read the current shared upstream-monitor authority and every current CUE file in `contracts/factory/workers/upstream-monitor/profiles_ctrl/`.
-2. Read `contracts/upstream-monitor/ctrl/contract-surface/AGENTS.md` and its report template.
+1. Read `contracts/factory/workers/upstream-monitor/AGENTS.md`, `contract.cue`, and every current CUE file in `contracts/factory/workers/upstream-monitor/profiles_ctrl/`.
+2. Read `projects/ctrl/.agents/report-template.md` and the current `projects/ctrl/upstream-monitor/latest.json` when present.
 3. Read the current `fatb4f/ctrl@main` subject context required by the profile.
-4. Submit the profile's existing accepted `loop_bootstrap_request` signal unchanged.
+4. Submit the profile's accepted `loop_bootstrap_request` signal with this file as `entrypoint`.
 5. Execute the existing ctrl workflow through its normal terminal and qualification states.
-6. Publish only through the profile's existing publication plan and compatibility surface.
+6. Publish only through the profile publication plan under `projects/ctrl/upstream-monitor/`; write the run manifest last and update `latest.json` only after the bundle is sealed.
 7. Return the run ID, terminal state, qualification state, and a compact outcome to the caller.
 
-The scheduler supplies no semantic claims and does not reinterpret the task result. Current repository contracts override this procedure if they evolve.
+This procedure, scheduler state, prior reports, and generated run bundles are not semantic authority. Current worker/profile CUE overrides this procedure if it evolves.
