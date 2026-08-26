@@ -2,7 +2,7 @@
 
 Status: proposed operational simplification
 
-The dispatcher is intentionally thin. The existing `ctrl` and `epistemic-plant-bootstrap` upstream-monitor workflows already own their authority, evidence, qualification, publication, and terminal-state semantics. Factory only needs a shared clock, task registry, and small scheduler ledger.
+The dispatcher is intentionally thin. The existing `ctrl` and `epistemic-plant-bootstrap` upstream-monitor workflows own their authority, evidence, qualification, publication, and terminal-state semantics. Factory only needs a shared clock, task registry, and small scheduler ledger.
 
 ## Control model
 
@@ -16,13 +16,13 @@ root registry.cue
 is task enabled and due?
         |
         v
-task-local AGENTS.md
+project-local .agents/AGENTS.md
         |
         v
 existing contracted task workflow
         |
         v
-existing task publication + terminal state
+project-local upstream-monitor publication
         |
         v
 simple scheduler ledger update
@@ -54,10 +54,10 @@ Both retain their existing upstream-monitor profile authority. They remain disab
 
 ## Task execution
 
-The task-local agent is a thin invocation surface. For example:
+The task-local agent is the direct invocation surface. For ctrl:
 
 ```text
-projects.ctrl/.agents/AGENTS.md
+projects/ctrl/.agents/AGENTS.md
         |
         v
 contracts/factory/workers/upstream-monitor/
@@ -65,13 +65,15 @@ contracts/factory/workers/upstream-monitor/
 profiles_ctrl/
         |
         v
-contracts/upstream-monitor/ctrl/contract-surface/AGENTS.md
+projects/ctrl/.agents/report-template.md
         |
         v
-existing ctrl workflow and publication plan
+projects/ctrl/upstream-monitor/
 ```
 
-The epistemic-plant-bootstrap task follows the equivalent existing authority chain.
+The epistemic-plant-bootstrap task follows the equivalent path under `projects/epistemic-plant-bootstrap/`.
+
+`contracts/factory/` contains semantic contracts. Project-local `.agents/` contains execution procedure and fixed templates. Project-local `upstream-monitor/` contains immutable run bundles and `latest.json`. There is no separate `contracts/upstream-monitor/` compatibility layer.
 
 The scheduler never translates `terminal_success`, `terminal_abort`, `terminal_deferred`, `coverage_gap`, qualification state, report content, or publication evidence into another dispatcher result schema. It records the task's existing terminal state only for scheduling history.
 
@@ -104,7 +106,7 @@ The single recurring ChatGPT task runs daily at `12:05 America/Toronto` and:
 1. reads current `fatb4f/factory@main`;
 2. reads `registry.cue`;
 3. checks each enabled task against its scheduler ledger;
-4. follows the declared task-local `AGENTS.md` for each due task;
+4. follows the declared project-local `AGENTS.md` for each due task;
 5. lets the existing task contract govern the entire run;
 6. updates the task's scheduler ledger after a terminal outcome; and
 7. returns a compact per-task summary.
@@ -132,7 +134,7 @@ If a concrete operational failure later demonstrates the need for one of these m
 Cutover is separate from this repository simplification:
 
 1. keep the existing combined upstream-monitor automation active;
-2. validate the simplified registry and task-local agent paths manually;
+2. validate the simplified registry and project-local task paths manually;
 3. configure the daily dispatcher task;
 4. seed or record scheduler state from the last existing invocation as appropriate;
 5. enable the two dispatcher registry entries; and
