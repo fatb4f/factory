@@ -4,37 +4,44 @@ import unit "github.com/fatb4f/factory/contracts/factory:unit"
 
 units: close({
 	"projects.ctrl": unit.#Unit & {
-		id:        "projects.ctrl"
-		kind:      "project"
-		authority: "projects/ctrl/contract.cue"
-		agents:    "projects/ctrl/.agents"
-		tasks: {
-			"upstream-monitor": {
-				id:        "projects.ctrl.upstream-monitor"
-				authority: "contracts/factory/workers/upstream-monitor/profiles_ctrl/contract.cue"
-			}
-		}
-		outputs: {}
+		id:     "projects.ctrl"
+		kind:   "project"
+		agents: "projects/ctrl/.agents"
 	}
 	"projects.epistemic-plant-bootstrap": unit.#Unit & {
-		id:        "projects.epistemic-plant-bootstrap"
-		kind:      "project"
-		authority: "projects/epistemic-plant-bootstrap/contract.cue"
-		agents:    "projects/epistemic-plant-bootstrap/.agents"
-		tasks: {
-			"upstream-monitor": {
-				id:        "projects.epistemic-plant-bootstrap.upstream-monitor"
-				authority: "contracts/factory/workers/upstream-monitor/profiles_epistemic_plant_bootstrap/contract.cue"
-			}
+		id:     "projects.epistemic-plant-bootstrap"
+		kind:   "project"
+		agents: "projects/epistemic-plant-bootstrap/.agents"
+	}
+})
+
+tasks: close({
+	"projects.ctrl.upstream-monitor": unit.#Task & {
+		id:        "projects.ctrl.upstream-monitor"
+		name:      "upstream-monitor"
+		unit:      "projects.ctrl"
+		authority: "contracts/factory/workers/upstream-monitor/profiles_ctrl/contract.cue"
+		agent:     "projects/ctrl/.agents/AGENTS.md"
+		enabled:   false
+		cadence: {
+			everyDays: 3
 		}
-		outputs: {}
+	}
+	"projects.epistemic-plant-bootstrap.upstream-monitor": unit.#Task & {
+		id:        "projects.epistemic-plant-bootstrap.upstream-monitor"
+		name:      "upstream-monitor"
+		unit:      "projects.epistemic-plant-bootstrap"
+		authority: "contracts/factory/workers/upstream-monitor/profiles_epistemic_plant_bootstrap/contract.cue"
+		agent:     "projects/epistemic-plant-bootstrap/.agents/AGENTS.md"
+		enabled:   false
+		cadence: {
+			everyDays: 3
+		}
 	}
 })
 
 _registryIdentity: [for id, registered in units {
-	let unitID = id
-	_id: unitID & #UnitID
-	_value: registered & {id: unitID}
+	_value: registered & {id: id}
 	if id =~ "^projects\\." {
 		_kind: registered & {kind: "project"}
 	}
@@ -44,10 +51,9 @@ _registryIdentity: [for id, registered in units {
 	if id =~ "^world\\." {
 		_kind: registered & {kind: "world"}
 	}
-	_tasks: [for name, task in registered.tasks {
-		task & {id: "\(unitID).\(name)"}
-	}]
-	_outputs: [for name, output in registered.outputs {
-		output & {id: "\(unitID).\(name)"}
-	}]
+}]
+
+_taskIdentity: [for id, task in tasks {
+	_value: task & {id: id, id: "\(task.unit).\(task.name)"}
+	_unit:  units[task.unit]
 }]
