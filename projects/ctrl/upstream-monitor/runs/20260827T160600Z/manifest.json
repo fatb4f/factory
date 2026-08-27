@@ -11,6 +11,6 @@
   "artifacts": [
     {"kind":"report","filename":"report.md","mediaType":"text/markdown","gitBlobSHA":"b453692f2e1828cd8a79b1ba74ca0985554acb69"},
     {"kind":"summary","filename":"summary.md","mediaType":"text/markdown","gitBlobSHA":"fb62683a67246c4993c18292075c69f802270d70"},
-    {"kind":"evidence","filename":"evidence.json","mediaType":"application/json","gitBlobSHA":"89c3bb95237947c830fe58712b6be4321f88c6ec"}
+    {"kind":"evidence","filename":"evidence.json","mediaType":"application/json","gitBlobSHA":"2f59f2b9c27976c91fc25bf791893a2337e9921b"}
   ]
 }
