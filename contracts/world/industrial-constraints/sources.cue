@@ -1,5 +1,14 @@
 package industrialconstraints
 
+#SourceID:
+	"gdelt" |
+	"google-bigquery" |
+	"gc-grants" |
+	"canadabuys" |
+	"statcan" |
+	"quebec-enterprise-register" |
+	"hydro-quebec"
+
 #AcquisitionMode: "bigquery" | "http" | "bulk" | "api"
 
 #AuthorityRole:
