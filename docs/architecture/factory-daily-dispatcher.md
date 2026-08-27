@@ -37,9 +37,10 @@ Current task registrations are:
 projects.ctrl.upstream-monitor
 projects.epistemic-plant-bootstrap.upstream-monitor
 academic.uqam.events
+world.industrial-constraints.monitor
 ```
 
-The project monitors declare CUE authority. The UQAM event watch does not: it is currently a procedural condition watch. All remain disabled in the dispatcher registry until an intentional cutover.
+The project monitors and industrial-constraints monitor declare CUE authority. The UQAM event watch does not: it is currently a procedural condition watch. All remain disabled in the dispatcher registry until an intentional cutover; the industrial-constraints task additionally remains disabled until independent qualification is complete.
 
 ## Task execution
 
@@ -58,6 +59,25 @@ projects/ctrl/upstream-monitor/
 
 The same shape applies to another registered upstream-monitor profile by substituting its selected `profiles_<profile>/` package and unit-local `.agents` procedure. `ctrl` is an example profile, not dispatcher or worker-core authority.
 
+For industrial constraints:
+
+```text
+world/industrial-constraints/.agents/AGENTS.md
+        |
+        +--> contracts/world/industrial-constraints/*.cue
+        |
+        v
+bounded acquisition + Ibis projections
+        |
+        v
+admitted relational state
+        |
+        v
+constraint/evidence assessment + admitted run bundle
+```
+
+This task is domain-owned and does not route through `contracts/workers/upstream-monitor/`.
+
 For UQAM events:
 
 ```text
@@ -74,7 +94,7 @@ No contract, qualification state, evidence bundle, or publication surface is inv
 
 ## Execution boundary
 
-The dispatcher does not provision containers, archives, local toolchains, or execution sandboxes. Those are task/profile concerns only when explicitly contracted. A contracted monitor that cannot obtain required executable evidence through its current actuator reports its task-native coverage-gap state; the dispatcher records that outcome without attempting to repair it with a second execution layer.
+The dispatcher does not provision containers, archives, local toolchains, or execution sandboxes. Those are task/profile concerns only when explicitly contracted. A contracted task that cannot obtain required executable evidence through its current actuator reports its task-native coverage-gap state; the dispatcher records that outcome without attempting to repair it with a second execution layer.
 
 ## Scheduler ledger
 
@@ -87,8 +107,8 @@ A task is due when no ledger exists or when at least `cadence.everyDays` calenda
 Cutover remains separate from repository wiring:
 
 1. keep existing recurring automations active;
-2. validate registered task paths;
-3. seed scheduler state from the existing automations;
+2. validate registered task paths and each contracted task independently;
+3. seed scheduler state from the existing automations where applicable;
 4. enable selected registry tasks;
 5. activate the daily dispatcher;
 6. disable only the recurring automations replaced by that dispatcher.

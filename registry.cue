@@ -18,6 +18,11 @@ units: close({
 		kind:   "academic"
 		agents: "academic/uqam/.agents"
 	}
+	"world.industrial-constraints": unit.#Unit & {
+		id:     "world.industrial-constraints"
+		kind:   "world"
+		agents: "world/industrial-constraints/.agents"
+	}
 })
 
 tasks: close({
@@ -51,6 +56,17 @@ tasks: close({
 		enabled: false
 		cadence: {
 			everyDays: 1
+		}
+	}
+	"world.industrial-constraints.monitor": unit.#Task & {
+		id:        "world.industrial-constraints.monitor"
+		name:      "monitor"
+		unit:      "world.industrial-constraints"
+		authority: "contracts/world/industrial-constraints/contract.cue"
+		agent:     "world/industrial-constraints/.agents/AGENTS.md"
+		enabled:   false
+		cadence: {
+			everyDays: 7
 		}
 	}
 })

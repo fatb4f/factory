@@ -12,9 +12,9 @@ package industrialconstraints
 })
 
 #IdentityCandidate: close({
-	id:         string
-	entityKind: #EntityKind
-	label:      string
+	id:          string
+	entityKind:  #EntityKind
+	label:       string
 	sourceAlias: #SourceAlias
 })
 
@@ -35,8 +35,8 @@ package industrialconstraints
 
 #Entity: close({
 	kind:       "entity"
-	id:         #EntityID
-	entityKind: #EntityKind
-	identity:   #CanonicalEntityIdentity & {entityID: id, entityKind: entityKind}
+	identity:   #CanonicalEntityIdentity
+	id:         identity.entityID
+	entityKind: identity.entityKind
 	provenance?: #Provenance
 })
