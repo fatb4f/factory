@@ -17,12 +17,12 @@ package unit
 })
 
 #Task: close({
-	id:        #TaskID
-	name:      #Name
-	unit:      #UnitID
-	authority: #AuthorityPath
-	agent:     #AgentPath
-	enabled:   bool
+	id:         #TaskID
+	name:       #Name
+	unit:       #UnitID
+	authority?: #AuthorityPath
+	agent:      #AgentPath
+	enabled:    bool
 	cadence: close({
 		everyDays: int & >0
 	})

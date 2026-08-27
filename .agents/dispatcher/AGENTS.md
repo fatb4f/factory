@@ -1,15 +1,15 @@
 # Factory daily dispatcher
 
-This surface is a scheduling procedure, not semantic authority. Root `registry.cue` says which tasks are enabled, their cadence, their authority path, and which task-local `AGENTS.md` to follow.
+This surface is a scheduling procedure, not semantic authority. Root `registry.cue` says which tasks are enabled, their cadence, an optional semantic-authority path, and which task-local `AGENTS.md` to follow.
 
 At each daily tick:
 
 1. Read current `registry.cue` from `fatb4f/factory@main`.
 2. For each enabled task, read `.agents/dispatcher/executions/<task-id>.json` when present.
 3. A task is due when it has no ledger entry or when at least `cadence.everyDays` calendar days have elapsed since `last_run_at` in `America/Toronto`.
-4. For each due task, read its declared `agent` file and execute that existing task workflow exactly as instructed. The task's own contract remains responsible for authority, evidence, qualification, publication, and terminal state.
-5. After the task reaches a terminal state, write or replace its single scheduler ledger file with the task ID, run time, terminal state, and run ID when available.
-6. Continue with other due tasks even when one task ends in failure, deferral, or coverage gap.
+4. For each due task, read its declared `agent` file and execute that task procedure exactly as instructed. When an `authority` path is declared, preserve that task's semantic contract and do not reinterpret it. When `authority` is absent, do not invent a semantic contract, qualification layer, or publication protocol.
+5. After the task finishes, write or replace its scheduler ledger with task ID, run time, the task-native outcome label, and run ID when available.
+6. Continue with other due tasks even when one task reports failure, deferral, coverage gap, `source_gap`, or another task-native non-success outcome.
 7. Return a compact per-task summary.
 
 Do not run a CUE CI job, generate due-plan archives, create claim/disposition records, or perform a second dispatcher-level result admission. The dispatcher only decides when to invoke a task and records when it ran.

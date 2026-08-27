@@ -8,9 +8,11 @@ Each enabled task may have one file named `<task-id>.json`:
 {
   "task_id": "projects.ctrl.upstream-monitor",
   "last_run_at": "2026-08-27T12:05:00-04:00",
-  "terminal_state": "terminal_success",
+  "outcome": "terminal_success",
   "run_id": "optional-task-run-id"
 }
 ```
 
-`last_run_at` is used only to determine the next scheduled invocation. Git history preserves earlier scheduler states; the task's own publication surface preserves task evidence and run history.
+`outcome` is an opaque task-native label. For a contracted upstream monitor it may be a terminal state; for another task it may be `new_matches`, `no_change`, `source_gap`, or another procedure-defined value. The scheduler does not interpret it.
+
+`last_run_at` alone determines the next scheduled invocation. Git history preserves earlier scheduler state; task-specific publication surfaces preserve task evidence and run history where such surfaces exist.

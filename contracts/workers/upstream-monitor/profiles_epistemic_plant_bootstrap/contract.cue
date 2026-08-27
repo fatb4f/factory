@@ -50,7 +50,9 @@ epistemicPlantAuthorityModel: close({
 	authority: [
 		"contracts/workers/upstream-monitor/contract.cue",
 		"contracts/workers/upstream-monitor/profiles_epistemic_plant_bootstrap/*.cue",
-		"contracts/workers/upstream-monitor/AGENTS.md",
+	]
+	executionSurfaces: [
+		".agents/workers/upstream-monitor/AGENTS.md",
 		"projects/epistemic-plant-bootstrap/.agents/AGENTS.md",
 		"projects/epistemic-plant-bootstrap/.agents/report-template.md",
 	]

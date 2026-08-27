@@ -13,6 +13,11 @@ units: close({
 		kind:   "project"
 		agents: "projects/epistemic-plant-bootstrap/.agents"
 	}
+	"academic.uqam": unit.#Unit & {
+		id:     "academic.uqam"
+		kind:   "academic"
+		agents: "academic/uqam/.agents"
+	}
 })
 
 tasks: close({
@@ -36,6 +41,16 @@ tasks: close({
 		enabled:   false
 		cadence: {
 			everyDays: 3
+		}
+	}
+	"academic.uqam.events": unit.#Task & {
+		id:      "academic.uqam.events"
+		name:    "events"
+		unit:    "academic.uqam"
+		agent:   "academic/uqam/.agents/events/AGENTS.md"
+		enabled: false
+		cadence: {
+			everyDays: 1
 		}
 	}
 })

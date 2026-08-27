@@ -58,7 +58,9 @@ ctrlAuthorityModel: close({
 		"contracts/workers/upstream-monitor/profiles_ctrl/*.cue",
 		"contracts/workers/upstream-monitor/profiles_ctrl/semantic-kernel.cue",
 		"contracts/workers/upstream-monitor/profiles_ctrl/correlation.cue",
-		"contracts/workers/upstream-monitor/AGENTS.md",
+	]
+	executionSurfaces: [
+		".agents/workers/upstream-monitor/AGENTS.md",
 		"projects/ctrl/.agents/AGENTS.md",
 		"projects/ctrl/.agents/report-template.md",
 	]

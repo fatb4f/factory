@@ -2,7 +2,7 @@
 
 Status: proposed operational simplification
 
-The dispatcher is intentionally thin. The existing `ctrl` and `epistemic-plant-bootstrap` upstream-monitor workflows own their authority, evidence, qualification, publication, and terminal-state semantics. Factory only needs a shared clock, task registry, and small scheduler ledger.
+The dispatcher is intentionally thin. Factory owns a shared clock, registry, and small scheduler ledger. Each task owns its own procedure and, when declared, its own semantic authority.
 
 ## Control model
 
@@ -10,134 +10,81 @@ The dispatcher is intentionally thin. The existing `ctrl` and `epistemic-plant-b
 ChatGPT daily clock
         |
         v
-root registry.cue
+registry.cue
         |
         v
-is task enabled and due?
+enabled + due?
         |
         v
-project-local .agents/AGENTS.md
+unit-local task AGENTS.md
         |
         v
-existing contracted task workflow
+task-native workflow/outcome
         |
         v
-project-local upstream-monitor publication
-        |
-        v
-simple scheduler ledger update
+scheduler ledger update
 ```
 
 The dispatcher does not create a second semantic control plane.
 
 ## Registry boundary
 
-Root `registry.cue` records only:
+Root `registry.cue` records unit/task identity, optional semantic-authority path, task-local agent path, enabled state, and cadence in days. CUE is structured repository configuration here; there is no dispatcher CUE admission package and no CUE CI job.
 
-- unit identity and `.agents` root;
-- task identity;
-- task semantic-authority path;
-- task-local agent path;
-- enabled state; and
-- cadence in days.
-
-CUE is used as structured repository configuration. There is no dispatcher CUE admission package and no CUE CI job.
-
-The first task registrations are:
+Current task registrations are:
 
 ```text
 projects.ctrl.upstream-monitor
 projects.epistemic-plant-bootstrap.upstream-monitor
+academic.uqam.events
 ```
 
-Both retain their existing upstream-monitor profile authority. They remain disabled in the dispatcher registry until the existing scheduled monitor is intentionally cut over.
+The project monitors declare CUE authority. The UQAM event watch does not: it is currently a procedural condition watch. All remain disabled in the dispatcher registry until an intentional cutover.
 
 ## Task execution
 
-The task-local agent is the direct invocation surface. For ctrl:
+For a contracted upstream monitor:
 
 ```text
 projects/ctrl/.agents/AGENTS.md
         |
-        v
-contracts/workers/upstream-monitor/
-        +
-profiles_ctrl/
-        |
-        v
-projects/ctrl/.agents/report-template.md
+        +--> .agents/workers/upstream-monitor/AGENTS.md
+        +--> contracts/workers/upstream-monitor/contract.cue
+        +--> contracts/workers/upstream-monitor/profiles_ctrl/*.cue
         |
         v
 projects/ctrl/upstream-monitor/
 ```
 
-The epistemic-plant-bootstrap task follows the equivalent path under `projects/epistemic-plant-bootstrap/`.
+For UQAM events:
 
-`contracts/` contains semantic contracts. Project-local `.agents/` contains execution procedure and fixed templates. Project-local `upstream-monitor/` contains immutable run bundles and `latest.json`.
+```text
+academic/uqam/.agents/events/AGENTS.md
+        |
+        v
+current public event sources
+        |
+        v
+new_matches | no_change | source_gap
+```
 
-The scheduler never translates `terminal_success`, `terminal_abort`, `terminal_deferred`, `coverage_gap`, qualification state, report content, or publication evidence into another dispatcher result schema. It records the task's existing terminal state only for scheduling history.
+No contract, qualification state, evidence bundle, or publication surface is invented for the UQAM task.
 
 ## Scheduler ledger
 
-Scheduler state lives under:
+Scheduler state lives under `.agents/dispatcher/executions/<task-id>.json` and contains only task ID, `last_run_at`, an opaque task-native `outcome`, and optional run ID. The dispatcher never interprets `outcome`.
 
-```text
-.agents/dispatcher/executions/<task-id>.json
-```
-
-Each file contains only the most recent invocation time, terminal state, and task run ID when one exists. Git history provides scheduler-history provenance; the task's own sealed run bundles remain the authoritative run record.
-
-A task is due when:
-
-```text
-no scheduler ledger exists
-    OR
-calendar days since last_run_at >= cadence.everyDays
-```
-
-Calendar-day evaluation uses `America/Toronto`, matching the daily dispatcher clock.
-
-A task-local failure, deferral, or coverage gap does not suppress another due task. It still counts as that scheduled invocation, matching the behavior of the existing recurring workflows.
-
-## Daily ChatGPT task
-
-The single recurring ChatGPT task runs daily at `12:05 America/Toronto` and:
-
-1. reads current `fatb4f/factory@main`;
-2. reads `registry.cue`;
-3. checks each enabled task against its scheduler ledger;
-4. follows the declared project-local `AGENTS.md` for each due task;
-5. lets the existing task contract govern the entire run;
-6. updates the task's scheduler ledger after a terminal outcome; and
-7. returns a compact per-task summary.
-
-## Explicit non-goals
-
-The dispatcher does not require or produce:
-
-```text
-GitHub Actions preflight
-CUE runtime admission
-resolved due-plan archives
-registry or workflow digests
-claim records
-attempt leases
-misfire dispositions
-dispatcher result admission
-task publication re-validation
-```
-
-If a concrete operational failure later demonstrates the need for one of these mechanisms, it can be introduced at the narrowest layer that requires it.
+A task is due when no ledger exists or when at least `cadence.everyDays` calendar days have elapsed since `last_run_at`, evaluated in `America/Toronto`.
 
 ## Cutover
 
-Cutover is separate from the repository layout:
+Cutover remains separate from repository wiring:
 
-1. keep the existing combined upstream-monitor automation active;
-2. validate the registry and project-local task paths manually;
-3. configure the daily dispatcher task;
-4. seed scheduler state from the last existing invocation as appropriate;
-5. enable the two dispatcher registry entries; and
-6. disable the previous combined scheduled task.
+1. keep existing recurring automations active;
+2. validate registered task paths;
+3. seed scheduler state from the existing automations;
+4. enable selected registry tasks;
+5. activate the daily dispatcher;
+6. disable only the recurring automations replaced by that dispatcher.
 
-Until those steps are performed, repository changes do not alter the recurring monitor cadence.
+Until cutover, registry entries stay disabled and no duplicate execution is introduced.
