@@ -1,6 +1,6 @@
 # Factory Daily Dispatcher
 
-Status: proposed operational simplification
+Status: current
 
 The dispatcher is intentionally thin. Factory owns a shared clock, registry, and small scheduler ledger. Each task owns its own procedure and, when declared, its own semantic authority.
 
@@ -34,13 +34,13 @@ Root `registry.cue` records unit/task identity, optional semantic-authority path
 Current task registrations are:
 
 ```text
-projects.ctrl.upstream-monitor
-projects.epistemic-plant-bootstrap.upstream-monitor
-academic.uqam.events
-world.industrial-constraints.monitor
+projects.ctrl.upstream-monitor                         enabled
+projects.epistemic-plant-bootstrap.upstream-monitor   enabled
+academic.uqam.events                                  enabled
+world.industrial-constraints.monitor                  disabled / unqualified
 ```
 
-The project monitors and industrial-constraints monitor declare CUE authority. The UQAM event watch does not: it is currently a procedural condition watch. All remain disabled in the dispatcher registry until an intentional cutover; the industrial-constraints task additionally remains disabled until independent qualification is complete.
+The project monitors declare CUE authority. The UQAM event watch does not: it is a procedural condition watch. `world.industrial-constraints.monitor` remains registered but disabled until independent qualification is complete.
 
 ## Task execution
 
@@ -76,7 +76,7 @@ admitted relational state
 constraint/evidence assessment + admitted run bundle
 ```
 
-This task is domain-owned and does not route through `contracts/workers/upstream-monitor/`.
+This task is domain-owned and does not route through `contracts/workers/upstream-monitor/`. Registration does not imply qualification or dispatcher admission.
 
 For UQAM events:
 
@@ -98,19 +98,19 @@ The dispatcher does not provision containers, archives, local toolchains, or exe
 
 ## Scheduler ledger
 
-Scheduler state lives under `.agents/dispatcher/executions/<task-id>.json` and contains only task ID, `last_run_at`, an opaque task-native `outcome`, and optional run ID. The dispatcher never interprets `outcome`.
+Scheduler state lives under `.agents/dispatcher/executions/<task-id>.json`. A normal entry contains task ID, `last_run_at`, an opaque task-native `outcome`, and optional run ID. The dispatcher never interprets `outcome`.
+
+For cutover only, a seed entry may omit `outcome` when it carries `seeded_from: "legacy-recurring-automation"`. This preserves cadence without inventing a historical task result. The first actual dispatcher execution replaces the seed with the normal form.
 
 A task is due when no ledger exists or when at least `cadence.everyDays` calendar days have elapsed since `last_run_at`, evaluated in `America/Toronto`.
 
-## Cutover
+## Cutover state
 
-Cutover remains separate from repository wiring:
+The dispatcher cutover covers the two established upstream monitors and the UQAM events watch:
 
-1. keep existing recurring automations active;
-2. validate registered task paths and each contracted task independently;
-3. seed scheduler state from the existing automations where applicable;
-4. enable selected registry tasks;
-5. activate the daily dispatcher;
-6. disable only the recurring automations replaced by that dispatcher.
+1. their latest scheduler checkpoints are seeded into `.agents/dispatcher/executions/`;
+2. those three registry tasks are enabled;
+3. the daily dispatcher is the active scheduler for them;
+4. their replaced recurring automations are disabled after the dispatcher is activated.
 
-Until cutover, registry entries stay disabled and no duplicate execution is introduced.
+`world.industrial-constraints.monitor` remains disabled and unqualified. Its existing standalone weekly monitoring automation may continue until the domain profile is independently qualified and explicitly admitted to dispatcher execution. This partial cutover therefore intentionally retains that one external schedule rather than silently dropping industrial monitoring.

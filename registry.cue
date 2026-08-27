@@ -32,7 +32,7 @@ tasks: close({
 		unit:      "projects.ctrl"
 		authority: "contracts/workers/upstream-monitor/profiles_ctrl/contract.cue"
 		agent:     "projects/ctrl/.agents/AGENTS.md"
-		enabled:   false
+		enabled:   true
 		cadence: {
 			everyDays: 3
 		}
@@ -43,7 +43,7 @@ tasks: close({
 		unit:      "projects.epistemic-plant-bootstrap"
 		authority: "contracts/workers/upstream-monitor/profiles_epistemic_plant_bootstrap/contract.cue"
 		agent:     "projects/epistemic-plant-bootstrap/.agents/AGENTS.md"
-		enabled:   false
+		enabled:   true
 		cadence: {
 			everyDays: 3
 		}
@@ -53,7 +53,7 @@ tasks: close({
 		name:    "events"
 		unit:    "academic.uqam"
 		agent:   "academic/uqam/.agents/events/AGENTS.md"
-		enabled: false
+		enabled: true
 		cadence: {
 			everyDays: 1
 		}

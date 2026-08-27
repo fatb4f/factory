@@ -89,21 +89,25 @@ Current registrations:
 projects.ctrl.upstream-monitor
     authority -> contracts/workers/upstream-monitor/profiles_ctrl/contract.cue
     agent     -> projects/ctrl/.agents/AGENTS.md
+    enabled   -> true
 
 projects.epistemic-plant-bootstrap.upstream-monitor
     authority -> contracts/workers/upstream-monitor/profiles_epistemic_plant_bootstrap/contract.cue
     agent     -> projects/epistemic-plant-bootstrap/.agents/AGENTS.md
+    enabled   -> true
 
 academic.uqam.events
     authority -> none
     agent     -> academic/uqam/.agents/events/AGENTS.md
+    enabled   -> true
 
 world.industrial-constraints.monitor
     authority -> contracts/world/industrial-constraints/contract.cue
     agent     -> world/industrial-constraints/.agents/AGENTS.md
+    enabled   -> false
 ```
 
-All remain disabled in the dispatcher registry while existing recurring automations remain the running implementations or until the new unit is independently qualified.
+The daily dispatcher is the scheduler for the first three tasks. `world.industrial-constraints.monitor` remains registered but disabled while its domain contract is unqualified; its standalone weekly automation remains the temporary execution surface until explicit qualification and dispatcher admission.
 
 ## Upstream-monitor topology
 
