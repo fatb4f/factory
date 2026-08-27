@@ -51,7 +51,10 @@ package industrialconstraints
 	"observation" |
 	"event" |
 	"measurement" |
-	"relation"
+	"relation" |
+	"claim" |
+	"assessment" |
+	"constraint-claim"
 
 #RecordRef: close({
 	kind: #RecordKind
@@ -63,12 +66,12 @@ package industrialconstraints
 })
 
 #Provenance: close({
-	source:     #SourceID
-	channel:    #ChannelID
-	recordID:   string
-	revision:   #RevisionID
+	source:      #SourceID
+	channel:     #ChannelID
+	recordID:    string
+	revision:    #RevisionID
 	observedAt?: #Timestamp
-	acquiredAt: #Timestamp
+	acquiredAt:  #Timestamp
 })
 
 #TypedValue:

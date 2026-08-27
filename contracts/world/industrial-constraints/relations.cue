@@ -16,4 +16,7 @@ package industrialconstraints
 	#Observation |
 	#Event |
 	#Measurement |
-	#Relation
+	#Relation |
+	#EvidenceClaim |
+	#Assessment |
+	#ConstraintClaim
