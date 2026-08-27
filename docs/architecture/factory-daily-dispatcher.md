@@ -48,13 +48,15 @@ For a contracted upstream monitor:
 ```text
 projects/ctrl/.agents/AGENTS.md
         |
-        +--> .agents/workers/upstream-monitor/AGENTS.md
+        +--> contracts/workers/upstream-monitor/AGENTS.md
         +--> contracts/workers/upstream-monitor/contract.cue
         +--> contracts/workers/upstream-monitor/profiles_ctrl/*.cue
         |
         v
 projects/ctrl/upstream-monitor/
 ```
+
+The same shape applies to another registered upstream-monitor profile by substituting its selected `profiles_<profile>/` package and unit-local `.agents` procedure. `ctrl` is an example profile, not dispatcher or worker-core authority.
 
 For UQAM events:
 
@@ -69,6 +71,10 @@ new_matches | no_change | source_gap
 ```
 
 No contract, qualification state, evidence bundle, or publication surface is invented for the UQAM task.
+
+## Execution boundary
+
+The dispatcher does not provision containers, archives, local toolchains, or execution sandboxes. Those are task/profile concerns only when explicitly contracted. A contracted monitor that cannot obtain required executable evidence through its current actuator reports its task-native coverage-gap state; the dispatcher records that outcome without attempting to repair it with a second execution layer.
 
 ## Scheduler ledger
 
