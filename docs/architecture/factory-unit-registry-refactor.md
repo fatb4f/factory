@@ -2,7 +2,7 @@
 
 Status: current
 
-Factory is a small registry of independently owned work units. `contracts/` contains semantic CUE authority. `.agents/` contains execution procedures. Unit directories own task-local procedure, templates, and generated state where applicable.
+Factory is a small registry of independently owned work units. Shared and profile CUE under `contracts/` define semantic authority. Worker `AGENTS.md` files colocated with a worker contract define shared execution procedure. Unit directories own task-local procedure, templates, and generated state where applicable.
 
 ## Repository topology
 
@@ -15,12 +15,11 @@ factory/
 |   `-- workers/
 |       `-- upstream-monitor/
 |           |-- contract.cue
+|           |-- AGENTS.md
 |           |-- profiles_ctrl/
 |           `-- profiles_epistemic_plant_bootstrap/
 |-- .agents/
-|   |-- dispatcher/
-|   `-- workers/
-|       `-- upstream-monitor/AGENTS.md
+|   `-- dispatcher/
 |-- projects/
 |   |-- ctrl/
 |   `-- epistemic-plant-bootstrap/
@@ -35,11 +34,14 @@ The old root `contract.cue` facade is removed: consumers import `contracts:unit`
 ## Boundaries
 
 ```text
-contracts/
-    semantic CUE authority only
+contracts/workers/<worker>/contract.cue
+    shared worker semantic CUE authority
 
-.agents/workers/
-    shared worker execution procedures
+contracts/workers/<worker>/profiles_<profile>/*.cue
+    selected profile semantic CUE authority
+
+contracts/workers/<worker>/AGENTS.md
+    shared worker execution procedure
 
 <unit>/.agents/
     unit/task execution procedure and fixed templates
@@ -48,7 +50,7 @@ contracts/
     generated state/publication only when that task defines one
 ```
 
-Moving a procedure into `.agents/` does not promote it to semantic authority. For upstream-monitor, shared worker CUE plus the selected profile CUE remain authoritative; the shared and unit-local `AGENTS.md` files are execution surfaces.
+Colocation does not promote procedural Markdown to semantic authority. For upstream-monitor, shared worker CUE plus exactly one selected profile CUE package define semantics; worker and unit-local `AGENTS.md` files define execution procedure.
 
 ## Registry
 
@@ -62,7 +64,7 @@ Moving a procedure into `.agents/` does not promote it to semantic authority. Fo
 - enabled state;
 - cadence in days.
 
-A task does not need a CUE semantic contract merely to be scheduled. `authority` is optional so simple procedural watches do not inherit an invented qualification model.
+A task does not need a CUE semantic contract merely to be scheduled. `authority` is optional so simple procedural watches do not inherit an invented qualification model. The registry selects an authority/entrypoint pair; it does not redefine profile semantics.
 
 Current registrations:
 
@@ -86,10 +88,10 @@ All three remain disabled in the dispatcher registry while their existing recurr
 
 ```text
 contracts/workers/upstream-monitor/contract.cue
-        + selected profiles_<profile>/*.cue
+        + exactly one selected profiles_<profile>/*.cue
                 |
                 v
-.agents/workers/upstream-monitor/AGENTS.md
+contracts/workers/upstream-monitor/AGENTS.md
                 |
                 v
 projects/<unit>/.agents/AGENTS.md
@@ -101,12 +103,22 @@ ChatGPT / GitHub actuator
 projects/<unit>/upstream-monitor/
 ```
 
-The first line is semantic authority. The remaining `.agents` layers are procedures. Project-local run bundles remain generated evidence/publication, not authority.
+The CUE layer is semantic authority. The `AGENTS.md` layers are procedures. Project-local run bundles remain generated evidence/publication, not authority.
+
+`profiles_ctrl` and `profiles_epistemic_plant_bootstrap` are independent concrete reference profiles. Neither is the universal shape for future profiles. Shared worker vocabulary should grow only from the demonstrated intersection of independent profiles.
+
+## Execution environment
+
+The generic upstream-monitor does not require a tailored container, distributed archive, OCI image, or local executable environment. The current actuator is ChatGPT through the GitHub App; when a selected profile requires executable evidence unavailable through that actuator, the run records a coverage gap rather than asserting validation.
+
+If executable validation later becomes a demonstrated profile requirement, model its execution semantics at the narrowest profile boundary and project them to a runner adapter. A container runtime is an implementation choice unless and until its semantics are proven to be a shared worker invariant.
+
+The canonical upstream-monitor publication remains the immutable run directory. ZIP, tar, OCI, or other wrappers are optional external-consumer projections, not worker-core requirements.
 
 ## Cross-domain test
 
 `academic.uqam.events` is intentionally smaller than an upstream-monitor profile. Its current requirements are source selection, delta filtering, deduplication, relevance ranking, and concise notification. Those do not justify a new CUE semantic family yet.
 
-`world/industrial-constraints` should be modeled independently when added. Its graph, evidence, constraint, problem-set, and scenario semantics must arise from that domain rather than being copied from `ctrl`.
+`world/industrial-constraints` should be modeled independently when added. Its graph, evidence, constraint, problem-set, and scenario semantics must arise from that domain rather than being copied from either existing upstream-monitor profile.
 
 Shared Factory vocabulary should grow only from the demonstrated intersection of real units.
