@@ -4,7 +4,7 @@ package gym
 #TargetRef: close({id: #TargetID})
 
 #TargetPriority: "primary" | "supporting" | "monitor"
-#CriterionKind: "minimum" | "maximum" | "range" | "state" | "stage"
+#CriterionKind: "minimum" | "maximum" | "range" | "state" | "stage" | "trend"
 
 #Criterion: close({
 	kind:  #CriterionKind
