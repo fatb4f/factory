@@ -5,6 +5,7 @@ package gym
 #ObservationID: string
 #RecoveryID: string
 #IssueID: string
+#IssueEvidenceID: string
 #MediaID: string
 #MeasurementID: string
 #CaptureID: string
