@@ -15,13 +15,14 @@ package gym
 #DualLoadSample: close({
 	kind: "dual-load"
 	id:   #MeasurementID
+	_unit: #Unit
 	left: close({
 		value: number & >=0
-		unit:  #Unit
+		unit:  _unit
 	})
 	right: close({
 		value: number & >=0
-		unit:  #Unit
+		unit:  _unit
 	})
 	at?:        #Timestamp
 	stance?:    string
