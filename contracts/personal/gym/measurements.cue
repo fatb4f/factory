@@ -1,6 +1,8 @@
 package gym
 
 #Measurement: close({
+	kind:       "measurement"
+	id:         #MeasurementID
 	metric:     string
 	metricKind: #MetricKind
 	value:      number
@@ -12,6 +14,7 @@ package gym
 
 #DualLoadSample: close({
 	kind: "dual-load"
+	id:   #MeasurementID
 	left: close({
 		value: number & >=0
 		unit:  #Unit
@@ -26,8 +29,9 @@ package gym
 })
 
 #MediaArtifact: close({
+	kind:        "media"
 	id:          #MediaID
-	kind:        "video" | "image"
+	mediaKind:   "video" | "image"
 	capturedAt:  #Timestamp
 	uri?:        string
 	digest?:     string

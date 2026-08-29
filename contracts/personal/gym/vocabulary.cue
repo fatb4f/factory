@@ -6,6 +6,8 @@ package gym
 #RecoveryID: string
 #IssueID: string
 #MediaID: string
+#MeasurementID: string
+#CaptureID: string
 #DeviceID: string
 #Timestamp: string
 
@@ -50,13 +52,9 @@ package gym
 	"velocity" |
 	"custom"
 
-#ObservationRef: close({
-	id: #ObservationID
-})
-
-#MediaRef: close({
-	id: #MediaID
-})
+#ObservationRef: close({id: #ObservationID})
+#MeasurementRef: close({id: #MeasurementID})
+#MediaRef: close({id: #MediaID})
 
 #Provenance: close({
 	sourceKind: #SourceKind
