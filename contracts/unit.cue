@@ -1,9 +1,9 @@
 package unit
 
 #Name:     string & =~"^[a-z0-9]+(?:-[a-z0-9]+)*$"
-#UnitKind: "project" | "academic" | "world"
-#UnitID:   string & =~"^(projects|academic|world)\\.[a-z0-9]+(?:-[a-z0-9]+)*$"
-#TaskID:   string & =~"^(projects|academic|world)\\.[a-z0-9]+(?:-[a-z0-9]+)*\\.[a-z0-9]+(?:-[a-z0-9]+)*$"
+#UnitKind: "project" | "academic" | "world" | "personal"
+#UnitID:   string & =~"^(projects|academic|world|personal)\\.[a-z0-9]+(?:-[a-z0-9]+)*$"
+#TaskID:   string & =~"^(projects|academic|world|personal)\\.[a-z0-9]+(?:-[a-z0-9]+)*\\.[a-z0-9]+(?:-[a-z0-9]+)*$"
 
 #RepositoryPath: string & =~"^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$" & !~"(^|/)\\.{1,2}(/|$)"
 #AuthorityPath:  #RepositoryPath & =~"(^|/)contract\\.cue$"

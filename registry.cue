@@ -23,6 +23,11 @@ units: close({
 		kind:   "world"
 		agents: "world/industrial-constraints/.agents"
 	}
+	"personal.gym": unit.#Unit & {
+		id:     "personal.gym"
+		kind:   "personal"
+		agents: "personal/gym/.agents"
+	}
 })
 
 tasks: close({
@@ -81,6 +86,9 @@ _registryIdentity: [for id, registered in units {
 	}
 	if id =~ "^world\\." {
 		_kind: registered & {kind: "world"}
+	}
+	if id =~ "^personal\\." {
+		_kind: registered & {kind: "personal"}
 	}
 }]
 
