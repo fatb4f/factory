@@ -30,6 +30,7 @@ package gym
 	chains:           [...#ChainRef]
 	targets:          [...#TargetRef]
 	compositeTargets?: [...#TargetRef]
+	equilibrium?:      #ProgramEquilibrium
 	recoveryBudget:   #RecoveryBudget
 	blockPolicy:      #BlockPolicy
 	dataRequirements: [...#DataRequirement]
@@ -48,6 +49,8 @@ package gym
 	program: #ProgramRef
 	observabilityComplete: bool
 	controllabilityComplete: bool
+	equilibriumObservabilityComplete?: bool
 	unobservedTargets?: [...#TargetRef]
 	unactuatedTargets?: [...#TargetRef]
+	unobservedEquilibriumMetrics?: [...#EquilibriumMetricRef]
 })
