@@ -1,6 +1,6 @@
 # Dispatcher execution ledger
 
-This directory contains scheduler state only. It is not task, domain, evidence, qualification, or publication authority.
+This directory contains scheduler state only. It is not task, domain, evidence, qualification, comparison, or publication authority.
 
 A normal dispatcher execution writes one file named `<task-id>.json`:
 
@@ -13,7 +13,9 @@ A normal dispatcher execution writes one file named `<task-id>.json`:
 }
 ```
 
-`outcome` is an opaque task-native label. For a contracted upstream monitor it may be a terminal state; for another task it may be `new_matches`, `no_change`, `source_gap`, or another procedure-defined value. The scheduler does not interpret it.
+`outcome` is an opaque task-native label. For a contracted upstream monitor it may be a terminal state; for another task it may be `baseline_established`, `new_matches`, `no_change`, `source_gap`, `comparison_gap`, `state_conflict`, or another procedure-defined value. The scheduler does not interpret it.
+
+Task-owned persistent state belongs with the task. For example, UQAM event comparison state lives under `academic/uqam/events/state/`; it must not be copied into this scheduler ledger.
 
 During scheduler cutover only, an existing recurring automation may seed cadence without fabricating an outcome:
 
@@ -27,4 +29,4 @@ During scheduler cutover only, an existing recurring automation may seed cadence
 
 A seed may also carry an existing task `run_id` when one is independently available. `seeded_from` is scheduler migration metadata, not task evidence. The first actual dispatcher execution replaces the seed with the normal form and removes `seeded_from`.
 
-`last_run_at` alone determines the next scheduled invocation. Git history preserves earlier scheduler state; task-specific publication surfaces preserve task evidence and run history where such surfaces exist.
+`last_run_at` alone determines the next scheduled invocation. Git history preserves earlier scheduler state; task-specific state, publication surfaces, and run bundles preserve task semantics where declared.

@@ -54,11 +54,12 @@ tasks: close({
 		}
 	}
 	"academic.uqam.events": unit.#Task & {
-		id:      "academic.uqam.events"
-		name:    "events"
-		unit:    "academic.uqam"
-		agent:   "academic/uqam/.agents/events/AGENTS.md"
-		enabled: true
+		id:        "academic.uqam.events"
+		name:      "events"
+		unit:      "academic.uqam"
+		authority: "contracts/academic/uqam/events/contract.cue"
+		agent:     "academic/uqam/.agents/events/AGENTS.md"
+		enabled:   true
 		cadence: {
 			everyDays: 1
 		}
