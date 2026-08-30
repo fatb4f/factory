@@ -1,16 +1,31 @@
 package gym
 
-#MechanicalAdmissionID: string
-#MechanicalAdmissionRef: close({id: #MechanicalAdmissionID})
+#MechanicalAdmissionDecisionID: string
+#MechanicalAdmissionDecisionRef: close({id: #MechanicalAdmissionDecisionID})
+#MechanicalAdmissionGrantID: string
+#MechanicalAdmissionGrantRef: close({id: #MechanicalAdmissionGrantID})
 #NormalizedCapacityID: string
 #NormalizedCapacityRef: close({id: #NormalizedCapacityID})
-#ComparisonAdmissionID: string
-#ComparisonAdmissionRef: close({id: #ComparisonAdmissionID})
+#NormalizedCapacityVectorID: string
+#NormalizedCapacityVectorRef: close({id: #NormalizedCapacityVectorID})
+#CapacityAggregateID: string
+#CapacityAggregateRef: close({id: #CapacityAggregateID})
+#ComparisonAdmissionDecisionID: string
+#ComparisonAdmissionDecisionRef: close({id: #ComparisonAdmissionDecisionID})
+#ComparisonAdmissionGrantID: string
+#ComparisonAdmissionGrantRef: close({id: #ComparisonAdmissionGrantID})
+
+// 0.4.0 compatibility aliases. New code should use the Decision names to make
+// the distinction between a decision and the capability it emits explicit.
+#MechanicalAdmissionID: #MechanicalAdmissionDecisionID
+#MechanicalAdmissionRef: #MechanicalAdmissionDecisionRef
+#ComparisonAdmissionID: #ComparisonAdmissionDecisionID
+#ComparisonAdmissionRef: #ComparisonAdmissionDecisionRef
 
 #MechanicalAdmissionState: "admitted" | "partial" | "rejected" | "unknown"
 
-// New analytical basis is expressed directly in mechanical demands. The legacy
-// #DemandBasis remains available for existing standards and migration fixtures.
+// An exposure may present several demands for admission. Capacity, however, is
+// always produced one demand at a time through a demand-specific grant.
 #MechanicalDemandBasis: close({
 	pattern:       #MovementPatternRef
 	demands:       [...#MechanicalDemandRef] & [_, ...]
@@ -18,51 +33,121 @@ package gym
 	normalization: #NormalizationBasis
 })
 
-// Mechanical admission answers whether the observed scale position actually
-// exposes the stated demand basis. It is separate from comparison admission.
-#MechanicalAdmission: close({
-	id:       #MechanicalAdmissionID
+#MechanicalAdmissionGrant: close({
+	id:       #MechanicalAdmissionGrantID
+	decision: #MechanicalAdmissionDecisionRef
+	exposure: #ExposureID
+	demand:   #MechanicalDemandRef
+})
+
+#MechanicalAdmissionGranted: close({
+	id:       #MechanicalAdmissionDecisionID
 	exposure: #ExposureID
 	position: #ScalePosition
 	basis:    #MechanicalDemandBasis
-	state:    #MechanicalAdmissionState
+	state:    "admitted"
+	reasons?: [...string]
+	evidence: [...#EvidenceLink] & [_, ...]
+	uncertainty?: #Uncertainty
+	grant:    #MechanicalAdmissionGrant
+})
+
+#MechanicalAdmissionNotGranted: close({
+	id:       #MechanicalAdmissionDecisionID
+	exposure: #ExposureID
+	position: #ScalePosition
+	basis:    #MechanicalDemandBasis
+	state:    "partial" | "rejected" | "unknown"
 	reasons?: [...string]
 	evidence: [...#EvidenceLink] & [_, ...]
 	uncertainty?: #Uncertainty
 })
 
+// Only the admitted branch contains a grant. The semantic-integrity registry
+// additionally proves that a referenced grant resolves to that successful
+// decision and to a demand actually covered by its basis.
+#MechanicalAdmissionDecision:
+	#MechanicalAdmissionGranted |
+	#MechanicalAdmissionNotGranted
+
+#MechanicalAdmission: #MechanicalAdmissionDecision
+
+// ComparisonBasis adds compatibility context only. Normalization authority
+// remains on each NormalizedCapacity and is checked when compatibility is
+// granted; it is intentionally not repeated here.
 #ComparisonBasis: close({
-	normalizationClass: #NormalizationKind
-	demand?:             #MechanicalDemandRef
-	legacyChannel?:      #DemandChannelRef
-	movementContext:     #MovementPatternRef
-	phase?:              string
-	contractionRegime?:  #ContractionMode
+	movementContext:    #MovementPatternRef
+	phase?:             #PatternPhaseRef
+	contractionRegime?: #ContractionMode
 	romBasis?:           string
 	loadBasis?:          string
 	temporalBasis?:      string
 	referenceVersion:    string
 })
 
+// Capacity is demand-specific. A plural admitted demand basis can therefore
+// produce several capacities, never an unexplained scalar over a demand vector.
 #NormalizedCapacity: close({
-	id:        #NormalizedCapacityID
-	basis:     #MechanicalDemandBasis
-	value:     #DerivedScalar
-	admission: #MechanicalAdmissionRef
-	comparisonBasis: #ComparisonBasis
+	id:            #NormalizedCapacityID
+	demand:        #MechanicalDemandRef
+	value:         #DerivedScalar
+	grant:         #MechanicalAdmissionGrantRef
+	normalization: #NormalizationBasis
+})
+
+#NormalizedCapacityVector: close({
+	id:      #NormalizedCapacityVectorID
+	entries: [...#NormalizedCapacityRef] & [_, ...]
+})
+
+// Any vector-to-scalar operation is explicit, evidence-bearing and versioned.
+#CapacityAggregate: close({
+	id:       #CapacityAggregateID
+	vector:   #NormalizedCapacityVectorRef
+	value:    #DerivedScalar
+	method:   string
+	weights?: [...number]
+	executor?: #OperationExecutorRef
+	version:  string
+	evidence: [...#EvidenceLink] & [_, ...]
 })
 
 #ComparisonAdmissionState: "compatible" | "incompatible" | "unknown"
 
-#ComparisonAdmission: close({
-	id:     #ComparisonAdmissionID
+#ComparisonAdmissionGrant: close({
+	id:       #ComparisonAdmissionGrantID
+	decision: #ComparisonAdmissionDecisionRef
+	left:     #NormalizedCapacityRef
+	right:    #NormalizedCapacityRef
+	basis:    #ComparisonBasis
+})
+
+#ComparisonAdmissionCompatible: close({
+	id:     #ComparisonAdmissionDecisionID
 	left:   #NormalizedCapacityRef
 	right:  #NormalizedCapacityRef
 	basis:  #ComparisonBasis
-	state:  #ComparisonAdmissionState
+	state:  "compatible"
+	reasons?: [...string]
+	evidence: [...#EvidenceLink] & [_, ...]
+	grant:   #ComparisonAdmissionGrant
+})
+
+#ComparisonAdmissionNotCompatible: close({
+	id:     #ComparisonAdmissionDecisionID
+	left:   #NormalizedCapacityRef
+	right:  #NormalizedCapacityRef
+	basis:  #ComparisonBasis
+	state:  "incompatible" | "unknown"
 	reasons?: [...string]
 	evidence: [...#EvidenceLink] & [_, ...]
 })
+
+#ComparisonAdmissionDecision:
+	#ComparisonAdmissionCompatible |
+	#ComparisonAdmissionNotCompatible
+
+#ComparisonAdmission: #ComparisonAdmissionDecision
 
 #ContextualCapacityRelationType:
 	"agonist-antagonist" |
@@ -80,20 +165,20 @@ package gym
 
 #CapacityRelationContext: close({
 	movement: #MovementPatternRef
-	phase?:   string
+	phase?:   #PatternPhaseRef
 	geometry?: string
 	role?:    #MechanicalRole
 })
 
 #ContextualCapacityRelation: close({
-	id:         string
-	source:     #NormalizedCapacityRef
-	target:     #NormalizedCapacityRef
-	admission:  #ComparisonAdmissionRef
+	id:           string
+	source:       #NormalizedCapacityRef
+	target:       #NormalizedCapacityRef
+	grant:        #ComparisonAdmissionGrantRef
 	relationType: #ContextualCapacityRelationType
-	context:    #CapacityRelationContext
+	context:      #CapacityRelationContext
 	expectedRelation?: string
-	observed?:  #DerivedScalar
-	evidence:   [...#EvidenceLink] & [_, ...]
+	observed?:    #DerivedScalar
+	evidence:     [...#EvidenceLink] & [_, ...]
 	uncertainty?: #Uncertainty
 })

@@ -1,5 +1,13 @@
 package gym
 
+// These row contracts are qualification targets for generated projections.
+// They are not independent semantic authority. The intended generation path is:
+// CUE -> JSON Schema -> Pydantic -> projection policy -> Ibis/Malloy/storage.
+projectionPolicy: close({
+	authority: "derived-qualification-target"
+	generationPath: ["cue", "json-schema", "pydantic", "projection-policy", "relational"]
+})
+
 #ExposureRow: close({
 	sessionID:           #SessionID
 	exposureID:          #ExposureID
@@ -13,7 +21,7 @@ package gym
 	rangeStage?:         string
 	rangeOrder?:         int & >=0
 	mechanicalAdmission?: #MechanicalQualityState
-	mechanicalAdmissionID?: #MechanicalAdmissionID
+	mechanicalAdmissionID?: #MechanicalAdmissionDecisionID
 	limiterRegion?:      string
 	limiterSide?:        #Side
 	sourceObservationID: #ObservationID
@@ -132,13 +140,35 @@ package gym
 	evaluatedAt?:  #Timestamp
 })
 
-// Mechanical semantic projections. These are deliberately relational and
-// stable enough to map directly into Ibis/DuckDB/BigQuery and Malloy models.
+// Evidence is relationally first-class. Domain rows never collapse a one-to-many
+// evidence relation into a single source/class pair.
+#EvidenceRow: close({
+	evidenceID:   #EvidenceID
+	class:        #EvidenceClass
+	sourceID:     string
+	providerID?:  #EvidenceProviderID
+	method?:      string
+	modelVersion?: string
+	confidence?:  number & >=0 & <=1
+	uncertaintyKind?:       "interval" | "score" | "qualitative"
+	uncertaintyLower?:      number
+	uncertaintyUpper?:      number
+	uncertaintyConfidence?: number & >=0 & <=1
+})
+
+#ObjectEvidenceRow: close({
+	objectKind: string
+	objectID:   string
+	evidenceID: #EvidenceID
+	role:       #EvidenceRole
+	ordinal?:   int & >=0
+})
+
 #MechanicalDemandRow: close({
 	demandID:     #MechanicalDemandID
 	objectiveID:  #MechanicalObjectiveID
 	movementID:   #MovementPatternID
-	phase:        string
+	phaseID:      #PatternPhaseID
 	targetKind:   #MechanicalTargetKind
 	targetID:     string
 	dof?:         string
@@ -152,13 +182,11 @@ package gym
 #MechanicalContributionRow: close({
 	contributionID: #MechanicalContributionID
 	movementID:     #MovementPatternID
-	phase:          string
+	phaseID:        #PatternPhaseID
 	contributorID:  #ContributorID
 	demandID:       #MechanicalDemandID
 	contractionMode?: #ContractionMode
 	confidence?:    number & >=0 & <=1
-	evidenceClass:  #ContributionEvidenceClass
-	sourceID:       string
 })
 
 #MechanicalRoleAssignmentRow: close({
@@ -168,29 +196,59 @@ package gym
 })
 
 #MechanicalAdmissionRow: close({
-	admissionID: #MechanicalAdmissionID
-	exposureID:  #ExposureID
-	familyID:    #ExerciseFamilyID
-	state:       #MechanicalAdmissionState
-	patternID:   #MovementPatternID
-	evidenceCount: int & >=1
+	decisionID:   #MechanicalAdmissionDecisionID
+	exposureID:   #ExposureID
+	familyID:     #ExerciseFamilyID
+	state:        #MechanicalAdmissionState
+	patternID:    #MovementPatternID
+	normalizationClass: #NormalizationKind
+	grantID?:     #MechanicalAdmissionGrantID
+})
+
+#MechanicalAdmissionGrantRow: close({
+	grantID:    #MechanicalAdmissionGrantID
+	decisionID: #MechanicalAdmissionDecisionID
+	exposureID: #ExposureID
+	demandID:   #MechanicalDemandID
 })
 
 #NormalizedCapacityRow: close({
 	capacityID:  #NormalizedCapacityID
-	admissionID: #MechanicalAdmissionID
-	patternID:   #MovementPatternID
+	grantID:     #MechanicalAdmissionGrantID
+	demandID:    #MechanicalDemandID
 	value:       number
 	unit?:       #Unit
 	source:      #DerivedSource
 	normalizationClass: #NormalizationKind
+	normalizationProtocolID?: #ProtocolID
+	uncertaintyKind?:       "interval" | "score" | "qualitative"
+	uncertaintyLower?:      number
+	uncertaintyUpper?:      number
+	uncertaintyConfidence?: number & >=0 & <=1
+})
+
+#ComparisonAdmissionRow: close({
+	decisionID: #ComparisonAdmissionDecisionID
+	leftCapacityID:  #NormalizedCapacityID
+	rightCapacityID: #NormalizedCapacityID
+	state:      #ComparisonAdmissionState
+	movementID: #MovementPatternID
+	phaseID?:   #PatternPhaseID
 	referenceVersion: string
+	grantID?:   #ComparisonAdmissionGrantID
+})
+
+#ComparisonAdmissionGrantRow: close({
+	grantID:    #ComparisonAdmissionGrantID
+	decisionID: #ComparisonAdmissionDecisionID
+	leftCapacityID:  #NormalizedCapacityID
+	rightCapacityID: #NormalizedCapacityID
 })
 
 #ContributionDistributionRow: close({
 	distributionID: #ContributionDistributionID
 	movementID:     #MovementPatternID
-	phase:          string
+	phaseID:        #PatternPhaseID
 	demandID:       #MechanicalDemandID
 	contributorID:  #ContributorID
 	contributionID?: #MechanicalContributionID
@@ -202,10 +260,18 @@ package gym
 	observationID: #CompensationObservationID
 	markerID:      #CompensationMarkerID
 	movementID:    #MovementPatternID
-	phase:         string
+	phaseID:       #PatternPhaseID
 	side?:         #Side
+	onset?:        number
+	onsetUnit?:    #Unit
 	peak?:         number
+	peakUnit?:     #Unit
+	integral?:     number
+	integralUnit?: #Unit
 	duration?:     number
+	durationUnit?: #Unit
+	deviationFromReference?:     number
+	deviationFromReferenceUnit?: #Unit
 	confidence?:   number & >=0 & <=1
 })
 
@@ -219,7 +285,7 @@ package gym
 #FunctionalEquilibriumRow: close({
 	programID?:    #ProgramID
 	movementID:    #MovementPatternID
-	phase:         string
+	phaseID:       #PatternPhaseID
 	demandID:      #MechanicalDemandID
 	residual:      number
 	unit?:         #Unit
@@ -240,11 +306,16 @@ projectionRelations: close({
 	adaptationDimensions:  "#AdaptationDimensionRow"
 	equilibrium:           "#EquilibriumRow"
 	programTargets:        "#ProgramTargetRow"
+	evidence:              "#EvidenceRow"
+	objectEvidence:        "#ObjectEvidenceRow"
 	mechanicalDemands:     "#MechanicalDemandRow"
 	mechanicalContributions: "#MechanicalContributionRow"
 	mechanicalRoles:       "#MechanicalRoleAssignmentRow"
 	mechanicalAdmissions:  "#MechanicalAdmissionRow"
+	mechanicalAdmissionGrants: "#MechanicalAdmissionGrantRow"
 	normalizedCapacities:  "#NormalizedCapacityRow"
+	comparisonAdmissions:  "#ComparisonAdmissionRow"
+	comparisonAdmissionGrants: "#ComparisonAdmissionGrantRow"
 	contributionDistribution: "#ContributionDistributionRow"
 	compensationObservations: "#CompensationObservationRow"
 	compensationQualifications: "#CompensationQualificationRow"

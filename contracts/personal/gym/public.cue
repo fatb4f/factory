@@ -1,6 +1,9 @@
 package gym
 
-public: close({
+// Convenience export namespace. Domain registries and contracts own their own
+// closure; recursively closing this composed index makes referenced registry
+// fields illegal under CUE 0.16.x.
+public: {
 	contract:          gymContract
 	body:              bodyRegions
 	chains:            chains
@@ -17,8 +20,9 @@ public: close({
 	programEquilibrium: ankleKneePelvisEquilibrium
 	dataRequirements:  ankleKneePelvisDataRequirements
 	projections:       projectionRelations
+	projectionPolicy:  projectionPolicy
 	policies: close({
 		recovery: defaultRecoveryPolicy
 		sessionAdmission: defaultSessionAdmissionPolicy
 	})
-})
+}

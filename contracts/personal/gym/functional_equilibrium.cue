@@ -15,7 +15,7 @@ package gym
 #ContributionDistribution: close({
 	id:        #ContributionDistributionID
 	movement:  #MovementPatternRef
-	phase:     string
+	phase:     #PatternPhaseRef
 	demand:    #MechanicalDemandRef
 	entries:   [...#ContributionAllocationEntry] & [_, ...]
 	evidence:  [...#EvidenceLink] & [_, ...]
@@ -42,7 +42,7 @@ package gym
 #EquilibriumProjection: close({
 	program?:   #ProgramRef
 	movement:   #MovementPatternRef
-	phase:      string
+	phase:      #PatternPhaseRef
 	demandResiduals: [...#DemandResidual] & [_, ...]
 	contributionDistribution?: #ContributionDistributionRef
 	distributionResidual?:      #DistributionResidual
