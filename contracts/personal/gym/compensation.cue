@@ -41,7 +41,7 @@ package gym
 	target:          #MechanicalTarget
 	mechanicalType:  #CompensationMechanicalType
 	direction?:      string
-	phase:           string
+	phase:           #PatternPhaseRef
 	expectedEnvelope?: #CompensationEnvelope
 	detectionBasis:  #CompensationDetectionBasis
 	normalizationBasis?: #NormalizationBasis
@@ -51,7 +51,7 @@ package gym
 	id:       #CompensationObservationID
 	marker:   #CompensationMarkerRef
 	movement: #MovementPatternRef
-	phase:    string
+	phase:    #PatternPhaseRef
 	side?:    #Side
 	onset?:   #DerivedScalar
 	peak?:    #DerivedScalar
