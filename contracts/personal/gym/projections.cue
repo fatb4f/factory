@@ -12,7 +12,8 @@ package gym
 	assistanceLevel?:    string
 	rangeStage?:         string
 	rangeOrder?:         int & >=0
-	mechanicalAdmission?: #MechanicalAdmission
+	mechanicalAdmission?: #MechanicalQualityState
+	mechanicalAdmissionID?: #MechanicalAdmissionID
 	limiterRegion?:      string
 	limiterSide?:        #Side
 	sourceObservationID: #ObservationID
@@ -131,6 +132,102 @@ package gym
 	evaluatedAt?:  #Timestamp
 })
 
+// Mechanical semantic projections. These are deliberately relational and
+// stable enough to map directly into Ibis/DuckDB/BigQuery and Malloy models.
+#MechanicalDemandRow: close({
+	demandID:     #MechanicalDemandID
+	objectiveID:  #MechanicalObjectiveID
+	movementID:   #MovementPatternID
+	phase:        string
+	targetKind:   #MechanicalTargetKind
+	targetID:     string
+	dof?:         string
+	quantity:     #MechanicalQuantity
+	plane?:       #MovementPlane
+	axis?:        string
+	direction?:   string
+	legacyChannelID?: #DemandChannelID
+})
+
+#MechanicalContributionRow: close({
+	contributionID: #MechanicalContributionID
+	movementID:     #MovementPatternID
+	phase:          string
+	contributorID:  #ContributorID
+	demandID:       #MechanicalDemandID
+	contractionMode?: #ContractionMode
+	confidence?:    number & >=0 & <=1
+	evidenceClass:  #ContributionEvidenceClass
+	sourceID:       string
+})
+
+#MechanicalRoleAssignmentRow: close({
+	contributionID: #MechanicalContributionID
+	objectiveID:    #MechanicalObjectiveID
+	role:           #MechanicalRole
+})
+
+#MechanicalAdmissionRow: close({
+	admissionID: #MechanicalAdmissionID
+	exposureID:  #ExposureID
+	familyID:    #ExerciseFamilyID
+	state:       #MechanicalAdmissionState
+	patternID:   #MovementPatternID
+	evidenceCount: int & >=1
+})
+
+#NormalizedCapacityRow: close({
+	capacityID:  #NormalizedCapacityID
+	admissionID: #MechanicalAdmissionID
+	patternID:   #MovementPatternID
+	value:       number
+	unit?:       #Unit
+	source:      #DerivedSource
+	normalizationClass: #NormalizationKind
+	referenceVersion: string
+})
+
+#ContributionDistributionRow: close({
+	distributionID: #ContributionDistributionID
+	movementID:     #MovementPatternID
+	phase:          string
+	demandID:       #MechanicalDemandID
+	contributorID:  #ContributorID
+	contributionID?: #MechanicalContributionID
+	allocation?:    number
+	projectionVersion: string
+})
+
+#CompensationObservationRow: close({
+	observationID: #CompensationObservationID
+	markerID:      #CompensationMarkerID
+	movementID:    #MovementPatternID
+	phase:         string
+	side?:         #Side
+	peak?:         number
+	duration?:     number
+	confidence?:   number & >=0 & <=1
+})
+
+#CompensationQualificationRow: close({
+	observationID: #CompensationObservationID
+	classification: #CompensationClassification
+	qualifier?:     #CompensationQualifier
+	policyVersion:  string
+})
+
+#FunctionalEquilibriumRow: close({
+	programID?:    #ProgramID
+	movementID:    #MovementPatternID
+	phase:         string
+	demandID:      #MechanicalDemandID
+	residual:      number
+	unit?:         #Unit
+	distributionID?: #ContributionDistributionID
+	compensationProjectionID?: #CompensationProjectionID
+	projectionVersion: string
+})
+
 projectionRelations: close({
 	exposures:             "#ExposureRow"
 	constraints:           "#ConstraintRow"
@@ -143,4 +240,13 @@ projectionRelations: close({
 	adaptationDimensions:  "#AdaptationDimensionRow"
 	equilibrium:           "#EquilibriumRow"
 	programTargets:        "#ProgramTargetRow"
+	mechanicalDemands:     "#MechanicalDemandRow"
+	mechanicalContributions: "#MechanicalContributionRow"
+	mechanicalRoles:       "#MechanicalRoleAssignmentRow"
+	mechanicalAdmissions:  "#MechanicalAdmissionRow"
+	normalizedCapacities:  "#NormalizedCapacityRow"
+	contributionDistribution: "#ContributionDistributionRow"
+	compensationObservations: "#CompensationObservationRow"
+	compensationQualifications: "#CompensationQualificationRow"
+	functionalEquilibrium: "#FunctionalEquilibriumRow"
 })
