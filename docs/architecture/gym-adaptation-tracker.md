@@ -22,6 +22,7 @@ Mechanical quality and systemic recovery cost are co-equal admission criteria.
 2. `personal/gym/.agents/`: conversational acquisition instructions and templates.
 3. `personal/gym/fixtures/`: synthetic examples used to exercise the contracts without publishing personal training data.
 4. `personal/gym/projections/`: dormant relational runtime design for DuckDB/Ibis.
+5. `personal/gym/docs/`: Gym-local architecture for external semantic conventions and analytics substrates.
 
 Observations remain fact-only. Normalization may resolve inherited setup and corrections, but it may not invent facts. Analysis creates derived assertions and never rewrites source observations.
 
@@ -63,8 +64,34 @@ Persistent anomalies receive stable issue identities. Observations, recovery che
 
 Association projections are explicitly non-causal. They may describe repeated relationships between exposure dimensions and recovery/mechanical outcomes while retaining source references.
 
+## Semantic analytics architecture
+
+The Gym domain may reuse external standards and analytics substrates without delegating semantic authority to them.
+
+The proposed composition is:
+
+```text
+BIDS-Motion + ISB conventions + UCUM
+              ↓
+       Gym CUE authority
+              ↓
+    canonical relational model
+              ↓
+       Ibis + Malloy
+              ↓
+      DuckDB / BigQuery
+```
+
+C3D, OpenSim, OpenCap, public biomechanics datasets, wearable schemas, and other source formats enter through normalization adapters. External reference distributions may contextualize observations but do not automatically become program targets.
+
+The detailed design, authority boundaries, candidate relational dimensions/facts, semantic-query role for Malloy, public-reference plane, and implementation sequence are documented in:
+
+`personal/gym/docs/semantic-analytics-stack.md`
+
 ## Relational projection
 
 The canonical state remains CUE + captured unit data. Relational tables are generated projections for DuckDB/Ibis. Initial row contracts cover exposures, constraints, recovery, DOMS, dual-load samples, video metrics, issue evidence, session assessments, and adaptation dimensions.
+
+Malloy is a candidate semantic analytics layer over the generated relational surface, not an additional semantic authority. Important joins, measures, and views should originate from or be checked against Gym CUE metric/relation definitions.
 
 Runtime dependencies should be added only after the real session corpus stabilizes the vocabulary and repeated queries justify the projection layer.
