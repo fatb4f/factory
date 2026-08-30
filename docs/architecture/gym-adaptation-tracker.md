@@ -18,13 +18,15 @@ Mechanical quality and systemic recovery cost are co-equal admission criteria.
 
 ## Authority layers
 
-1. `contracts/personal/gym/`: CUE vocabulary, capture, exercise, analysis, issue, and projection authority.
+1. `contracts/personal/gym/`: CUE vocabulary, capture, exercise, analysis, issue, runtime-evidence, and projection authority.
 2. `personal/gym/.agents/`: conversational acquisition instructions and templates.
 3. `personal/gym/fixtures/`: synthetic examples used to exercise the contracts without publishing personal training data.
 4. `personal/gym/projections/`: dormant relational runtime design for DuckDB/Ibis.
-5. `personal/gym/docs/`: Gym-local architecture for external semantic conventions and analytics substrates.
+5. `personal/gym/docs/`: Gym-local architecture for external semantic conventions, biomechanics runtimes, and analytics substrates.
 
 Observations remain fact-only. Normalization may resolve inherited setup and corrections, but it may not invent facts. Analysis creates derived assertions and never rewrites source observations.
+
+External numerical objects are also non-authoritative. `ktk.TimeSeries`, Pyomeca/xarray arrays, OpenSim models, Pose2Sim outputs, and Malloy measures may participate in execution, but none becomes the Gym domain model.
 
 ## Capture model
 
@@ -42,9 +44,11 @@ Repeated standardized tests are preferred for longitudinal use. Interpretation s
 
 ### Video
 
-`#MediaArtifact` registers the capture. Video-derived angle, ROM, timing, velocity, and symmetry values are separate measurements linked by media ID and marked with video provenance/certainty.
+`#MediaArtifact` registers the capture. Video-derived angle, ROM, timing, velocity, symmetry, pose, and reconstructed-coordinate values are separate measurements linked by media ID and marked with derivation provenance/certainty.
 
-This permits later computer-vision adapters without changing the session contract.
+Future camera nodes should preserve device, stream, clock-domain, frame-rate, calibration, synchronization, orientation/coordinate, and content-digest metadata independently of the pose-estimation implementation.
+
+This permits Pose2Sim, OpenCap, or future computer-vision adapters without changing the session contract.
 
 ## Analysis model
 
@@ -58,40 +62,95 @@ Session analysis retains separate vectors for:
 
 No composite strength or readiness score is authoritative in v1. Adaptation comparisons use dimension directions and a Pareto-style class (`dominates-previous`, `mixed`, `equivalent`, `dominated-by-previous`, `insufficient-evidence`).
 
+Machine-derived biomechanical observations remain inputs to these Gym analyses. A runtime can calculate an angle, force feature, timing feature, EMG envelope, or reconstructed trajectory; Gym determines whether that observation is protocol-comparable and what it means for capacity, compensation, redistribution, recovery, or equilibrium.
+
 ## Issues and associations
 
-Persistent anomalies receive stable issue identities. Observations, recovery checkpoints, measurements, and session assessments can support, contradict, or contextualize an issue.
+Persistent anomalies receive stable issue identities. Observations, recovery checkpoints, measurements, machine-derived features, and session assessments can support, contradict, or contextualize an issue.
 
-Association projections are explicitly non-causal. They may describe repeated relationships between exposure dimensions and recovery/mechanical outcomes while retaining source references.
+Association projections are explicitly non-causal. They may describe repeated relationships between exposure dimensions and recovery/mechanical outcomes while retaining source references and runtime derivation lineage.
 
 ## Semantic analytics architecture
 
-The Gym domain may reuse external standards and analytics substrates without delegating semantic authority to them.
+The Gym domain may reuse external standards, biomechanics runtimes, and analytics substrates without delegating semantic authority to them.
 
-The proposed composition is:
+The revised composition is:
 
 ```text
 BIDS-Motion + ISB conventions + UCUM
-              ↓
+              │
+              ├── Open mHealth / IEEE 1752.1
+              │
+              ▼
        Gym CUE authority
-              ↓
-    canonical relational model
-              ↓
-       Ibis + Malloy
-              ↓
-      DuckDB / BigQuery
+              │
+              ▼
+   capture / signal artifacts
+              │
+              ▼
+ qualified biomechanics runtimes
+              │
+      ┌───────┼──────────────┐
+      ▼       ▼              ▼
+ KTK/Pyomeca  Pose2Sim/    OpenSim/
+ low-level    OpenCap       biorbd
+ processing   video→3D      mechanics
+      │       │              │
+      └───────┴──────┬───────┘
+                     ▼
+        canonical derived observations
+                     │
+                     ▼
+          canonical relational model
+                     │
+              Ibis + Malloy
+                     │
+             DuckDB / BigQuery
 ```
 
-C3D, OpenSim, OpenCap, public biomechanics datasets, wearable schemas, and other source formats enter through normalization adapters. External reference distributions may contextualize observations but do not automatically become program targets.
+This separates four concerns:
 
-The detailed design, authority boundaries, candidate relational dimensions/facts, semantic-query role for Malloy, public-reference plane, and implementation sequence are documented in:
+1. BIDS-Motion/ISB/UCUM provide external vocabulary and conventions.
+2. Gym CUE defines canonical meaning and admission rules.
+3. KTK/Pyomeca/Pose2Sim/OpenCap/OpenSim/biorbd are replaceable, qualified numerical executors.
+4. Ibis/Malloy/DuckDB/BigQuery operate over canonical projections after derivation.
+
+C3D, OpenSim, Pose2Sim, OpenCap, public biomechanics datasets, wearable schemas, and other source formats enter through normalization/runtime adapters. External reference distributions may contextualize observations but do not automatically become program targets.
+
+The detailed design, authority boundaries, candidate relational dimensions/facts, runtime qualification rules, KTK/Pyomeca differential, markerless-capture path, semantic-query role for Malloy, public-reference plane, and implementation sequence are documented in:
 
 `personal/gym/docs/semantic-analytics-stack.md`
 
+## Biomechanics execution boundary
+
+The first numerical runtime class is generic time-series/geometry processing.
+
+Kinetics Toolkit is the initial candidate because it already provides time/event management, filtering, cycles, C3D handling, coordinate transforms, 3D angle extraction, and kinematic reconstruction. Pyomeca is retained as the closest OSS peer and differential backend, using xarray-backed biomechanical arrays and broad biomechanics file support.
+
+Canonical execution should therefore look like:
+
+```text
+Gym operation contract
+        │
+        ├── KTK adapter
+        └── Pyomeca adapter
+                │
+                ▼
+      canonical DerivedObservation
+                +
+          RuntimeEvidence
+```
+
+The same principle applies upstream to Pose2Sim/OpenCap and downstream to OpenSim/biorbd. Runtime identity, version, parameters, inputs, calibration/synchronization references, coordinate convention, quality flags, and output lineage must remain available for reproducibility and comparability checks.
+
+Runtime equivalence is contractual. Same-name/same-unit outputs are not automatically comparable.
+
 ## Relational projection
 
-The canonical state remains CUE + captured unit data. Relational tables are generated projections for DuckDB/Ibis. Initial row contracts cover exposures, constraints, recovery, DOMS, dual-load samples, video metrics, issue evidence, session assessments, and adaptation dimensions.
+The canonical state remains CUE + captured unit data + admitted derived observations. Relational tables are generated projections for DuckDB/Ibis. Initial row contracts cover exposures, constraints, recovery, DOMS, dual-load samples, video metrics, runtime executions, issue evidence, session assessments, and adaptation dimensions.
+
+High-frequency video, pose, IMU, EMG, GRF, and kinematic series belong in a signal/object/columnar layer. The analytical warehouse receives bounded features, distributions, quality metadata, and lineage rather than one row per raw sample by default.
 
 Malloy is a candidate semantic analytics layer over the generated relational surface, not an additional semantic authority. Important joins, measures, and views should originate from or be checked against Gym CUE metric/relation definitions.
 
-Runtime dependencies should be added only after the real session corpus stabilizes the vocabulary and repeated queries justify the projection layer.
+Runtime dependencies should be added only after fixtures establish their operation-level value. The proposed order is KTK first, Pyomeca differential qualification second, relational projection, then Pose2Sim once camera synchronization/calibration contracts are stable. OpenSim/biorbd remain optional until an admitted metric actually requires explicit musculoskeletal modeling.
