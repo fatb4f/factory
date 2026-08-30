@@ -1,6 +1,8 @@
 package gym
 
-#MechanicalAdmission: "clean" | "marginal" | "exceeded" | "unknown"
+// Mechanical quality is the legacy Tier-0 execution-quality state. The
+// first-class #MechanicalAdmission object lives in admission.cue.
+#MechanicalQualityState: "clean" | "marginal" | "exceeded" | "unknown"
 #RecoveryCostLevel: "low" | "moderate" | "high" | "exceeded" | "unknown"
 #ProgressEligibility: "eligible" | "hold" | "reduce" | "provisional" | "unknown"
 #Direction: "improved" | "unchanged" | "regressed" | "unknown"
@@ -17,9 +19,10 @@ package gym
 
 #ExposureAssessment: close({
 	exposure:   #ExposureID
-	mechanical: #MechanicalAdmission
+	mechanical: #MechanicalQualityState
 	capacity:   #CapacityVector
 	sources:    [...#ObservationRef]
+	admission?: #MechanicalAdmissionRef
 })
 
 #RecoverySummary: close({

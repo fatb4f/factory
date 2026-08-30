@@ -20,6 +20,13 @@ package gym
 	limiter?:     #Limiter
 	measurements?: [...#MeasurementRef]
 	media?:        [...#MediaRef]
+
+	// Additive semantic interpretation. Historical Tier-0 capture remains valid
+	// when these fields are absent; it is simply not mechanically admitted yet.
+	scalePosition?:       #ScalePosition
+	mechanicalAdmission?: #MechanicalAdmissionRef
+	demandBasis?:         [...#MechanicalDemandBasis]
+
 	sourceObservations: [...#ObservationRef] & [_, ...]
 })
 
