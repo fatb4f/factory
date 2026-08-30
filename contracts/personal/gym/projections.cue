@@ -110,6 +110,27 @@ package gym
 	classification:    #AdaptationClass
 })
 
+#EquilibriumRow: close({
+	programID:           #ProgramID
+	equilibriumMetricID: #EquilibriumMetricID
+	outputMetricID:      #MetricID
+	state:               #EquilibriumObservationState
+	value?:              number
+	protocolID?:         #ProtocolID
+	sourceCount:         int & >=1
+	evaluatedAt?:        #Timestamp
+})
+
+#ProgramTargetRow: close({
+	programID:   #ProgramID
+	targetID:    #TargetID
+	status:      "unmeasured" | "baselining" | "below-target" | "at-target" | "sustained" | "regressed" | "insufficient-evidence"
+	evidenceCount: int & >=0
+	latestNumber?: number
+	latestState?:  string
+	evaluatedAt?:  #Timestamp
+})
+
 projectionRelations: close({
 	exposures:             "#ExposureRow"
 	constraints:           "#ConstraintRow"
@@ -120,4 +141,6 @@ projectionRelations: close({
 	issueEvidence:         "#IssueEvidenceRow"
 	sessionAssessments:    "#SessionAssessmentRow"
 	adaptationDimensions:  "#AdaptationDimensionRow"
+	equilibrium:           "#EquilibriumRow"
+	programTargets:        "#ProgramTargetRow"
 })
