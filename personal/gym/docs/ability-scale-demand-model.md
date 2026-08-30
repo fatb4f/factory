@@ -1,339 +1,387 @@
-# Ability-scale and demand-transfer model
+# Ability-scale, mechanical-demand, and semantic object model
 
-Status: experimental design layer. This document does not replace the active program, capture, or equilibrium contracts yet.
+Status: additive semantic layer implemented over the existing Tier-0 Gym capture model. Historical session capture remains valid. The active tri-session program can migrate onto the new admission path incrementally rather than being rewritten.
 
-## Motivation
+## Canonical semantic axis
 
-ATG-style regression is better represented as a multidimensional ability scale than as a single ordered exercise level. A programming variable can change overall difficulty, redistribute demand between joints or support chains, change mobility requirements, or do several of these at once.
-
-The central model is therefore:
+Exercise identity is no longer the analytical primitive. The canonical path is:
 
 ```text
-movement pattern
-      │
-      ├── joint motion by phase
-      └── capacity-demand channels
-                  │
-                  ▼
-             ExerciseFamily
-                  │
-             ScaleAxis[]
-                  │
-        ┌─────────┴──────────┐
-        ▼                    ▼
- difficulty effect     demand-transfer effect
-        │                    │
-        └─────────┬──────────┘
-                  ▼
-             ScalePosition
-                  │
-          mechanical admission
-                  │
-                  ▼
-        normalized ability position
-                  │
-                  ▼
-       structural/equilibrium relation
+FunctionalMovement / MovementPattern
+        ↓
+MovementPhase
+        ↓
+MechanicalObjective
+        ↓
+MechanicalDemand
+        ↓
+MechanicalContribution
+        ↓
+MechanicalRoleAssignment
+        ↓
+FunctionalGroup
+        ↓
+ContributionDistribution
+        ↓
+EquilibriumProjection
 ```
 
-## Motion is not demand
+`DemandChannel` remains a useful Tier-0 shorthand for joint-targeted capacity such as knee extension, knee flexion, or plantarflexion. New analytical state is expressed in `MechanicalDemand` objects so support, COM braking, propulsion, pelvic stabilization, swing clearance, and similar requirements share one substrate.
 
-Joint motion and the capacity resisting or producing it are separate concepts.
+`Chain` also remains available as a human-facing anatomical migration view. It is no longer semantic authority.
 
-Examples:
+## Mechanical effect precedes role
 
-- squat descent: hip and knee flex while hip- and knee-extension capacity is loaded eccentrically;
-- Nordic lowering: the knee extends while knee-flexion capacity is loaded eccentrically;
-- reverse-Nordic lowering: the knee flexes while knee-extension capacity is loaded eccentrically.
-
-This distinction allows functional patterns, agonist/antagonist relationships, and eccentric/concentric capacity to share one schema without reversing semantic meaning between exercises.
-
-## Functional movement patterns
-
-A `MovementPattern` owns:
-
-- joint motion by phase;
-- the capacity-demand channels active in each phase;
-- optional coupling/transfer relations.
-
-A demand channel is intentionally simple:
+A contributor is modeled by what it mechanically produces or resists:
 
 ```text
-joint + capacity action + optional contraction mode
+contributor
+    produces/resists
+        force / moment / acceleration / power / impulse / stability constraint
+    on
+        COM / segment / joint DOF
+    during
+        movement phase
 ```
 
-Examples:
+A `MechanicalRoleAssignment` then interprets that contribution contextually as one or more of:
 
 ```text
-hip-extension
-knee-extension
-knee-flexion
-ankle-plantarflexion
-hip-flexion
-trunk-stabilization
-```
-
-This provides a common substrate below exercise identity. A Nordic and a hamstring-curl variant can both express knee-flexion capacity even when their kinematics and scaling variables differ.
-
-## Scale axes
-
-The initial recurring vocabulary is:
-
-```text
-assistance
-external-load
-geometry
-range
-lever
-limb-contribution
-load-placement
-tempo
-volume
-speed
-resistance
-stance
-rotation
-configuration
-```
-
-An axis must not be assumed to be monotonically equivalent to difficulty.
-
-Each axis records both:
-
-```text
-difficultyEffect
-ScaleEffect[]
-```
-
-`ScaleEffect` can increase/decrease a demand, redistribute demand, transfer demand between targets, or alter access to a movement requirement.
-
-### Squat example
-
-Trunk and shank geometry changes the relative hip and knee extensor moments even at matched knee-flexion depth. Increased trunk inclination relative to shank shifts the hip:knee moment ratio toward the hip. This makes geometry a demand-transfer variable rather than a mere setup field.
-
-Reference:
-
-- https://pmc.ncbi.nlm.nih.gov/articles/PMC10518215/
-- https://pmc.ncbi.nlm.nih.gov/articles/PMC10987311/
-
-ATG's counterbalance and heel-elevation material supplies complementary coaching-scale examples where load placement or geometry changes accessibility and the movement configuration rather than simply adding or subtracting load:
-
-- https://www.atgonlinecoaching.com/articles/article-counterbalance-a-squat-skill-for-life
-- https://www.atgonlinecoaching.com/articles/article-how-to-keep-or-rebuild-your-squat-mobility
-
-### Dual-joint configuration example
-
-The gastrocnemius crosses the knee and ankle. Knee position changes its plantarflexion contribution and total plantarflexion torque. A bent-knee and straight-knee calf exposure therefore cannot be treated as identical plantarflexion tests with a cosmetic setup difference.
-
-References:
-
-- https://pmc.ncbi.nlm.nih.gov/articles/PMC4471746/
-- https://pmc.ncbi.nlm.nih.gov/articles/PMC11708772/
-- https://pmc.ncbi.nlm.nih.gov/articles/PMC4894017/
-
-This generalizes to other bi-articular and coupled-joint cases: joint configuration can alter force capacity, moment arms, muscle length, support requirements, or inter-joint power transfer.
-
-## Demand transfer versus biological attribution
-
-Tier 0 should model demand transfer at the joint-action or chain level before attributing it to a specific tissue.
-
-For example:
-
-```text
-trunk/tibia geometry
-  → knee-extension demand decreases
-  → hip-extension demand increases
-```
-
-is supportable without asserting that one specific muscle caused the transfer.
-
-Muscle-level or musculoskeletal-model attribution belongs to a later evidence tier. Bi-articular muscle research can then enrich the same graph with explicit transfer paths rather than forcing the Tier-0 model to depend on EMG, force plates, or OpenSim.
-
-## Standards require a normalization basis
-
-Every `AbilityStandard` and every cross-family `CapacityRelation` must declare a `DemandBasis`:
-
-```text
-DemandBasis
-├── movement pattern
-├── demand channels
-└── normalization basis
-```
-
-Supported normalization classes begin with:
-
-```text
-absolute
-body-mass
-contralateral-side
-self-baseline
-anchor-ability
-movement-pattern
-```
-
-This prevents relations such as:
-
-```text
-Nordic reps / reverse-Nordic reps
-```
-
-from becoming canonical simply because both numbers exist.
-
-Instead:
-
-```text
-raw exercise result
-      ↓
-mechanically admitted ScalePosition
-      ↓
-normalize using declared basis
-      ↓
-capacity on named demand channel(s)
-      ↓
-structural relation
-```
-
-## Structural balance and equilibrium
-
-The new `CapacityRelation` shape can express:
-
-```text
-agonist-antagonist
-bilateral
 support
-joint-sharing
-proximal-distal
-pattern-balance
-short-long-range
+stabilize
+brake
+propel
+rotate
+redirect
+transfer
+steer
+clear
+recover
 ```
 
-This creates a direct path for public ATG structural-balance references and scientific biomechanics data to coexist with personal longitudinal baselines.
+This prevents role labels from becoming permanent muscle or region categories. One contribution can satisfy several objectives, and the same contributor can have different roles in different phases.
 
-External standards remain reference evidence, not Gym targets.
+## Demand is not muscular demand
 
-ATG explicitly describes structural balance as strength relative to other lifts/abilities and presents lower-body examples involving squat, RDL, calf, hamstring, Nordic, tibialis, and hip-flexor capacities:
-
-- https://app.atgonlinecoaching.com/articles/article-structural-balance-1
-- https://app.atgonlinecoaching.com/articles/article-my-23-physical-standards
-
-The useful semantic distinction is:
+`Contributor` deliberately includes more than muscle:
 
 ```text
-ExternalAbilityStandard != ProgramTarget
+muscle
+muscle-group
+passive-structure
+skeletal-alignment
+external-support
+contralateral-limb
+functional-aggregate
 ```
 
-A program may choose to use an external standard as one reference frame, but admission remains a Gym decision.
+This allows Tier-0 exercise proxies, later OpenSim estimates, force/kinematic evidence, EMG, passive structures, and alignment-mediated support to coexist without asserting that every mechanical requirement is a muscular requirement.
 
-## ATG reference fixture
+Evidence is classified as:
 
-`personal/gym/fixtures/ability_scale_reference.cue` currently exercises the abstraction against representative families:
+```text
+direct-mechanical
+model-derived
+physiological
+exercise-derived-proxy
+qualitative-observation
+```
 
-- deep squat;
-- ATG split squat;
-- step-down;
-- full-stretch RDL;
-- Nordic/bodyweight hamstring curl;
-- reverse Nordic;
-- straight-knee calf raise;
-- Garhammer/loaded hip flexion;
-- back extension.
+Derived scalars carry source class, evidence, optional uncertainty, and provider/model metadata. A manually captured GHR exposure can therefore support knee-flexion/hip-extension capacity without pretending that it measured a muscle's percentage contribution.
 
-The fixture deliberately includes cases where:
+## Ability scale becomes a demand transformer
 
-- increasing a value makes an exercise harder;
-- decreasing a value makes an exercise harder;
-- the variable is context-dependent;
-- the variable transfers demand between joints;
-- joint motion is opposite the loaded capacity action;
-- a second-joint configuration changes capacity at the primary joint.
+The existing `ExerciseFamily`, `ScaleAxis`, and `ScalePosition` contracts remain the controlled exposure mechanism.
 
-This is the qualification gate for replacing the existing `RangeStage`-centric progression model.
+A progression variable does not mean only "difficulty". It changes the demand field:
 
-## Python analytical projection
+```text
+ScalePosition
+     ↓
+DemandTransform
+     ↓
+MechanicalDemand vector
+     ↓
+MechanicalContribution allocation
+```
 
-The desired runtime split is:
+`DemandTransform` is explicitly compositional and evidence-bearing. Interactions are first-class because variables such as geometry and load may not act independently.
+
+Conceptually:
+
+```text
+D' = Tn(...T2(T1(D)))
+```
+
+The controller invariant remains one ordinary coordinate change per progression decision unless the program explicitly authorizes a coupled intervention:
+
+```text
+|Δ ScaleAxis| = 1
+```
+
+This preserves experimental control: change load while holding ROM, assistance, tempo, geometry, and other axes fixed.
+
+## Admission and normalization path
+
+The migration path is now:
+
+```text
+ObservedExposure
+      ↓
+ScalePosition
+      ↓
+MechanicalAdmission
+      ↓
+NormalizedExposure
+      ↓
+NormalizedCapacity
+      ↓
+ComparisonAdmission
+      ↓
+ContextualCapacityRelation
+      ↓
+EquilibriumProjection
+```
+
+Two distinct gates are required.
+
+### Mechanical admission
+
+`MechanicalAdmission` asks whether an observed exercise/scale position actually exposes the claimed `MechanicalDemandBasis`.
+
+The basis names mechanical demands directly and may carry legacy demand channels only as a migration bridge.
+
+### Comparison admission
+
+`ComparisonAdmission` asks whether two normalized capacities can legitimately participate in a relation.
+
+`ComparisonBasis` includes:
+
+```text
+normalization class
+mechanical demand / legacy channel
+movement context
+phase
+contraction regime
+ROM basis
+load basis
+temporal basis
+reference version
+```
+
+Two values are not ratio-compatible merely because both are normalized numbers.
+
+## Demand satisfaction and redistribution are separate
+
+Task success is represented separately from how the task was solved.
+
+For a demand in movement `m`, phase `p`:
+
+```text
+DemandResidual = required demand - observed contribution toward demand
+```
+
+Contribution allocation is tracked independently as `ContributionDistribution`.
+
+Therefore the model can represent:
+
+```text
+demand residual ≈ 0
+contribution distribution != reference
+```
+
+This is the core distinction required for redistribution analysis: the task can succeed while load allocation changes substantially.
+
+`EquilibriumProjection` is derived state. It references demand residuals, optional contribution-distribution residuals, compensation projection, evidence, uncertainty, and a projection version. It is not an authoritative observation and it is not collapsed into one scalar score.
+
+## Compensation is first-class but non-causal
+
+A `CompensationMarker` defines an observable alternative task solution such as excess rotation, translation, bracing, unloading, shortening, or load transfer.
+
+A trial/session produces a `CompensationObservation` with longitudinal quantities such as onset, peak, integral, duration, or deviation from a reference envelope when the evidence tier supports those measurements.
+
+The observation never classifies itself as dysfunctional.
+
+A separate `CompensationQualification` applies a versioned policy using explicit qualifiers such as excessive magnitude, persistence, increasing-with-load behavior, capacity limitation, demand displacement, recovery cost, or downstream constraint.
+
+The classification space is:
+
+```text
+nominal-variation
+adaptive
+compensatory
+dysfunctional
+```
+
+Relations between capacity and compensation begin as evidence-bearing associations and can be promoted only through explicit qualification. This preserves Gym's non-causal stance.
+
+## One semantic object model, multiple projections
+
+The mechanics, allocation, and compensation "graphs" are not separately authoritative graph schemas. They are projections over one semantic object model.
+
+Conceptually, the Python runtime should feel object-native:
+
+```text
+movement.phases
+movement.objectives
+movement.demands
+
+state.mechanics
+state.allocation
+state.compensation
+
+state.capacity(...)
+state.compare(...)
+state.equilibrium(...)
+state.project(...)
+```
+
+The mapping is deliberate:
+
+| Python concept | Gym semantic equivalent |
+| --- | --- |
+| class | semantic type |
+| instance | admitted entity/state |
+| field | authoritative fact |
+| property | derived projection |
+| method | typed transformation/query |
+| decorator/metadata | evidence, admission, derivation contract |
+| protocol | external provider capability |
+| serialization | JSON/Arrow/relational projection |
+
+Generated structural models should remain boring. Behavioral analytics belong in runtime/projector layers rather than being hidden inside generated data classes.
+
+## CUE -> JSON Schema -> Pydantic
+
+The contract pipeline is:
 
 ```text
 CUE
-  semantic authority
-      │
-      ▼
-Pydantic v2
-  nested operational models
-      │
-      ├── session/controller objects
-      └── Arrow-compatible serialization
-                │
-                ▼
-             PyArrow
-                │
-                ▼
-              Ibis
-                │
-        ┌───────┴────────┐
-        ▼                ▼
-     DuckDB           BigQuery
-        │
-        ▼
-Pandera/Ibis validation
+  semantic constraints, composition, admission contracts
+        ↓
+JSON Schema
+  portable structural contract
+        ↓
+Pydantic
+  Python runtime types, validation, serialization
+        ↓
+projection/runtime layer
+        ├── Ibis
+        ├── Malloy
+        ├── DuckDB
+        └── BigQuery
 ```
 
-Pydantic is the right object-model layer for nested structures such as:
+CUE remains the stronger source of truth. JSON Schema is a portable projection and is not assumed to preserve every CUE semantic constraint bidirectionally.
+
+Pydantic is the Python object boundary. Ibis becomes the relational algebra projection; Malloy becomes the analytical semantic projection over admitted relational state. Neither Ibis nor Malloy is domain authority.
+
+A default relational projection policy is:
 
 ```text
-ExerciseFamily
-  axes[]
-    effects[]
-
-ScalePosition
-  coordinates[]
-
-MovementPattern
-  channels[]
-  phases[]
+scalar      -> column
+entity ref  -> identity/FK column
+list        -> child relation
+union       -> tagged relation
+nested fact -> struct or child relation by projection policy
+derived     -> evidence-bearing view/expression
+projection  -> disposable view
 ```
 
-Ibis already converts PyArrow schemas into Ibis schemas and supports nested data types. DuckDB supports nested list/struct/map values, so operational records do not need to be prematurely flattened.
+`projections.cue` now exposes rows for mechanical demand, contribution, role assignment, mechanical admission, normalized capacity, contribution distribution, compensation, and functional equilibrium in addition to the original session/recovery rows.
 
-Pandera's Ibis integration is a good candidate for validating analytical relation contracts after projection.
+## External runtime bridge
 
-References:
+External systems integrate as capability providers rather than alternate semantic authorities.
 
-- https://ibis-project.org/
-- https://pandera.readthedocs.io/en/stable/ibis.html
-- https://duckdb.org/docs/stable/sql/data_types/overview
-
-`pydantic-to-pyarrow` is worth qualification because it handles nested Pydantic lists/structs/maps, but its published support currently stops at Python 3.13. Factory's Python 3.14 baseline means it should not become a dependency until tested or patched.
-
-- https://github.com/simw/pydantic-to-pyarrow
-
-## Next contract migration
-
-Do not immediately delete `#ExerciseProfile` or `#RangeStage`.
-
-Sequence the migration:
-
-1. validate the reference fixture against additional ATG families and scientific joint-demand cases;
-2. define `AdmittedScalePosition` from normalized exposure evidence;
-3. define deterministic comparison compatibility for scale positions;
-4. redefine `normalized-capacity-index` as a family/basis-specific projection rather than a universal scalar;
-5. project existing equilibrium metrics onto `CapacityRelation`;
-6. migrate active exercise profiles onto `ExerciseFamily` only after equivalent session capture can be represented;
-7. generate/validate Pydantic and Ibis projection models;
-8. then resume prescription identity and controller work against the new ability-scale substrate.
-
-The controller should ultimately advance a scale coordinate, not an opaque exercise level:
+Representative capabilities are:
 
 ```text
-observed admitted position
-        ↓
-comparison / recovery gate
-        ↓
-select one ScaleAxis
-        ↓
-propose one coordinate change
-        ↓
-hold remaining coordinates fixed
-        ↓
-next planned exposure
+kinematics
+kinetics
+force
+emg
+mechanical-contribution
+scale-transform
+normalization
+comparison
+projection
 ```
+
+The intended bridge is:
+
+```text
+OpenSim / pymecha / video / force / EMG
+        ↓
+adapter/provider
+        ↓
+evidence-bearing Gym objects
+        ↓
+admission
+        ↓
+canonical semantic state
+```
+
+OpenSim can eventually produce model-derived `MechanicalContribution` evidence. Video can provide kinematic compensation evidence. Manual session capture can provide exposure-derived proxy evidence. All enrich the same graph without replacing Gym's semantics.
+
+## Backward compatibility
+
+The active Tier-0 capture envelope is unchanged.
+
+Existing records remain authoritative observations:
+
+```text
+SessionStart
+ExposureObservation
+SessionClose
+RecoveryCheckpoint
+Measurement
+DualLoadSample
+MediaArtifact
+Supersession
+```
+
+`NormalizedExposure` now permits optional `ScalePosition`, `MechanicalAdmissionRef`, and `MechanicalDemandBasis` fields. Old records lacking these fields remain valid but are mechanically unadmitted or only partially interpretable.
+
+Legacy `DemandChannel`, `CapacityRelation`, `EquilibriumMetric`, `Chain`, `ExerciseProfile`, and `RangeStage` concepts are retained as migration surfaces. They should not be deleted until the current tri-session fixture and live program can be represented without special cases.
+
+## Migration sequence
+
+The next implementation sequence is:
+
+1. instantiate mechanical objectives and demands for the existing tri-session movement patterns;
+2. map existing demand channels into `MechanicalDemandBasis` as migration links;
+3. admit current `ExerciseFamily + ScalePosition` exposures mechanically;
+4. derive normalized capacity only from admitted exposure evidence;
+5. enforce `ComparisonAdmission` before contextual capacity relations;
+6. add compensation markers only where there is an actual observation path;
+7. project demand residual and contribution distribution separately;
+8. qualify JSON Schema -> Pydantic generation;
+9. derive Ibis schemas and Malloy sources/models from the same structural projection;
+10. migrate chain-based equilibrium views onto functional-group and contextual-relation projections;
+11. only then replace the old RangeStage-centric controller representation.
+
+The resulting controller state is approximately:
+
+```text
+State
+├── admitted ScalePosition
+├── normalized capacity vector
+├── demand residual vector
+├── contribution distribution
+├── compensation state
+├── recovery state
+└── uncertainty
+        ↓
+Controller
+        ↓
+choose one ScaleAxis
+        ↓
+propose Δcoordinate
+        ↓
+predict DemandTransform
+        ↓
+admit / reject
+```
+
+The architecture therefore preserves the existing factory capture substrate while moving Gym's semantic center from exercise/chain identity to movement-phase mechanical demand, contribution, admission, and evidence-bearing projections.
