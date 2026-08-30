@@ -23,9 +23,10 @@ package gym
 
 	// Additive semantic interpretation. Historical Tier-0 capture remains valid
 	// when these fields are absent; it is simply not mechanically admitted yet.
-	scalePosition?:       #ScalePosition
-	mechanicalAdmission?: #MechanicalAdmissionRef
-	demandBasis?:         [...#MechanicalDemandBasis]
+	scalePosition?:        #ScalePosition
+	mechanicalAdmission?:  #MechanicalAdmissionDecisionRef
+	mechanicalGrants?:     [...#MechanicalAdmissionGrantRef]
+	demandBasis?:          [...#MechanicalDemandBasis]
 
 	sourceObservations: [...#ObservationRef] & [_, ...]
 })
