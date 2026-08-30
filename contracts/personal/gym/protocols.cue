@@ -26,9 +26,9 @@ protocols: close({
 	"dual-scale-neutral-stance-v1": #Protocol & {
 		id: "dual-scale-neutral-stance-v1"
 		label: "Dual-scale neutral stance"
-		produces: [{id: "left-scale-load"}, {id: "right-scale-load"}, {id: "stance-asymmetry-ratio"}]
+		produces: [{id: "left-scale-load"}, {id: "right-scale-load"}, {id: "stance-asymmetry-ratio"}, {id: "stance-asymmetry-variability"}]
 		phase: "baseline"
-		requirements: ["same scales", "same unit", "repeatable stance width", "repeatable foot orientation", "no external hand support", "stable reading window"]
+		requirements: ["same scales", "same unit", "repeatable stance width", "repeatable foot orientation", "no external hand support", "stable reading window", "repeat repeated samples before estimating variability"]
 		version: "1"
 	}
 	"ghr-side-video-v1": #Protocol & {
@@ -38,6 +38,38 @@ protocols: close({
 		phase: "in-session"
 		exercise: {id: "ghr"}
 		requirements: ["side perspective", "machine reference visible", "full working excursion visible", "entire repetition visible"]
+		version: "1"
+	}
+	"rom-control-baseline-v1": #Protocol & {
+		id: "rom-control-baseline-v1"
+		label: "Controlled versus available range baseline"
+		produces: [{id: "available-rom-stage"}, {id: "clean-rom-stage"}, {id: "controlled-rom-fraction"}]
+		phase: "baseline"
+		requirements: ["match movement and range-stage definitions", "record available reference range separately from loaded clean range", "do not infer passive tissue limits from the ratio"]
+		version: "1"
+	}
+	"capacity-equilibrium-review-v1": #Protocol & {
+		id: "capacity-equilibrium-review-v1"
+		label: "Cross-region capacity equilibrium review"
+		produces: [
+			{id: "normalized-capacity-index"},
+			{id: "bilateral-capacity-asymmetry"},
+			{id: "reciprocal-capacity-ratio"},
+			{id: "anterior-posterior-capacity-ratio"},
+			{id: "distal-proximal-capacity-ratio"},
+			{id: "frontal-sagittal-capacity-ratio"},
+			{id: "limiter-concentration"},
+			{id: "recovery-normalized-capacity-state"},
+		]
+		phase: "recovery"
+		requirements: [
+			"use finalized sessions only",
+			"use mechanically admitted exposures for capacity comparison",
+			"compare like protocols or baseline-normalized indices rather than raw unlike exercise outputs",
+			"preserve side and chain identity",
+			"require recovery evidence before declaring redistribution progress",
+			"treat agonist-antagonist and cross-chain ratios as operational equilibrium metrics, not universal diagnostic thresholds",
+		]
 		version: "1"
 	}
 	"recovery-check-v1": #Protocol & {
