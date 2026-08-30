@@ -17,11 +17,11 @@ fixtures=(
 
 for fixture in "${fixtures[@]}"; do
   path="$root/$fixture"
-  echo "expecting CUE rejection: $fixture"
-  if cue vet "$base" "$path"; then
+  echo "expecting CUE contradiction: $fixture"
+  if cue vet -c=false "$base" "$path"; then
     echo "ERROR: negative fixture unexpectedly validated: $fixture" >&2
     exit 1
   fi
 done
 
-echo "all Gym semantic-integrity negative fixtures rejected as expected"
+echo "all Gym semantic-integrity negative fixtures contradicted as expected"
