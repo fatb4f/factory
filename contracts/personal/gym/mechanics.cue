@@ -43,46 +43,11 @@ package gym
 	"contralateral-limb" |
 	"functional-aggregate"
 
-#ContributionEvidenceClass:
-	"direct-mechanical" |
-	"model-derived" |
-	"physiological" |
-	"exercise-derived-proxy" |
-	"qualitative-observation"
-
-#DerivedSource: "measured" | "derived" | "estimated" | "imputed"
-
-#Uncertainty: close({
-	kind?:       "interval" | "score" | "qualitative"
-	lower?:      number
-	upper?:      number
-	confidence?: number & >=0 & <=1
-	note?:       string
-})
-
-#EvidenceLink: close({
-	class:        #ContributionEvidenceClass
-	sourceID:     string
-	provider?:    string
-	method?:      string
-	modelVersion?: string
-})
-
-// Derived values never masquerade as observations. Provenance and evidence are
-// part of the value contract so model, proxy, and measured state can coexist.
-#DerivedScalar: close({
-	value:       number
-	unit?:       #Unit
-	source:      #DerivedSource
-	evidence:    [...#EvidenceLink] & [_, ...]
-	uncertainty?: #Uncertainty
-})
-
 #MechanicalObjective: close({
 	id:       #MechanicalObjectiveID
 	label:    string
 	movement: #MovementPatternRef
-	phase:    string
+	phase:    #PatternPhaseRef
 	note?:    string
 })
 
@@ -131,7 +96,7 @@ package gym
 })
 
 #ContributionTiming: close({
-	phase:      string
+	phase:      #PatternPhaseRef
 	onset?:     number
 	peak?:      number
 	duration?:  number
@@ -141,7 +106,7 @@ package gym
 #MechanicalContribution: close({
 	id:          #MechanicalContributionID
 	movement:    #MovementPatternRef
-	phase:       string
+	phase:       #PatternPhaseRef
 	contributor: #ContributorRef
 	demand:      #MechanicalDemandRef
 	effects:     [...#MechanicalEffect] & [_, ...]
@@ -166,7 +131,7 @@ package gym
 #FunctionalGroup: close({
 	id:               #FunctionalGroupID
 	movement:         #MovementPatternRef
-	phase:            string
+	phase:            #PatternPhaseRef
 	objective:        #MechanicalObjectiveRef
 	roles?:           [...#MechanicalRole]
 	membershipRule:   string
@@ -197,24 +162,4 @@ package gym
 	effects:      [...#DemandTransformEffect] & [_, ...]
 	interactions?: [...#DemandTransformInteraction]
 	evidence:     [...#EvidenceLink] & [_, ...]
-})
-
-#ProviderCapability:
-	"kinematics" |
-	"kinetics" |
-	"force" |
-	"emg" |
-	"mechanical-contribution" |
-	"scale-transform" |
-	"normalization" |
-	"comparison" |
-	"projection"
-
-#EvidenceProvider: close({
-	id:           string
-	kind:         "external-model" | "device" | "video" | "manual" | "analytics-runtime"
-	adapter?:     string
-	version?:     string
-	capabilities: [...#ProviderCapability] & [_, ...]
-	outputClass:  #ContributionEvidenceClass
 })
