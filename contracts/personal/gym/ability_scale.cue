@@ -6,6 +6,8 @@ package gym
 #ExerciseFamilyRef: close({id: #ExerciseFamilyID})
 #MovementPatternID: string
 #MovementPatternRef: close({id: #MovementPatternID})
+#PatternPhaseID: string
+#PatternPhaseRef: close({id: #PatternPhaseID})
 #ScaleAxisID: string
 #ScaleAxisRef: close({id: #ScaleAxisID})
 #DemandChannelID: string
@@ -59,7 +61,7 @@ package gym
 })
 
 #PatternPhase: close({
-	id:           string
+	id:           #PatternPhaseID
 	kind:         #PatternPhaseKind
 	motion:       [...#JointMotion]
 	activeDemand: [...#DemandChannelRef]
