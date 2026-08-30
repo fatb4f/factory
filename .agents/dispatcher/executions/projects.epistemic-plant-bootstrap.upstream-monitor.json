@@ -1,6 +1,6 @@
 {
   "task_id": "projects.epistemic-plant-bootstrap.upstream-monitor",
-  "last_run_at": "2026-08-27T12:19:19-04:00",
-  "run_id": "20260827T160601Z",
-  "seeded_from": "legacy-recurring-automation"
+  "last_run_at": "2026-08-30T12:05:19-04:00",
+  "outcome": "terminal_success",
+  "run_id": "20260830T160520Z"
 }
