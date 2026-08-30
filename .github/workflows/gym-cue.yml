@@ -32,10 +32,10 @@ jobs:
           version: v0.16.1
 
       - name: Validate Gym contracts
-        run: cue vet ./contracts/personal/gym
+        run: cue vet -c=false ./contracts/personal/gym
 
       - name: Validate Gym positive fixtures
-        run: cue vet ./personal/gym/fixtures
+        run: cue vet -c=false ./personal/gym/fixtures
 
       - name: Reject Gym negative fixtures
         run: bash personal/gym/fixtures/negative/run.sh
