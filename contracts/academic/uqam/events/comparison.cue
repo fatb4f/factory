@@ -22,6 +22,16 @@ import state "github.com/fatb4f/factory/contracts/state"
 	removed: [...#NormalizedEvent]
 })
 
+#NoReportableDelta: #Delta & {
+	added:   []
+	changed: []
+}
+
+#ReportableDelta: #Delta & (
+	{added: [#NormalizedEvent, ...#NormalizedEvent]} |
+	{changed: [#ChangedEvent, ...#ChangedEvent]}
+)
+
 #Outcome:
 	"baseline_established" |
 	"no_change" |
@@ -30,52 +40,73 @@ import state "github.com/fatb4f/factory/contracts/state"
 	"comparison_gap" |
 	"state_conflict"
 
-#ComparisonResult: close({
-	comparison_state: state.#ComparisonState
-	delta?:           #Delta
-
-	if comparison_state.status == "bootstrap" {
-		delta?: _|_
-	}
-	if comparison_state.status == "comparable" {
-		delta: #Delta
-	}
-	if comparison_state.status == "invalidated" {
-		delta?: _|_
-	}
+#BootstrapComparisonResult: close({
+	comparison_state: state.#BootstrapComparisonState
 })
 
-#Decision: close({
-	outcome:             #Outcome
-	baseline_action:     "advance" | "hold"
-	reported_event_keys: [...#NonEmptyString]
+#ComparableComparisonResult: close({
+	comparison_state: state.#ComparableComparisonState
+	delta:            #Delta
+})
+
+#InvalidatedComparisonResult: close({
+	comparison_state: state.#InvalidatedComparisonState
+})
+
+#ComparisonResult:
+	#BootstrapComparisonResult |
+	#ComparableComparisonResult |
+	#InvalidatedComparisonResult
+
+#BaselineEstablishedDecision: close({
+	outcome:             "baseline_established"
+	baseline_action:     "advance"
+	reported_event_keys: []
 	reason:              #NonEmptyString
-
-	if outcome == "baseline_established" {
-		baseline_action:     "advance"
-		reported_event_keys: []
-	}
-	if outcome == "no_change" {
-		baseline_action:     "advance"
-		reported_event_keys: []
-	}
-	if outcome == "new_matches" {
-		baseline_action:     "advance"
-		reported_event_keys: [...#NonEmptyString] & [_, ...]
-	}
-	if outcome == "source_gap" {
-		baseline_action:     "hold"
-		reported_event_keys: []
-	}
-	if outcome == "comparison_gap" {
-		baseline_action:     "hold"
-		reported_event_keys: []
-	}
-	if outcome == "state_conflict" {
-		baseline_action:     "hold"
-		reported_event_keys: []
-	}
 })
+
+#NoChangeDecision: close({
+	outcome:             "no_change"
+	baseline_action:     "advance"
+	reported_event_keys: []
+	reason:              #NonEmptyString
+})
+
+#NewMatchesDecision: close({
+	outcome:             "new_matches"
+	baseline_action:     "advance"
+	reported_event_keys: [#NonEmptyString, ...#NonEmptyString]
+	reason:              #NonEmptyString
+})
+
+#SourceGapDecision: close({
+	outcome:             "source_gap"
+	baseline_action:     "hold"
+	reported_event_keys: []
+	reason:              #NonEmptyString
+})
+
+#ComparisonGapDecision: close({
+	outcome:             "comparison_gap"
+	baseline_action:     "hold"
+	reported_event_keys: []
+	reason:              #NonEmptyString
+})
+
+#StateConflictDecision: close({
+	outcome:             "state_conflict"
+	baseline_action:     "hold"
+	reported_event_keys: []
+	reason:              #NonEmptyString
+})
+
+#Decision:
+	#BaselineEstablishedDecision |
+	#NoChangeDecision |
+	#NewMatchesDecision |
+	#SourceGapDecision |
+	#ComparisonGapDecision |
+	#StateConflictDecision
 
 comparisonPolicy: close({
 	identity: close({
