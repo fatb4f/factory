@@ -1,6 +1,6 @@
 package uqameventsfixtures
 
-import events "github.com/fatb4f/factory/contracts/academic/uqam/events"
+import events "github.com/fatb4f/factory/contracts/academic/uqam/events:uqamevents"
 
 #Expected: close({
 	status:         "bootstrap" | "comparable" | "invalidated"
