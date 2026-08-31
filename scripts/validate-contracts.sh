@@ -132,6 +132,45 @@ EOF
   grep '^## ' projects/epistemic-plant-bootstrap/upstream-monitor/fixtures/report-template-rendered.md | diff -u "$expected" -
 }
 
+validate_gym_public() {
+  section "Gym public compatibility"
+
+  local tmpdir public_json
+  tmpdir="$(mktemp -d)"
+  public_json="$tmpdir/public.json"
+  cue export ./contracts/personal/gym:gym -e public --out json >"$public_json"
+
+  local pairs=(
+    "body:bodyRegions"
+    "chains:chains"
+    "relations:chainRelations"
+    "metrics:metrics"
+    "equilibriumMetrics:equilibriumMetrics"
+    "protocols:protocols"
+    "exercises:exerciseProfiles"
+    "mappings:exerciseMappings"
+    "programs:programs"
+    "projections:projectionRelations"
+  )
+
+  local pair public_key expression canonical_json public_count canonical_count
+  for pair in "${pairs[@]}"; do
+    public_key="${pair%%:*}"
+    expression="${pair#*:}"
+    canonical_json="$tmpdir/${public_key}.json"
+    cue export ./contracts/personal/gym:gym -e "$expression" --out json >"$canonical_json"
+    public_count="$(jq --arg key "$public_key" '.[$key] | length' "$public_json")"
+    canonical_count="$(jq 'length' "$canonical_json")"
+    [[ "$public_count" == "$canonical_count" ]] || {
+      echo "Gym public registry count mismatch: $public_key public=$public_count canonical=$canonical_count" >&2
+      rm -rf "$tmpdir"
+      exit 1
+    }
+  done
+
+  rm -rf "$tmpdir"
+}
+
 section "shared state"
 cue vet -c=false ./contracts/state:state
 cue vet -c=false ./state/fixtures:statefixtures
@@ -162,7 +201,7 @@ section "Gym"
 cue vet -c=false ./contracts/personal/gym:gym
 cue vet -c=false ./personal/gym/fixtures:fixtures
 bash personal/gym/fixtures/negative/run.sh
-cue export ./contracts/personal/gym:gym -e public --out json >/dev/null
+validate_gym_public
 
 validate_registry
 
