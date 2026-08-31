@@ -18,7 +18,7 @@ epistemicPlantForbiddenAttractors: [
 	"epistemic observation emitted without admitted receipt lineage",
 	"terminal_success interpreted as executable qualification success without qualification_state",
 	"subject evidence/ directory copied into factory authority",
-	"run artifact written outside contract-surface/runs/<run_id>/",
+	"run artifact written outside projects/epistemic-plant-bootstrap/upstream-monitor/runs/<run_id>/",
 	"manifest published before report, summary, and evidence",
 	"latest pointer updated before manifest seal",
 	"publication_revision interpreted as latest-pointer self-reference",
