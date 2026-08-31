@@ -1,7 +1,18 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if cue vet -c=false ./world/industrial-constraints/fixtures/negative:negative; then
-  echo "expected single-observation binding fixture to fail" >&2
-  exit 1
-fi
+root="world/industrial-constraints/fixtures/negative"
+fixtures=(
+  binding_single_observation.cue
+  dangling_projection_input.cue
+)
+
+for fixture in "${fixtures[@]}"; do
+  echo "expecting CUE contradiction: $fixture"
+  if cue vet -c=false "$root/$fixture"; then
+    echo "negative industrial fixture unexpectedly validated: $fixture" >&2
+    exit 1
+  fi
+done
+
+echo "all industrial negative fixtures contradicted as expected"
