@@ -38,22 +38,22 @@ validate_uqam_admitted_state() {
   local pointer="academic/uqam/events/state/admitted-baseline.json"
   [[ -f "$pointer" ]] || { echo "missing UQAM admitted baseline pointer: $pointer" >&2; exit 1; }
 
-  cue vet -c=false "$pointer" "$contract_dir" -d '#EventBaselinePointer'
+  cue vet -c=false "$pointer" "$contract_dir"/*.cue -d '#EventBaselinePointer'
 
   local bundle manifest normalized decision
   bundle="$(jq -r '.baseline.run.bundle_path' "$pointer")"
   manifest="${bundle%/}/manifest.json"
   [[ -f "$manifest" ]] || { echo "missing UQAM manifest: $manifest" >&2; exit 1; }
 
-  cue vet -c=false "$manifest" "$contract_dir" -d '#RunManifest'
+  cue vet -c=false "$manifest" "$contract_dir"/*.cue -d '#RunManifest'
 
   normalized="${bundle%/}/$(jq -r '.normalized_path' "$manifest")"
   decision="${bundle%/}/$(jq -r '.decision_path' "$manifest")"
   [[ -f "$normalized" ]] || { echo "missing UQAM normalized artifact: $normalized" >&2; exit 1; }
   [[ -f "$decision" ]] || { echo "missing UQAM decision artifact: $decision" >&2; exit 1; }
 
-  cue vet -c=false "$normalized" "$contract_dir" -d '#NormalizedSnapshot'
-  cue vet -c=false "$decision" "$contract_dir" -d '#DecisionArtifact'
+  cue vet -c=false "$normalized" "$contract_dir"/*.cue -d '#NormalizedSnapshot'
+  cue vet -c=false "$decision" "$contract_dir"/*.cue -d '#DecisionArtifact'
 
   [[ "$(jq -r '.baseline.run.run_id' "$pointer")" == "$(jq -r '.run_id' "$manifest")" ]]
   [[ "$(jq -r '.baseline.run.normalized_digest' "$pointer")" == "$(jq -r '.normalized_digest' "$manifest")" ]]
@@ -78,7 +78,7 @@ validate_upstream_latest() {
   local latest="projects/${profile}/upstream-monitor/latest.json"
 
   section "upstream-monitor latest: ${profile}"
-  cue vet -c=false "$latest" ./contracts/workers/upstream-monitor -d '#LatestRunPointer'
+  cue vet -c=false "$latest" ./contracts/workers/upstream-monitor/*.cue -d '#LatestRunPointer'
 
   local bundle manifest evidence
   bundle="$(jq -r '.bundle_path' "$latest")"
@@ -89,8 +89,8 @@ validate_upstream_latest() {
   [[ -f "$manifest" ]] || { echo "missing manifest: $manifest" >&2; exit 1; }
   [[ -f "$evidence" ]] || { echo "missing evidence: $evidence" >&2; exit 1; }
 
-  cue vet -c=false "$manifest" ./contracts/workers/upstream-monitor -d '#RunBundleManifest'
-  cue vet -c=false "$evidence" "$profile_dir" -d "$evidence_schema"
+  cue vet -c=false "$manifest" ./contracts/workers/upstream-monitor/*.cue -d '#RunBundleManifest'
+  cue vet -c=false "$evidence" "$profile_dir"/*.cue -d "$evidence_schema"
 
   [[ "$(jq -r '.run_id' "$latest")" == "$(jq -r '.run_id' "$manifest")" ]]
   [[ "$(jq -r '.profile_id' "$latest")" == "$(jq -r '.profile_id' "$manifest")" ]]
