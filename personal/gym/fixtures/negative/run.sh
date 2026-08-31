@@ -13,6 +13,10 @@ fixtures=(
   multi_demand_scalar_capacity.cue
   unknown_phase_reference.cue
   unresolved_evidence_reference.cue
+  dangling_contributor_reference.cue
+  contribution_demand_context_mismatch.cue
+  distribution_dangling_contributor.cue
+  equilibrium_dangling_distribution.cue
 )
 
 for fixture in "${fixtures[@]}"; do
