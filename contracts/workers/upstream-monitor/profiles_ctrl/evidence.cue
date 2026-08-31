@@ -2,6 +2,12 @@ package ctrlprofile
 
 import core "github.com/fatb4f/factory/contracts/workers/upstream-monitor:upstreammonitor"
 
+#CorrectionLineage: close({
+	corrects_run_id:       core.#NonEmptyString
+	corrects_evidence_blob: core.#GitObjectSHA
+	reason:                core.#NonEmptyString
+})
+
 #CtrlRunEvidence: close({
 	apiVersion: "factory.upstream-monitor.ctrl.evidence/v3"
 	kind: "CtrlUpstreamEvidence"
@@ -14,6 +20,7 @@ import core "github.com/fatb4f/factory/contracts/workers/upstream-monitor:upstre
 	publication_revision?: core.#CommitSHA
 	ctrl_revision: core.#CommitSHA
 	bootstrap_baseline: bool
+	lineage?: #CorrectionLineage
 	sources: [...core.#SourceObservation] & [_, ...]
 	graph: close({
 		nodesObserved: [...core.#NonEmptyString] & [_, ...]
