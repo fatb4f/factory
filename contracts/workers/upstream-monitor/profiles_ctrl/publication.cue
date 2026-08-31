@@ -12,9 +12,12 @@ ctrlPublicationPlan: close({
 		manifest: close({
 			filename: "manifest.json"
 			mediaType: "application/json"
-			apiVersion: "factory.upstream-monitor.run-bundle/v2"
+			apiVersion: "factory.upstream-monitor.run-bundle/v3"
 			kind: "UpstreamMonitorRunBundle"
 			profile_id: "ctrl"
+			requireAuthorityRevision: true
+			requireSubjectRevision: true
+			requireQualificationState: true
 		})
 		exportUnit: "directory"
 	})
