@@ -23,29 +23,37 @@ import unit "github.com/fatb4f/factory/contracts:unit"
 	admitted_at: #NonEmptyString
 })
 
-#ComparisonState: close({
+#BootstrapComparisonState: close({
 	task:    unit.#TaskID
 	scope:   #NonEmptyString
 	schema:  #NonEmptyString
 	current: #RunReference
-	status:  #ComparisonStatus
-
-	baseline?:            #BaselineReference
-	invalidation_reason?: #NonEmptyString
-
-	if status == "bootstrap" {
-		baseline?:            _|_
-		invalidation_reason?: _|_
-	}
-	if status == "comparable" {
-		baseline:             #BaselineReference
-		invalidation_reason?: _|_
-	}
-	if status == "invalidated" {
-		baseline:            #BaselineReference
-		invalidation_reason: #NonEmptyString
-	}
+	status:  "bootstrap"
 })
+
+#ComparableComparisonState: close({
+	task:     unit.#TaskID
+	scope:    #NonEmptyString
+	schema:   #NonEmptyString
+	current:  #RunReference
+	status:   "comparable"
+	baseline: #BaselineReference
+})
+
+#InvalidatedComparisonState: close({
+	task:                unit.#TaskID
+	scope:               #NonEmptyString
+	schema:              #NonEmptyString
+	current:             #RunReference
+	status:              "invalidated"
+	baseline:            #BaselineReference
+	invalidation_reason: #NonEmptyString
+})
+
+#ComparisonState:
+	#BootstrapComparisonState |
+	#ComparableComparisonState |
+	#InvalidatedComparisonState
 
 #BaselinePointer: close({
 	apiVersion: "factory.comparison-state.baseline/v1"
