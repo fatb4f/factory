@@ -8,6 +8,7 @@ package gym
 	movementPatterns: {[string]: #MovementPattern}
 	objectives: {[string]: #MechanicalObjective}
 	demands: {[string]: #MechanicalDemand}
+	contributors: {[string]: #Contributor}
 	contributions: {[string]: #MechanicalContribution}
 	evidence: {[string]: #EvidenceRecord}
 	mechanicalAdmissions: {[string]: #MechanicalAdmissionDecision}
@@ -18,6 +19,7 @@ package gym
 	relations: {[string]: #ContextualCapacityRelation}
 	compensationMarkers: {[string]: #CompensationMarker}
 	compensationObservations: {[string]: #CompensationObservation}
+	compensationProjections: {[string]: #CompensationProjection}
 	contributionDistributions: {[string]: #ContributionDistribution}
 	equilibriumProjections: {[string]: #EquilibriumProjection}
 
@@ -43,17 +45,32 @@ package gym
 		}] & [_, ...]
 	}]
 
+	_contributorIdentity: [for id, contributor in contributors {
+		_value: contributor & {id: id}
+	}]
+
 	_contributionIntegrity: [for id, contribution in contributions {
 		_key: contribution & {id: id}
 		_movementMatches: [for movementID, movement in movementPatterns if movementID == contribution.movement.id {
 			movement & {id: movementID}
 		}] & [_, ...]
 		_movement: _movementMatches[0]
+		_phase: [for phase in _movement.phases if phase.id == contribution.phase.id {
+			phase
+		}] & [_, ...]
+		_contributorMatches: [for contributorID, contributor in contributors if contributorID == contribution.contributor.id {
+			contributor & {id: contributorID}
+		}] & [_, ...]
 		_demandMatches: [for demandID, demand in demands if demandID == contribution.demand.id {
 			demand & {id: demandID}
 		}] & [_, ...]
-		_phase: [for phase in _movement.phases if phase.id == contribution.phase.id {
-			phase
+		_demand: _demandMatches[0]
+		_objectiveMatches: [for objectiveID, objective in objectives if objectiveID == _demand.objective.id {
+			objective & {
+				id:       objectiveID
+				movement: contribution.movement
+				phase:    contribution.phase
+			}
 		}] & [_, ...]
 		_evidence: [for link in contribution.evidence {
 			_matches: [for evidenceID, record in evidence if evidenceID == link.evidence.id {
@@ -202,18 +219,61 @@ package gym
 		}]
 	}]
 
+	_compensationProjectionIntegrity: [for id, projection in compensationProjections {
+		_key: projection & {id: id}
+		_movementMatches: [for movementID, movement in movementPatterns if movementID == projection.movement.id {
+			movement & {id: movementID}
+		}] & [_, ...]
+		_observations: [for observationRef in projection.observations {
+			_matches: [for observationID, observation in compensationObservations if observationID == observationRef.id {
+				observation & {id: observationID, movement: projection.movement}
+			}] & [_, ...]
+		}]
+		if projection.qualifications != _|_ {
+			_qualifications: [for qualification in projection.qualifications {
+				_matches: [for observationID, observation in compensationObservations if observationID == qualification.observation.id {
+					observation & {id: observationID, movement: projection.movement}
+				}] & [_, ...]
+			}]
+		}
+	}]
+
 	_distributionIntegrity: [for id, distribution in contributionDistributions {
 		_key: distribution & {id: id}
 		_movementMatches: [for movementID, movement in movementPatterns if movementID == distribution.movement.id {
 			movement & {id: movementID}
 		}] & [_, ...]
 		_movement: _movementMatches[0]
-		_demandMatches: [for demandID, demand in demands if demandID == distribution.demand.id {
-			demand & {id: demandID}
-		}] & [_, ...]
 		_phase: [for phase in _movement.phases if phase.id == distribution.phase.id {
 			phase
 		}] & [_, ...]
+		_demandMatches: [for demandID, demand in demands if demandID == distribution.demand.id {
+			demand & {id: demandID}
+		}] & [_, ...]
+		_demand: _demandMatches[0]
+		_objectiveMatches: [for objectiveID, objective in objectives if objectiveID == _demand.objective.id {
+			objective & {
+				id:       objectiveID
+				movement: distribution.movement
+				phase:    distribution.phase
+			}
+		}] & [_, ...]
+		_entries: [for entry in distribution.entries {
+			_contributorMatches: [for contributorID, contributor in contributors if contributorID == entry.contributor.id {
+				contributor & {id: contributorID}
+			}] & [_, ...]
+			if entry.contribution != _|_ {
+				_contributionMatches: [for contributionID, contribution in contributions if contributionID == entry.contribution.id {
+					contribution & {
+						id:          contributionID
+						movement:    distribution.movement
+						phase:       distribution.phase
+						demand:      distribution.demand
+						contributor: entry.contributor
+					}
+				}] & [_, ...]
+			}
+		}]
 		_evidence: [for link in distribution.evidence {
 			_matches: [for evidenceID, record in evidence if evidenceID == link.evidence.id {
 				record & {id: evidenceID}
@@ -229,6 +289,33 @@ package gym
 		_phase: [for phase in _movement.phases if phase.id == projection.phase.id {
 			phase
 		}] & [_, ...]
+		_demandResiduals: [for residual in projection.demandResiduals {
+			_matches: [for demandID, demand in demands if demandID == residual.demand.id {
+				demand & {id: demandID}
+			}] & [_, ...]
+		}]
+		if projection.contributionDistribution != _|_ {
+			_distributionMatches: [for distributionID, distribution in contributionDistributions if distributionID == projection.contributionDistribution.id {
+				distribution & {
+					id:       distributionID
+					movement: projection.movement
+					phase:    projection.phase
+				}
+			}] & [_, ...]
+		}
+		if projection.distributionResidual != _|_ {
+			_currentMatches: [for distributionID, distribution in contributionDistributions if distributionID == projection.distributionResidual.current.id {
+				distribution & {id: distributionID}
+			}] & [_, ...]
+			_referenceMatches: [for distributionID, distribution in contributionDistributions if distributionID == projection.distributionResidual.reference.id {
+				distribution & {id: distributionID}
+			}] & [_, ...]
+		}
+		if projection.compensation != _|_ {
+			_compensationMatches: [for compensationID, compensation in compensationProjections if compensationID == projection.compensation.id {
+				compensation & {id: compensationID, movement: projection.movement}
+			}] & [_, ...]
+		}
 		_evidence: [for link in projection.evidence {
 			_matches: [for evidenceID, record in evidence if evidenceID == link.evidence.id {
 				record & {id: evidenceID}
