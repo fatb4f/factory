@@ -33,24 +33,30 @@ package industrialconstraints
 	class:  #EvidenceClass
 })
 
-#ConstraintClaim: close({
+#BindingConstraintClaim: close({
 	kind:              "constraint-claim"
 	id:                #RecordID
 	subject:           #EntityRef
 	mechanism:         #ConstraintMechanism
-	state:             #ConstraintState
+	state:             "binding"
+	basis:             "multi-record-correlation"
+	evidence:          [...#ConstraintEvidenceItem] & [_, _, ...]
+	affectedRelations: [...#RelationRef]
+	confidence:        #Confidence
+	assessment?:       #AssessmentRef
+})
+
+#NonBindingConstraintClaim: close({
+	kind:              "constraint-claim"
+	id:                #RecordID
+	subject:           #EntityRef
+	mechanism:         #ConstraintMechanism
+	state:             "unknown" | "latent" | "emerging" | "relieving" | "resolved"
 	basis:             #ConstraintBasis
 	evidence:          [...#ConstraintEvidenceItem] & [_, ...]
 	affectedRelations: [...#RelationRef]
 	confidence:        #Confidence
 	assessment?:       #AssessmentRef
-}) & (
-	{
-		state:    "binding"
-		basis:    "multi-record-correlation"
-		evidence: [#ConstraintEvidenceItem, #ConstraintEvidenceItem, ...#ConstraintEvidenceItem]
-	} |
-	{
-		state: "unknown" | "latent" | "emerging" | "relieving" | "resolved"
-	}
-)
+})
+
+#ConstraintClaim: #BindingConstraintClaim | #NonBindingConstraintClaim
