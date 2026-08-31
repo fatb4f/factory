@@ -27,10 +27,15 @@ import state "github.com/fatb4f/factory/contracts/state"
 	changed: []
 }
 
-#ReportableDelta: #Delta & (
-	{added: [#NormalizedEvent, ...#NormalizedEvent]} |
-	{changed: [#ChangedEvent, ...#ChangedEvent]}
-)
+#AddedDelta: #Delta & {
+	added: [...#NormalizedEvent] & [_, ...]
+}
+
+#ChangedDelta: #Delta & {
+	changed: [...#ChangedEvent] & [_, ...]
+}
+
+#ReportableDelta: #AddedDelta | #ChangedDelta
 
 #Outcome:
 	"baseline_established" |
@@ -75,7 +80,7 @@ import state "github.com/fatb4f/factory/contracts/state"
 #NewMatchesDecision: close({
 	outcome:             "new_matches"
 	baseline_action:     "advance"
-	reported_event_keys: [#NonEmptyString, ...#NonEmptyString]
+	reported_event_keys: [...#NonEmptyString] & [_, ...]
 	reason:              #NonEmptyString
 })
 
