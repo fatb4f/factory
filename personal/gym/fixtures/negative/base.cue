@@ -29,6 +29,12 @@ baseDemand: gym.#MechanicalDemand & {
 	direction: "extension"
 }
 
+baseContributor: gym.#Contributor & {
+	id:    "contributor-a"
+	label: "Fixture contributor"
+	kind:  "functional-aggregate"
+}
+
 baseEvidence: gym.#EvidenceRecord & {
 	id:       "e1"
 	class:    "exercise-derived-proxy"
@@ -153,6 +159,7 @@ emptyState: {
 	movementPatterns: {squat: baseMovement}
 	objectives:       {}
 	demands:          {}
+	contributors:     {}
 	contributions:    {}
 	evidence:         {e1: baseEvidence}
 	mechanicalAdmissions: {}
@@ -163,6 +170,7 @@ emptyState: {
 	relations:            {}
 	compensationMarkers:      {}
 	compensationObservations: {}
+	compensationProjections:  {}
 	contributionDistributions: {}
 	equilibriumProjections:    {}
 }
