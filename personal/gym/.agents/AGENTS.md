@@ -11,8 +11,11 @@ The active operating protocol is `session-workflow.md`. Use it whenever the user
 For the current ankle-knee-pelvis program, resolve session programming from:
 
 - `contracts/personal/gym/tri_session_program.cue` — machine-readable posterior / anterior / distal-integrated topology;
+- `contracts/personal/gym/exercise_registry.cue` — canonical exercise identity, display names, constraints, setup dimensions, and supported metrics;
 - `personal/gym/docs/tri-session-program.md` — human-readable rationale and programming;
 - `contracts/personal/gym/program_ankle_knee_pelvis.cue` — targets, equilibrium, and data requirements.
+
+For every planned or executed prescription, resolve `exercise.id` through `exerciseProfiles`. Agent-facing plan text uses the resolved profile `name`; capture and persistence use the resolved canonical profile `id`. User aliases may be accepted as acquisition input but must not become stored exercise identity.
 
 ## Operating invariant
 
