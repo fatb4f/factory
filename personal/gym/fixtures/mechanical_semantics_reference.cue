@@ -168,7 +168,7 @@ referenceMechanicalSemantics: close({
 // are mutually consistent.
 referenceMechanicalIntegrity: gym.#SemanticIntegrityState & {
 	movementPatterns: {
-		squat:         referenceMovementPatterns.squat
+		squat:          referenceMovementPatterns.squat
 		"split-squat": referenceMovementPatterns.splitSquat
 	}
 	objectives: {
@@ -177,13 +177,16 @@ referenceMechanicalIntegrity: gym.#SemanticIntegrityState & {
 	demands: {
 		"squat-ascent-knee-extension-moment": referenceMechanicalSemantics.demand
 	}
+	contributors: {
+		"squat-knee-extension-capacity-proxy": referenceMechanicalSemantics.contributor
+	}
 	contributions: {
 		"squat-ascent-knee-extension-proxy-contribution": referenceMechanicalSemantics.contribution
 	}
 	evidence: {
-		"fixture-scale-position":       referenceMechanicalSemantics.evidence.scalePosition
-		"fixture-external-load-axis":   referenceMechanicalSemantics.evidence.externalLoad
-		"fixture-compensation-video":   referenceMechanicalSemantics.evidence.compensationVideo
+		"fixture-scale-position":     referenceMechanicalSemantics.evidence.scalePosition
+		"fixture-external-load-axis": referenceMechanicalSemantics.evidence.externalLoad
+		"fixture-compensation-video": referenceMechanicalSemantics.evidence.compensationVideo
 	}
 	mechanicalAdmissions: {
 		"fixture-squat-admission": referenceMechanicalSemantics.admission
@@ -203,6 +206,7 @@ referenceMechanicalIntegrity: gym.#SemanticIntegrityState & {
 	compensationObservations: {
 		"fixture-pelvic-rotation-observation": referenceMechanicalSemantics.compensationObservation
 	}
+	compensationProjections:  {}
 	contributionDistributions: {}
 	equilibriumProjections:    {}
 }
