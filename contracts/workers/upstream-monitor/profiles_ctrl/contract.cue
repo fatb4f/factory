@@ -60,7 +60,7 @@ ctrlAuthorityModel: close({
 		"contracts/workers/upstream-monitor/profiles_ctrl/correlation.cue",
 	]
 	executionSurfaces: [
-		".agents/workers/upstream-monitor/AGENTS.md",
+		"contracts/workers/upstream-monitor/AGENTS.md",
 		"projects/ctrl/.agents/AGENTS.md",
 		"projects/ctrl/.agents/report-template.md",
 	]
