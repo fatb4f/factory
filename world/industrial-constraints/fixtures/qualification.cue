@@ -1,6 +1,6 @@
 package qualification
 
-import domain "github.com/fatb4f/factory/contracts/world/industrial-constraints"
+import domain "github.com/fatb4f/factory/contracts/world/industrial-constraints:industrialconstraints"
 
 document: domain.#Document & {
 	kind:         "document"
