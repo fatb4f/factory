@@ -83,9 +83,9 @@ ankleKneePelvisTriSessionV1: #TriSessionProgram & {
 			invariant: "GHR depth, assistance, load, or volume may advance only while ankle, femoral, pelvic, and lumbar constraints remain admitted."
 			exposures: [
 				{exercise: {id: "ankle-inversion-eversion"}, phase: "activation", role: "activation-gate", sets: 1, reps: {min: 8, max: 10}, intent: "Make distal control available without fatigue."},
-				{exercise: {id: "calf-raise"}, phase: "activation", role: "activation-gate", sets: 1, reps: {min: 8, max: 10}, constraints: ["ankle-neutral", "no-calf-burn"], intent: "Establish plantar-flexor output without aggressive plantar flexion."},
+				{exercise: {id: "calf-raise-neutral"}, phase: "activation", role: "activation-gate", sets: 1, reps: {min: 8, max: 10}, constraints: ["ankle-neutral", "no-calf-burn"], intent: "Establish plantar-flexor output without aggressive plantar flexion."},
 				{exercise: {id: "heel-dig-bridge"}, phase: "activation", role: "activation-gate", sets: 2, hold: {min: 10, max: 15}, intent: "Acquire hamstring tension before long-lever loading.", constraints: ["graded-tension", "no-cramping"]},
-				{exercise: {id: "bridge-march"}, phase: "activation", role: "activation-gate", sets: 1, reps: {min: 5, max: 6}, intent: "Establish low-cost trunk-pelvis control."},
+				{exercise: {id: "cross-supported-bridge-march"}, phase: "activation", role: "activation-gate", sets: 1, reps: {min: 5, max: 6}, intent: "Establish low-cost trunk-pelvis control."},
 				{exercise: {id: "reverse-hyper"}, phase: "primer", role: "primer", sets: 2, reps: {min: 8, max: 12}, intent: "Bring glute-pelvis-hamstring complex online before GHR.", constraints: ["very-light-load", "pelvis-organized", "no-lumbar-swing", "stop-before-fatigue"]},
 				{exercise: {id: "ghr"}, phase: "main", role: "primary", sets: 3, reps: {min: 5, max: 8}, assistance: "enough-to-preserve-control", constraints: ["ankle-neutral", "femoral-position-organized", "hamstring-acquired-before-rep", "hips-torso-stacked", "pelvis-neutral", "slow-eccentric", "no-lumbar-rescue"], stopOn: ["pelvic-rotation-or-tilt", "lumbar-takeover", "delayed-hamstring-acquisition", "gastroc-cramp-threat", "medial-hamstring-cramp-threat", "femoral-control-loss"], progression: ["increase-clean-eccentric-rom", "reduce-assistance", "increase-reps-or-load"]},
 				{exercise: {id: "reverse-hyper"}, phase: "main", role: "secondary", sets: 3, reps: {min: 8, max: 12}, constraints: ["hip-driven-extension", "controlled-turnaround", "small-controlled-eccentric-end-range", "no-lumbar-substitution"]},
@@ -116,11 +116,11 @@ ankleKneePelvisTriSessionV1: #TriSessionProgram & {
 			invariant: "This is the lowest-load and highest-observation session; movement quality outranks fatigue."
 			exposures: [
 				{exercise: {id: "ankle-inversion-eversion"}, phase: "activation", role: "primary", sets: 2, reps: {min: 8, max: 12}, intent: "Direct distal adaptive exposure."},
-				{exercise: {id: "calf-raise"}, phase: "main", role: "primary", sets: 2, reps: {min: 6, max: 10}, constraints: ["controlled-plantarflexion", "clean-foot-pressure-transition"]},
+				{exercise: {id: "calf-raise-neutral"}, phase: "main", role: "primary", sets: 2, reps: {min: 6, max: 10}, constraints: ["controlled-plantarflexion", "clean-foot-pressure-transition"]},
 				{exercise: {id: "ankle-dorsiflexion"}, phase: "main", role: "secondary", sets: 2, reps: {min: 8, max: 12}},
 				{exercise: {id: "assisted-slrdl"}, phase: "integration", role: "integration", sets: 2, reps: {min: 5, max: 8}, intent: "Test distal correction under unilateral proximal demand."},
 				{exercise: {id: "curtsey-stepdown"}, phase: "integration", role: "integration", sets: 2, reps: {min: 5, max: 8}, optional: true},
-				{exercise: {id: "bridge-march"}, phase: "core", role: "core", sets: 2, reps: {min: 5, max: 8}, intent: "Cross-chain trunk-pelvis integration."},
+				{exercise: {id: "cross-supported-bridge-march"}, phase: "core", role: "core", sets: 2, reps: {min: 5, max: 8}, intent: "Cross-chain trunk-pelvis integration."},
 				{exercise: {id: "pallof-press"}, phase: "core", role: "core", sets: 2, reps: {min: 5, max: 8}, optional: true},
 				{exercise: {id: "roman-chair-side-bend"}, phase: "core", role: "core", sets: 2, reps: {min: 5, max: 8}, optional: true, constraints: ["start-with-isometric-or-small-rom", "pelvis-fixed", "no-hip-hike"], progression: ["increase-rom", "then-add-load"]},
 				{exercise: {id: "treadmill-walk"}, phase: "downregulation", role: "downregulation", sets: 1, intent: "Read heel loading, pronation, midstance, resupination, and push-off."},
