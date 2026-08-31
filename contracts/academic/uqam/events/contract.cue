@@ -87,10 +87,9 @@ requiredSourceIDs: [
 		task:   #TaskID
 		scope:  #ScopeID
 		schema: #SchemaID
-		next: #EventBaselinePointer & {
-			generation: expected_generation + 1
-		}
+		next:   #EventBaselinePointer
 	}
+	_generationInvariant: transition.next.generation & (transition.expected_generation + 1)
 })
 
 #PointerHold: close({
