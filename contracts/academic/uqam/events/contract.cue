@@ -1,9 +1,6 @@
 package uqamevents
 
-import (
-	"list"
-	state "github.com/fatb4f/factory/contracts/state"
-)
+import state "github.com/fatb4f/factory/contracts/state"
 
 #TaskID:   "academic.uqam.events"
 #SchemaID: "uqam-events/v1"
@@ -27,26 +24,91 @@ requiredSourceIDs: [
 	channel: "public-web" | "organizer-web" | "community-web"
 })
 
+// Required-source coverage is modeled as explicit closed variants rather than
+// set-membership predicates over an unconstrained open list. The canonical
+// ordering is deterministic and keeps each definition satisfiable on its own.
 #CompleteAcquisitionCoverage: close({
-	complete:         true
-	observed_sources: [...#RequiredSourceID]
-	gaps:             []
-	_requiredCoverage: [for id in requiredSourceIDs {
-		list.Contains(observed_sources, id) & true
-	}]
+	complete: true
+	observed_sources: [
+		"uqam-central-events",
+		"uqam-numerique",
+		"uqam-information-diffusion",
+	]
+	gaps: []
 })
 
-#IncompleteAcquisitionCoverage: close({
-	complete:         false
-	observed_sources: [...#RequiredSourceID]
-	gaps:             [#RequiredSourceID, ...#RequiredSourceID]
-	_requiredPartition: [for id in requiredSourceIDs {
-		observed: list.Contains(observed_sources, id)
-		gap:      list.Contains(gaps, id)
-		covered:  (list.Contains(observed_sources, id) || list.Contains(gaps, id)) & true
-		exclusive: (!(list.Contains(observed_sources, id) && list.Contains(gaps, id))) & true
-	}]
+#GapCentralEvents: close({
+	complete: false
+	observed_sources: [
+		"uqam-numerique",
+		"uqam-information-diffusion",
+	]
+	gaps: ["uqam-central-events"]
 })
+
+#GapNumerique: close({
+	complete: false
+	observed_sources: [
+		"uqam-central-events",
+		"uqam-information-diffusion",
+	]
+	gaps: ["uqam-numerique"]
+})
+
+#GapInformationDiffusion: close({
+	complete: false
+	observed_sources: [
+		"uqam-central-events",
+		"uqam-numerique",
+	]
+	gaps: ["uqam-information-diffusion"]
+})
+
+#GapCentralEventsNumerique: close({
+	complete: false
+	observed_sources: ["uqam-information-diffusion"]
+	gaps: [
+		"uqam-central-events",
+		"uqam-numerique",
+	]
+})
+
+#GapCentralEventsInformationDiffusion: close({
+	complete: false
+	observed_sources: ["uqam-numerique"]
+	gaps: [
+		"uqam-central-events",
+		"uqam-information-diffusion",
+	]
+})
+
+#GapNumeriqueInformationDiffusion: close({
+	complete: false
+	observed_sources: ["uqam-central-events"]
+	gaps: [
+		"uqam-numerique",
+		"uqam-information-diffusion",
+	]
+})
+
+#GapAllRequiredSources: close({
+	complete:         false
+	observed_sources: []
+	gaps: [
+		"uqam-central-events",
+		"uqam-numerique",
+		"uqam-information-diffusion",
+	]
+})
+
+#IncompleteAcquisitionCoverage:
+	#GapCentralEvents |
+	#GapNumerique |
+	#GapInformationDiffusion |
+	#GapCentralEventsNumerique |
+	#GapCentralEventsInformationDiffusion |
+	#GapNumeriqueInformationDiffusion |
+	#GapAllRequiredSources
 
 #AcquisitionCoverage:
 	#CompleteAcquisitionCoverage |
