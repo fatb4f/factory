@@ -120,10 +120,18 @@ exerciseProfiles: close({
 	"treadmill-walk":                 #TreadmillWalkProfile
 })
 
+// Registry identity is canonical: every key must equal the profile's own ID.
+_exerciseProfileIdentity: [for key, profile in exerciseProfiles {
+	_value: profile & {id: key}
+}]
+
+// Each exposure gets an independent non-empty lookup result. Do not emit the
+// same _matches field repeatedly into one session struct: repeated fields unify
+// in CUE and would incorrectly require all exercise profiles to be identical.
 _triSessionExerciseIntegrity: [for session in ankleKneePelvisTriSessionV1.sessions {
-	for exposure in session.exposures {
-		_matches: [for id, profile in exerciseProfiles if id == exposure.exercise.id {
-			profile & {id: id}
+	_exposures: [for exposure in session.exposures {
+		_matches: [for key, profile in exerciseProfiles if key == exposure.exercise.id {
+			profile & {id: key}
 		}] & [_, ...]
-	}
+	}]
 }]
