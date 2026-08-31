@@ -1,6 +1,6 @@
 package uqameventsnegative
 
-import events "github.com/fatb4f/factory/contracts/academic/uqam/events"
+import events "github.com/fatb4f/factory/contracts/academic/uqam/events:uqamevents"
 
 fixtureRunRef: events.#EventRunReference & {
 	task:              "academic.uqam.events"
