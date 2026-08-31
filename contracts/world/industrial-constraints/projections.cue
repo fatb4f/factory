@@ -7,7 +7,10 @@ package industrialconstraints
 	"admission" |
 	"graph" |
 	"correlation" |
-	"constraint-evidence"
+	"constraint-evidence" |
+	"claim" |
+	"assessment" |
+	"constraint"
 
 #ProjectionState: "candidate" | "normalized" | "admitted" | "derived"
 
@@ -50,7 +53,7 @@ package industrialconstraints
 	engine:  "ibis"
 	purpose: #ProjectionPurpose
 	inputs:  [...#ProjectionInput] & [_, ...]
-	output:  #ProjectionOutput
+	outputs: [#ProjectionOutput, ...#ProjectionOutput]
 	backend: close({
 		read:  "bigquery" | "adapter" | "duckdb" | "memory"
 		write: "duckdb" | "memory"
@@ -108,7 +111,7 @@ projections: close({
 		id:      "acquire-gdelt-events"
 		purpose: "acquisition"
 		inputs: [{kind: "source-channel", source: "gdelt", channel: "events"}]
-		output: {relation: "documents", state: "candidate"}
+		outputs: [{relation: "documents", state: "candidate"}]
 		backend: {read: "bigquery", write: "memory"}
 	}
 
@@ -116,7 +119,7 @@ projections: close({
 		id:      "acquire-google-patents"
 		purpose: "acquisition"
 		inputs: [{kind: "source-channel", source: "google-bigquery", channel: "google-patents"}]
-		output: {relation: "documents", state: "candidate"}
+		outputs: [{relation: "documents", state: "candidate"}]
 		backend: {read: "bigquery", write: "memory"}
 	}
 
@@ -128,7 +131,7 @@ projections: close({
 			{kind: "source-channel", source: "canadabuys", channel: "procurement"},
 			{kind: "source-channel", source: "quebec-enterprise-register", channel: "enterprises"},
 		]
-		output: {relation: "documents", state: "candidate"}
+		outputs: [{relation: "documents", state: "candidate"}]
 		backend: {read: "adapter", write: "memory"}
 	}
 
@@ -139,7 +142,7 @@ projections: close({
 			{kind: "source-channel", source: "statcan", channel: "tables"},
 			{kind: "source-channel", source: "hydro-quebec", channel: "open-data"},
 		]
-		output: {relation: "measurements", state: "candidate"}
+		outputs: [{relation: "measurements", state: "candidate"}]
 		backend: {read: "adapter", write: "memory"}
 	}
 
@@ -147,7 +150,7 @@ projections: close({
 		id:      "normalize-documents"
 		purpose: "normalization"
 		inputs: [{kind: "relation", relation: "documents", state: "candidate"}]
-		output: {relation: "documents", state: "normalized"}
+		outputs: [{relation: "documents", state: "normalized"}]
 		backend: {read: "memory", write: "memory"}
 	}
 
@@ -155,7 +158,7 @@ projections: close({
 		id:      "extract-observations"
 		purpose: "normalization"
 		inputs: [{kind: "relation", relation: "documents", state: "candidate"}]
-		output: {relation: "observations", state: "normalized"}
+		outputs: [{relation: "observations", state: "normalized"}]
 		backend: {read: "memory", write: "memory"}
 	}
 
@@ -163,7 +166,7 @@ projections: close({
 		id:      "extract-events"
 		purpose: "normalization"
 		inputs: [{kind: "relation", relation: "documents", state: "candidate"}]
-		output: {relation: "events", state: "normalized"}
+		outputs: [{relation: "events", state: "normalized"}]
 		backend: {read: "memory", write: "memory"}
 	}
 
@@ -171,7 +174,7 @@ projections: close({
 		id:      "normalize-measurements"
 		purpose: "normalization"
 		inputs: [{kind: "relation", relation: "measurements", state: "candidate"}]
-		output: {relation: "measurements", state: "normalized"}
+		outputs: [{relation: "measurements", state: "normalized"}]
 		backend: {read: "memory", write: "memory"}
 	}
 
@@ -182,7 +185,7 @@ projections: close({
 			{kind: "relation", relation: "observations", state: "normalized"},
 			{kind: "relation", relation: "events", state: "normalized"},
 		]
-		output: {relation: "entities", state: "normalized"}
+		outputs: [{relation: "entities", state: "normalized"}]
 		backend: {read: "memory", write: "memory"}
 	}
 
@@ -194,7 +197,7 @@ projections: close({
 			{kind: "relation", relation: "events", state: "normalized"},
 			{kind: "relation", relation: "entities", state: "normalized"},
 		]
-		output: {relation: "relations", state: "normalized"}
+		outputs: [{relation: "relations", state: "normalized"}]
 		backend: {read: "memory", write: "memory"}
 	}
 
@@ -209,7 +212,14 @@ projections: close({
 			{kind: "relation", relation: "measurements", state: "normalized"},
 			{kind: "relation", relation: "relations", state: "normalized"},
 		]
-		output: {relation: "relations", state: "admitted"}
+		outputs: [
+			{relation: "documents", state: "admitted"},
+			{relation: "entities", state: "admitted"},
+			{relation: "observations", state: "admitted"},
+			{relation: "events", state: "admitted"},
+			{relation: "measurements", state: "admitted"},
+			{relation: "relations", state: "admitted"},
+		]
 		backend: {read: "memory", write: "duckdb"}
 	}
 
@@ -217,7 +227,7 @@ projections: close({
 		id:      "project-graph-nodes"
 		purpose: "graph"
 		inputs: [{kind: "relation", relation: "entities", state: "admitted"}]
-		output: {relation: "graph-nodes", state: "derived"}
+		outputs: [{relation: "graph-nodes", state: "derived"}]
 		backend: {read: "duckdb", write: "memory"}
 	}
 
@@ -225,7 +235,7 @@ projections: close({
 		id:      "project-graph-edges"
 		purpose: "graph"
 		inputs: [{kind: "relation", relation: "relations", state: "admitted"}]
-		output: {relation: "graph-edges", state: "derived"}
+		outputs: [{relation: "graph-edges", state: "derived"}]
 		backend: {read: "duckdb", write: "memory"}
 	}
 
@@ -237,7 +247,7 @@ projections: close({
 			{kind: "relation", relation: "measurements", state: "admitted"},
 			{kind: "relation", relation: "relations", state: "admitted"},
 		]
-		output: {relation: "constraint-evidence", state: "derived"}
+		outputs: [{relation: "constraint-evidence", state: "derived"}]
 		backend: {read: "duckdb", write: "memory"}
 	}
 
@@ -249,8 +259,51 @@ projections: close({
 			{kind: "relation", relation: "events", state: "admitted"},
 			{kind: "relation", relation: "measurements", state: "admitted"},
 		]
-		output: {relation: "constraint-evidence", state: "derived"}
+		outputs: [{relation: "constraint-evidence", state: "derived"}]
 		backend: {read: "duckdb", write: "memory"}
+	}
+
+	"derive-constraint-claims": #Projection & {
+		id:      "derive-constraint-claims"
+		purpose: "claim"
+		inputs: [{kind: "relation", relation: "constraint-evidence", state: "derived"}]
+		outputs: [{relation: "claims", state: "derived"}]
+		backend: {read: "memory", write: "memory"}
+	}
+
+	"assess-constraint-claims": #Projection & {
+		id:      "assess-constraint-claims"
+		purpose: "assessment"
+		inputs: [{kind: "relation", relation: "claims", state: "derived"}]
+		outputs: [{relation: "assessments", state: "derived"}]
+		backend: {read: "memory", write: "memory"}
+	}
+
+	"derive-constraints": #Projection & {
+		id:      "derive-constraints"
+		purpose: "constraint"
+		inputs: [
+			{kind: "relation", relation: "claims", state: "derived"},
+			{kind: "relation", relation: "assessments", state: "derived"},
+		]
+		outputs: [{relation: "constraints", state: "derived"}]
+		backend: {read: "memory", write: "memory"}
+	}
+
+	"admit-qualified-constraints": #Projection & {
+		id:      "admit-qualified-constraints"
+		purpose: "admission"
+		inputs: [
+			{kind: "relation", relation: "claims", state: "derived"},
+			{kind: "relation", relation: "assessments", state: "derived"},
+			{kind: "relation", relation: "constraints", state: "derived"},
+		]
+		outputs: [
+			{relation: "claims", state: "admitted"},
+			{relation: "assessments", state: "admitted"},
+			{relation: "constraints", state: "admitted"},
+		]
+		backend: {read: "memory", write: "duckdb"}
 	}
 
 	"project-funding-response": #Projection & {
@@ -261,7 +314,7 @@ projections: close({
 			{kind: "relation", relation: "events", state: "admitted"},
 			{kind: "relation", relation: "relations", state: "admitted"},
 		]
-		output: {relation: "constraint-evidence", state: "derived"}
+		outputs: [{relation: "constraint-evidence", state: "derived"}]
 		backend: {read: "duckdb", write: "memory"}
 	}
 })
