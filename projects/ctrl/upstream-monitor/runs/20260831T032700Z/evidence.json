@@ -1,0 +1,77 @@
+{
+  "apiVersion": "factory.upstream-monitor.ctrl.evidence/v3",
+  "kind": "CtrlUpstreamEvidence",
+  "run_id": "20260831T032700Z",
+  "profile_id": "ctrl",
+  "terminal_state": "terminal_success",
+  "monitor_state": "terminal_success",
+  "qualification_state": "observation_only",
+  "authority_revision": "4f9c5471ba8c8627efc1662ab3aee8906f2461b0",
+  "ctrl_revision": "b5f82c3a5e33d08d1f5d07cb2c9724c7679c7538",
+  "bootstrap_baseline": false,
+  "lineage": {
+    "corrects_run_id": "20260830T160519Z",
+    "corrects_evidence_blob": "8e0f6191df19efe33eb90122b4d33c1536884ae1",
+    "reason": "Replaces report-shaped validationNotes with the contracted evidence validation object; the prior sealed run remains immutable."
+  },
+  "sources": [
+    {"source":"codex","channel":"main","status":"resolved","head_commit":"88f776588f5e73467e7659c268f8358a9a2378b6","evidence":["source=codex; channel=main; ref=main; revision=88f776588f5e73467e7659c268f8358a9a2378b6; observed_surface=app-server protocol/schema, Guardian/approval/MCP/tool policy, thread/rollout runtime"]},
+    {"source":"codex","channel":"latest-alpha-cli","status":"resolved","head_commit":"7ac2dff554323b17d5f622b7aca236ca75c93259","evidence":["source=codex; channel=latest-alpha-cli; ref=latest-alpha-cli; revision=7ac2dff554323b17d5f622b7aca236ca75c93259; observed_surface=forecast CLI channel"]},
+    {"source":"cpython","channel":"3.14","status":"resolved","head_commit":"3656c15ce88f0eeb758a136c503a1d41edc88e68","version":"3.14","evidence":["source=cpython; channel=3.14; ref=3.14; revision=3656c15ce88f0eeb758a136c503a1d41edc88e68; observed_surface=active compiler/runtime/introspection baseline"]},
+    {"source":"cpython","channel":"main","status":"resolved","head_commit":"26d9b25580159abeb69b80ae6fbf511385eb6e99","evidence":["source=cpython; channel=main; ref=main; revision=26d9b25580159abeb69b80ae6fbf511385eb6e99; observed_surface=forecast compiler/runtime/tokenizer"]},
+    {"source":"astral-python","channel":"main","status":"resolved","head_commit":"4d622392df65335245f0267e3b6465a7e992dc4c","evidence":["source=astral-python; channel=main; ref=main; revision=4d622392df65335245f0267e3b6465a7e992dc4c; observed_surface=Ruff/ty analyzer forecast"]},
+    {"source":"scip","channel":"main","status":"resolved","head_commit":"efbb5d957156f62ebc1908526290aa9adafaa279","evidence":["source=scip; channel=main; ref=main; revision=efbb5d957156f62ebc1908526290aa9adafaa279; observed_surface=scip.proto semantic identity"]},
+    {"source":"otel-python-core","channel":"main","status":"resolved","head_commit":"251d01a9b65b9a9386c8483de5a8065d9abce4de","evidence":["source=otel-python-core; channel=main; ref=main; revision=251d01a9b65b9a9386c8483de5a8065d9abce4de; observed_surface=telemetry API/SDK/configuration/exporters/propagation"]},
+    {"source":"otel-python-contrib","channel":"main","status":"resolved","head_commit":"f1b9368aa6e2ad4cb0aaa79d341cd19b0b9cd13b","evidence":["source=otel-python-contrib; channel=main; ref=main; revision=f1b9368aa6e2ad4cb0aaa79d341cd19b0b9cd13b; observed_surface=provider and GenAI instrumentation"]},
+    {"source":"otel-genai-semconv","channel":"main","status":"resolved","head_commit":"67dff024110be5bd9f318006e733f4078e0f4c97","evidence":["source=otel-genai-semconv; channel=main; ref=main; revision=67dff024110be5bd9f318006e733f4078e0f4c97; observed_surface=GenAI semantic-convention model"]},
+    {"source":"otel-python-genai","channel":"main","status":"resolved","head_commit":"b70398865dc3c95945c16b8aab0a92f94bcd316b","evidence":["source=otel-python-genai; channel=main; ref=main; revision=b70398865dc3c95945c16b8aab0a92f94bcd316b; observed_surface=GenAI/OpenAI instrumentation realization"]},
+    {"source":"otel-arrow","channel":"main","status":"resolved","head_commit":"3065676427079b08049c6167d0d7fd410ff25743","evidence":["source=otel-arrow; channel=main; ref=main; revision=3065676427079b08049c6167d0d7fd410ff25743; observed_surface=OTAP/dataflow/Arrow projection"]},
+    {"source":"weaver","channel":"main","status":"resolved","head_commit":"c66bdc1b63b71ebe7f4aa1a84eda25421269d2aa","evidence":["source=weaver; channel=main; ref=main; revision=c66bdc1b63b71ebe7f4aa1a84eda25421269d2aa; observed_surface=registry semantic interface validation/resolution"]},
+    {"source":"cue","channel":"pinned","status":"resolved","head_commit":"806821e40fae070318600a264d311517e596353b","evidence":["source=cue; channel=pinned; ref=806821e40fae070318600a264d311517e596353b; revision=806821e40fae070318600a264d311517e596353b; observed_surface=pinned evaluator semantics"]},
+    {"source":"cue","channel":"master","status":"resolved","head_commit":"69d097ba2878cfe24c28f1e7012836f9b934ff08","evidence":["source=cue; channel=master; ref=master; revision=69d097ba2878cfe24c28f1e7012836f9b934ff08; observed_surface=forecast evaluator semantics"]}
+  ],
+  "graph": {
+    "nodesObserved": ["codex-rust-protocol","codex-json-schema","codex-live-runtime","cpython-inspect","cpython-symtable","cpython-compiler","astral-ty-semantic","scip-semantic-index","otel-python-api-sdk","otel-arrow-dataflow","weaver-registry-interface","ctrl-cue-qualification-gate"],
+    "edgesEvaluated": ["codex-protocol-schema","codex-protocol-runtime","cpython-import-inspect","cpython-ast-symtable","cpython-symtable-compiler"],
+    "kernelRelationsEvaluated": ["closure-cue-gate","cue-gate-fixpoint","fixpoint-seal","diagnostic-packet","packet-weaver","weaver-codex"],
+    "upstreamBindingsEvaluated": ["scip-correlation-binding","weaver-feedback-binding","cue-qualification-binding"],
+    "testBindingsEvaluated": [],
+    "probeBindingsEvaluated": []
+  },
+  "items": [
+    {
+      "id":"codex-policy-boundary-open-20260831","title":"Codex policy/tool/MCP compatibility gate remains open","decision":"blocking-gate","severity":"critical","sources":["codex"],"nodes":["codex-live-runtime","codex-rust-protocol"],"summary":"The corrected run preserves the prior observation that Codex policy, approval, hook, MCP/tool, unified-execution and plugin surfaces advanced while ctrl remained fixed; no executable local compatibility witness is available.","localContractImpact":"Keep the blocking gate open before adopting the observed Codex policy semantics into spec/.codex or controller assumptions.","observations":[{"id":"obs-codex-policy-20260831","reportItemID":"codex-policy-boundary-open-20260831","source":"codex","channel":"main","kind":"runtime","path":"codex-rs/app-server/; codex-rs/core/; codex-rs/core-plugins/","nodeMatches":["codex-live-runtime","codex-rust-protocol"],"observation":"Policy, approval, hook, MCP/tool, unified-execution and plugin behavior changed on the previously acquired Codex main revision; local compatibility was not executed.","decision":"blocking-gate","severity":"critical"}],"claims":[{"id":"claim-codex-policy-open-20260831","text":"Observed Codex policy behavior is not locally qualified until the declared local gate executes.","observationRefs":["obs-codex-policy-20260831"]}]},
+    {
+      "id":"codex-protocol-schema-20260831","title":"Codex protocol and schema projection advanced materially","decision":"contract-update","severity":"high","sources":["codex"],"nodes":["codex-rust-protocol","codex-json-schema","codex-live-runtime"],"summary":"The corrected evidence preserves the prior protocol/schema delta across app-server request, notification, MCP and project/thread surfaces.","localContractImpact":"Reconcile local app-server/config/transport projections before treating the observed Codex main revision as protocol-compatible.","observations":[{"id":"obs-codex-schema-20260831","reportItemID":"codex-protocol-schema-20260831","source":"codex","channel":"main","kind":"schema","path":"codex-rs/app-server-protocol/src/; codex-rs/app-server-protocol/schema/","nodeMatches":["codex-rust-protocol","codex-json-schema","codex-live-runtime"],"observation":"Declared Codex protocol/schema/runtime surfaces differ materially from the previous admitted baseline.","decision":"contract-update","severity":"high"}],"claims":[{"id":"claim-codex-projection-20260831","text":"The observed Codex protocol/schema/runtime projection changed materially from the previous admitted baseline.","observationRefs":["obs-codex-schema-20260831"]}]},
+    {
+      "id":"cpython-314-semantic-delta-20260831","title":"CPython 3.14 compiler and introspection baseline changed","decision":"contract-update","severity":"high","sources":["cpython"],"nodes":["cpython-inspect","cpython-symtable","cpython-compiler"],"summary":"The active 3.14 observation includes inspect, symtable, compile and code-generation changes relative to the previous admitted source revision.","localContractImpact":"Run the selected upstream test and local probe bindings before treating the observed 3.14 revision as behaviorally qualified.","observations":[{"id":"obs-cpython-314-20260831","reportItemID":"cpython-314-semantic-delta-20260831","source":"cpython","channel":"3.14","kind":"runtime","path":"Lib/inspect.py; Lib/symtable.py; Python/symtable.c; Python/compile.c; Python/codegen.c","nodeMatches":["cpython-inspect","cpython-symtable","cpython-compiler"],"observation":"The acquired CPython 3.14 revision changed declared compiler and introspection surfaces; no regrtest slice or local semantic probe was executed by this actuator.","decision":"contract-update","severity":"high"}],"claims":[{"id":"claim-cpython-314-20260831","text":"The CPython 3.14 source delta is material but remains behaviorally unqualified locally.","observationRefs":["obs-cpython-314-20260831"]}]},
+    {
+      "id":"otel-arrow-dataflow-delta-20260831","title":"OTel-Arrow transport and dataflow surfaces moved","decision":"contract-update","severity":"high","sources":["otel-arrow"],"nodes":["otel-arrow-dataflow"],"summary":"The acquired OTel-Arrow main revision includes changes across dataflow, replay/retry, transforms, durable buffering and capability behavior.","localContractImpact":"Preserve OTLP/OTAP identity and run the contracted trace-preservation witness before adopting the changed transport/dataflow behavior.","observations":[{"id":"obs-otel-arrow-20260831","reportItemID":"otel-arrow-dataflow-delta-20260831","source":"otel-arrow","channel":"main","kind":"transport","path":"rust/otap-dataflow/; docs/","nodeMatches":["otel-arrow-dataflow"],"observation":"OTel-Arrow transport/dataflow implementation changed on the acquired revision; no OTLP/OTAP round-trip was executed.","decision":"contract-update","severity":"high"}],"claims":[{"id":"claim-otel-arrow-20260831","text":"The observed OTel-Arrow delta requires transport-preservation qualification before local adoption.","observationRefs":["obs-otel-arrow-20260831"]}]},
+    {
+      "id":"weaver-interface-delta-20260831","title":"Weaver semantic-interface realization advanced","decision":"contract-update","severity":"high","sources":["weaver"],"nodes":["weaver-registry-interface"],"summary":"The acquired Weaver main revision changed registry, resolver, dependency-tree, live-check and schema-materialization surfaces.","localContractImpact":"Keep Weaver as interface realization evidence and qualify the projected DiagnosticPacket interface before adoption.","observations":[{"id":"obs-weaver-20260831","reportItemID":"weaver-interface-delta-20260831","source":"weaver","channel":"main","kind":"projection","path":"src/registry/; crates/; schemas/","nodeMatches":["weaver-registry-interface"],"observation":"Weaver interface implementation changed materially; no local Weaver projection/conformance execution was available.","decision":"contract-update","severity":"high"}],"claims":[{"id":"claim-weaver-20260831","text":"Weaver changes are interface-realization evidence and do not establish local qualification by themselves.","observationRefs":["obs-weaver-20260831"]}]}
+  ],
+  "validation": {
+    "authorityRead": true,
+    "ctrlContextRead": true,
+    "projectTopologyRead": true,
+    "semanticKernelRead": true,
+    "sourceChannelsDistinct": true,
+    "graphModelRead": true,
+    "correlationCarrierPolicyRead": true,
+    "interfaceBoundaryRead": true,
+    "publicationPlanRead": true,
+    "forbiddenAttractorsChecked": true,
+    "cueExecution": "not_available_to_github_app",
+    "executableCpythonProbes": "not_executed",
+    "executableRegrtest": "not_executed",
+    "executableAstralCorrelation": "not_executed",
+    "executableScipCorrelation": "not_executed",
+    "executableOtelPipeline": "not_executed",
+    "executableOtlpOtapRoundtrip": "not_executed",
+    "executableRelationalProjection": "not_executed",
+    "executableSemanticKernel": "not_executed",
+    "executableWeaverProjection": "not_executed",
+    "reportProjectionOnly": true,
+    "summaryProjectionOnly": true
+  }
+}
