@@ -44,7 +44,7 @@ baseEvent: events.#NormalizedEvent & {
 	content_digest: "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 }
 
-movedEvent: events.#NormalizedEvent & {
+movedEventObservation: events.#NormalizedEvent & {
 	identity: {
 		key:             "uqam:event:example"
 		basis:           "primary-url"
@@ -135,7 +135,7 @@ fixtures: close({
 	}
 	movedEvent: #FixtureCase & {
 		previous:          [baseEvent]
-		current:           [movedEvent]
+		current:           [movedEventObservation]
 		pointerGeneration: 1
 		expected: {
 			status:         "comparable"
