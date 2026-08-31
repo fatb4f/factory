@@ -107,7 +107,7 @@ package upstreammonitor
 	gitBlobSHA: #GitObjectSHA
 })
 
-#RunBundleManifest: close({
+#RunBundleManifestV2Legacy: close({
 	apiVersion: "factory.upstream-monitor.run-bundle/v2"
 	kind: "UpstreamMonitorRunBundle"
 	run_id: #NonEmptyString
@@ -116,6 +116,40 @@ package upstreammonitor
 	export_unit: "directory"
 	artifacts: [...#RunBundleArtifact] & [_, ...]
 })
+
+#RunBundleManifestV2Qualified: close({
+	apiVersion: "factory.upstream-monitor.run-bundle/v2"
+	kind: "UpstreamMonitorRunBundle"
+	run_id: #NonEmptyString
+	profile_id: #NonEmptyString
+	authority_revision: #CommitSHA
+	subject_revision: #CommitSHA
+	terminal_state: #TerminalState
+	qualification_state: #QualificationState
+	export_unit: "directory"
+	artifacts: [...#RunBundleArtifact] & [_, ...]
+})
+
+#RunBundleManifestV2:
+	#RunBundleManifestV2Legacy |
+	#RunBundleManifestV2Qualified
+
+#RunBundleManifestV3: close({
+	apiVersion: "factory.upstream-monitor.run-bundle/v3"
+	kind: "UpstreamMonitorRunBundle"
+	run_id: #NonEmptyString
+	profile_id: #NonEmptyString
+	authority_revision: #CommitSHA
+	subject_revision: #CommitSHA
+	terminal_state: #TerminalState
+	qualification_state: #QualificationState
+	export_unit: "directory"
+	artifacts: [...#RunBundleArtifact] & [_, ...]
+})
+
+#RunBundleManifest:
+	#RunBundleManifestV2 |
+	#RunBundleManifestV3
 
 #LatestRunPointer: close({
 	apiVersion: "factory.upstream-monitor.latest-run/v2"
