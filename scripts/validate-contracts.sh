@@ -7,6 +7,10 @@ section() {
   printf '\n== %s ==\n' "$1"
 }
 
+sha256_uri() {
+  printf 'sha256:%s\n' "$(sha256sum "$1" | awk '{print $1}')"
+}
+
 validate_registry() {
   section "registry"
   cue vet -c=false ./registry.cue
@@ -27,14 +31,54 @@ validate_registry() {
   grep -Fq 'contracts/workers/upstream-monitor/AGENTS.md' docs/architecture/factory-unit-registry-refactor.md
 }
 
+validate_uqam_admitted_state() {
+  section "UQAM admitted comparison state"
+
+  local contract_dir="./contracts/academic/uqam/events"
+  local pointer="academic/uqam/events/state/admitted-baseline.json"
+  [[ -f "$pointer" ]] || { echo "missing UQAM admitted baseline pointer: $pointer" >&2; exit 1; }
+
+  cue vet -c=false "$pointer" "$contract_dir" -d '#EventBaselinePointer'
+
+  local bundle manifest normalized decision
+  bundle="$(jq -r '.baseline.run.bundle_path' "$pointer")"
+  manifest="${bundle%/}/manifest.json"
+  [[ -f "$manifest" ]] || { echo "missing UQAM manifest: $manifest" >&2; exit 1; }
+
+  cue vet -c=false "$manifest" "$contract_dir" -d '#RunManifest'
+
+  normalized="${bundle%/}/$(jq -r '.normalized_path' "$manifest")"
+  decision="${bundle%/}/$(jq -r '.decision_path' "$manifest")"
+  [[ -f "$normalized" ]] || { echo "missing UQAM normalized artifact: $normalized" >&2; exit 1; }
+  [[ -f "$decision" ]] || { echo "missing UQAM decision artifact: $decision" >&2; exit 1; }
+
+  cue vet -c=false "$normalized" "$contract_dir" -d '#NormalizedSnapshot'
+  cue vet -c=false "$decision" "$contract_dir" -d '#DecisionArtifact'
+
+  [[ "$(jq -r '.baseline.run.run_id' "$pointer")" == "$(jq -r '.run_id' "$manifest")" ]]
+  [[ "$(jq -r '.baseline.run.normalized_digest' "$pointer")" == "$(jq -r '.normalized_digest' "$manifest")" ]]
+  [[ "$(jq -r '.baseline.run.observed_at' "$pointer")" == "$(jq -r '.observed_at' "$manifest")" ]]
+
+  [[ "$(jq -r '.task_id' "$normalized")" == "$(jq -r '.task_id' "$manifest")" ]]
+  [[ "$(jq -r '.schema' "$normalized")" == "$(jq -r '.schema' "$manifest")" ]]
+  [[ "$(jq -r '.observed_at' "$normalized")" == "$(jq -r '.observed_at' "$manifest")" ]]
+
+  [[ "$(jq -r '.currentRun.run_id' "$decision")" == "$(jq -r '.run_id' "$manifest")" ]]
+  [[ "$(jq -r '.currentRun.normalized_digest' "$decision")" == "$(jq -r '.normalized_digest' "$manifest")" ]]
+  [[ "$(sha256_uri "$normalized")" == "$(jq -r '.normalized_digest' "$manifest")" ]]
+  [[ "$(sha256_uri "$decision")" == "$(jq -r '.decision_digest' "$manifest")" ]]
+
+  jq -e --slurpfile admitted "$pointer" '(.pointer.action != "advance") or (.pointer.transition.next == $admitted[0])' "$decision" >/dev/null
+}
+
 validate_upstream_latest() {
   local profile="$1"
   local evidence_schema="$2"
-  local profile_package="$3"
+  local profile_dir="$3"
   local latest="projects/${profile}/upstream-monitor/latest.json"
 
   section "upstream-monitor latest: ${profile}"
-  cue vet -c=false "$latest" ./contracts/workers/upstream-monitor:upstreammonitor -d '#LatestRunPointer'
+  cue vet -c=false "$latest" ./contracts/workers/upstream-monitor -d '#LatestRunPointer'
 
   local bundle manifest evidence
   bundle="$(jq -r '.bundle_path' "$latest")"
@@ -45,8 +89,8 @@ validate_upstream_latest() {
   [[ -f "$manifest" ]] || { echo "missing manifest: $manifest" >&2; exit 1; }
   [[ -f "$evidence" ]] || { echo "missing evidence: $evidence" >&2; exit 1; }
 
-  cue vet -c=false "$manifest" ./contracts/workers/upstream-monitor:upstreammonitor -d '#RunBundleManifest'
-  cue vet -c=false "$evidence" "$profile_package" -d "$evidence_schema"
+  cue vet -c=false "$manifest" ./contracts/workers/upstream-monitor -d '#RunBundleManifest'
+  cue vet -c=false "$evidence" "$profile_dir" -d "$evidence_schema"
 
   [[ "$(jq -r '.run_id' "$latest")" == "$(jq -r '.run_id' "$manifest")" ]]
   [[ "$(jq -r '.profile_id' "$latest")" == "$(jq -r '.profile_id' "$manifest")" ]]
@@ -97,13 +141,14 @@ section "UQAM event watch"
 cue vet -c=false ./contracts/academic/uqam/events:uqamevents
 cue vet -c=false ./academic/uqam/events/fixtures:uqameventsfixtures
 bash academic/uqam/events/fixtures/negative/run.sh
+validate_uqam_admitted_state
 
 section "upstream-monitor contracts"
 cue vet -c=false ./contracts/workers/upstream-monitor:upstreammonitor
 cue export ./contracts/workers/upstream-monitor/profiles_ctrl:ctrlprofile -e publicContract --out json >/dev/null
 cue export ./contracts/workers/upstream-monitor/profiles_epistemic_plant_bootstrap:epistemicplantprofile -e publicContract --out json >/dev/null
-validate_upstream_latest "ctrl" '#CtrlRunEvidence' './contracts/workers/upstream-monitor/profiles_ctrl:ctrlprofile'
-validate_upstream_latest "epistemic-plant-bootstrap" '#EpistemicPlantRunEvidence' './contracts/workers/upstream-monitor/profiles_epistemic_plant_bootstrap:epistemicplantprofile'
+validate_upstream_latest "ctrl" '#CtrlRunEvidence' './contracts/workers/upstream-monitor/profiles_ctrl'
+validate_upstream_latest "epistemic-plant-bootstrap" '#EpistemicPlantRunEvidence' './contracts/workers/upstream-monitor/profiles_epistemic_plant_bootstrap'
 validate_epistemic_template
 
 section "industrial constraints"
