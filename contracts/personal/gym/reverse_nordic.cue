@@ -18,7 +18,7 @@ package gym
 		{id: "R3", order: 3, label: "deep controlled lean"},
 		{id: "R4", order: 4, label: "prescribed full working excursion"},
 	]
-	setupDimensions: ["knee-padding", "foot-position", "assistance"]
-	supportedMetrics: ["reps", "eccentric-duration", "knee-angle", "hip-angle", "torso-angle"]
-	videoPerspectives: ["left-side", "right-side", "oblique"]
+	setupDimensions: ["knee-padding", "foot-position", "knee-spacing", "assistance"]
+	supportedMetrics: ["reps", "eccentric-duration", "concentric-reversal-duration", "knee-angle", "knee-separation-angle", "hip-angle", "torso-angle"]
+	videoPerspectives: ["front", "left-side", "right-side", "oblique"]
 }

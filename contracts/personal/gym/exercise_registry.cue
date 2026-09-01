@@ -26,6 +26,7 @@ package gym
 	name:                "Backward walk"
 	requiredConstraints: []
 	rangeRequired:       false
+	setupDimensions:     ["surface", "resistance", "speed", "incline"]
 	supportedMetrics:    ["duration", "distance"]
 }
 
@@ -105,6 +106,9 @@ exerciseProfiles: close({
 	"reverse-hyper":                  #ReverseHyperProfile
 	copenhagen:                       #CopenhagenProfile
 	"reverse-nordic":                 #ReverseNordicProfile
+	"atg-split-squat":                #ATGSplitSquatProfile
+	"poliquin-step-up":               #PoliquinStepUpProfile
+	"resisted-hip-flexion":           #ResistedHipFlexionProfile
 	"curtsey-stepdown":               #CurtseyStepdownProfile
 	"cross-supported-bridge-march":   #BridgeMarchProfile
 	"ankle-inversion-eversion":       #AnkleInversionEversionProfile

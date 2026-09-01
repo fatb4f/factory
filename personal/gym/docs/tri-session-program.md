@@ -13,7 +13,7 @@ A — posterior transfer
 ankle → hamstring → glute → pelvis
 
 B — anterior / rotational femoral control
-ankle → quad / adductor → femur → pelvis
+ankle → quad / adductor / hip flexor → femur → pelvis
 
 C — distal + integrated redistribution
 foot / ankle → tibia → femur → pelvis → trunk
@@ -127,26 +127,90 @@ Do not automatically finish with aggressive loaded stretching. Long-length hamst
 
 ### Objective
 
-Restore anterior-chain loading and controlled femoral rotation while maintaining pelvis and trunk organization.
+Restore anterior-hip and knee-extension capacity while testing whether posterior-chain and trunk support can preserve femur-pelvis organization under deep unilateral and bilateral anterior-chain demand.
 
-### Main exposure
+Program B borrows selected ATG/Knees Over Toes movement families, but it is not intended to reproduce an official ATG session. Movements are admitted only when they serve the ankle-knee-pelvis contract and do not create redundant fatigue.
 
-Reverse Nordic is the primary anterior-chain movement.
+### Activation and knee-control primer
+
+Start with low-fatigue dorsiflexion and anterior trunk-pelvis activation. A short backward walk, resisted backward walk, or backward treadmill exposure may be used as a knee-extension primer when it improves movement quality without becoming conditioning work.
+
+A Poliquin step-up then exposes unilateral knee-extension control before the deeper main lifts. Progress step height and reduce hand support before adding substantial external load.
+
+```text
+clean low step
+→ greater controlled step height
+→ less hand support
+→ external load
+```
+
+The step-up is a primer and measurement surface, not a third maximal quad lift.
+
+### ATG split squat
+
+The ATG split squat is a defining Program B lift because it couples several requirements in one asymmetric task:
+
+```text
+front leg
+  deep knee flexion + ankle dorsiflexion + quad output
+
+rear leg
+  hip-extension tolerance / anterior-hip length
+
+pelvis
+  bilateral force transfer + femoral organization
+```
+
+Begin with front-foot elevation and/or hand support as required. The progression order is:
+
+```text
+clean supported ROM
+→ deeper controlled ROM
+→ lower front-foot elevation / less assistance
+→ external load
+```
+
+Depth is admitted only while the pelvis remains organized, the front knee tracks under control, and rear-hip extension is not manufactured through lumbar extension.
+
+### Reverse Nordic
+
+Reverse Nordic remains the other defining anterior-chain lift.
 
 ```text
 clean shallow ROM
 → deeper ROM
 → slower eccentric
+→ cleaner deep-flexion-to-concentric reversal
 → external load
 ```
 
 Hips remain extended, ribs stacked, and depth is not manufactured through lumbar extension.
 
-A curtsey-stepdown or related controlled unilateral pattern then exposes femoral translation/rotation under a relatively quiet pelvis.
+The deep-flexion reversal is a specific observation boundary. Preserve the starting knee relationship rather than forcibly squeezing the knees together. Record uncontrolled knee separation, femoral rotation, pelvic drift, or lumbar substitution as the first failing constraint.
+
+Useful repeatable observations include knee separation, knee angle, eccentric duration, and the quality or duration of the initial concentric reversal. A front view is therefore part of the preferred video set in addition to side/oblique views.
+
+### Direct resisted hip flexion
+
+Program B now includes a direct hip-flexion slot rather than relying only on GHD knee-to-chest work.
+
+The canonical exercise is `resisted-hip-flexion`; loading implementation is setup data rather than exercise identity. Supported implementations include:
+
+- bilateral cable hip flexion with an attachment connecting both ankles;
+- unilateral cable knee drive;
+- controlled foot-suspended resistance such as a kettlebell when secure and mechanically clean.
+
+The unilateral implementation adds stance-side pelvic control. Active ankle dorsiflexion may be intentionally coupled to the knee drive when the goal is anterior-chain integration; if so, record it as a setup/constraint rather than assuming tibialis contribution from the exercise name.
+
+Progress clean ROM and repeatability before increasing load. Pelvic rotation, rib flare, lumbar arching, or momentum terminate the useful set.
+
+### Rotational integration
+
+A curtsey-stepdown or related controlled unilateral pattern follows the principal sagittal-plane work to expose femoral translation/rotation under a relatively quiet pelvis. Assisted SLRDL remains optional as a low-load cross-chain probe when it does not shift the session back toward posterior-chain fatigue.
 
 ### Core
 
-This is the preferred session for dynamic anterior compression through a GHD bent-knee knee-to-chest / leg-raise pattern.
+This remains the preferred session for dynamic anterior compression through a GHD bent-knee knee-to-chest / leg-raise pattern.
 
 The movement contract is:
 
@@ -158,6 +222,10 @@ hips near pad edge
 ```
 
 Bent knees precede long-lever or straight-leg variants. The objective is controlled anterior pelvic compression rather than simply maximizing hip-flexor torque.
+
+### Deliberate omission: deep squat
+
+Deep/slant/KOT squatting is not part of the current baseline Program B. Step-up + ATG split squat + reverse Nordic already provide three knee-extension exposures with distinct mechanical roles. A deep squat may later replace one of those slots, but should not initially be stacked on top as a fourth primary quad exposure.
 
 ## C — distal / integrated redistribution
 
