@@ -28,6 +28,7 @@ validate_registry() {
   done < <(jq -r '.tasks[] | .agent' "$registry_json")
 
   grep -Fq 'authority -> contracts/academic/uqam/events/contract.cue' docs/architecture/factory-unit-registry-refactor.md
+  grep -Fq 'contracts/academic/uqam/catalog/contract.cue' registry.cue
   grep -Fq 'contracts/workers/upstream-monitor/AGENTS.md' docs/architecture/factory-unit-registry-refactor.md
 }
 
@@ -181,6 +182,10 @@ cue vet -c=false ./contracts/academic/uqam/events:uqamevents
 cue vet -c=false ./academic/uqam/events/fixtures:uqameventsfixtures
 bash academic/uqam/events/fixtures/negative/run.sh
 validate_uqam_admitted_state
+
+section "UQAM institutional catalog"
+cue vet -c=false ./contracts/academic/uqam/catalog:uqamcatalog
+cue vet -c=false ./academic/uqam/catalog/fixtures:uqamcatalogfixtures
 
 section "upstream-monitor contracts"
 cue vet -c=false ./contracts/workers/upstream-monitor:upstreammonitor
