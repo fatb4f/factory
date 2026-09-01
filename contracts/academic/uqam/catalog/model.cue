@@ -5,10 +5,12 @@ import state "github.com/fatb4f/factory/contracts/state"
 #NonEmptyString: string & != ""
 #URL:            string & =~"^https?://"
 
-#EntityID:   string & =~"^uqam:[a-z0-9][a-z0-9._:-]*$"
-#RelationID: string & =~"^rel:[a-z0-9][a-z0-9._:-]*$"
+#ObservationID: string & =~"^obs:[a-z0-9][a-z0-9._:-]*$"
+#EntityID:      string & =~"^uqam:[a-z0-9][a-z0-9._:-]*$"
+#RelationID:    string & =~"^rel:[a-z0-9][a-z0-9._:-]*$"
 
 #SourceObservation: close({
+	id:               #ObservationID
 	source:           #NonEmptyString
 	channel:          #NonEmptyString
 	ref:              #NonEmptyString
@@ -64,7 +66,7 @@ import state "github.com/fatb4f/factory/contracts/state"
 	location?:    #Location
 	audiences?:   [...#Audience]
 
-	evidence: [...#SourceObservation] & [_, ...]
+	evidence: [...#ObservationID] & [_, ...]
 })
 
 #RelationType:
@@ -89,13 +91,14 @@ import state "github.com/fatb4f/factory/contracts/state"
 	to:   #EntityID
 
 	description?: #NonEmptyString
-	evidence:     [...#SourceObservation] & [_, ...]
+	evidence:     [...#ObservationID] & [_, ...]
 })
 
 #NormalizedSnapshot: close({
 	task_id:     #TaskID
 	schema:      #SchemaID
 	observed_at: #NonEmptyString
-	entities:    [...#Entity]
-	relations:   [...#Relation]
+	observations: [...#SourceObservation]
+	entities:     [...#Entity]
+	relations:    [...#Relation]
 })
