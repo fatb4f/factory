@@ -1,0 +1,33 @@
+package uqamcatalogcurrent
+
+observedAt: "2026-09-01T17:04:24-04:00"
+
+observations: [
+	{id: "obs:student-services", source: "uqam-student-services", channel: "public-web", ref: "https://portailetudiant.uqam.ca/services/", observed_surface: "student services and academic-resource index", acquired_at: observedAt},
+	{id: "obs:student-life", source: "uqam-student-life", channel: "public-web", ref: "https://portailetudiant.uqam.ca/vie-etudiante/", observed_surface: "student-life discovery surface", acquired_at: observedAt},
+	{id: "obs:associations", source: "uqam-student-associations", channel: "public-web", ref: "https://portailetudiant.uqam.ca/implication/vie-associative-et-groupes-etudiants/associations-etudiantes/", observed_surface: "faculty student-association directory", acquired_at: observedAt},
+	{id: "obs:groups-root", source: "uqam-student-groups", channel: "public-web", ref: "https://portailetudiant.uqam.ca/implication/vie-associative-et-groupes-etudiants/groupes-etudiants/", observed_surface: "student-group index and category topology", acquired_at: observedAt},
+	{id: "obs:groups-community", source: "uqam-student-groups", channel: "public-web", ref: "https://portailetudiant.uqam.ca/implication/vie-associative-et-groupes-etudiants/groupes-etudiants/groupes-communautaires/", observed_surface: "community student-group directory", acquired_at: observedAt},
+	{id: "obs:groups-management", source: "uqam-student-groups", channel: "public-web", ref: "https://portailetudiant.uqam.ca/implication/vie-associative-et-groupes-etudiants/groupes-etudiants/groupes-entrepreneuriat-et-management/", observed_surface: "entrepreneurship and management student-group directory", acquired_at: observedAt},
+	{id: "obs:groups-multicultural", source: "uqam-student-groups", channel: "public-web", ref: "https://portailetudiant.uqam.ca/implication/vie-associative-et-groupes-etudiants/groupes-etudiants/groupes-multiculturels/", observed_surface: "multicultural student-group directory", acquired_at: observedAt},
+	{id: "obs:groups-science", source: "uqam-student-groups", channel: "public-web", ref: "https://portailetudiant.uqam.ca/implication/vie-associative-et-groupes-etudiants/groupes-etudiants/groupes-sciences-et-technologies/", observed_surface: "science and technology student-group directory", acquired_at: observedAt},
+	{id: "obs:groups-sports", source: "uqam-student-groups", channel: "public-web", ref: "https://portailetudiant.uqam.ca/implication/vie-associative-et-groupes-etudiants/groupes-etudiants/groupes-sports/", observed_surface: "sports student-group directory", acquired_at: observedAt},
+	{id: "obs:groups-cultural", source: "uqam-student-groups", channel: "public-web", ref: "https://portailetudiant.uqam.ca/implication/vie-associative-et-groupes-etudiants/groupes-etudiants/groupes-vie-culturelle/", observed_surface: "cultural student-group directory", acquired_at: observedAt},
+	{id: "obs:student-media", source: "uqam-student-media", channel: "public-web", ref: "https://portailetudiant.uqam.ca/implication/medias-etudiants/", observed_surface: "student-media directory and media group category", acquired_at: observedAt},
+	{id: "obs:student-cafes", source: "uqam-student-cafes", channel: "public-web", ref: "https://portailetudiant.uqam.ca/implication/cafes-etudiants/", observed_surface: "student-café directory with faculty-association operators", acquired_at: observedAt},
+	{id: "obs:bire", source: "uqam-bire", channel: "public-web", ref: "https://portailetudiant.uqam.ca/soutien-apprentissage/nous-joindre/", observed_surface: "BIRÉ and SEA service identity and locations", acquired_at: observedAt},
+	{id: "obs:pesh", source: "uqam-bire", channel: "public-web", ref: "https://portailetudiant.uqam.ca/pesh/", observed_surface: "PESH service surface", acquired_at: observedAt},
+	{id: "obs:funding", source: "uqam-funding", channel: "public-web", ref: "https://portailetudiant.uqam.ca/financement/bourses-detudes/", observed_surface: "student funding, scholarships and RIBÉ", acquired_at: observedAt},
+	{id: "obs:numerique", source: "uqam-numerique", channel: "public-web", ref: "https://numerique.uqam.ca/", observed_surface: "digital toolbox and technology resources", acquired_at: observedAt},
+	{id: "obs:libraries", source: "uqam-libraries", channel: "public-web", ref: "https://bibliotheques.uqam.ca/services-offerts/espaces-aux-bibliotheques/", observed_surface: "library workspaces and computing resources", acquired_at: observedAt},
+	{id: "obs:sports", source: "uqam-sports", channel: "public-web", ref: "https://sports.uqam.ca/services/", observed_surface: "Centre sportif services and student access", acquired_at: observedAt},
+	{id: "obs:faculty-sciences", source: "uqam-faculty-sciences", channel: "public-web", ref: "https://sciences.uqam.ca/", observed_surface: "Faculté des sciences institutional surface", acquired_at: observedAt},
+	{id: "obs:department-informatique", source: "uqam-faculty-sciences", channel: "public-web", ref: "https://sciences.uqam.ca/la-faculte/departements-et-institut/", observed_surface: "faculty department directory including Département d’informatique", acquired_at: observedAt},
+	{id: "obs:programmes-informatique", source: "uqam-faculty-sciences", channel: "public-web", ref: "https://sciences.uqam.ca/informatique/", observed_surface: "informatics program surface", acquired_at: observedAt},
+	{id: "obs:inf1035", source: "uqam-course-catalog", channel: "public-web", ref: "https://etudier.uqam.ca/cours?sigle=INF1035", observed_surface: "official course identity INF1035", acquired_at: observedAt},
+	{id: "obs:inf1070", source: "uqam-course-catalog", channel: "public-web", ref: "https://etudier.uqam.ca/cours?sigle=INF1070", observed_surface: "official course identity INF1070", acquired_at: observedAt},
+	{id: "obs:inf1120", source: "uqam-course-catalog", channel: "public-web", ref: "https://etudier.uqam.ca/cours?sigle=INF1120", observed_surface: "official course identity INF1120", acquired_at: observedAt},
+	{id: "obs:inf1132", source: "uqam-course-catalog", channel: "public-web", ref: "https://etudier.uqam.ca/cours?sigle=INF1132", observed_surface: "official course identity INF1132", acquired_at: observedAt},
+	{id: "obs:inf2050", source: "uqam-course-catalog", channel: "public-web", ref: "https://etudier.uqam.ca/cours?sigle=INF2050", observed_surface: "official course identity INF2050", acquired_at: observedAt},
+	{id: "obs:inf2171", source: "uqam-course-catalog", channel: "public-web", ref: "https://etudier.uqam.ca/cours?sigle=INF2171", observed_surface: "official course identity INF2171", acquired_at: observedAt},
+]
