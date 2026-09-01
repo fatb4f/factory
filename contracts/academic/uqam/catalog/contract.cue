@@ -14,6 +14,15 @@ import state "github.com/fatb4f/factory/contracts/state"
 	"uqam-student-cafes" |
 	"uqam-student-media"
 
+#GroupCategoryID:
+	"community" |
+	"entrepreneurship-management" |
+	"student-media" |
+	"multicultural" |
+	"science-technology" |
+	"sports" |
+	"cultural"
+
 #CompleteAcquisitionCoverage: close({
 	complete: true
 	observed_sources: [
@@ -24,13 +33,23 @@ import state "github.com/fatb4f/factory/contracts/state"
 		"uqam-student-cafes",
 		"uqam-student-media",
 	]
+	traversed_group_categories: [
+		"community",
+		"entrepreneurship-management",
+		"student-media",
+		"multicultural",
+		"science-technology",
+		"sports",
+		"cultural",
+	]
 	gaps: []
 })
 
 #IncompleteAcquisitionCoverage: close({
 	complete: false
-	observed_sources: [...#RequiredSourceID]
-	gaps:             [...#RequiredSourceID] & [_, ...]
+	observed_sources:           [...#RequiredSourceID]
+	traversed_group_categories: [...#GroupCategoryID]
+	gaps:                       [...#NonEmptyString] & [_, ...]
 })
 
 #AcquisitionCoverage:
@@ -132,10 +151,17 @@ import state "github.com/fatb4f/factory/contracts/state"
 })
 
 #PointerHold: close({
-	action:               "hold"
-	reason:               "source_gap" | "comparison_gap" | "cas_conflict"
-	expected_generation:  int & >=0
-	observed_generation?: int & >=1
+	action:              "hold"
+	reason:              "source_gap" | "comparison_gap"
+	expected_generation: int & >=0
+})
+
+#StateConflictHold: close({
+	action:              "hold"
+	reason:              "cas_conflict"
+	expected_generation: int & >=0
+	observed_generation: int & >=1
+	_generationsDiffer:  (observed_generation != expected_generation) & true
 })
 
 #RunManifest: close({
@@ -157,16 +183,16 @@ import state "github.com/fatb4f/factory/contracts/state"
 	acquisition: #CompleteAcquisitionCoverage
 	comparison: close({
 		comparison_state: state.#BootstrapComparisonState & {
-			task: #TaskID
-			scope: #ScopeID
-			schema: #SchemaID
+			task:    #TaskID
+			scope:   #ScopeID
+			schema:  #SchemaID
 			current: currentRun
 		}
 	})
 	decision: #Decision & {
-		outcome: "baseline_established"
-		baseline_action: "advance"
-		changed_entity_ids: []
+		outcome:              "baseline_established"
+		baseline_action:      "advance"
+		changed_entity_ids:   []
 		changed_relation_ids: []
 	}
 	pointer: #PointerAdvance & {
@@ -178,84 +204,97 @@ import state "github.com/fatb4f/factory/contracts/state"
 })
 
 #ComparableNoChangeDecisionArtifact: close({
-	currentRun: #CatalogRunReference
+	currentRun:  #CatalogRunReference
 	acquisition: #CompleteAcquisitionCoverage
 	comparison: close({
 		comparison_state: state.#ComparableComparisonState & {
-			task: #TaskID
-			scope: #ScopeID
-			schema: #SchemaID
+			task:    #TaskID
+			scope:   #ScopeID
+			schema:  #SchemaID
 			current: currentRun
 		}
 		delta: #NoChangeDelta
 	})
 	decision: #Decision & {
-		outcome: "no_change"
-		baseline_action: "advance"
-		changed_entity_ids: []
+		outcome:              "no_change"
+		baseline_action:      "advance"
+		changed_entity_ids:   []
 		changed_relation_ids: []
 	}
-	pointer: #PointerAdvance
+	pointer: #PointerAdvance & {
+		transition: {
+			expected_generation: int & >=1
+			next: {baseline: {run: currentRun}}
+		}
+	}
 })
 
 #ComparableChangedDecisionArtifact: close({
-	currentRun: #CatalogRunReference
+	currentRun:  #CatalogRunReference
 	acquisition: #CompleteAcquisitionCoverage
 	comparison: close({
 		comparison_state: state.#ComparableComparisonState & {
-			task: #TaskID
-			scope: #ScopeID
-			schema: #SchemaID
+			task:    #TaskID
+			scope:   #ScopeID
+			schema:  #SchemaID
 			current: currentRun
 		}
 		delta: #ChangedDelta
 	})
-	decision: #Decision & {outcome: "catalog_changed", baseline_action: "advance"}
-	pointer: #PointerAdvance
+	decision: #Decision & {
+		outcome:         "catalog_changed"
+		baseline_action: "advance"
+	}
+	pointer: #PointerAdvance & {
+		transition: {
+			expected_generation: int & >=1
+			next: {baseline: {run: currentRun}}
+		}
+	}
 })
 
 #SourceGapDecisionArtifact: close({
-	currentRun: #CatalogRunReference
+	currentRun:  #CatalogRunReference
 	acquisition: #IncompleteAcquisitionCoverage
 	decision: #Decision & {
-		outcome: "source_gap"
-		baseline_action: "hold"
-		changed_entity_ids: []
+		outcome:              "source_gap"
+		baseline_action:      "hold"
+		changed_entity_ids:   []
 		changed_relation_ids: []
 	}
 	pointer: #PointerHold & {reason: "source_gap"}
 })
 
 #ComparisonGapDecisionArtifact: close({
-	currentRun: #CatalogRunReference
+	currentRun:  #CatalogRunReference
 	acquisition: #CompleteAcquisitionCoverage
 	comparison: close({
 		comparison_state: state.#InvalidatedComparisonState & {
-			task: #TaskID
-			scope: #ScopeID
-			schema: #SchemaID
+			task:    #TaskID
+			scope:   #ScopeID
+			schema:  #SchemaID
 			current: currentRun
 		}
 	})
 	decision: #Decision & {
-		outcome: "comparison_gap"
-		baseline_action: "hold"
-		changed_entity_ids: []
+		outcome:              "comparison_gap"
+		baseline_action:      "hold"
+		changed_entity_ids:   []
 		changed_relation_ids: []
 	}
 	pointer: #PointerHold & {reason: "comparison_gap"}
 })
 
 #StateConflictDecisionArtifact: close({
-	currentRun: #CatalogRunReference
+	currentRun:  #CatalogRunReference
 	acquisition: #CompleteAcquisitionCoverage
 	decision: #Decision & {
-		outcome: "state_conflict"
-		baseline_action: "hold"
-		changed_entity_ids: []
+		outcome:              "state_conflict"
+		baseline_action:      "hold"
+		changed_entity_ids:   []
 		changed_relation_ids: []
 	}
-	pointer: #PointerHold & {reason: "cas_conflict"}
+	pointer: #StateConflictHold
 })
 
 #DecisionArtifact:
@@ -274,15 +313,18 @@ import state "github.com/fatb4f/factory/contracts/state"
 })
 
 #Contract: close({
-	id: #TaskID
-	kind: "academic-institution-catalog"
+	id:     #TaskID
+	kind:   "academic-institution-catalog"
 	schema: #SchemaID
-	scope: #ScopeID
+	scope:  #ScopeID
+
 	authority: #AuthorityBoundary
+
 	identity: close({
-		entity: "source-defined-id-else-canonical-kind-and-name"
+		entity:   "source-defined-id-else-canonical-kind-and-name"
 		relation: "explicit-source-qualified-edge"
 	})
+
 	sources: close({
 		required: [
 			"uqam-student-services",
@@ -291,6 +333,15 @@ import state "github.com/fatb4f/factory/contracts/state"
 			"uqam-student-groups",
 			"uqam-student-cafes",
 			"uqam-student-media",
+		]
+		requiredGroupCategories: [
+			"community",
+			"entrepreneurship-management",
+			"student-media",
+			"multicultural",
+			"science-technology",
+			"sports",
+			"cultural",
 		]
 		priorityOptionalClasses: [
 			"uqam-academic-unit",
@@ -303,11 +354,24 @@ import state "github.com/fatb4f/factory/contracts/state"
 			"uqam-group-category",
 		]
 	})
+
 	graph: close({
-		relations: ["part-of","operated-by","supported-by","represents","offers","serves","located-at","publishes","organizes","discoverable-at"]
+		relations: [
+			"part-of",
+			"operated-by",
+			"supported-by",
+			"represents",
+			"offers",
+			"serves",
+			"located-at",
+			"publishes",
+			"organizes",
+			"discoverable-at",
+		]
 		requireExplicitEvidence: true
-		noNameBasedInference: true
+		noNameBasedInference:    true
 	})
+
 	publication: close({
 		immutableRuns: true
 		pointerUpdate: "compare-and-swap"
@@ -315,28 +379,67 @@ import state "github.com/fatb4f/factory/contracts/state"
 })
 
 contract: #Contract & {
-	id: "academic.uqam.catalog"
-	kind: "academic-institution-catalog"
+	id:     "academic.uqam.catalog"
+	kind:   "academic-institution-catalog"
 	schema: "uqam-catalog/v1"
-	scope: "uqam-student-community-academic-catalog"
+	scope:  "uqam-student-community-academic-catalog"
 	authority: {
-		semantic: "contracts/academic/uqam/catalog"
-		procedure: "academic/uqam/.agents/catalog"
-		runs: "academic/uqam/catalog/runs"
+		semantic:        "contracts/academic/uqam/catalog"
+		procedure:       "academic/uqam/.agents/catalog"
+		runs:            "academic/uqam/catalog/runs"
 		baselinePointer: "academic/uqam/catalog/state/admitted-baseline.json"
 	}
 	identity: {
-		entity: "source-defined-id-else-canonical-kind-and-name"
+		entity:   "source-defined-id-else-canonical-kind-and-name"
 		relation: "explicit-source-qualified-edge"
 	}
 	sources: {
-		required: ["uqam-student-services","uqam-student-life","uqam-student-associations","uqam-student-groups","uqam-student-cafes","uqam-student-media"]
-		priorityOptionalClasses: ["uqam-academic-unit","uqam-student-success-service","uqam-digital-platform","uqam-library","uqam-sport","uqam-funding","uqam-accessibility","uqam-group-category"]
+		required: [
+			"uqam-student-services",
+			"uqam-student-life",
+			"uqam-student-associations",
+			"uqam-student-groups",
+			"uqam-student-cafes",
+			"uqam-student-media",
+		]
+		requiredGroupCategories: [
+			"community",
+			"entrepreneurship-management",
+			"student-media",
+			"multicultural",
+			"science-technology",
+			"sports",
+			"cultural",
+		]
+		priorityOptionalClasses: [
+			"uqam-academic-unit",
+			"uqam-student-success-service",
+			"uqam-digital-platform",
+			"uqam-library",
+			"uqam-sport",
+			"uqam-funding",
+			"uqam-accessibility",
+			"uqam-group-category",
+		]
 	}
 	graph: {
-		relations: ["part-of","operated-by","supported-by","represents","offers","serves","located-at","publishes","organizes","discoverable-at"]
+		relations: [
+			"part-of",
+			"operated-by",
+			"supported-by",
+			"represents",
+			"offers",
+			"serves",
+			"located-at",
+			"publishes",
+			"organizes",
+			"discoverable-at",
+		]
 		requireExplicitEvidence: true
-		noNameBasedInference: true
+		noNameBasedInference:    true
 	}
-	publication: {immutableRuns: true, pointerUpdate: "compare-and-swap"}
+	publication: {
+		immutableRuns: true
+		pointerUpdate: "compare-and-swap"
+	}
 }
