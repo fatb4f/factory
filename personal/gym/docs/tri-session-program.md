@@ -15,8 +15,8 @@ ankle → hamstring → glute → pelvis
 B — anterior / rotational femoral control
 ankle → quad / adductor / hip flexor → femur → pelvis
 
-C — distal + integrated redistribution
-foot / ankle → tibia → femur → pelvis → trunk
+C — whole-body integration / redistribution
+foot / ankle → tibia → femur ↔ adductor / glute → pelvis → trunk / contralateral reach
 ```
 
 The shared invariant is:
@@ -227,39 +227,148 @@ Bent knees precede long-lever or straight-leg variants. The objective is control
 
 Deep/slant/KOT squatting is not part of the current baseline Program B. Step-up + ATG split squat + reverse Nordic already provide three knee-extension exposures with distinct mechanical roles. A deep squat may later replace one of those slots, but should not initially be stacked on top as a fourth primary quad exposure.
 
-## C — distal / integrated redistribution
+## C — whole-body integration / redistribution
 
 ### Objective
 
-Give the ankle and foot a direct adaptive dose, then test whether the resulting mechanics remain available when demand propagates upward.
+Program C is the integration day. It asks whether the capacities developed in A and B can coexist under unilateral, frontal-plane, rotational, and contralateral whole-body constraints.
 
-This should usually be the lowest-load and highest-observation session.
+Its governing question is:
 
-### Distal exposure
+> Can the foot, ankle, femur, adductor-glute complex, pelvis, trunk, and contralateral reach continuously negotiate force without losing organization?
 
-Direct work may include:
+Program C remains observation-heavy, but it is no longer merely the low-load distal day. Distal work establishes the entry state; the defining exposures are the transitions from constrained bilateral cooperation to long-range frontal-plane loading and finally unilateral whole-body equilibrium.
+
+### Locomotor and distal entry
+
+Begin with a short backward walk and low-fatigue distal preparation:
 
 - inversion / eversion;
-- dorsiflexion;
-- plantar-flexion / calf raise;
-- foot-pressure transitions;
-- controlled pronation and resupination.
+- dorsiflexion / tibialis work;
+- controlled plantar-flexion / calf work;
+- clean foot-pressure transitions.
 
-Unlike posterior day, these are allowed to constitute actual training volume.
+The purpose is to make distal control available without consuming the session's integration budget.
 
-### Integration
+### Bikram-derived integration primer
 
-Use a small set of unilateral and cross-chain movements such as assisted SLRDL, curtsey/stepdown, bridge-march, Pallof work, carries, or later Roman-chair lateral control.
+Program C borrows selected standing asanas as mechanical constraints, not the Bikram heat or maximal-end-range protocol.
 
-The governing question is:
+Useful primitives are:
 
-> Does corrected distal control survive when force is transmitted through the femur, pelvis, and trunk?
+- Eagle for cross-body stacked ankle-knee-hip organization;
+- Standing Bow as the primary whole-body unilateral integration reference;
+- Balancing Stick as the long-axis bridge between Standing Bow and a resistance-oriented single-leg hinge;
+- Triangle as an optional frontal-plane / rotational integration exposure.
 
-Roman-chair side bending should begin with isometric or small-ROM control. The lengthened side controls the eccentric and then contracts to return the trunk toward neutral; pelvic hiking should not manufacture the rep.
+Initial asana dosing is submaximal: usually one set per side for roughly 10–30 seconds, with steady breathing and no forced end range.
+
+Standing Bow is modeled as:
+
+```text
+single-leg support
++ stance-foot organization
++ rear-leg drive
++ anterior / contralateral reach
++ femoral and pelvic control
++ trunk organization
+→ whole-body equilibrium
+```
+
+The hold terminates on loss of stance-foot organization, knee trajectory, pelvic control, or trunk organization rather than on muscular failure.
+
+### Frog bridge → Cossack → modified SLRDL
+
+This is the defining Program C progression.
+
+#### Soles-together frog glute bridge
+
+The current bridge configuration is specific:
+
+```text
+soles together
++ knees near 90°
++ active outward knee drive
++ symmetric pelvis
++ hip extension
+```
+
+The intent is not generic glute activation. It is a constrained bilateral glute-adductor cooperation task: hip extension is produced while the femurs remain under an active external-rotation / abduction constraint and the medial chain contributes to femoral and pelvic organization.
+
+Useful observations include side-to-side differences in medial-thigh recruitment, pelvic rotation, ability to preserve symmetric outward knee pressure, and lumbar substitution.
+
+#### Cossack family
+
+The Cossack family is the principal loaded frontal-plane / adductor family in Program C.
+
+It progresses from assisted range to full range and later external load:
+
+```text
+assisted Cossack
+→ greater clean lateral depth
+→ less assistance
+→ repeatable full-range Cossack
+→ external load
+```
+
+The receiving leg must maintain foot and knee organization while the opposite adductor complex tolerates and produces force at long length. Pelvic position and femoral rotation remain explicit constraints.
+
+This makes the Cossack family particularly important for restoring medial-chain capacity and redistribution rather than treating the adductors as passive stretching tissue.
+
+#### Modified Standing-Bow SLRDL
+
+The modified SLRDL becomes the defining loaded whole-body integration lift rather than a generic single-leg RDL.
+
+It is explicitly modeled as a resistance-oriented projection of Standing Bow:
+
+```text
+Standing Bow
+    ↓ resistance-oriented projection
+modified SLRDL
+    ├─ stance-foot support
+    ├─ controlled knee / femur
+    ├─ loaded hip hinge
+    ├─ active rear-leg counterforce
+    ├─ stance-hip abduction / lateral organization
+    ├─ pelvic control
+    └─ contralateral reach
+```
+
+Assistance is retained as long as needed to keep the whole-body relationship intact. Progression is:
+
+```text
+cleaner range
+→ less assistance
+→ more repeatable reps
+→ external load
+```
+
+Foot collapse, uncontrolled femoral rotation, pelvic hike/rotation, trunk escape, or lumbar rescue terminate the useful set.
+
+The sequence therefore becomes:
+
+```text
+frog bridge
+    constrained bilateral cooperation
+        ↓
+Cossack family
+    long-range frontal-plane / adductor negotiation
+        ↓
+modified Standing-Bow SLRDL
+    unilateral multiplanar whole-body negotiation
+```
+
+This is the mechanical center of Program C.
+
+### Trunk-pelvis transfer
+
+Copenhagen, Pallof, and Roman-chair lateral work remain optional constraints rather than mandatory volume.
+
+Use Copenhagen when additional direct medial-chain / trunk transfer work is useful. Pallof adds anti-rotation. Roman-chair side bending begins with isometric or small-ROM control; the pelvis stays fixed and hip hiking must not manufacture the rep.
 
 ### Gait readout
 
-Gait is a primary integration output:
+Gait remains the final integration output:
 
 ```text
 heel loading
@@ -269,7 +378,9 @@ heel loading
 → push-off
 ```
 
-Backward walking remains a small coordination/diagnostic dose. Local dorsiflexor recruitment is expected; focal or persistent joint pain changes the interpretation and should not be trained through.
+Easy forward walking may progress into light jogging only if the resulting gait remains organized. A short backward walk can then provide a final coordination readout.
+
+Program C therefore ends by asking whether the integration work transfers back into locomotion rather than whether additional fatigue can be accumulated.
 
 ## Recovery-gated sequencing
 
