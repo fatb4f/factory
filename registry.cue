@@ -64,6 +64,17 @@ tasks: close({
 			everyDays: 1
 		}
 	}
+	"academic.uqam.catalog": unit.#Task & {
+		id:        "academic.uqam.catalog"
+		name:      "catalog"
+		unit:      "academic.uqam"
+		authority: "contracts/academic/uqam/catalog/contract.cue"
+		agent:     "academic/uqam/.agents/catalog/AGENTS.md"
+		enabled:   true
+		cadence: {
+			everyDays: 7
+		}
+	}
 	"world.industrial-constraints.monitor": unit.#Task & {
 		id:        "world.industrial-constraints.monitor"
 		name:      "monitor"
