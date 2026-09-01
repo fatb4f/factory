@@ -345,6 +345,10 @@ import state "github.com/fatb4f/factory/contracts/state"
 		]
 		priorityOptionalClasses: [
 			"uqam-academic-unit",
+			"uqam-academic-program",
+			"uqam-course",
+			"uqam-academic-calendar",
+			"uqam-academic-policy",
 			"uqam-student-success-service",
 			"uqam-digital-platform",
 			"uqam-library",
@@ -352,6 +356,7 @@ import state "github.com/fatb4f/factory/contracts/state"
 			"uqam-funding",
 			"uqam-accessibility",
 			"uqam-group-category",
+			"uqam-community-space",
 		]
 	})
 
@@ -362,10 +367,13 @@ import state "github.com/fatb4f/factory/contracts/state"
 			"supported-by",
 			"represents",
 			"offers",
+			"offered-by",
 			"serves",
 			"located-at",
 			"publishes",
 			"organizes",
+			"categorized-as",
+			"accessed-via",
 			"discoverable-at",
 		]
 		requireExplicitEvidence: true
@@ -413,6 +421,10 @@ contract: #Contract & {
 		]
 		priorityOptionalClasses: [
 			"uqam-academic-unit",
+			"uqam-academic-program",
+			"uqam-course",
+			"uqam-academic-calendar",
+			"uqam-academic-policy",
 			"uqam-student-success-service",
 			"uqam-digital-platform",
 			"uqam-library",
@@ -420,6 +432,7 @@ contract: #Contract & {
 			"uqam-funding",
 			"uqam-accessibility",
 			"uqam-group-category",
+			"uqam-community-space",
 		]
 	}
 	graph: {
@@ -429,10 +442,13 @@ contract: #Contract & {
 			"supported-by",
 			"represents",
 			"offers",
+			"offered-by",
 			"serves",
 			"located-at",
 			"publishes",
 			"organizes",
+			"categorized-as",
+			"accessed-via",
 			"discoverable-at",
 		]
 		requireExplicitEvidence: true
