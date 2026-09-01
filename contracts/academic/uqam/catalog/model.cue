@@ -21,11 +21,17 @@ import state "github.com/fatb4f/factory/contracts/state"
 #EntityKind:
 	"institution" |
 	"academic-unit" |
+	"academic-program" |
+	"course" |
+	"academic-calendar" |
+	"academic-policy" |
 	"administrative-unit" |
 	"student-association" |
 	"student-group" |
+	"group-category" |
 	"student-media" |
 	"cafe" |
+	"community-space" |
 	"service" |
 	"platform" |
 	"facility" |
@@ -67,10 +73,13 @@ import state "github.com/fatb4f/factory/contracts/state"
 	"supported-by" |
 	"represents" |
 	"offers" |
+	"offered-by" |
 	"serves" |
 	"located-at" |
 	"publishes" |
 	"organizes" |
+	"categorized-as" |
+	"accessed-via" |
 	"discoverable-at"
 
 #Relation: close({
