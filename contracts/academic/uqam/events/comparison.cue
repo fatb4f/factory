@@ -126,6 +126,8 @@ comparisonPolicy: close({
 			"location",
 			"registration_status",
 			"scope",
+			"organizer_entity_id",
+			"venue_entity_id",
 		]
 	})
 	materialChanges: [
