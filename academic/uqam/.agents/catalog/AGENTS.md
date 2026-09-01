@@ -6,7 +6,7 @@ Semantic authority is `contracts/academic/uqam/catalog/`. Shared comparison-stat
 
 ## Objective
 
-Maintain a source-qualified graph of the UQAM substrate that student/community events can project onto.
+Maintain a source-qualified graph of the UQAM academic/student/community substrate that event and analytical projections can reference without taking authority over institutional identity.
 
 The catalog is deliberately separate from `academic.uqam.events`:
 
@@ -41,7 +41,9 @@ Acquire all of these on each due run:
 - `uqam-student-cafes` — the official student-cafés directory
 - `uqam-student-media` — the official student-media directory
 
-Expand every current student-group category page reachable from the official group index. Normalize all currently listed groups that have enough source information to establish stable identity.
+Expand every current student-group category page reachable from the official group index. Record traversal of all contract-declared categories and normalize every currently listed group/media identity for which the official page provides enough information to establish a stable identity. If a required category cannot be traversed, acquisition is incomplete even when the top-level group index is reachable.
+
+Represent the seven directory categories as `group-category` entities when the source provides stable category surfaces. Link a listed group/media item to its category only with an explicit `categorized-as` edge supported by that category page.
 
 ## Priority academic/community acquisition
 
@@ -49,15 +51,18 @@ Also acquire current official primary surfaces for useful known substrate when a
 
 - UQAM / Portail étudiant / Services à la réussite et à la vie étudiante;
 - Faculté des sciences and its departments, especially Département d'informatique;
-- academic program and calendar discovery surfaces where they provide stable institutional nodes;
+- stable academic-program and course identities from official program/course catalog surfaces;
+- academic calendars and durable academic-policy discovery surfaces;
 - Boîte à outils numérique, computer laboratories, seminars and major student technology platforms;
-- Service des bibliothèques and materially useful study/technology spaces;
+- Service des bibliothèques and materially useful study/technology/community spaces;
 - BIRÉ, student-success, accessibility and accommodated-exam services;
 - financial-aid and scholarship/RIBÉ services;
 - Centre sportif, Citadins and high-signal student recreation resources;
-- faculty associations, program associations when current official identity is available;
+- faculty associations and program associations when current official identity is available;
 - student cafés and their operating faculty associations;
 - student media and recognized student/community groups.
+
+For academic courses, keep the stable course identity separate from term-specific offering/schedule state. A course code may be a durable `course` entity; a particular section, enrolment state, room or session schedule is not folded into that identity merely because it appears on a current timetable. Do not normalize user-specific registration state into the institutional catalog.
 
 Prefer official UQAM or organizer-owned sources. Third-party/social pages may corroborate contact or activity, but must not replace an available institutional identity source.
 
@@ -89,17 +94,27 @@ to entity id
 source-qualified evidence
 ```
 
-Only emit graph edges explicitly supported by evidence. Do not infer `part-of`, `operated-by`, `represents`, `supported-by`, or another relation because names appear related.
+Only emit graph edges explicitly supported by evidence. Do not infer `part-of`, `operated-by`, `represents`, `supported-by`, `offered-by`, `categorized-as`, `accessed-via`, or another relation because names appear related.
 
-A page saying that a café is under a named faculty association supports `cafe -> operated-by -> association`. A page naming a department under a faculty supports `department -> part-of -> faculty`. Naming similarity by itself supports nothing.
+Examples of admissible projection:
+
+```text
+student café -> operated-by -> faculty association
+student group -> categorized-as -> official group category
+department -> part-of -> faculty
+course -> offered-by -> academic unit
+service -> accessed-via -> platform
+```
+
+Each edge still requires evidence that explicitly establishes that relationship. Naming similarity by itself supports nothing.
 
 ## Identity
 
 Prefer a durable source-defined identifier. Otherwise derive an ID from canonical entity kind plus canonical source name and retain the source URL as evidence.
 
-Mutable fields such as location, description, contact information and status do not define identity.
+Mutable fields such as location, description, contact information, current hours and status do not define identity.
 
-Never merge two groups, services or associations because their acronyms or names resemble one another.
+Course identity should prefer the official course code. Academic-program identity should prefer the official program code when present. Never merge two groups, services, programs, courses or associations because their acronyms or names resemble one another.
 
 ## Comparison
 
@@ -111,7 +126,7 @@ Read `academic/uqam/catalog/state/admitted-baseline.json` when present and load 
 
 Compare entities by stable entity ID and relations by stable relation ID.
 
-Classify additions, material entity changes, removals, relation additions/changes/removals. Treat disappearance from an optional source conservatively: do not remove a previously admitted entity unless required acquisition is complete and the authoritative source establishes that the entity is no longer current or the relevant directory no longer lists it after a complete traversal.
+Classify additions, material entity changes, removals, relation additions/changes/removals. Treat disappearance conservatively: do not remove a previously admitted entity unless required acquisition is complete and an authoritative source establishes that the entity is no longer current, or the relevant required directory no longer lists it after a complete traversal.
 
 Outcomes:
 
@@ -148,6 +163,7 @@ Return only the task-native outcome plus a compact count summary:
 outcome
 entities total / added / changed / removed
 relations total / added / changed / removed
+group categories traversed
 source gaps, if any
 run id
 ```
