@@ -45,6 +45,12 @@ import state "github.com/fatb4f/factory/contracts/state"
 	scope?:     #NonEmptyString
 	registration_status: #RegistrationStatus
 
+	// Optional projections into the independently admitted UQAM catalog.
+	// Populate only when explicit evidence establishes the organizer or venue
+	// relation and the referenced catalog entity is present in admitted context.
+	organizer_entity_id?: #NonEmptyString
+	venue_entity_id?:     #NonEmptyString
+
 	primary_url: #URL
 	evidence:    [...#SourceObservation] & [_, ...]
 	content_digest: state.#SHA256
