@@ -1,10 +1,1 @@
-{
-  "apiVersion": "factory.upstream-monitor.latest-run/v2",
-  "kind": "LatestUpstreamMonitorRun",
-  "run_id": "20260831T032700Z",
-  "profile_id": "ctrl",
-  "bundle_path": "projects/ctrl/upstream-monitor/runs/20260831T032700Z/",
-  "manifest_path": "projects/ctrl/upstream-monitor/runs/20260831T032700Z/manifest.json",
-  "authority_revision": "4f9c5471ba8c8627efc1662ab3aee8906f2461b0",
-  "publication_revision": "00fc5b919d1198790e034a2092d547e32d7e63ff"
-}
+{"apiVersion":"factory.upstream-monitor.latest-run/v2","kind":"LatestUpstreamMonitorRun","run_id":"20260902T162000Z","profile_id":"ctrl","bundle_path":"projects/ctrl/upstream-monitor/runs/20260902T162000Z/","manifest_path":"projects/ctrl/upstream-monitor/runs/20260902T162000Z/manifest.json","authority_revision":"578810440ff81a878957e4c746bb945e8b97020d","publication_revision":"f917f699468c31fe58b0617c5a48e4dd37e2ae1b"}

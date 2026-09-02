@@ -1,6 +1,1 @@
-{
-  "task_id": "projects.ctrl.upstream-monitor",
-  "last_run_at": "2026-08-30T12:05:19-04:00",
-  "outcome": "terminal_success",
-  "run_id": "20260830T160519Z"
-}
+{"task_id":"projects.ctrl.upstream-monitor","last_run_at":"2026-09-02T12:20:00-04:00","outcome":"terminal_success","run_id":"20260902T162000Z"}
