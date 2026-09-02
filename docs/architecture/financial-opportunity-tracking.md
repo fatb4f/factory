@@ -6,29 +6,35 @@ Snapshot date: 2026-09-02
 
 Proposed semantic authority: `contracts/world/financial-opportunities/`
 
-This document proposes a dedicated financial-opportunity intelligence substrate. It does **not** extend the semantic authority of `world.industrial-constraints`, and it does not establish financial authority until corresponding CUE contracts are introduced and qualified.
+This document proposes a dedicated financial-opportunity **projection** substrate. It does **not** extend the semantic authority of `world.industrial-constraints`, and it must not construct a second relationship graph beside the one already modeled under `contracts/world/industrial-constraints/`.
+
+The industrial domain owns industrial entities, relations, constraint claims, and their provenance. The financial domain consumes an admitted graph snapshot/path and overlays issuer, instrument, market, valuation, scenario, and risk observations. Financial conclusions remain derived claims subject to their own admission rules.
 
 The September 2 opportunity register below is observation-derived speculative analysis. Scenario returns are model outputs from explicit assumptions, not admitted facts, price targets, or investment recommendations.
 
 ## 1. Authority boundary
 
-`world.industrial-constraints` owns admitted industrial constraint intelligence: capacity, scarcity, funding/procurement, institutional response, and evidence-backed constraint claims.
+`world.industrial-constraints` owns admitted industrial constraint intelligence and the relationship topology used to reach it. Its existing `#Relation` records and controlled predicates such as `supplies`, `consumes`, `requires`, `depends-on`, `funded-by`, `procured-by`, and `projects-to` remain the semantic source of industrial connectivity.
 
-A separate financial domain should consume admitted industrial outputs through declared projections and combine them with independently acquired market and issuer observations.
+The financial domain does not restate those relations. It consumes graph-qualified records through declared projections and combines them with independently acquired issuer and market observations.
 
 ```text
 world.industrial-constraints
-    admitted industrial facts
-    constraints
+    admitted entities
+    admitted relations
+    constraint claims
+    capacity / scarcity
     funding / procurement
-    capacity changes
     institutional response
               |
-              | declared projection
+              | admitted graph snapshot
+              | + declared path projection
               v
 world.financial-opportunities
-    exposure resolution
-    market observations
+    graph-path reference
+    issuer / instrument mapping
+    financial observations
+    economic-capture projection
     valuation
     scenarios
     risk
@@ -47,7 +53,9 @@ industrial observation
         !=
 industrial claim
         !=
-economic beneficiary
+relationship path
+        !=
+economic capture
         !=
 investable exposure
         !=
@@ -58,7 +66,37 @@ attractive valuation
 admitted opportunity
 ```
 
-Industrial evidence may support a financial thesis. It cannot establish one by implication.
+Industrial evidence and topology may support a financial thesis. They cannot establish one by implication.
+
+### 1.1 No duplicate financial graph
+
+Do not introduce finance-owned equivalents of:
+
+```text
+#Entity
+#Relation
+#Predicate
+industrial dependency topology
+industrial supplier topology
+industrial project topology
+```
+
+The base graph already answers the structural question:
+
+```text
+what is related to what, by which admitted relation, under which provenance?
+```
+
+The financial substrate answers a different question:
+
+```text
+given an admitted relationship path,
+what investable instrument maps to its economic terminal,
+what financial observations support capture,
+and what return/risk distribution follows at the current valuation?
+```
+
+If a required industrial relationship is missing, that is a base-graph coverage gap. Finance must not repair the gap by inventing a private relation.
 
 ## 2. Proposed repository shape
 
@@ -66,7 +104,8 @@ Industrial evidence may support a financial thesis. It cannot establish one by i
 contracts/world/financial-opportunities/
     contract.cue
     observations.cue
-    exposure.cue
+    projection.cue
+    mappings.cue
     thesis.cue
     valuation.cue
     scenarios.cue
@@ -81,6 +120,10 @@ world/financial-opportunities/
     runs/
     state/
 ```
+
+`projection.cue` defines references to admitted industrial graph state and financial derivations over those references. It does not define a parallel relation vocabulary.
+
+`mappings.cue` owns only the boundary that the industrial graph should not own: mapping an industrial entity to a legal issuer and then to an investable security or other instrument.
 
 The implementation objective remains:
 
@@ -102,32 +145,59 @@ thin acquisition / market-data adapters
 
 Ibis, DuckDB, BigQuery, pricing APIs, filings providers, analysts, and model outputs remain realization or evidence providers. They do not become semantic authority.
 
-## 3. Opportunity identity and exposure
+## 3. Base-graph projection and opportunity identity
 
-An opportunity is identified by an investable exposure, not by a company name or industrial event alone.
+An opportunity is identified by an investable instrument plus the admitted industrial graph path that motivates evaluating it. A company name or industrial event alone is insufficient.
 
 ```cue
 #OpportunityIdentity: close({
     opportunityID: string
 
-    instrument: close({
-        issuerID:   string
-        securityID: string
-        kind:       "equity" | "bond" | "fund" | "commodity" | "private-project"
-        currency:   string
-        venue?:     string
-    })
+    graphProjection: #IndustrialGraphProjectionRef
+    instrument:      #InstrumentRef
 
     strategy:        #StrategyClass
     thesisMechanism: #ThesisMechanism
 })
+```
 
-#ExposureAssessment: close({
-    industrialDriver: #ExternalRecordRef
-    beneficiary:      #EntityRef
-    instrument:       #InstrumentRef
+The financial domain should reference rather than reproduce graph topology:
 
-    mechanism:
+```cue
+#IndustrialGraphProjectionRef: close({
+    domain: "world.industrial-constraints"
+
+    // Immutable identity of the admitted industrial state used by this run.
+    snapshot: #ExternalSnapshotRef
+
+    // Ordered references to admitted relation/claim records traversed by the
+    // projection. The referenced records remain owned by the industrial domain.
+    path: [...#ExternalRecordRef] & [_, ...]
+
+    terminalEntity: #ExternalEntityRef
+})
+```
+
+The industrial terminal can then be mapped across the domain boundary:
+
+```cue
+#InstrumentMapping: close({
+    industrialEntity: #ExternalEntityRef
+    issuer:            #IssuerRef
+    instrument:        #InstrumentRef
+
+    provenance: [...#EvidenceRef] & [_, ...]
+})
+```
+
+The financial exposure state is an **overlay on the graph projection**, not a replacement for it:
+
+```cue
+#FinancialExposureProjection: close({
+    graphProjection: #IndustrialGraphProjectionRef
+    mapping:         #InstrumentMapping
+
+    captureMechanism:
         "revenue-growth" |
         "margin-expansion" |
         "capacity-utilization" |
@@ -135,32 +205,164 @@ An opportunity is identified by an investable exposure, not by a company name or
         "asset-revaluation" |
         "cost-reduction" |
         "subsidy" |
-        "contract-award"
-
-    directness: "direct" | "second-order" | "indirect"
+        "contract-award" |
+        "financing-spread" |
+        "scarcity-rent"
 
     revenueExposurePct?:  >=0 & <=100
     earningsExposurePct?: >=0 & <=100
     assetExposurePct?:    >=0 & <=100
 
-    confidence: #Confidence
-    evidence:   [...#EvidenceRef]
+    financialEvidence: [...#EvidenceRef]
+    assumptions:       [...#AssumptionRef]
 })
 ```
 
-Exposure propagation must be graph-declared:
+Do not author a second `directness` or adjacency relation as semantic truth. Views such as `direct`, `adjacent`, `second-order`, or `plumbing` are query projections over the referenced path and its predicates. They may be useful labels, but they are not a new topology.
+
+### 3.1 Relationship-centric discovery
+
+Candidate discovery should begin from admitted graph state rather than ticker universes:
 
 ```text
-industrial constraint
-    -> projects-to
-beneficiary
-    -> realized-by
-issuer
-    -> represented-by
-security
+admitted constraint / state change
+        |
+        v
+traverse declared relationships
+        |
+        +-- requires
+        +-- depends-on
+        +-- supplies
+        +-- consumes
+        +-- funded-by
+        +-- procured-by
+        +-- projects-to
+        |
+        v
+candidate terminal entities
+        |
+        v
+issuer / instrument mapping
+        |
+        v
+financial observation join
+        |
+        v
+opportunity qualification
 ```
 
-Do not infer exposure because names, sectors, or paths appear related.
+This naturally captures direct, indirect, adjacent, and plumbing exposure without giving those categories independent authority.
+
+For example:
+
+```text
+data-center load growth
+    -> requires -> grid expansion
+    -> depends-on -> substations
+    -> requires -> switchgear
+    -> supplied-by relationship represented in base graph
+    -> terminal organization
+            |
+            | financial mapping
+            v
+         issuer
+            |
+            v
+        instrument
+```
+
+Every industrial hop must resolve to an admitted base-graph record. The issuer/security boundary is a financial mapping, not an industrial relationship.
+
+### 3.2 Derived relationship metrics
+
+The projection layer may deterministically derive useful financial search features from base topology:
+
+```text
+path length
+path predicate composition
+number of independent paths to a terminal
+number of distinct constraint nodes reaching a terminal
+source / evidence diversity across a path
+substitutability observations
+capacity / backlog observations attached to terminal nodes
+path persistence across graph snapshots
+```
+
+These support derived views such as:
+
+```text
+exposure purity
+path convergence
+plumbing depth
+constraint centrality
+capture confidence
+substitution risk
+```
+
+None is a replacement for the underlying relation records.
+
+A particularly useful derived condition is **path convergence**:
+
+```text
+data centers -----------+
+reshoring --------------+
+electrification --------+--> grid expansion --> terminal supplier
+reliability investment -+
+```
+
+Multiple independently supported industrial paths converging on the same terminal may strengthen the economic-capture hypothesis. The convergence score remains a projection; the individual paths and their provenance remain canonical.
+
+### 3.3 Economic capture and constraint rent
+
+`constraint rent` is a financial analytical projection, not a new graph edge.
+
+A useful model is:
+
+```text
+admitted demand / constraint path
+        +
+issuer operating observations
+        +
+scarcity / substitution observations
+        |
+        v
+modeled economic capture
+```
+
+For example:
+
+```text
+ConstraintRent
+    ~= DemandShock
+       * Exposure
+       * Scarcity
+       * CaptureAbility
+       * Persistence
+
+EconomicValueSignal
+    ~= ConstraintRent
+       * PathConfidence
+       * ContractVisibility
+       / (Substitutability * ExecutionRisk * CapitalIntensity)
+```
+
+These are analytical functions over admitted graph state plus financial observations. Their coefficients, weights, and outputs are assumptions/model state unless separately calibrated and admitted.
+
+The final investment question remains valuation-dependent:
+
+```text
+Opportunity
+    = f(
+        graph projection,
+        economic capture,
+        instrument mapping,
+        current valuation,
+        scenario distribution,
+        risk
+      )
+```
+
+A strong industrial path may therefore terminate in `valuation_constrained`, `uninvestable`, or `coverage_gap` rather than an actionable opportunity.
 
 ## 4. ROI semantics
 
@@ -242,6 +444,8 @@ Risk remains multidimensional. A scalar `riskScore` may be projected for conveni
 
 This preserves the distinction between, for example, a highly valued profitable infrastructure supplier and an early-stage mine requiring financing and dilution.
 
+Graph-related risk should be derived from the referenced industrial path where possible. For example, substitution risk should consume admitted `substitutable-by` relationships rather than be recreated from prose in the financial profile.
+
 ## 6. Thesis, catalysts, and invalidators
 
 Every qualified thesis should define both realization paths and failure conditions.
@@ -249,6 +453,8 @@ Every qualified thesis should define both realization paths and failure conditio
 ```cue
 #Thesis: close({
     proposition: string
+
+    graphProjection: #IndustrialGraphProjectionRef
 
     catalysts:    [...#Catalyst]
     invalidators: [...#Invalidator] & [_, ...]
@@ -258,6 +464,8 @@ Every qualified thesis should define both realization paths and failure conditio
 ```
 
 A monitoring loop must be able to invalidate its own thesis rather than accumulate only confirming observations.
+
+Graph changes are first-class invalidators. If an admitted dependency disappears, a substitute becomes available, capacity expands enough to relieve a bottleneck, or a project path is cancelled, the financial thesis must be re-evaluated even if market observations have not changed.
 
 ## 7. Valuation snapshots
 
@@ -282,10 +490,10 @@ Industrial strength and investment attractiveness are separate axes. A valid opp
 })
 ```
 
-Historical opportunity snapshots are immutable. A thesis can remain valid while a security moves from attractive to unattractive because price changes.
+Historical opportunity snapshots are immutable. A graph path and thesis can remain valid while a security moves from attractive to unattractive because price changes.
 
 ```text
-industrial thesis unchanged
+industrial graph path unchanged
           +
 price rises materially
           |
@@ -296,7 +504,7 @@ expected return contracts
 qualified -> watch / overvalued
 ```
 
-Likewise, an unchanged thesis plus a material price decline can increase prospective return and trigger requalification.
+Likewise, an unchanged path plus a material price decline can increase prospective return and trigger requalification.
 
 ## 8. Admission lifecycle
 
@@ -331,15 +539,19 @@ coverage_gap
 
 `actionable` should fail closed unless the run contains at least:
 
-- a resolved investable instrument;
+- an immutable admitted industrial graph snapshot reference;
+- at least one declared graph path reaching the economic terminal;
+- a resolved issuer/instrument mapping;
 - a current valuation observation;
 - an explicit failure/downside scenario;
 - scenario assumptions and evidence;
-- an exposure assessment;
+- a financial exposure/capture projection;
 - a risk assessment;
 - a declared catalyst or structural return mechanism;
 - sufficient provenance to reproduce the decision;
-- no material unresolved coverage gap affecting the return thesis.
+- no material unresolved base-graph or financial coverage gap affecting the return thesis.
+
+A missing relationship path is not satisfiable by a model assertion. It remains a coverage gap until the base graph admits the missing relation.
 
 ## 9. Calibration
 
@@ -347,6 +559,8 @@ Each admitted snapshot should eventually be evaluated against realized outcomes.
 
 ```text
 t0
+industrial graph snapshot
+projected path set
 price
 scenario distribution
 probabilities
@@ -356,7 +570,7 @@ evidence
         |
         v
 t1 / t2 / t3
-realized observations
+realized graph + market observations
         |
         v
 forecast evaluation
@@ -373,9 +587,11 @@ maximum drawdown
 benchmark-relative return
 time-to-catalyst error
 thesis invalidation accuracy
+path-persistence accuracy
+capture-model error
 ```
 
-This allows the substrate to learn whether particular evidence classes or opportunity profiles are systematically over- or under-estimated.
+This allows the substrate to learn whether particular graph motifs, evidence classes, capture mechanisms, or opportunity profiles are systematically over- or under-estimated.
 
 ---
 
@@ -384,6 +600,8 @@ This allows the substrate to learn whether particular evidence classes or opport
 Snapshot: 2026-09-02.
 
 The profiles below are candidate observations for future qualification. They are not admitted financial decisions. Market observations must be re-acquired before any later evaluation.
+
+The industrial relationships motivating each candidate should be represented by references to admitted base-graph paths. The prose below describes the financial overlay and does not create new relationship authority.
 
 ## 10.1 Vertiv — AI power, cooling, switchgear, and microgrid infrastructure
 
@@ -593,13 +811,19 @@ The IBM/C2MI Bromont advanced-packaging expansion is a strong industrial event, 
 The appropriate financial state is therefore:
 
 ```text
-industrial-signal
+admitted industrial path
     |
     v
-exposure-resolution-required
+terminal industrial entities
+    |
+    v
+issuer / instrument mapping
+    |
+    v
+financial exposure qualification
 ```
 
-The financial substrate should resolve equipment, materials, supplier, capacity, and local-beneficiary relationships before generating an opportunity claim. IBM itself should not be promoted merely because it participates in the project.
+The financial substrate should traverse the existing equipment, materials, supplier, capacity, and local-beneficiary relationships in the base graph and then evaluate mapped instruments. It should not recreate those relationships inside the financial domain. IBM itself should not be promoted merely because it participates in the project.
 
 ## 10.6 Comparative speculative profile
 
@@ -622,10 +846,56 @@ best downside resilience         Eaton
 greatest convexity               First Phosphate
 greatest permanent-loss risk     First Phosphate
 largest valuation constraint     Vertiv / Soitec
-weakest exposure mapping         IBM / C2MI
+weakest instrument mapping       IBM / C2MI
 ```
 
 No current candidate clearly combines high-confidence industrial evidence, low valuation risk, high exposure purity, high upside, and low permanent-loss risk.
+
+## 10.7 Relationship-centric expansion candidates
+
+The next candidate set should be discovered by graph traversal, not by adding a hand-maintained stock list.
+
+Useful traversal families include:
+
+```text
+transformer constraints
+    -> electrical steel
+    -> copper / windings
+    -> testing
+    -> transport / installation
+
+cleanroom expansion
+    -> filtration
+    -> specialty gases
+    -> process chemicals
+    -> ultrapure water
+    -> HVAC
+    -> certification / maintenance
+
+advanced packaging
+    -> substrates
+    -> bonding
+    -> metrology
+    -> plating chemistry
+    -> packaging equipment
+
+grid congestion
+    -> substations
+    -> transformers
+    -> switchgear
+    -> conductors
+    -> engineering
+    -> storage
+
+data-center cooling
+    -> chillers / CDUs
+    -> pumps
+    -> heat exchangers
+    -> piping / valves
+    -> water treatment
+```
+
+These lines are query intents. Actual propagation is valid only where the base graph contains the corresponding admitted relationships.
 
 ---
 
@@ -634,13 +904,16 @@ No current candidate clearly combines high-confidence industrial evidence, low v
 Implement only the smallest closed path first:
 
 ```text
-IndustrialRecordRef
+AdmittedIndustrialGraphSnapshot
         |
         v
-ExposureAssessment
+IndustrialGraphProjectionRef
         |
         v
-Instrument
+InstrumentMapping
+        |
+        v
+FinancialExposureProjection
         |
         v
 ValuationSnapshot
@@ -658,28 +931,54 @@ OpportunityDecision
 immutable snapshot
 ```
 
-Use Vertiv, Eaton, Soitec, and First Phosphate as initial real-observation fixtures/candidate records. Keep IBM/C2MI deliberately unresolved as a positive coverage-gap case.
+The first implementation should therefore **reuse** the existing industrial relation model rather than introduce financial relationship CUE.
+
+Minimal requirements:
+
+1. pin the industrial graph snapshot/revision used by the financial run;
+2. record ordered references to every industrial relation/claim traversed;
+3. resolve the terminal industrial entity to issuer and instrument through an explicitly evidenced mapping;
+4. join issuer/market observations without mutating industrial state;
+5. derive relationship metrics and capture hypotheses deterministically;
+6. qualify valuation, scenarios, risk, and decision;
+7. preserve the graph snapshot and path references in the immutable financial run bundle.
+
+Use Vertiv, Eaton, Soitec, and First Phosphate as initial real-observation fixtures/candidate records. Keep IBM/C2MI deliberately unresolved as a positive issuer/instrument-mapping coverage-gap case.
 
 Do not generalize this domain into worker-core CUE until another profile demonstrates genuine shared invariants.
 
 ## 12. Re-evaluation loop
 
-Both world state and market state can invalidate or materially alter an opportunity:
+Both graph state and market state can invalidate or materially alter an opportunity:
 
 ```text
-world changes                    market changes
-     |                                |
-new contract                      price falls
-new backlog                       multiple rises
-constraint relief                 dilution
-project cancellation              financing
-     \----------------+---------------/
-                      |
-                      v
-               requalification
+industrial graph changes                  market / issuer changes
+        |                                          |
+new relation / path                         price falls
+path disappears                             multiple rises
+substitute admitted                         dilution
+constraint relief                           financing
+capacity expansion                          margin / backlog changes
+project cancellation                        contract award / loss
+        \----------------------+-------------------/
+                               |
+                               v
+                        requalification
 ```
 
-A financial opportunity substrate is therefore a control plane over changing evidence, not a feed of bullish events.
+The financial run should compare both:
+
+```text
+previous industrial graph snapshot
+        -> current industrial graph snapshot
+
+previous financial snapshot
+        -> current financial observations
+```
+
+A graph delta can therefore trigger financial requalification even when the instrument price is unchanged; a market delta can trigger requalification while the graph remains unchanged.
+
+A financial opportunity substrate is a control plane over changing evidence and projected relationships, not a feed of bullish events.
 
 ## 13. Snapshot sources
 
