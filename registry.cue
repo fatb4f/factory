@@ -38,9 +38,7 @@ tasks: close({
 		authority: "contracts/workers/upstream-monitor/profiles_ctrl/contract.cue"
 		agent:     "projects/ctrl/.agents/AGENTS.md"
 		enabled:   true
-		cadence: {
-			everyDays: 3
-		}
+		cadence: {everyDays: 3}
 	}
 	"projects.epistemic-plant-bootstrap.upstream-monitor": unit.#Task & {
 		id:        "projects.epistemic-plant-bootstrap.upstream-monitor"
@@ -49,9 +47,7 @@ tasks: close({
 		authority: "contracts/workers/upstream-monitor/profiles_epistemic_plant_bootstrap/contract.cue"
 		agent:     "projects/epistemic-plant-bootstrap/.agents/AGENTS.md"
 		enabled:   true
-		cadence: {
-			everyDays: 3
-		}
+		cadence: {everyDays: 3}
 	}
 	"academic.uqam.events": unit.#Task & {
 		id:        "academic.uqam.events"
@@ -60,9 +56,7 @@ tasks: close({
 		authority: "contracts/academic/uqam/events/contract.cue"
 		agent:     "academic/uqam/.agents/events/AGENTS.md"
 		enabled:   true
-		cadence: {
-			everyDays: 1
-		}
+		cadence: {everyDays: 1}
 	}
 	"academic.uqam.catalog": unit.#Task & {
 		id:        "academic.uqam.catalog"
@@ -71,9 +65,16 @@ tasks: close({
 		authority: "contracts/academic/uqam/catalog/contract.cue"
 		agent:     "academic/uqam/.agents/catalog/AGENTS.md"
 		enabled:   true
-		cadence: {
-			everyDays: 7
-		}
+		cadence: {everyDays: 7}
+	}
+	"academic.uqam.academics": unit.#Task & {
+		id:        "academic.uqam.academics"
+		name:      "academics"
+		unit:      "academic.uqam"
+		authority: "contracts/academic/uqam/academics/contract.cue"
+		agent:     "academic/uqam/.agents/academics/AGENTS.md"
+		enabled:   true
+		cadence: {everyDays: 1}
 	}
 	"world.industrial-constraints.monitor": unit.#Task & {
 		id:        "world.industrial-constraints.monitor"
@@ -82,9 +83,7 @@ tasks: close({
 		authority: "contracts/world/industrial-constraints/contract.cue"
 		agent:     "world/industrial-constraints/.agents/AGENTS.md"
 		enabled:   false
-		cadence: {
-			everyDays: 7
-		}
+		cadence: {everyDays: 7}
 	}
 })
 
