@@ -10,13 +10,14 @@ communityEvent: events.#NormalizedEvent & {
 		canonical_title: "Le Rendez-vous de la vie étudiante"
 		primary_url:     "https://portailetudiant.uqam.ca/nouvelle/implicationetudiante/le-rendez-vous-de-la-vie-etudiante/"
 	}
+	kind:                "student-group"
 	title:               "Le Rendez-vous de la vie étudiante"
 	starts_at:           "2026-09-22T12:30:00-04:00"
 	ends_at:             "2026-09-23T14:00:00-04:00"
 	location:            "Agora du pavillon Judith-Jasmin"
 	scope:               "Student-group discovery fair and campus involvement"
 	registration_status: "not-required"
-	organizer_entity_id: "uqam:service:srve"
+	organizer_entity_id: "uqam:administrative-unit:srve"
 	primary_url:         "https://portailetudiant.uqam.ca/nouvelle/implicationetudiante/le-rendez-vous-de-la-vie-etudiante/"
 	evidence: [{
 		source:           "uqam-student-life"
