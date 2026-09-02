@@ -1,10 +1,1 @@
-{
-  "apiVersion": "factory.upstream-monitor.latest-run/v2",
-  "kind": "LatestUpstreamMonitorRun",
-  "run_id": "20260830T160520Z",
-  "profile_id": "epistemic-plant-bootstrap",
-  "bundle_path": "projects/epistemic-plant-bootstrap/upstream-monitor/runs/20260830T160520Z/",
-  "manifest_path": "projects/epistemic-plant-bootstrap/upstream-monitor/runs/20260830T160520Z/manifest.json",
-  "authority_revision": "9ab0b2e691dc24a4a72cffbcf7cdca9d963c8c3b",
-  "publication_revision": "c0a48b80c16acb2f6d956375602b9b27ae33c8eb"
-}
+{"apiVersion":"factory.upstream-monitor.latest-run/v2","kind":"LatestUpstreamMonitorRun","run_id":"20260902T163500Z","profile_id":"epistemic-plant-bootstrap","bundle_path":"projects/epistemic-plant-bootstrap/upstream-monitor/runs/20260902T163500Z/","manifest_path":"projects/epistemic-plant-bootstrap/upstream-monitor/runs/20260902T163500Z/manifest.json","authority_revision":"72534f558c3d9d00eba8ab4d1ef7b8647dd4e9b9","publication_revision":"df7ef39f7e45d29607963d302b3722b0fdb539ca"}
