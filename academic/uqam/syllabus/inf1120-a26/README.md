@@ -34,11 +34,16 @@ source artifacts
 - `issues.cue` — source inconsistencies/currentness/gaps kept explicit.
 - `normalized.cue` — projection against `contracts/academic/uqam/syllabus/#NormalizedSyllabus`.
 - `material-index.md` and `learning-graph.md` — readable projections.
+- `source-material/` — readable Git-native projections of currently accessible PDF course material.
 
 ## Authority rule
 
 Current A26 claims come from the supplied Moodle snapshot and signed evaluation agreement. Course-resource files support topic and correction/style constraints. Historical quiz archives may only justify `historical-assessment-derived` edges; they must not be promoted to current A26 assessment coverage without current evidence.
 
-## Raw source policy
+## Source material policy
 
-The repository records filenames, archive membership and SHA-256 identity for the supplied binary/source corpus. The uploaded ZIP/PDF/JAR binaries are not duplicated in Git. The normalized graph remains traceable to those artifacts without treating generated summaries as source authority.
+Original binary/source identities remain canonical in `sources.cue`, including filenames, archive membership, byte sizes and SHA-256 digests where acquired.
+
+Readable text projections of the currently accessible PDF material are vendored under `source-material/`. The File Library interface available to this run exposes parsed document content rather than transferable raw bytes, so the original PDF/ZIP/JAR binaries are not copied by this commit. Topic archives and historical archives therefore remain inventory-backed until their original bytes can be reacquired through a writable Git path.
+
+A text projection improves Git-native reading/search but does not replace its original artifact when exact wording, visual layout or byte identity is authoritative.

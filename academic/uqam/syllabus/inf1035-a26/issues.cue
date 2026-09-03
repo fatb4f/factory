@@ -6,7 +6,7 @@ issues: [
         kind: "source-gap"
         source: "src:calendar-a26"
         basis: "explicit"
-        note: "The current normalized input does not establish group, instructor, meeting time/location, department or a canonical course title; these fields remain unset rather than inferred."
+        note: "The calendar establishes group 020, instructor identity/email and Tuesday sessions, but does not establish lecture time, room or department. Those fields remain unset rather than inferred."
     },
     {
         id: "issue:later-chapter-detail-gap"
@@ -21,6 +21,6 @@ issues: [
         kind: "source-gap"
         source: "src:chapter-01"
         basis: "explicit"
-        note: "The two referenced PDF binaries are not mounted in this turn, so source SHA-256 and byte-size fields are intentionally omitted until reacquisition."
+        note: "Original PDF bytes are not transferable from the File Library interface in this run. Git-native text projections are present under source-material/, while source SHA-256 and byte-size remain unset until original bytes are reacquired."
     },
 ]
