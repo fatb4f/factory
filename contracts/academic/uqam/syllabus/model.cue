@@ -13,13 +13,16 @@ package uqamsyllabus
 #ConstraintID: string & =~"^constraint:[a-z0-9][a-z0-9._:-]*$"
 #RelationID: string & =~"^relation:[a-z0-9][a-z0-9._:-]*$"
 #IssueID: string & =~"^issue:[a-z0-9][a-z0-9._:-]*$"
-#NodeID: #MaterialID | #ConceptID | #WeekID | #AssessmentID | #ConstraintID
+#CourseID: string & =~"^uqam:course:[a-z0-9][a-z0-9._:-]*$"
+#NodeID: #CourseID | #MaterialID | #ConceptID | #WeekID | #AssessmentID | #ConstraintID
 
 #SourceStatus: "current-course" | "course-resource" | "historical"
 #SourceKind:
     "moodle-snapshot" |
     "evaluation-agreement" |
     "course-directive" |
+    "course-calendar" |
+    "chapter-notes" |
     "style-guide" |
     "correction-guide" |
     "topic-archive" |
@@ -31,8 +34,8 @@ package uqamsyllabus
     kind: #SourceKind
     status: #SourceStatus
     filename: #NonEmptyString
-    sha256: #SHA256
-    bytes: int & >=0
+    sha256?: #SHA256
+    bytes?: int & >=0
     members?: [...#NonEmptyString]
     note?: #NonEmptyString
 })
@@ -55,6 +58,7 @@ package uqamsyllabus
     role: #MaterialRole
     source: #SourceID
     path: #NonEmptyString
+    locator?: #NonEmptyString
     topic?: #NonEmptyString
     currentness: "current-topic-material" | "historical-assessment" | "course-reference"
 })
@@ -64,25 +68,47 @@ package uqamsyllabus
     day: "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday"
     start: #Time
     end: #Time
-    room: #NonEmptyString
+    room?: #NonEmptyString
     leader?: #NonEmptyString
 })
 
 #Course: close({
-    id: "uqam:course:inf1120-020-a26"
-    code: "INF1120"
-    group: "020"
-    term: "AUTOMNE 2026"
-    title: "PROGRAMMATION I"
-    department: "DÉPARTEMENT D'INFORMATIQUE"
-    instructor: close({
+    id: #CourseID
+    code: #NonEmptyString
+    group?: #NonEmptyString
+    term: #NonEmptyString
+    title?: #NonEmptyString
+    department?: #NonEmptyString
+    instructor?: close({
         name: #NonEmptyString
-        email: #NonEmptyString
+        email?: #NonEmptyString
     })
-    meetings: [...#Meeting] & [_, ...]
+    meetings?: [...#Meeting]
 })
 
-#ConceptKind: "foundation" | "specification" | "language" | "method" | "library" | "object" | "array" | "exception" | "io"
+#ConceptKind:
+    "foundation" |
+    "hardware" |
+    "representation" |
+    "encoding" |
+    "execution" |
+    "specification" |
+    "language" |
+    "environment" |
+    "control-flow" |
+    "function" |
+    "method" |
+    "library" |
+    "object" |
+    "array" |
+    "exception" |
+    "io" |
+    "collection" |
+    "structured-data" |
+    "numerical-computing" |
+    "tabular-data" |
+    "visualization" |
+    "machine-learning"
 
 #Concept: close({
     id: #ConceptID
@@ -94,13 +120,13 @@ package uqamsyllabus
 
 #Week: close({
     id: #WeekID
-    number: int & >=1 & <=15
+    number: int & >=1 & <=16
     week_start: #Date
     source_week_start_literal?: #NonEmptyString
     lecture_topics: [...#NonEmptyString]
     lab_topics: [...#NonEmptyString]
-    lecture_status: "scheduled" | "no-course"
-    lab_status: "scheduled" | "no-lab"
+    lecture_status: "scheduled" | "no-course" | "reserve" | "assessment-only"
+    lab_status: "scheduled" | "no-lab" | "not-specified"
     evidence: [...#SourceID] & [_, ...]
 })
 
@@ -111,13 +137,15 @@ package uqamsyllabus
     kind: #AssessmentKind
     weight_percent: number & >0 & <=100
     date?: #Date
+    release_date?: #Date
+    due_date?: #Date
     start?: #Time
     end?: #Time
     due: "fixed" | "moodle-publication"
     evidence: [...#SourceID] & [_, ...]
 })
 
-#ConstraintScope: "code" | "submission" | "exam" | "documentation" | "design"
+#ConstraintScope: "code" | "submission" | "exam" | "documentation" | "design" | "grading" | "calendar"
 #Constraint: close({
     id: #ConstraintID
     label: #NonEmptyString
@@ -136,7 +164,9 @@ package uqamsyllabus
     "uses" |
     "extends" |
     "depends-on" |
-    "evidenced-by"
+    "evidenced-by" |
+    "releases" |
+    "due-at"
 
 #RelationBasis:
     "explicit" |

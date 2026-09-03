@@ -12,4 +12,9 @@ Semantic shape: `contracts/academic/uqam/syllabus/`.
 
 A syllabus is not a scheduled monitor. It is a source-qualified projection of supplied course materials. Explicit source facts and derived topology are separated through each relationship's `basis` and `evidence`.
 
-Current courses live under a term-qualified directory such as `inf1120-a26/`.
+## Automne 2026
+
+- `inf1120-a26/` — Java-first Programming I corpus with course-specific correction constraints.
+- `inf1035-a26/` — computer representation → Python fundamentals → structured/scientific data tooling.
+
+Course directories remain term-qualified so future revisions do not overwrite historical teaching/evaluation state.
