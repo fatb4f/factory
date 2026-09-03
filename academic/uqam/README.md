@@ -1,16 +1,16 @@
 # UQAM academic substrate
 
-`academic.uqam` is split into two independent task contracts with a one-way contextual projection:
+`academic.uqam` separates institutional identity, time-sensitive events, and course-local syllabus normalization:
 
 ```text
 official UQAM / organizer sources
             │
-            ├───────────────┐
-            ▼               ▼
- academic.uqam.catalog   academic.uqam.events
- stable entities         time-sensitive events
- + explicit relations    + comparison/delta state
-            │               ▲
+            ├───────────────┬──────────────────┐
+            ▼               ▼                  ▼
+ academic.uqam.catalog   academic.uqam.events   academic/uqam/syllabus
+ stable entities         time-sensitive events  course-local corpus graph
+ + explicit relations    + comparison/delta     + concepts/constraints
+            │               ▲                  + assessment/material edges
             └── admitted ────┘
                 identity context only
 ```
@@ -19,30 +19,22 @@ official UQAM / organizer sources
 
 Semantic authority: `contracts/academic/uqam/catalog/`
 
-The catalog models slower-changing UQAM substrate such as:
-
-- university, faculties, departments and administrative/service units;
-- faculty/program associations;
-- recognized student groups and student media;
-- student cafés and common/community resources;
-- digital platforms, libraries, sports/recreation, funding and accessibility services;
-- explicit source-supported relations such as `part-of`, `operated-by`, `supported-by`, `represents`, `offers` and `located-at`.
-
-A catalog baseline is admitted only after every required discovery source and every declared student-group category has been traversed. Partial discovery remains observation/fixture state.
+The catalog models slower-changing UQAM substrate such as university units, programs, associations, student groups, community resources, services and explicit source-supported relationships.
 
 ## Events
 
 Semantic authority: `contracts/academic/uqam/events/`
 
-The daily event watch covers student/community activity in addition to the existing technical/scientific scope. It keeps its own stable event identity and comparison state. When explicit evidence permits, an event may project an organizer or venue to an admitted catalog entity ID.
+The event watch owns time-sensitive activity, stable event identity, comparison state and event admission. Catalog state may provide admitted identity context but does not decide event deltas.
 
-Catalog state is context for event normalization; it never decides whether an event is added, changed, reportable or admitted.
+## Syllabus
+
+Semantic shape: `contracts/academic/uqam/syllabus/`
+
+`academic/uqam/syllabus/` stores term-qualified course corpora. Current course authority, topic resources, historical assessment evidence, concept dependencies, assessment structure and course-specific correction constraints stay distinct. Relationship edges carry both a derivation basis and evidence source IDs so inferred topology cannot masquerade as an explicit source fact.
+
+The syllabus substrate is not scheduled by `registry.cue`; it changes when course material is acquired or revised.
 
 ## Scheduling
 
-`registry.cue` schedules:
-
-- `academic.uqam.events` daily;
-- `academic.uqam.catalog` weekly.
-
-The dispatcher only invokes each task and records its task-native outcome. Each task owns its own acquisition, comparison and publication state.
+`registry.cue` schedules `academic.uqam.events` daily and `academic.uqam.catalog` weekly. Each scheduled task owns its acquisition, comparison and publication state.
