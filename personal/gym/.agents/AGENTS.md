@@ -6,16 +6,74 @@ Canonical authority lives under `contracts/personal/gym/`.
 
 Act as the acquisition and normalization interface for Gym training sessions. Convert user statements and device/media observations into contract-shaped records while preserving the boundary between facts, planned programming, and derived interpretation.
 
-The active operating protocol is `session-workflow.md`. Use it whenever the user starts, resumes, reports observations from, closes, or reports recovery from a training session.
+The active operating protocol is `session-workflow-v2.md`. Use it whenever the user starts, resumes, reports observations from, closes, or reports recovery from a training session.
 
 For the current ankle-knee-pelvis program, resolve session programming from:
 
-- `contracts/personal/gym/tri_session_program.cue` — machine-readable posterior / anterior / distal-integrated topology;
+- `contracts/personal/gym/tri_session_program_v2.cue` — active machine-readable posterior / anterior / distal-integrated topology;
+- `contracts/personal/gym/tri_session_program.cue` — historical v1 topology retained for already-captured v1 sessions;
 - `contracts/personal/gym/exercise_registry.cue` — canonical exercise identity, display names, constraints, setup dimensions, and supported metrics;
-- `personal/gym/docs/tri-session-program.md` — human-readable rationale and programming;
+- `personal/gym/docs/tri-session-program-v2.md` — active human-readable rationale and programming;
+- `personal/gym/docs/tri-session-program.md` — historical v1 rationale;
 - `contracts/personal/gym/program_ankle_knee_pelvis.cue` — targets, equilibrium, and data requirements.
 
 For every planned or executed prescription, resolve `exercise.id` through `exerciseProfiles`. Agent-facing plan text uses the resolved profile `name`; capture and persistence use the resolved canonical profile `id`. User aliases may be accepted as acquisition input but must not become stored exercise identity.
+
+## Active v2 scheduling constraints
+
+The active v2 program deliberately does **not** create a separate upper-body Program D. One upper-body strength exposure is projected into each A/B/C session:
+
+```text
+A -> rear-delt high row
+B -> overhead press
+C -> lateral raise
+```
+
+Recovery is currently a hard no-training domain. Do not schedule or encourage another training exposure, including a separate upper-body session, while the current session remains inside its recovery gate. Time alone does not admit training; lower-chain state, systemic state, and cognitive/academic availability all matter.
+
+Current calibration from the last observed instances is approximately:
+
+```text
+Program A / posterior -> 72 h
+Program B / anterior  -> 48 h
+Program C             -> not yet baselined
+```
+
+These are calibration observations, not guarantees that a future session will recover on the same clock.
+
+A and B retain their irreducible foundations:
+
+```text
+A
+GHR
+reverse hyper
+Copenhagen
+
+B
+ATG split squat
+reverse Nordic
+resisted hip flexion
+```
+
+Program C is deliberately sparse while the lower chain continues to reorganize materially: low-cost state setting, frog bridge, exactly one principal integration family (`cossack-squat` or `modified-standing-bow-slrdl`), lateral raise, gait readout.
+
+Do not add accessory lower-chain work simply because equipment or time is available. Exercise-count progression itself is gated on a more stable chain and acceptable cognitive recovery cost.
+
+## Shoulder-girdle programming boundary
+
+The distributed upper-body layer is a capacity-building hypothesis, not a diagnosis. Current programming assumes that posterior/lateral shoulder strength may be underexposed relative to anterior pressing, but capture must not promote that hypothesis into a causal medical assertion.
+
+Upper-body progression requires:
+
+- quiet neck/levator behavior;
+- no increase in sternal/anterior-thorax tension;
+- controlled humeral position;
+- free scapular excursion appropriate to the exercise;
+- no need to force the shoulders "back and down."
+
+If those constraints fail, stop or regress the upper exposure rather than increasing load.
+
+A-Y-W, band pulls, and similar low-load control work are not substitutes for the loaded upper slot. During hard recovery they are not automatically prescribed as daily training.
 
 ## Operating invariant
 
@@ -26,7 +84,7 @@ start
   -> append-only in-session capture
   -> down-regulation
   -> session close
-  -> recovery checkpoints
+  -> hard recovery gate
   -> downstream analysis/progression
 ```
 
@@ -73,13 +131,14 @@ For video, register the media artifact and link observations or measurements to 
 
 ## Persistence
 
-Repository content under `personal/gym/` is currently architecture, agent guidance, program definitions, and synthetic fixtures. Do not commit personal session observations to the public repository unless the user explicitly instructs that specific persistence action.
+Repository content under `personal/gym/` is currently architecture, agent guidance, program definitions, and explicitly persisted session evidence. Do not commit additional personal session observations unless the user explicitly instructs that specific persistence action.
 
 Until a dedicated capture runtime/store exists, treat the active conversation as the capture buffer and shape records according to the CUE contracts.
 
 ## Templates
 
-- `session-workflow.md` — authoritative conversational state machine;
+- `session-workflow-v2.md` — active conversational state machine;
+- `session-workflow.md` — historical v1 workflow;
 - `templates/session-start.md`;
 - `templates/exposure.md`;
 - `templates/capture.md`;
