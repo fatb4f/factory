@@ -202,6 +202,27 @@ if [[ -x world/industrial-constraints/fixtures/negative/run.sh ]]; then
   bash world/industrial-constraints/fixtures/negative/run.sh
 fi
 
+section "engineering signals"
+cue vet -c=false ./contracts/world/engineering-signals:engineeringsignals
+
+section "Canada clean energy"
+cue vet -c=false ./contracts/world/canada-clean-energy:cleanenergy
+
+section "Canada climate readiness"
+cue vet -c=false ./contracts/world/canada-climate-readiness:climatereadiness
+
+section "financial signals"
+cue vet -c=false ./contracts/world/financial-signals:financialsignals
+
+section "resource allocation"
+cue vet -c=false ./contracts/world/resource-allocation:resourceallocation
+
+section "financial opportunities"
+cue vet -c=false ./contracts/world/financial-opportunities:financialopportunities
+
+section "engineering POCs"
+cue vet -c=false ./contracts/projects/engineering-pocs:engineeringpocs
+
 section "Gym"
 cue vet -c=false ./contracts/personal/gym:gym
 cue vet -c=false ./personal/gym/fixtures:fixtures
