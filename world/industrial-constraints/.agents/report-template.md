@@ -1,12 +1,8 @@
 # Industrial Constraints Monitor
 
-## Material state changes
+## Observed events
 
-## Emerging constraints
-
-## Binding constraints
-
-## Relieving or resolved constraints
+## Infrastructure and capacity signals
 
 ## Institutional responses
 
@@ -15,3 +11,5 @@
 ## Evidence and provenance
 
 ## Coverage gaps
+
+> Current phase: `event-watch`. This report records source-qualified observations only. Constraint claims, canonical graph propagation, and relational qualification are unavailable until the contract switches to `relational-pipeline`.
