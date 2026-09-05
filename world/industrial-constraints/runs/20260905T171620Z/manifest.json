@@ -1,0 +1,62 @@
+{
+  "runID": "20260905T171620Z",
+  "phase": "event-watch",
+  "generatedAt": "2026-09-05T17:16:20Z",
+  "contractPath": "contracts/world/industrial-constraints/contract.cue",
+  "contractRevision": "78fc67411aad8f1a6a47d2d71898e98900d574d5",
+  "immutable": true,
+  "artifacts": {
+    "report": "report.md",
+    "summary": "summary.md",
+    "evidence": "evidence.json"
+  },
+  "digests": {
+    "report": "sha256:3e1a066fe59e92cc3b35bf42b53752b72756e1cf73d77e9a46801514e4cb07f1",
+    "summary": "sha256:ec9440b841147318397448a1b2d50388ab317ceb0921c0d5f04972325d3a83f3",
+    "evidence": "sha256:b102d8a53fefcb8f8ad3b62ab9c6ef9b17d573341b52b6402edbc9b925e96257"
+  },
+  "publication": {
+    "phase": "event-watch",
+    "decision": "admit",
+    "events": [
+      {
+        "kind": "event-observation",
+        "id": "event.mcilvenna-bay.production-milestone.2026-09-02"
+      },
+      {
+        "kind": "event-observation",
+        "id": "event.canada.data-centre-principles.2026-09-03"
+      },
+      {
+        "kind": "event-observation",
+        "id": "event.cmrdd.contribution-eoi.2026-09-01"
+      },
+      {
+        "kind": "event-observation",
+        "id": "event.joliette.pad-transformer-tender-amended.2026-09-02"
+      }
+    ],
+    "coverageGaps": [
+      {
+        "id": "gap.web-search-exhaustiveness",
+        "description": "Bounded web acquisition is search-index dependent and does not enumerate every selected institution, operator or supplier.",
+        "affects": []
+      },
+      {
+        "id": "gap.canadabuys-full-enumeration",
+        "description": "This pass inspected a material transformer notice but did not enumerate the complete CanadaBuys procurement dataset.",
+        "affects": [
+          {
+            "kind": "event-observation",
+            "id": "event.joliette.pad-transformer-tender-amended.2026-09-02"
+          }
+        ]
+      },
+      {
+        "id": "gap.surface-absence-inference",
+        "description": "No absence-of-event inference is admitted for semiconductor, advanced-packaging or cleanroom surfaces from this bounded pass alone.",
+        "affects": []
+      }
+    ]
+  }
+}
