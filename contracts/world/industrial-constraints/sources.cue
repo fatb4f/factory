@@ -7,7 +7,9 @@ package industrialconstraints
 	"canadabuys" |
 	"statcan" |
 	"quebec-enterprise-register" |
-	"hydro-quebec"
+	"hydro-quebec" |
+	"institutional-web" |
+	"operator-supplier-web"
 
 #AcquisitionMode: "bigquery" | "http" | "bulk" | "api"
 
@@ -166,6 +168,38 @@ sources: close({
 				recordIdentity: "composite-source-key"
 				revision: "source-version"
 				cursor: "modified-since"
+			}
+		}
+	}
+
+	"institutional-web": #Source & {
+		id: "institutional-web"
+		acquisition: {modes: ["http"]}
+		channels: {
+			"official-publication": {
+				id: "official-publication"
+				dataset: "Official public institutional publications"
+				authorityRole: "asserted-event"
+				expectedRecords: ["document", "event-observation"]
+				recordIdentity: "composite-source-key"
+				revision: "publication-date"
+				cursor: "date-window"
+			}
+		}
+	}
+
+	"operator-supplier-web": #Source & {
+		id: "operator-supplier-web"
+		acquisition: {modes: ["http"]}
+		channels: {
+			"official-publication": {
+				id: "official-publication"
+				dataset: "Official operator and supplier publications"
+				authorityRole: "asserted-event"
+				expectedRecords: ["document", "event-observation"]
+				recordIdentity: "composite-source-key"
+				revision: "publication-date"
+				cursor: "date-window"
 			}
 		}
 	}
