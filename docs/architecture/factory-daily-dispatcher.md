@@ -73,7 +73,7 @@ unit-local AGENTS.md
 profile-owned run/publication surface
 ```
 
-For industrial constraints:
+For industrial constraints, the current execution phase is deliberately narrower than the target data platform:
 
 ```text
 world/industrial-constraints/.agents/AGENTS.md
@@ -81,25 +81,39 @@ world/industrial-constraints/.agents/AGENTS.md
         +--> contracts/world/industrial-constraints/*.cue
         |
         v
-bounded acquisition
+bounded public-source acquisition
         |
         v
-typed relational observations
+source-qualified documents + event observations
         |
         v
-deterministic projections
+relevance classification
         |
         v
-admitted relational state
-        |
-        v
-constraint/evidence assessment
-        |
-        v
-admitted run bundle
+admitted observation report/run bundle
 ```
 
-The industrial task is domain-owned and does not route through the generic upstream-monitor worker. Enabling it permits invocation; it does not weaken its fail-closed publication contract or convert acquisition gaps into admitted facts.
+The contract separately models the future `relational-pipeline` target:
+
+```text
+bounded acquisition adapters
+        |
+        v
+typed relational normalization + canonical identity
+        |
+        v
+Ibis projections / DuckDB admitted state
+        |
+        v
+graph correlation
+        |
+        v
+evidence-backed constraint claims
+```
+
+The future pipeline is not a prerequisite for current event tracking. While `contract.execution.phase == "event-watch"`, the task may publish source-qualified events and coverage gaps but must not publish canonical graph propagation, assessments, or constraint claims. Missing Ibis/DuckDB/BigQuery execution is therefore a future-capability gap rather than an event-watch failure.
+
+The industrial task is domain-owned and does not route through the generic upstream-monitor worker.
 
 For UQAM tasks, academic contracts remain semantic authority and their task-local baseline/comparison state remains separate from dispatcher state.
 
@@ -111,6 +125,6 @@ Task-owned state, evidence, qualification, comparison baselines, and immutable r
 
 ## Execution boundary
 
-The dispatcher does not provision containers, archives, local toolchains, or execution sandboxes. Those are task/profile concerns only when explicitly contracted. A task that cannot obtain required executable evidence through its current actuator must preserve the task-native coverage gap or rejection state rather than allowing the dispatcher to fabricate validation.
+The dispatcher does not provision containers, archives, local toolchains, or execution sandboxes. Those are task/profile concerns only when explicitly contracted. A task that cannot obtain evidence required by its currently selected execution phase must preserve the task-native coverage gap rather than allowing the dispatcher to fabricate validation.
 
 The active scheduler topology is one Monday-morning dispatcher over all enabled registered tasks. Legacy task-specific recurring automations are not part of Factory authority and should remain disabled once their function is represented by the dispatcher.
