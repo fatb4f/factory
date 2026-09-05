@@ -31,6 +31,14 @@ engineeringIssue: state.#EngineeringWorkIssue & {
 engineeringProjection: state.#GitHubIssueProjection & {
 	issue: engineeringIssue
 	title: "[substrate] Define Factory analytical IR boundary"
+	managedLabels: [
+		"factory",
+		"origin:engineering",
+		"entity:substrate",
+		"state:ready",
+		"priority:p1",
+		"work:schema",
+	]
 }
 
 evidenceIssue: state.#EvidenceDerivedIssue & {
@@ -57,4 +65,16 @@ evidenceIssue: state.#EvidenceDerivedIssue & {
 		authority: "contracts/workers/upstream-monitor/profiles_ctrl/contract.cue"
 		decision:  "Profile qualification admitted the regression."
 	}
+}
+
+evidenceProjection: state.#GitHubIssueProjection & {
+	issue: evidenceIssue
+	title: "[profile] Track ctrl runtime compatibility regression"
+	managedLabels: [
+		"factory",
+		"origin:evidence",
+		"entity:profile",
+		"state:ready",
+		"priority:p1",
+	]
 }
