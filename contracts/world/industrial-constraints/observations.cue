@@ -10,6 +10,32 @@ package industrialconstraints
 	evidence?:       [...#RecordRef]
 })
 
+#ObservedParty: close({
+	label:      string
+	entityKind?: #EntityKind
+})
+
+#EventObservation: close({
+	kind:      "event-observation"
+	id:        #RecordID
+	eventKind: #EventKind
+	headline:  string
+	actors:    [...#ObservedParty]
+	subjects:  [...#ObservedParty]
+	occurredAt?:  #Timestamp
+	announcedAt?: #Timestamp
+	relevance: close({
+		geographies:       [...#GeographyScope]
+		industrialSurfaces: [...#IndustrialSurface] & [_, ...]
+		disposition:       #WatchDisposition
+	})
+	provenance: #Provenance & {
+		publisher:       string
+		observedSurface: string
+	}
+	evidence: [...#RecordRef] & [_, ...]
+})
+
 #Event: close({
 	kind:        "event"
 	id:          #RecordID
