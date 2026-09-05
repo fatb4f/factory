@@ -114,8 +114,9 @@ import unit "github.com/fatb4f/factory/contracts:unit"
 #TrackerIssue: #EngineeringWorkIssue | #EvidenceDerivedIssue
 
 #GitHubIssueProjectionBase: {
-	issue: #TrackerIssue
-	title: #NonEmptyString
+	issue:         #TrackerIssue
+	title:         #NonEmptyString
+	managedLabels: [#NonEmptyString, ...#NonEmptyString]
 
 	markers: close({
 		factory_schema:      issue.apiVersion
