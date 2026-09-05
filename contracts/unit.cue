@@ -4,6 +4,7 @@ package unit
 #UnitKind: "project" | "academic" | "world" | "personal"
 #UnitID:   string & =~"^(projects|academic|world|personal)\\.[a-z0-9]+(?:-[a-z0-9]+)*$"
 #TaskID:   string & =~"^(projects|academic|world|personal)\\.[a-z0-9]+(?:-[a-z0-9]+)*\\.[a-z0-9]+(?:-[a-z0-9]+)*$"
+#Weekday:  "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday"
 
 #RepositoryPath: string & =~"^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$" & !~"(^|/)\\.{1,2}(/|$)"
 #AuthorityPath:  #RepositoryPath & =~"(^|/)contract\\.cue$"
@@ -16,6 +17,11 @@ package unit
 	agents: #AgentRootPath
 })
 
+#Cadence: close({
+	frequency: "weekly"
+	weekday:   #Weekday
+})
+
 #Task: close({
 	id:         #TaskID
 	name:       #Name
@@ -23,7 +29,5 @@ package unit
 	authority?: #AuthorityPath
 	agent:      #AgentPath
 	enabled:    bool
-	cadence: close({
-		everyDays: int & >0
-	})
+	cadence:    #Cadence
 })
