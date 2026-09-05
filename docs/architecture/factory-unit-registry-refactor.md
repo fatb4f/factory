@@ -21,10 +21,9 @@ factory/
 |   |       |-- profiles_ctrl/
 |   |       `-- profiles_epistemic_plant_bootstrap/
 |   |-- academic/
-|   |   `-- uqam/events/
-|   |       |-- contract.cue
-|   |       |-- events.cue
-|   |       `-- comparison.cue
+|   |   `-- uqam/
+|   |       |-- events/
+|   |       `-- catalog/
 |   `-- world/
 |       `-- industrial-constraints/
 |           |-- contract.cue
@@ -46,11 +45,11 @@ factory/
 |   `-- epistemic-plant-bootstrap/
 |-- academic/
 |   `-- uqam/
-|       |-- .agents/events/
-|       `-- events/
-|           |-- fixtures/
-|           |-- runs/
-|           `-- state/
+|       |-- .agents/
+|       |   |-- events/
+|       |   `-- catalog/
+|       |-- events/
+|       `-- catalog/
 `-- world/
     `-- industrial-constraints/
 ```
@@ -72,6 +71,9 @@ contracts/workers/<worker>/profiles_<profile>/*.cue
 contracts/academic/uqam/events/*.cue
     UQAM event-watch semantic authority
 
+contracts/academic/uqam/catalog/*.cue
+    UQAM catalog semantic authority
+
 contracts/world/industrial-constraints/*.cue
     domain-owned industrial intelligence semantic authority
 
@@ -87,7 +89,7 @@ contracts/workers/<worker>/AGENTS.md
 
 Colocation does not promote procedural Markdown to semantic authority. For upstream-monitor, shared worker CUE plus exactly one selected profile CUE package define semantics; the contract-colocated worker `AGENTS.md` and unit-local `AGENTS.md` files define procedure. The legacy `.agents/workers/upstream-monitor/AGENTS.md` path is a non-normative compatibility pointer only.
 
-`academic.uqam.events` and `world.industrial-constraints` are independent domain authorities and do not inherit upstream-monitor semantics.
+`academic.uqam.*` and `world.industrial-constraints` are independent domain authorities and do not inherit upstream-monitor semantics.
 
 ## Registry
 
@@ -99,7 +101,7 @@ Colocation does not promote procedural Markdown to semantic authority. For upstr
 - optional semantic-authority path;
 - task-local agent path;
 - enabled state;
-- cadence in days.
+- explicit weekly cadence and weekday.
 
 A task does not need a CUE semantic contract merely to be scheduled. `authority` remains optional in the generic task type; where the registry declares one, however, the dispatcher must preserve that authority/entrypoint pair and may not replace it with procedural inference.
 
@@ -110,24 +112,34 @@ projects.ctrl.upstream-monitor
     authority -> contracts/workers/upstream-monitor/profiles_ctrl/contract.cue
     agent     -> projects/ctrl/.agents/AGENTS.md
     enabled   -> true
+    cadence   -> weekly / Monday
 
 projects.epistemic-plant-bootstrap.upstream-monitor
     authority -> contracts/workers/upstream-monitor/profiles_epistemic_plant_bootstrap/contract.cue
     agent     -> projects/epistemic-plant-bootstrap/.agents/AGENTS.md
     enabled   -> true
+    cadence   -> weekly / Monday
 
 academic.uqam.events
     authority -> contracts/academic/uqam/events/contract.cue
     agent     -> academic/uqam/.agents/events/AGENTS.md
     enabled   -> true
+    cadence   -> weekly / Monday
+
+academic.uqam.catalog
+    authority -> contracts/academic/uqam/catalog/contract.cue
+    agent     -> academic/uqam/.agents/catalog/AGENTS.md
+    enabled   -> true
+    cadence   -> weekly / Monday
 
 world.industrial-constraints.monitor
     authority -> contracts/world/industrial-constraints/contract.cue
     agent     -> world/industrial-constraints/.agents/AGENTS.md
-    enabled   -> false
+    enabled   -> true
+    cadence   -> weekly / Monday
 ```
 
-The daily dispatcher schedules the first three tasks. `world.industrial-constraints.monitor` remains registered but disabled until its own qualification and publication path are complete.
+The shared Monday-morning dispatcher schedules all enabled registered tasks. Scheduler state only deduplicates execution on the same local calendar date; task-local semantic state remains outside the dispatcher ledger.
 
 ## Upstream-monitor topology
 
@@ -154,7 +166,7 @@ The CUE layer is semantic authority. The `AGENTS.md` layers are procedure. Proje
 
 ## UQAM event-watch topology
 
-UQAM is a contracted event-watch domain, but not an upstream-monitor profile:
+UQAM events is a contracted event-watch domain, but not an upstream-monitor profile:
 
 ```text
 registry.cue
@@ -184,13 +196,17 @@ admitted decision
     `--> CAS update of academic/uqam/events/state/admitted-baseline.json
 ```
 
-The UQAM contract owns exact required-source coverage, normalized event identity, material delta semantics, outcome/baseline-action coupling, and publication admission. The shared state package owns only generic run/baseline references and compare-and-swap vocabulary.
+The UQAM event contract owns exact required-source coverage, normalized event identity, material delta semantics, outcome/baseline-action coupling, and publication admission. The shared state package owns only generic run/baseline references and compare-and-swap vocabulary.
 
 The first complete run is a contracted `bootstrap` state and may establish the baseline. Incomplete required acquisition permits only `source_gap` with pointer hold. Comparable state may advance only through the admitted `no_change` or `new_matches` branches; invalidated comparison and CAS conflict hold the pointer. The run manifest seals both normalized and decision artifacts.
 
 The baseline pointer is task-local persistent comparison state. It is not scheduler authority and it is not a substitute for an immutable run bundle.
 
 ## Industrial-constraints topology
+
+Industrial intelligence has an explicit selected execution phase. The current phase tracks public events without claiming that the future data platform already exists.
+
+Current phase:
 
 ```text
 Factory registry
@@ -202,31 +218,65 @@ contracts/world/industrial-constraints/*.cue
 world/industrial-constraints/.agents/AGENTS.md
         |
         v
-bounded source acquisition + Ibis projections
+bounded official-source acquisition
+        |
+        v
+source-qualified documents
+        |
+        v
+event-observation records
+        |
+        v
+scope/relevance classification
+        |
+        v
+admitted immutable event-watch bundle
+```
+
+An `event-observation` preserves source/channel/publisher/record/revision/surface provenance while its actors and subjects remain observed labels. It does not require canonical identity resolution and cannot establish graph propagation or a constraint claim.
+
+The contract separately preserves the target relational phase:
+
+```text
+heterogeneous source adapters
+        |
+        v
+typed relational normalization
+        |
+        v
+canonical identity
+        |
+        v
+Ibis projections
         |
         v
 admitted DuckDB/Parquet relational state
         |
-        +--> graph projection
-        +--> constraint evidence / assessment
+        +--> graph projection/correlation
+        +--> constraint evidence/assessment
         |
         v
-admitted immutable run bundle
+evidence-backed constraint claims
+        |
+        v
+admitted immutable relational run bundle
 ```
 
-BigQuery and source APIs are observational spaces. The relational CUE model constrains meaning; Ibis expresses deterministic transformations; DuckDB/Parquet hold bounded admitted analytical state; graphs are projections; constraints are evidence-backed claims. The synthetic qualification fixture lives outside `runs/` and carries no real-world industrial claim.
+BigQuery, Ibis, DuckDB and Parquet therefore belong to the selected `relational-pipeline` execution phase. Their absence does not invalidate an `event-watch` run. During `event-watch`, publication may contain source-qualified events and coverage gaps, but no canonical graph propagation, assessment or constraint claim.
+
+The synthetic relational qualification fixture, when used, remains outside `runs/` and carries no real-world industrial claim.
 
 ## Execution environment
 
 The generic upstream-monitor does not require a tailored container, distributed archive, OCI image, or local executable environment. The current actuator is ChatGPT through the GitHub App; when a selected profile requires executable evidence unavailable through that actuator, the run records a coverage gap rather than asserting validation.
 
-The same principle applies to UQAM and `world.industrial-constraints`: acquisition, comparison, relational, or query runtimes are adapters to their contracts. Missing executable coverage is represented as a gap rather than replaced by asserted success.
+The same phase-sensitive principle applies to UQAM and `world.industrial-constraints`: an adapter is required only when the currently selected task contract requires it. Future relational-pipeline tooling must not be turned into a false prerequisite for the current industrial event watch.
 
 If executable validation later becomes a demonstrated profile requirement, model its execution semantics at the narrowest authority boundary and project them to a runner adapter. A container runtime is an implementation choice unless and until its semantics are proven to be a shared invariant.
 
 ## Cross-domain test
 
-The repository now demonstrates three distinct contract families:
+The repository demonstrates distinct contract families:
 
 ```text
 upstream-monitor
@@ -235,8 +285,11 @@ upstream-monitor
 academic.uqam.events
     bounded event acquisition -> normalized comparison state -> admitted delta publication
 
-world.industrial-constraints
+world.industrial-constraints / event-watch
+    bounded official-source acquisition -> source-qualified event observations -> admitted observation bundle
+
+world.industrial-constraints / relational-pipeline target
     heterogeneous records -> relational admission -> graph/correlation -> constraint intelligence
 ```
 
-Their shared vocabulary should remain limited to semantics that are actually invariant. UQAM comparison-state reuse does not promote event-watch semantics into upstream-monitor. Industrial relational/correlation machinery does not become generic worker-core machinery. Early duplication is preferable to false cross-domain abstraction.
+Their shared vocabulary should remain limited to semantics that are actually invariant. UQAM comparison-state reuse does not promote event-watch semantics into upstream-monitor. The industrial future relational/correlation machinery does not become generic worker-core machinery and does not constrain the currently selected event-watch phase. Early duplication is preferable to false cross-domain abstraction.
