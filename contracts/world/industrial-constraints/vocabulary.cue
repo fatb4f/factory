@@ -43,12 +43,23 @@ package industrialconstraints
 	"tender-issued" |
 	"interconnection-delayed" |
 	"facility-commissioned" |
-	"production-curtailed"
+	"production-curtailed" |
+	"program-opened" |
+	"program-updated" |
+	"project-milestone" |
+	"infrastructure-investment-announced" |
+	"supply-chain-agreement" |
+	"policy-regulatory-change" |
+	"research-commercialization-partnership" |
+	"other-material-event"
+
+#WatchDisposition: "track" | "investigate" | "low-relevance"
 
 #RecordKind:
 	"document" |
 	"entity" |
 	"observation" |
+	"event-observation" |
 	"event" |
 	"measurement" |
 	"relation" |
@@ -66,12 +77,14 @@ package industrialconstraints
 })
 
 #Provenance: close({
-	source:      #SourceID
-	channel:     #ChannelID
-	recordID:    string
-	revision:    #RevisionID
-	observedAt?: #Timestamp
-	acquiredAt:  #Timestamp
+	source:           #SourceID
+	channel:          #ChannelID
+	publisher?:       string
+	recordID:         string
+	revision:         #RevisionID
+	observedSurface?: string
+	observedAt?:      #Timestamp
+	acquiredAt:       #Timestamp
 })
 
 #TypedValue:
