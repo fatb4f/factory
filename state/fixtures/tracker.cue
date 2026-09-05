@@ -43,7 +43,7 @@ evidenceIssue: state.#EvidenceDerivedIssue & {
 	}
 	issue_class: "qualification-regression"
 	slug:        "runtime-compatibility"
-	state:       "actionable"
+	state:       "ready"
 	priority:    "p1"
 	runs: [{
 		kind: "run"
