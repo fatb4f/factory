@@ -2,98 +2,52 @@
 
 Status: current
 
-Factory is a small registry of independently owned work units. Shared and profile CUE under `contracts/` define semantic authority. Worker `AGENTS.md` files colocated with a worker contract define shared execution procedure. Unit directories own task-local procedure, templates, adapters, immutable run bundles, and mutable pointers where a selected contract admits them.
+Factory is a registry of independently owned work units. CUE under `contracts/` defines semantic authority; unit-local `.agents/` files define procedure; immutable runs and mutable task-local state remain below their owning unit. Registration does not promote a unit into shared semantic authority.
 
-## Repository topology
-
-```text
-factory/
-|-- cue.mod/
-|-- registry.cue
-|-- contracts/
-|   |-- unit.cue
-|   |-- state/
-|   |   `-- comparison.cue
-|   |-- workers/
-|   |   `-- upstream-monitor/
-|   |       |-- contract.cue
-|   |       |-- AGENTS.md
-|   |       |-- profiles_ctrl/
-|   |       `-- profiles_epistemic_plant_bootstrap/
-|   |-- academic/
-|   |   `-- uqam/
-|   |       |-- events/
-|   |       `-- catalog/
-|   `-- world/
-|       `-- industrial-constraints/
-|           |-- contract.cue
-|           |-- vocabulary.cue
-|           |-- sources.cue
-|           |-- documents.cue
-|           |-- identity.cue
-|           |-- observations.cue
-|           |-- relations.cue
-|           |-- projections.cue
-|           |-- constraints.cue
-|           |-- evidence.cue
-|           `-- public.cue
-|-- .agents/
-|   |-- dispatcher/
-|   `-- workers/upstream-monitor/AGENTS.md   # compatibility pointer only
-|-- projects/
-|   |-- ctrl/
-|   `-- epistemic-plant-bootstrap/
-|-- academic/
-|   `-- uqam/
-|       |-- .agents/
-|       |   |-- events/
-|       |   `-- catalog/
-|       |-- events/
-|       `-- catalog/
-`-- world/
-    `-- industrial-constraints/
-```
-
-The old root `contract.cue` facade is removed: consumers import `contracts:unit` directly. There is no repository-name layer or compatibility/publication namespace inside `contracts/`.
-
-## Boundaries
+## Authority families
 
 ```text
-contracts/state/comparison.cue
-    shared comparison-state and CAS vocabulary
+contracts/workers/upstream-monitor/
+    shared software upstream-monitor vocabulary/invariants
 
-contracts/workers/<worker>/contract.cue
-    shared worker semantic CUE authority
+contracts/workers/upstream-monitor/profiles_<profile>/
+    concrete upstream-monitor profile authority
 
-contracts/workers/<worker>/profiles_<profile>/*.cue
-    selected profile semantic CUE authority
+contracts/academic/uqam/
+    independent academic event/catalog authorities
 
-contracts/academic/uqam/events/*.cue
-    UQAM event-watch semantic authority
+contracts/world/engineering-signals/
+    engineering frontier and future engineering-graph authority
 
-contracts/academic/uqam/catalog/*.cue
-    UQAM catalog semantic authority
+contracts/world/industrial-constraints/
+    industrial observations and future industrial relational/graph authority
 
-contracts/world/industrial-constraints/*.cue
-    domain-owned industrial intelligence semantic authority
+contracts/world/canada-clean-energy/
+    Canadian/Quebec clean-energy policy/project authority
 
-contracts/workers/<worker>/AGENTS.md
-    canonical shared worker execution procedure
+contracts/world/canada-climate-readiness/
+    Canadian/Quebec adaptation/resilience authority
 
-<unit>/.agents/
-    unit/task execution procedure and fixed templates
+contracts/world/financial-signals/
+    financial topology and time-qualified financial observations
 
-<unit>/<task-state>/
-    generated immutable runs and admitted mutable pointers when contracted
+contracts/world/resource-allocation/
+    qualified cross-domain snapshot/bridge/resource/conjunction authority
+
+contracts/world/financial-opportunities/
+    downstream investment qualification authority
+
+contracts/projects/engineering-pocs/
+    Factory-owned POC selection authority
 ```
 
-Colocation does not promote procedural Markdown to semantic authority. For upstream-monitor, shared worker CUE plus exactly one selected profile CUE package define semantics; the contract-colocated worker `AGENTS.md` and unit-local `AGENTS.md` files define procedure. The legacy `.agents/workers/upstream-monitor/AGENTS.md` path is a non-normative compatibility pointer only.
+`contracts/workers/upstream-monitor/AGENTS.md` remains the canonical shared procedure for that worker family. None of the world domains inherit upstream-monitor semantics merely because they reuse epistemic patterns such as source-qualified observations, claims or fail-closed publication.
 
-`academic.uqam.*` and `world.industrial-constraints` are independent domain authorities and do not inherit upstream-monitor semantics.
+No generic `graph` or `multigraph` contract is introduced. Engineering, industrial, clean-energy, climate-readiness and financial topology remain independently modeled until their actual intersection demonstrates a reusable invariant.
 
-## Registry
+## Registry contract
 
-`registry.cue` records demonstrated scheduling/discovery invariants:
+`registry.cue` records only scheduling/discovery information:
 
 - unit identity and kind;
 - unit `.agents` root;
@@ -101,195 +55,152 @@ Colocation does not promote procedural Markdown to semantic authority. For upstr
 - optional semantic-authority path;
 - task-local agent path;
 - enabled state;
-- explicit weekly cadence and weekday.
+- weekly weekday cadence.
 
-A task does not need a CUE semantic contract merely to be scheduled. `authority` remains optional in the generic task type; where the registry declares one, however, the dispatcher must preserve that authority/entrypoint pair and may not replace it with procedural inference.
+It does not define graph semantics, task dependencies, correlation, publication or qualification.
 
-Current registrations:
+Current upstream/academic registrations include:
 
 ```text
 projects.ctrl.upstream-monitor
     authority -> contracts/workers/upstream-monitor/profiles_ctrl/contract.cue
-    agent     -> projects/ctrl/.agents/AGENTS.md
     enabled   -> true
-    cadence   -> weekly / Monday
 
 projects.epistemic-plant-bootstrap.upstream-monitor
     authority -> contracts/workers/upstream-monitor/profiles_epistemic_plant_bootstrap/contract.cue
-    agent     -> projects/epistemic-plant-bootstrap/.agents/AGENTS.md
     enabled   -> true
-    cadence   -> weekly / Monday
 
 academic.uqam.events
     authority -> contracts/academic/uqam/events/contract.cue
-    agent     -> academic/uqam/.agents/events/AGENTS.md
     enabled   -> true
-    cadence   -> weekly / Monday
 
 academic.uqam.catalog
     authority -> contracts/academic/uqam/catalog/contract.cue
-    agent     -> academic/uqam/.agents/catalog/AGENTS.md
     enabled   -> true
-    cadence   -> weekly / Monday
-
-world.industrial-constraints.monitor
-    authority -> contracts/world/industrial-constraints/contract.cue
-    agent     -> world/industrial-constraints/.agents/AGENTS.md
-    enabled   -> true
-    cadence   -> weekly / Monday
 ```
 
-The shared Monday-morning dispatcher schedules all enabled registered tasks. Scheduler state only deduplicates execution on the same local calendar date; task-local semantic state remains outside the dispatcher ledger.
-
-## Upstream-monitor topology
+World intelligence and project-decision registrations are:
 
 ```text
-contracts/workers/upstream-monitor/contract.cue
-        + exactly one selected profiles_<profile>/*.cue
-                |
-                v
-contracts/workers/upstream-monitor/AGENTS.md
-                |
-                v
-projects/<unit>/.agents/AGENTS.md
-                |
-                v
-ChatGPT / GitHub actuator
-                |
-                v
-projects/<unit>/upstream-monitor/
+world.engineering-signals.monitor          enabled
+world.industrial-constraints.monitor       enabled
+world.canada-clean-energy.monitor           enabled
+world.canada-climate-readiness.monitor      enabled
+
+world.financial-signals.monitor             disabled
+world.resource-allocation.correlate         disabled
+world.financial-opportunities.qualify       disabled
+projects.engineering-pocs.qualify           disabled
 ```
 
-The CUE layer is semantic authority. The `AGENTS.md` layers are procedure. Project-local run bundles remain generated evidence/publication, not authority.
+All declared cadences are weekly / Monday. The shared dispatcher runs only enabled tasks.
 
-`profiles_ctrl` and `profiles_epistemic_plant_bootstrap` are independent concrete reference profiles. Neither is the universal shape for future profiles. Shared worker vocabulary should grow only from the demonstrated intersection of independent profiles.
+## Why downstream tasks are registered but disabled
 
-## UQAM event-watch topology
-
-UQAM events is a contracted event-watch domain, but not an upstream-monitor profile:
+The repository now carries semantic authority for the target multi-graph system without asserting execution capability that does not exist.
 
 ```text
-registry.cue
-    |
-    v
-contracts/academic/uqam/events/*.cue
-    |              |
-    |              +--> contracts/state/comparison.cue
-    |
-    v
-academic/uqam/.agents/events/AGENTS.md
-    |
-    v
-required-source acquisition
-    |
-    v
-normalized event observations
-    |
-    v
-comparison against admitted baseline
-    |
-    v
-admitted decision
-    |
-    +--> immutable academic/uqam/events/runs/<run_id>/
-    |
-    `--> CAS update of academic/uqam/events/state/admitted-baseline.json
+observation-ready now
+    engineering-signals
+    industrial-constraints
+    canada-clean-energy
+    canada-climate-readiness
+
+contracted but not executable yet
+    financial-signals broad watch
+    resource-allocation correlation
+    financial-opportunity qualification
+    engineering-POC qualification
 ```
 
-The UQAM event contract owns exact required-source coverage, normalized event identity, material delta semantics, outcome/baseline-action coupling, and publication admission. The shared state package owns only generic run/baseline references and compare-and-swap vocabulary.
+Financial monitoring remains disabled until an issuer/hypothesis/source universe is explicitly configured. Resource-allocation remains disabled until immutable graph snapshots and qualified bridges exist. Financial opportunities and POC selection remain disabled until their upstream evidence paths are real.
 
-The first complete run is a contracted `bootstrap` state and may establish the baseline. Incomplete required acquisition permits only `source_gap` with pointer hold. Comparable state may advance only through the admitted `no_change` or `new_matches` branches; invalidated comparison and CAS conflict hold the pointer. The run manifest seals both normalized and decision artifacts.
+Registration therefore means "Factory knows this task and its authority," not "all prerequisites have been satisfied."
 
-The baseline pointer is task-local persistent comparison state. It is not scheduler authority and it is not a substitute for an immutable run bundle.
+## Multi-graph topology
 
-## Industrial-constraints topology
-
-Industrial intelligence has an explicit selected execution phase. The current phase tracks public events without claiming that the future data platform already exists.
-
-Current phase:
+The architectural target is:
 
 ```text
-Factory registry
-        |
-        v
-contracts/world/industrial-constraints/*.cue
-        |
-        v
-world/industrial-constraints/.agents/AGENTS.md
-        |
-        v
-bounded official-source acquisition
-        |
-        v
-source-qualified documents
-        |
-        v
-event-observation records
-        |
-        v
-scope/relevance classification
-        |
-        v
-admitted immutable event-watch bundle
+engineering graph
+      |
+      | qualified engineering-to-industrial translation
+      v
+industrial graph
+      |
+      +-------------------------------+
+      |                               |
+      v                               v
+clean-energy graph             climate-readiness graph
+      |                               |
+      +---------------+---------------+
+                      |
+                      v
+              resource-allocation
+        snapshot-qualified bridges /
+         shared resources / demands /
+              conjunctions
+                      |
+                      v
+                financial graph
+                      |
+                      v
+          qualification / decisions
+              |               |
+              v               v
+      engineering POCs   financial opportunities
 ```
 
-An `event-observation` preserves source/channel/publisher/record/revision/surface provenance while its actors and subjects remain observed labels. It does not require canonical identity resolution and cannot establish graph propagation or a constraint claim.
+The arrows do not imply that one domain owns another domain's relations. Each cross-domain identity or path must be supported by an explicit qualified bridge or source-domain path.
 
-The contract separately preserves the target relational phase:
+## Current phase semantics
+
+### Engineering signals
+
+The enabled engineering watch tracks technical mechanisms, tests, prototypes, standards, patents, manufacturing/process developments and failure analysis. A `poc-candidate` disposition is an observation prioritization hint only; it cannot admit a POC.
+
+### Industrial constraints
+
+The industrial contract currently selects `event-watch`. It admits source-qualified documents/events while its Ibis/DuckDB relational graph remains a future target. Current event publication cannot establish canonical graph propagation or constraint claims.
+
+### Clean energy and climate readiness
+
+These watches track initiatives only where they create, redirect, finance or constrain engineering/industrial demand. Their events cannot establish an industrial shortage, cross-domain resource identity, economic capture or investment attractiveness.
+
+### Financial signals
+
+The financial domain owns issuers, reporting segments, instruments, capital structure, financial relations and time-qualified measurements. It must not duplicate engineering/industrial/policy topology.
+
+### Resource allocation
+
+This is a coordination/control authority, not a source graph. It consumes immutable external graph references, separately qualifies bridge hypotheses, represents shared resources and explicit source-domain demand paths, and admits conjunction/intervention/decision state only when prerequisites are satisfied.
+
+### Engineering POCs
+
+World domains observe reality. `projects.engineering-pocs` decides what Factory should build or test. Policy convergence and financial value may raise priority, but an admitted engineering mechanism plus an explicit industrial problem remain mandatory.
+
+## Scheduler evolution
+
+Do not add generic task dependencies yet. The currently enabled observation watches are independent.
+
+When the first real correlation task becomes executable, scheduler ordering must be declared explicitly rather than inferred from names:
 
 ```text
-heterogeneous source adapters
-        |
-        v
-typed relational normalization
-        |
-        v
-canonical identity
-        |
-        v
-Ibis projections
-        |
-        v
-admitted DuckDB/Parquet relational state
-        |
-        +--> graph projection/correlation
-        +--> constraint evidence/assessment
-        |
-        v
-evidence-backed constraint claims
-        |
-        v
-admitted immutable relational run bundle
+acquisition tasks
+      ↓ explicit task references
+correlation
+      ↓
+qualification / decision
 ```
 
-BigQuery, Ibis, DuckDB and Parquet therefore belong to the selected `relational-pipeline` execution phase. Their absence does not invalidate an `event-watch` run. During `event-watch`, publication may contain source-qualified events and coverage gaps, but no canonical graph propagation, assessment or constraint claim.
+Only then should `contracts/unit.cue` gain dependency semantics.
 
-The synthetic relational qualification fixture, when used, remains outside `runs/` and carries no real-world industrial claim.
+## UQAM and upstream-monitor preservation
 
-## Execution environment
+The multi-graph refactor does not alter existing UQAM or software upstream-monitor authority.
 
-The generic upstream-monitor does not require a tailored container, distributed archive, OCI image, or local executable environment. The current actuator is ChatGPT through the GitHub App; when a selected profile requires executable evidence unavailable through that actuator, the run records a coverage gap rather than asserting validation.
+UQAM event comparison state remains task-local and contractually separate from dispatcher state. Upstream-monitor still consists of shared worker CUE plus exactly one selected independent profile; `profiles_ctrl` is not a template for the new world domains.
 
-The same phase-sensitive principle applies to UQAM and `world.industrial-constraints`: an adapter is required only when the currently selected task contract requires it. Future relational-pipeline tooling must not be turned into a false prerequisite for the current industrial event watch.
+## Reference
 
-If executable validation later becomes a demonstrated profile requirement, model its execution semantics at the narrowest authority boundary and project them to a runner adapter. A container runtime is an implementation choice unless and until its semantics are proven to be a shared invariant.
-
-## Cross-domain test
-
-The repository demonstrates distinct contract families:
-
-```text
-upstream-monitor
-    changing software/upstream state -> graph-bound evidence -> impact/qualification
-
-academic.uqam.events
-    bounded event acquisition -> normalized comparison state -> admitted delta publication
-
-world.industrial-constraints / event-watch
-    bounded official-source acquisition -> source-qualified event observations -> admitted observation bundle
-
-world.industrial-constraints / relational-pipeline target
-    heterogeneous records -> relational admission -> graph/correlation -> constraint intelligence
-```
-
-Their shared vocabulary should remain limited to semantics that are actually invariant. UQAM comparison-state reuse does not promote event-watch semantics into upstream-monitor. The industrial future relational/correlation machinery does not become generic worker-core machinery and does not constrain the currently selected event-watch phase. Early duplication is preferable to false cross-domain abstraction.
+The sequencing, gates, initiative routing and implementation state are defined in `docs/architecture/multi-graph-world-refactor.md`.
