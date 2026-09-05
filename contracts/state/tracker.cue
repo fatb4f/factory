@@ -75,8 +75,8 @@ import unit "github.com/fatb4f/factory/contracts:unit"
 
 	key: "engineering:\(entity.kind):\(entity.id):\(work.class):\(work.slug)"
 
-	state:    #TrackerState
-	priority: #TrackerPriority
+	state:     #TrackerState
+	priority:  #TrackerPriority
 	objective: #NonEmptyString
 
 	authority: [#AuthorityRef, ...#AuthorityRef]
@@ -113,7 +113,7 @@ import unit "github.com/fatb4f/factory/contracts:unit"
 
 #TrackerIssue: #EngineeringWorkIssue | #EvidenceDerivedIssue
 
-#GitHubIssueProjection: close({
+#GitHubIssueProjectionBase: {
 	issue: #TrackerIssue
 	title: #NonEmptyString
 
@@ -124,7 +124,32 @@ import unit "github.com/fatb4f/factory/contracts:unit"
 		factory_entity_kind: issue.entity.kind
 		factory_entity_id:   issue.entity.id
 	})
+}
+
+#GitHubEngineeringIssueProjection: close(#GitHubIssueProjectionBase & {
+	issue: #EngineeringWorkIssue
+	managedLabels: [
+		"factory",
+		"origin:engineering",
+		"entity:\(issue.entity.kind)",
+		"state:\(issue.state)",
+		"priority:\(issue.priority)",
+		"work:\(issue.work.class)",
+	]
 })
+
+#GitHubEvidenceIssueProjection: close(#GitHubIssueProjectionBase & {
+	issue: #EvidenceDerivedIssue
+	managedLabels: [
+		"factory",
+		"origin:evidence",
+		"entity:\(issue.entity.kind)",
+		"state:\(issue.state)",
+		"priority:\(issue.priority)",
+	]
+})
+
+#GitHubIssueProjection: #GitHubEngineeringIssueProjection | #GitHubEvidenceIssueProjection
 
 trackerProtocol: close({
 	semanticIdentity: "factory-issue-key"
@@ -134,6 +159,18 @@ trackerProtocol: close({
 		"engineering-intent",
 		"evidence-derived",
 	]
+	managedLabels: close({
+		ownershipMarker: "factory"
+		prefixes: [
+			"origin:",
+			"entity:",
+			"state:",
+			"priority:",
+			"work:",
+		]
+		preserveUnmanaged: true
+		reconcileAsSet:    true
+	})
 	actions: [
 		"create",
 		"update",
