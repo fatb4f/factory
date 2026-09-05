@@ -39,7 +39,8 @@ tasks: close({
 		agent:     "projects/ctrl/.agents/AGENTS.md"
 		enabled:   true
 		cadence: {
-			everyDays: 3
+			frequency: "weekly"
+			weekday:   "monday"
 		}
 	}
 	"projects.epistemic-plant-bootstrap.upstream-monitor": unit.#Task & {
@@ -50,7 +51,8 @@ tasks: close({
 		agent:     "projects/epistemic-plant-bootstrap/.agents/AGENTS.md"
 		enabled:   true
 		cadence: {
-			everyDays: 3
+			frequency: "weekly"
+			weekday:   "monday"
 		}
 	}
 	"academic.uqam.events": unit.#Task & {
@@ -61,7 +63,8 @@ tasks: close({
 		agent:     "academic/uqam/.agents/events/AGENTS.md"
 		enabled:   true
 		cadence: {
-			everyDays: 1
+			frequency: "weekly"
+			weekday:   "monday"
 		}
 	}
 	"academic.uqam.catalog": unit.#Task & {
@@ -72,7 +75,8 @@ tasks: close({
 		agent:     "academic/uqam/.agents/catalog/AGENTS.md"
 		enabled:   true
 		cadence: {
-			everyDays: 7
+			frequency: "weekly"
+			weekday:   "monday"
 		}
 	}
 	"world.industrial-constraints.monitor": unit.#Task & {
@@ -81,9 +85,10 @@ tasks: close({
 		unit:      "world.industrial-constraints"
 		authority: "contracts/world/industrial-constraints/contract.cue"
 		agent:     "world/industrial-constraints/.agents/AGENTS.md"
-		enabled:   false
+		enabled:   true
 		cadence: {
-			everyDays: 7
+			frequency: "weekly"
+			weekday:   "monday"
 		}
 	}
 })
