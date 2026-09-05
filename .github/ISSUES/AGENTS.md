@@ -134,6 +134,67 @@ factory-entity-id: <id>
 
 These markers are machine state. Do not casually edit them.
 
+## Managed GitHub labels
+
+Factory projects a small, low-cardinality label set for issue search and navigation. Labels are ergonomic projections only. They do not establish semantic identity, tracker state, authority, or dependencies.
+
+Every managed issue projects:
+
+```text
+factory
+origin:<engineering|evidence>
+entity:<tracked-entity-kind>
+state:<tracker-state>
+priority:<tracker-priority>
+```
+
+Engineering-intent issues additionally project:
+
+```text
+work:<engineering-work-class>
+```
+
+Examples:
+
+```text
+factory
+origin:engineering
+entity:substrate
+state:ready
+priority:p0
+work:integration
+```
+
+```text
+factory
+origin:evidence
+entity:profile
+state:blocked
+priority:p1
+```
+
+Do not generate high-cardinality labels for entity IDs, issue keys, profile IDs, project IDs, repository paths, run IDs, or evidence IDs. Exact identity remains in the issue markers and typed tracker state.
+
+The Factory-managed label namespace consists of the `factory` ownership marker and labels with these prefixes:
+
+```text
+origin:
+entity:
+state:
+priority:
+work:
+```
+
+Reconciliation rules:
+
+1. derive managed labels from typed tracker state;
+2. compare managed labels as a set rather than by ordering;
+3. restore missing or manually altered managed labels from Factory state;
+4. preserve every label outside the Factory-managed namespace;
+5. never infer a Factory state change from a manual GitHub label edit.
+
+GitHub Projects is not required tracker state. Milestones, assignees, Projects, and similar GitHub-native organization surfaces may be used as optional operational metadata, but tracker correctness and reconciliation must not depend on them.
+
 ## Engineering issue body
 
 Use this shape for `engineering-intent` issues:
@@ -261,8 +322,9 @@ When asked to plan or track Factory engineering work:
 5. search GitHub Issues by exact stable key or marker fragments;
 6. update an existing issue when identity matches;
 7. create a new issue only when the concern has a distinct stable identity;
-8. preserve explicit dependencies and acceptance criteria;
-9. never infer semantic relationships from names;
-10. report the created/updated issue numbers and any coverage gaps.
+8. reconcile Factory-managed labels from typed tracker state while preserving unmanaged labels;
+9. preserve explicit dependencies and acceptance criteria;
+10. never infer semantic relationships from names or GitHub-native organization metadata;
+11. report the created/updated issue numbers and any coverage gaps.
 
 For evidence-derived issues, also read the relevant project/profile tracker/admission contract before mutation.
