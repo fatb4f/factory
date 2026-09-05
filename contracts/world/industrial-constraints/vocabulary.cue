@@ -41,6 +41,7 @@ package industrialconstraints
 	"plant-construction-started" |
 	"grant-awarded" |
 	"tender-issued" |
+	"tender-amended" |
 	"interconnection-delayed" |
 	"facility-commissioned" |
 	"production-curtailed" |
