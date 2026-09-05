@@ -172,6 +172,35 @@ validate_gym_public() {
   rm -rf "$tmpdir"
 }
 
+# Validate the current multi-graph refactor before legacy fixture suites that are
+# independently known to fail. This preserves one workflow while making new
+# contract regressions visible rather than masking them behind unrelated state.
+validate_registry
+
+section "engineering signals"
+cue vet -c=false ./contracts/world/engineering-signals:engineeringsignals
+
+section "industrial constraints contract"
+cue vet -c=false ./contracts/world/industrial-constraints:industrialconstraints
+
+section "Canada clean energy"
+cue vet -c=false ./contracts/world/canada-clean-energy:cleanenergy
+
+section "Canada climate readiness"
+cue vet -c=false ./contracts/world/canada-climate-readiness:climatereadiness
+
+section "financial signals"
+cue vet -c=false ./contracts/world/financial-signals:financialsignals
+
+section "resource allocation"
+cue vet -c=false ./contracts/world/resource-allocation:resourceallocation
+
+section "financial opportunities"
+cue vet -c=false ./contracts/world/financial-opportunities:financialopportunities
+
+section "engineering POCs"
+cue vet -c=false ./contracts/projects/engineering-pocs:engineeringpocs
+
 section "shared state"
 cue vet -c=false ./contracts/state:state
 cue vet -c=false ./state/fixtures:statefixtures
@@ -195,41 +224,17 @@ validate_upstream_latest "ctrl" '#CtrlRunEvidence' './contracts/workers/upstream
 validate_upstream_latest "epistemic-plant-bootstrap" '#EpistemicPlantRunEvidence' './contracts/workers/upstream-monitor/profiles_epistemic_plant_bootstrap'
 validate_epistemic_template
 
-section "industrial constraints"
-cue vet -c=false ./contracts/world/industrial-constraints:industrialconstraints
+section "industrial constraints fixtures"
 cue vet -c=false ./world/industrial-constraints/fixtures:qualification
 if [[ -x world/industrial-constraints/fixtures/negative/run.sh ]]; then
   bash world/industrial-constraints/fixtures/negative/run.sh
 fi
-
-section "engineering signals"
-cue vet -c=false ./contracts/world/engineering-signals:engineeringsignals
-
-section "Canada clean energy"
-cue vet -c=false ./contracts/world/canada-clean-energy:cleanenergy
-
-section "Canada climate readiness"
-cue vet -c=false ./contracts/world/canada-climate-readiness:climatereadiness
-
-section "financial signals"
-cue vet -c=false ./contracts/world/financial-signals:financialsignals
-
-section "resource allocation"
-cue vet -c=false ./contracts/world/resource-allocation:resourceallocation
-
-section "financial opportunities"
-cue vet -c=false ./contracts/world/financial-opportunities:financialopportunities
-
-section "engineering POCs"
-cue vet -c=false ./contracts/projects/engineering-pocs:engineeringpocs
 
 section "Gym"
 cue vet -c=false ./contracts/personal/gym:gym
 cue vet -c=false ./personal/gym/fixtures:fixtures
 bash personal/gym/fixtures/negative/run.sh
 validate_gym_public
-
-validate_registry
 
 section "worker-procedure uniqueness"
 grep -Fq 'This path is non-normative compatibility only.' .agents/workers/upstream-monitor/AGENTS.md
