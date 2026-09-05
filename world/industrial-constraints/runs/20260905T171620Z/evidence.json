@@ -1,0 +1,268 @@
+[
+  {
+    "kind": "document",
+    "id": "doc.nrcan.mcilvenna-bay.2026-09-02",
+    "documentKind": "government-announcement",
+    "provenance": {
+      "source": "institutional-web",
+      "channel": "official-publication",
+      "publisher": "natural-resources-canada",
+      "recordID": "mcilvenna-bay-progress-2026-09-02",
+      "revision": "2026-09-02",
+      "observedSurface": "critical-minerals",
+      "observedAt": "2026-09-02T00:00:00Z",
+      "acquiredAt": "2026-09-05T17:16:20Z"
+    },
+    "uri": "https://www.canada.ca/en/natural-resources-canada/news/2026/09/canada-celebrates-progress-on-the-mcilvenna-bay-mine-production-underway-jobs-created-supply-chains-strengthened.html",
+    "contentType": "text/html"
+  },
+  {
+    "kind": "document",
+    "id": "doc.ised.data-centre-principles.2026-09-03",
+    "documentKind": "government-announcement",
+    "provenance": {
+      "source": "institutional-web",
+      "channel": "official-publication",
+      "publisher": "innovation-science-economic-development-canada",
+      "recordID": "responsible-data-centre-development-principles-2026-09-03",
+      "revision": "2026-09-03",
+      "observedSurface": "ai-compute",
+      "observedAt": "2026-09-03T00:00:00Z",
+      "acquiredAt": "2026-09-05T17:16:20Z"
+    },
+    "uri": "https://www.canada.ca/en/innovation-science-economic-development/news/2026/09/government-of-canada-launches-canadas-responsible-data-centre-development-principles.html",
+    "contentType": "text/html"
+  },
+  {
+    "kind": "document",
+    "id": "doc.nrcan.cmrdd.2026-09-01",
+    "documentKind": "government-announcement",
+    "provenance": {
+      "source": "institutional-web",
+      "channel": "official-publication",
+      "publisher": "natural-resources-canada",
+      "recordID": "cmrdd-program-page-2026-09-01",
+      "revision": "2026-09-01",
+      "observedSurface": "critical-minerals",
+      "observedAt": "2026-09-01T00:00:00Z",
+      "acquiredAt": "2026-09-05T17:16:20Z"
+    },
+    "uri": "https://www.canada.ca/en/campaign/critical-minerals-in-canada/federal-support-for-critical-mineral-projects-and-value-chains/critical-minerals-research-development-and-demonstration-program.html",
+    "contentType": "text/html"
+  },
+  {
+    "kind": "document",
+    "id": "doc.canadabuys.qc20162777.2026-09-02",
+    "documentKind": "tender",
+    "provenance": {
+      "source": "canadabuys",
+      "channel": "procurement",
+      "publisher": "ville-de-joliette-approvisionnement",
+      "recordID": "qc20162777",
+      "revision": "2026-09-02",
+      "observedSurface": "transformers-switchgear",
+      "observedAt": "2026-09-02T00:00:00Z",
+      "acquiredAt": "2026-09-05T17:16:20Z"
+    },
+    "uri": "https://canadabuys.canada.ca/en/tender-opportunities/tender-notice/qc20162777",
+    "contentType": "text/html"
+  },
+  {
+    "kind": "event-observation",
+    "id": "event.mcilvenna-bay.production-milestone.2026-09-02",
+    "eventKind": "project-milestone",
+    "headline": "NRCan reports McIlvenna Bay has produced initial copper, zinc and pyrite concentrates and is ramping toward commercial production; an expansion study is evaluating processing capacity from 4,900 to about 7,000 tonnes/day.",
+    "actors": [
+      {
+        "label": "Natural Resources Canada",
+        "entityKind": "organization"
+      },
+      {
+        "label": "Eldorado Gold",
+        "entityKind": "organization"
+      }
+    ],
+    "subjects": [
+      {
+        "label": "McIlvenna Bay copper-zinc mine",
+        "entityKind": "project"
+      },
+      {
+        "label": "85-km transmission line and substation",
+        "entityKind": "infrastructure-asset"
+      }
+    ],
+    "announcedAt": "2026-09-02T00:00:00Z",
+    "relevance": {
+      "geographies": [
+        "canada",
+        "quebec"
+      ],
+      "industrialSurfaces": [
+        "critical-minerals",
+        "electricity-grid"
+      ],
+      "disposition": "track"
+    },
+    "provenance": {
+      "source": "institutional-web",
+      "channel": "official-publication",
+      "publisher": "natural-resources-canada",
+      "recordID": "mcilvenna-bay-progress-2026-09-02",
+      "revision": "2026-09-02",
+      "observedSurface": "critical-minerals",
+      "observedAt": "2026-09-02T00:00:00Z",
+      "acquiredAt": "2026-09-05T17:16:20Z"
+    },
+    "evidence": [
+      {
+        "kind": "document",
+        "id": "doc.nrcan.mcilvenna-bay.2026-09-02"
+      }
+    ]
+  },
+  {
+    "kind": "event-observation",
+    "id": "event.canada.data-centre-principles.2026-09-03",
+    "eventKind": "policy-regulatory-change",
+    "headline": "ISED launched national Responsible Data Centre Development Principles covering electricity-ratepayer protection, water use, transparency, local benefits and strategic value.",
+    "actors": [
+      {
+        "label": "Innovation, Science and Economic Development Canada",
+        "entityKind": "organization"
+      },
+      {
+        "label": "Federation of Canadian Municipalities",
+        "entityKind": "organization"
+      }
+    ],
+    "subjects": [
+      {
+        "label": "Canada's Responsible Data Centre Development Principles"
+      },
+      {
+        "label": "Canadian data centre development",
+        "entityKind": "industry"
+      }
+    ],
+    "announcedAt": "2026-09-03T00:00:00Z",
+    "relevance": {
+      "geographies": [
+        "canada",
+        "quebec"
+      ],
+      "industrialSurfaces": [
+        "ai-compute",
+        "electricity-grid"
+      ],
+      "disposition": "track"
+    },
+    "provenance": {
+      "source": "institutional-web",
+      "channel": "official-publication",
+      "publisher": "innovation-science-economic-development-canada",
+      "recordID": "responsible-data-centre-development-principles-2026-09-03",
+      "revision": "2026-09-03",
+      "observedSurface": "ai-compute",
+      "observedAt": "2026-09-03T00:00:00Z",
+      "acquiredAt": "2026-09-05T17:16:20Z"
+    },
+    "evidence": [
+      {
+        "kind": "document",
+        "id": "doc.ised.data-centre-principles.2026-09-03"
+      }
+    ]
+  },
+  {
+    "kind": "event-observation",
+    "id": "event.cmrdd.contribution-eoi.2026-09-01",
+    "eventKind": "program-updated",
+    "headline": "NRCan's CMRDD contribution-funding stream is listed as open for applications through a continuous EOI process targeting critical-mineral processing, recycling and circular technologies, including semiconductor and advanced-manufacturing inputs.",
+    "actors": [
+      {
+        "label": "Natural Resources Canada",
+        "entityKind": "organization"
+      }
+    ],
+    "subjects": [
+      {
+        "label": "Critical Minerals Research, Development and Demonstration Program",
+        "entityKind": "government-program"
+      }
+    ],
+    "announcedAt": "2026-09-01T00:00:00Z",
+    "relevance": {
+      "geographies": [
+        "canada",
+        "quebec"
+      ],
+      "industrialSurfaces": [
+        "critical-minerals",
+        "semiconductors"
+      ],
+      "disposition": "track"
+    },
+    "provenance": {
+      "source": "institutional-web",
+      "channel": "official-publication",
+      "publisher": "natural-resources-canada",
+      "recordID": "cmrdd-program-page-2026-09-01",
+      "revision": "2026-09-01",
+      "observedSurface": "critical-minerals",
+      "observedAt": "2026-09-01T00:00:00Z",
+      "acquiredAt": "2026-09-05T17:16:20Z"
+    },
+    "evidence": [
+      {
+        "kind": "document",
+        "id": "doc.nrcan.cmrdd.2026-09-01"
+      }
+    ]
+  },
+  {
+    "kind": "event-observation",
+    "id": "event.joliette.pad-transformer-tender-amended.2026-09-02",
+    "eventKind": "tender-amended",
+    "headline": "Ville de Joliette's open procurement for 167 kVA and 1500 kVA pad-mounted transformers was amended on September 2; bids close September 10.",
+    "actors": [
+      {
+        "label": "Ville de Joliette - Approvisionnement",
+        "entityKind": "organization"
+      }
+    ],
+    "subjects": [
+      {
+        "label": "167 kVA and 1500 kVA pad-mounted transformers",
+        "entityKind": "product-component"
+      }
+    ],
+    "announcedAt": "2026-09-02T00:00:00Z",
+    "relevance": {
+      "geographies": [
+        "quebec"
+      ],
+      "industrialSurfaces": [
+        "transformers-switchgear",
+        "electricity-grid"
+      ],
+      "disposition": "track"
+    },
+    "provenance": {
+      "source": "canadabuys",
+      "channel": "procurement",
+      "publisher": "ville-de-joliette-approvisionnement",
+      "recordID": "qc20162777",
+      "revision": "2026-09-02",
+      "observedSurface": "transformers-switchgear",
+      "observedAt": "2026-09-02T00:00:00Z",
+      "acquiredAt": "2026-09-05T17:16:20Z"
+    },
+    "evidence": [
+      {
+        "kind": "document",
+        "id": "doc.canadabuys.qc20162777.2026-09-02"
+      }
+    ]
+  }
+]
