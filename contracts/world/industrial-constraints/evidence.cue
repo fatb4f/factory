@@ -3,6 +3,7 @@ package industrialconstraints
 #EvidenceClass:
 	"source-record" |
 	"measurement" |
+	"event-observation" |
 	"event" |
 	"relation" |
 	"correlation" |
