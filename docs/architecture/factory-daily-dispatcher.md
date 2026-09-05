@@ -40,17 +40,19 @@ projects.ctrl.upstream-monitor
 projects.epistemic-plant-bootstrap.upstream-monitor
 academic.uqam.events
 academic.uqam.catalog
-world.industrial-constraints.monitor
 world.engineering-signals.monitor
+world.industrial-signals.monitor
+world.industrial-constraints.monitor
 world.canada-clean-energy.monitor
 world.canada-climate-readiness.monitor
 ```
 
-The four world intelligence watches currently execute independently:
+The five world intelligence watches currently execute independently:
 
 ```text
 engineering-signals        engineering frontier / mechanisms / tests
-industrial-constraints     engineering-to-industry / capacity / industrial events
+industrial-signals         actors / responses / adoption / funding / progress / outcomes
+industrial-constraints     direct constraint-oriented event watch; future downstream qualification
 canada-clean-energy        policy/project demand relevant to engineering/industry
 canada-climate-readiness   resilience/adaptation demand relevant to engineering/industry
 ```
@@ -90,31 +92,48 @@ Current execution is deliberately pre-correlation:
 
 ```text
 engineering event watch ------+
-industrial event watch -------+--> independent admitted observations
-clean-energy event watch -----+
-climate-readiness event watch +
+industrial-signal watch -------+
+industrial-constraint watch ---+--> independent admitted observations
+clean-energy event watch ------+
+climate-readiness event watch -+
 ```
+
+The industrial-signal watch is longitudinal and actor-centric. In particular, it follows subsidized actors across distinct stages such as award, disbursement, evidenced expenditure, project milestone and outcome. These stages remain separate observations; missing follow-through is a coverage gap, not an inferred failure.
 
 Future execution may add:
 
 ```text
-independent immutable graph snapshots
-        |
-        v
-resource-allocation correlation
-        |
-        +--> intervention / POC qualification
-        |
-        `--> financial qualification / opportunity decisions
+engineering graph
+      |
+      v
+industrial-signal immutable graph snapshot
+      |
+      v
+industrial-constraint relational qualification
+      |
+      +--> resource-allocation correlation
+      |          |
+      |          +--> financial qualification / opportunity decisions
+      |
+      `--> intervention / POC qualification
 ```
 
-Do not add generic scheduler `dependsOn` semantics merely because these future relationships are architecturally known. Add explicit task dependencies only when the first real correlation task is enabled and requires scheduler ordering. Until then, the current watches remain independent scheduled tasks.
+Do not add generic scheduler `dependsOn` semantics merely because these future relationships are architecturally known. Add explicit task dependencies only when the first real downstream task is enabled and requires scheduler ordering. Until then, the current watches remain independent scheduled tasks.
 
 ## Industrial phase boundary
 
-`world.industrial-constraints` currently selects `event-watch`; its relational/Ibis/DuckDB graph pipeline remains a modeled target. Missing relational execution is therefore not an event-watch failure. Current publication may contain source-qualified event observations and coverage gaps, but not canonical graph propagation or constraint claims.
+`world.industrial-signals` currently selects `event-watch`. It may publish source-qualified actor/event records and coverage gaps, including funding/progress observations, but it may not establish canonical actor identity, admitted response causality, funding-accountability judgments or immutable industrial graph state.
 
-The same observation-first discipline applies to the new engineering, clean-energy and climate-readiness domains: an event may establish that a source published or changed something within scope; it does not establish cross-domain identity, resource contention, economic capture or POC priority.
+`world.industrial-constraints` also currently selects `event-watch`. Its future relational pipeline is now explicitly downstream of a snapshot-qualified `world.industrial-signals` input. Missing relational execution is therefore not an event-watch failure.
+
+The observation-first discipline remains strict:
+
+```text
+funding award != spending
+spending != project progress
+project progress != industrial outcome
+industrial action != binding constraint
+```
 
 ## Scheduler ledger
 

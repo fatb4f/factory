@@ -180,6 +180,9 @@ validate_registry
 section "engineering signals"
 cue vet -c=false ./contracts/world/engineering-signals:engineeringsignals
 
+section "industrial signals"
+cue vet -c=false ./contracts/world/industrial-signals:industrialsignals
+
 section "industrial constraints contract"
 cue vet -c=false ./contracts/world/industrial-constraints:industrialconstraints
 

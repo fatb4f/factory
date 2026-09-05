@@ -45,24 +45,26 @@ package industrialconstraints
 })
 
 #EventWatchExecution: close({
-	phase:                       "event-watch"
-	admittedState:               "source-qualified-event-bundles"
-	sourceQualifiedEventTracking: true
-	relationalProjectionRequired: false
-	canonicalIdentityRequired:   false
-	graphQualificationEnabled:   false
+	phase:                         "event-watch"
+	admittedState:                 "source-qualified-event-bundles"
+	sourceQualifiedEventTracking:  true
+	relationalProjectionRequired:  false
+	canonicalIdentityRequired:     false
+	graphQualificationEnabled:     false
 	constraintQualificationEnabled: false
+	industrialSignalsSnapshotRequired: false
 	outcomes: ["events_observed", "no_material_events", "source_gap"]
 })
 
 #RelationalPipelineExecution: close({
-	phase:                       "relational-pipeline"
-	admittedState:               "relational"
-	sourceQualifiedEventTracking: true
-	relationalProjectionRequired: true
-	canonicalIdentityRequired:   true
-	graphQualificationEnabled:   true
+	phase:                         "relational-pipeline"
+	admittedState:                 "relational"
+	sourceQualifiedEventTracking:  true
+	relationalProjectionRequired:  true
+	canonicalIdentityRequired:     true
+	graphQualificationEnabled:     true
 	constraintQualificationEnabled: true
+	industrialSignalsSnapshotRequired: true
 	outcomes: ["admitted", "rejected", "coverage_gap"]
 })
 
@@ -71,7 +73,8 @@ package industrialconstraints
 	kind:           "world"
 	execution:      #EventWatchExecution | #RelationalPipelineExecution
 	pipelineTarget: #RelationalPipelineExecution
-	graphRole:      "projection"
+	pipelineInput:  #IndustrialSignalsInputContract
+	graphRole:      "constraint-projection"
 	constraintRole: "evidence-backed-claim"
 	scope:          #Scope
 	authority:      #AuthorityBoundary
@@ -88,6 +91,11 @@ contract: #Contract & {
 	}
 	pipelineTarget: #RelationalPipelineExecution & {
 		phase: "relational-pipeline"
+	}
+	pipelineInput: {
+		sourceDomain: "world.industrial-signals"
+		admission:    "snapshot-qualified"
+		schema:       "#RelationalConstraintInput"
 	}
 	scope: {
 		geographies: ["canada", "quebec"]

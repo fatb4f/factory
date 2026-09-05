@@ -19,8 +19,12 @@ contracts/academic/uqam/
 contracts/world/engineering-signals/
     engineering frontier and future engineering-graph authority
 
+contracts/world/industrial-signals/
+    industrial actors, roles, signals, actions, innovation adoption, subsidy/public-support
+    flows, project milestones, outcomes and future industrial graph authority
+
 contracts/world/industrial-constraints/
-    industrial observations and future industrial relational/graph authority
+    downstream industrial bottleneck/choke-point qualification authority
 
 contracts/world/canada-clean-energy/
     Canadian/Quebec clean-energy policy/project authority
@@ -43,7 +47,7 @@ contracts/projects/engineering-pocs/
 
 `contracts/workers/upstream-monitor/AGENTS.md` remains the canonical shared procedure for that worker family. None of the world domains inherit upstream-monitor semantics merely because they reuse epistemic patterns such as source-qualified observations, claims or fail-closed publication.
 
-No generic `graph` or `multigraph` contract is introduced. Engineering, industrial, clean-energy, climate-readiness and financial topology remain independently modeled until their actual intersection demonstrates a reusable invariant.
+No generic `graph` or `multigraph` contract is introduced. Engineering, industrial-signal, industrial-constraint, clean-energy, climate-readiness and financial semantics remain independently modeled until their actual intersection demonstrates reusable invariants.
 
 ## Registry contract
 
@@ -83,6 +87,7 @@ World intelligence and project-decision registrations are:
 
 ```text
 world.engineering-signals.monitor          enabled
+world.industrial-signals.monitor           enabled
 world.industrial-constraints.monitor       enabled
 world.canada-clean-energy.monitor           enabled
 world.canada-climate-readiness.monitor      enabled
@@ -95,23 +100,55 @@ projects.engineering-pocs.qualify           disabled
 
 All declared cadences are weekly / Monday. The shared dispatcher runs only enabled tasks.
 
+## Why industrial signals is a separate unit
+
+`industrial-signals` answers what industrial actors are doing and what happens afterward. `industrial-constraints` answers what is actually constrained and why.
+
+```text
+engineering signal
+      |
+      v
+industrial actor signal / action / adoption / funding / milestone / outcome
+      |
+      v
+snapshot-qualified industrial state
+      |
+      v
+industrial constraint qualification
+```
+
+The split prevents announcements, subsidies or actor actions from being promoted directly into shortage/choke-point claims.
+
+Public-support follow-through is explicitly longitudinal:
+
+```text
+award != disbursement != expenditure != milestone != outcome
+```
+
+The industrial-signals watch therefore seeks evidence about how subsidized actors use funds and how projects progress, while preserving source-specific evidence and coverage gaps.
+
 ## Why downstream tasks are registered but disabled
 
-The repository now carries semantic authority for the target multi-graph system without asserting execution capability that does not exist.
+The repository carries semantic authority for the target multi-graph system without asserting execution capability that does not exist.
 
 ```text
 observation-ready now
     engineering-signals
-    industrial-constraints
+    industrial-signals
+    industrial-constraints event-watch
     canada-clean-energy
     canada-climate-readiness
 
 contracted but not executable yet
+    industrial-signals canonical graph/snapshot
+    industrial-constraints relational qualification from snapshot
     financial-signals broad watch
     resource-allocation correlation
     financial-opportunity qualification
     engineering-POC qualification
 ```
+
+The industrial-constraints monitor remains enabled only because its current selected phase is still an independent event watch. Its relational target now requires a snapshot-qualified `world.industrial-signals` input.
 
 Financial monitoring remains disabled until an issuer/hypothesis/source universe is explicitly configured. Resource-allocation remains disabled until immutable graph snapshots and qualified bridges exist. Financial opportunities and POC selection remain disabled until their upstream evidence paths are real.
 
@@ -119,14 +156,14 @@ Registration therefore means "Factory knows this task and its authority," not "a
 
 ## Multi-graph topology
 
-The architectural target is:
-
 ```text
 engineering graph
       |
-      | qualified engineering-to-industrial translation
       v
-industrial graph
+industrial-signal graph
+      |
+      v
+industrial-constraint qualification
       |
       +-------------------------------+
       |                               |
@@ -137,70 +174,40 @@ clean-energy graph             climate-readiness graph
                       |
                       v
               resource-allocation
-        snapshot-qualified bridges /
-         shared resources / demands /
-              conjunctions
                       |
                       v
                 financial graph
                       |
-                      v
-          qualification / decisions
+              +-------+-------+
               |               |
               v               v
       engineering POCs   financial opportunities
 ```
 
-The arrows do not imply that one domain owns another domain's relations. Each cross-domain identity or path must be supported by an explicit qualified bridge or source-domain path.
-
-## Current phase semantics
-
-### Engineering signals
-
-The enabled engineering watch tracks technical mechanisms, tests, prototypes, standards, patents, manufacturing/process developments and failure analysis. A `poc-candidate` disposition is an observation prioritization hint only; it cannot admit a POC.
-
-### Industrial constraints
-
-The industrial contract currently selects `event-watch`. It admits source-qualified documents/events while its Ibis/DuckDB relational graph remains a future target. Current event publication cannot establish canonical graph propagation or constraint claims.
-
-### Clean energy and climate readiness
-
-These watches track initiatives only where they create, redirect, finance or constrain engineering/industrial demand. Their events cannot establish an industrial shortage, cross-domain resource identity, economic capture or investment attractiveness.
-
-### Financial signals
-
-The financial domain owns issuers, reporting segments, instruments, capital structure, financial relations and time-qualified measurements. It must not duplicate engineering/industrial/policy topology.
-
-### Resource allocation
-
-This is a coordination/control authority, not a source graph. It consumes immutable external graph references, separately qualifies bridge hypotheses, represents shared resources and explicit source-domain demand paths, and admits conjunction/intervention/decision state only when prerequisites are satisfied.
-
-### Engineering POCs
-
-World domains observe reality. `projects.engineering-pocs` decides what Factory should build or test. Policy convergence and financial value may raise priority, but an admitted engineering mechanism plus an explicit industrial problem remain mandatory.
+The arrows do not transfer semantic authority. Cross-domain identity and propagation require explicit admitted references/bridges.
 
 ## Scheduler evolution
 
-Do not add generic task dependencies yet. The currently enabled observation watches are independent.
+Do not add generic task dependencies yet. The enabled watches are still independent observation tasks.
 
-When the first real correlation task becomes executable, scheduler ordering must be declared explicitly rather than inferred from names:
+When the first real correlation or downstream qualification task becomes executable, scheduler ordering must be declared explicitly rather than inferred from names:
 
 ```text
 acquisition tasks
       ↓ explicit task references
-correlation
+correlation / qualification
       ↓
-qualification / decision
+decision
 ```
 
 Only then should `contracts/unit.cue` gain dependency semantics.
 
 ## UQAM and upstream-monitor preservation
 
-The multi-graph refactor does not alter existing UQAM or software upstream-monitor authority.
+The world refactor does not alter existing UQAM or software upstream-monitor authority.
 
-UQAM event comparison state remains task-local and contractually separate from dispatcher state. Upstream-monitor still consists of shared worker CUE plus exactly one selected independent profile; `profiles_ctrl` is not a template for the new world domains.
+UQAM event comparison state remains task-local and contractually separate from dispatcher state. Upstream-monitor still consists of shared worker CUE plus exactly one selected independent profile; `profiles_ctrl` is not a template for the world domains.
 
 ## Reference
 
-The sequencing, gates, initiative routing and implementation state are defined in `docs/architecture/multi-graph-world-refactor.md`.
+The sequencing, gates, industrial actor/subsidy model and implementation state are defined in `docs/architecture/multi-graph-world-refactor.md`.

@@ -23,15 +23,20 @@ units: close({
 		kind:   "academic"
 		agents: "academic/uqam/.agents"
 	}
-	"world.industrial-constraints": unit.#Unit & {
-		id:     "world.industrial-constraints"
-		kind:   "world"
-		agents: "world/industrial-constraints/.agents"
-	}
 	"world.engineering-signals": unit.#Unit & {
 		id:     "world.engineering-signals"
 		kind:   "world"
 		agents: "world/engineering-signals/.agents"
+	}
+	"world.industrial-signals": unit.#Unit & {
+		id:     "world.industrial-signals"
+		kind:   "world"
+		agents: "world/industrial-signals/.agents"
+	}
+	"world.industrial-constraints": unit.#Unit & {
+		id:     "world.industrial-constraints"
+		kind:   "world"
+		agents: "world/industrial-constraints/.agents"
 	}
 	"world.canada-clean-energy": unit.#Unit & {
 		id:     "world.canada-clean-energy"
@@ -111,21 +116,30 @@ tasks: close({
 		enabled:   true
 		cadence: {frequency: "weekly", weekday: "monday"}
 	}
-	"world.industrial-constraints.monitor": unit.#Task & {
-		id:        "world.industrial-constraints.monitor"
-		name:      "monitor"
-		unit:      "world.industrial-constraints"
-		authority: "contracts/world/industrial-constraints/contract.cue"
-		agent:     "world/industrial-constraints/.agents/AGENTS.md"
-		enabled:   true
-		cadence: {frequency: "weekly", weekday: "monday"}
-	}
 	"world.engineering-signals.monitor": unit.#Task & {
 		id:        "world.engineering-signals.monitor"
 		name:      "monitor"
 		unit:      "world.engineering-signals"
 		authority: "contracts/world/engineering-signals/contract.cue"
 		agent:     "world/engineering-signals/.agents/AGENTS.md"
+		enabled:   true
+		cadence: {frequency: "weekly", weekday: "monday"}
+	}
+	"world.industrial-signals.monitor": unit.#Task & {
+		id:        "world.industrial-signals.monitor"
+		name:      "monitor"
+		unit:      "world.industrial-signals"
+		authority: "contracts/world/industrial-signals/contract.cue"
+		agent:     "world/industrial-signals/.agents/AGENTS.md"
+		enabled:   true
+		cadence: {frequency: "weekly", weekday: "monday"}
+	}
+	"world.industrial-constraints.monitor": unit.#Task & {
+		id:        "world.industrial-constraints.monitor"
+		name:      "monitor"
+		unit:      "world.industrial-constraints"
+		authority: "contracts/world/industrial-constraints/contract.cue"
+		agent:     "world/industrial-constraints/.agents/AGENTS.md"
 		enabled:   true
 		cadence: {frequency: "weekly", weekday: "monday"}
 	}

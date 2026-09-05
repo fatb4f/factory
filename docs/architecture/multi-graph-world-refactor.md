@@ -1,48 +1,40 @@
 # Multi-Graph World Refactor
 
-Status: implementation plan / initial authority scaffold
+Status: implementation plan / active authority scaffold
 
 ## Objective
 
-Factory's primary purpose remains engineering-to-industry intelligence: track engineering developments, observe industrial translation and constraints, identify high-leverage mechanisms, and select bounded POCs that test them.
+Factory remains an engineering-to-industry intelligence system: track engineering developments, observe how industrial actors react and evolve, qualify real industrial constraints, identify high-leverage interventions, and select bounded POCs that test them.
 
-Clean-energy, climate-readiness and financial domains are not replacements for that purpose. They add independent demand, resilience, policy and economic context that can materially change which engineering developments deserve attention.
-
-The target architecture is therefore:
+The industrial model is now explicitly two-layered:
 
 ```text
-engineering graph
-      |
-      | translation
-      v
-industrial graph
-      |
-      +-------------------------------+
-      |                               |
-      v                               v
-clean-energy graph             climate-readiness graph
-      |                               |
-      +---------------+---------------+
-                      |
-                      v
-             resource-allocation
-      identity / bridges / conjunctions
-        shared resources / competing demand
-                      |
-                      v
-               financial graph
-                      |
-                      v
-             financial qualification
-                      |
-             +--------+--------+
-             |                 |
-             v                 v
-      allocation decision   investment opportunity
-             |
-             v
-      engineering POC selection
+engineering signals
+        |
+        | translation / adoption
+        v
+industrial signals
+        |
+        | actor trajectories / actions / outcomes
+        v
+industrial constraints
+        |
+        | qualified choke points
+        +-----------------------------+
+                                      |
+clean energy -------------------------+
+climate readiness --------------------+--> resource allocation
+                                      |
+                                      v
+                               financial signals
+                                      |
+                         +------------+------------+
+                         |                         |
+                         v                         v
+                  engineering POCs       financial opportunities
 ```
+
+`industrial-signals` owns the evolving industrial ecosystem. `industrial-constraints` is downstream qualification over industrial state; it is no longer the semantic container for all industrial behavior.
 
 No domain may manufacture another domain's topology.
 
@@ -52,14 +44,19 @@ No domain may manufacture another domain's topology.
 contracts/world/engineering-signals/
     engineering mechanisms, maturity, technical observations, future engineering graph
 
+contracts/world/industrial-signals/
+    industrial actors, roles, facilities/projects, signals, actions, response hypotheses,
+    admitted responses, innovation adoption, public-support flows, milestones and outcomes
+
 contracts/world/industrial-constraints/
-    industrial facilities, capacity, suppliers, infrastructure, constraints
+    evidence-backed bottleneck, shortage, dependency and choke-point qualification
+    over admitted industrial state
 
 contracts/world/canada-clean-energy/
-    Canadian/Quebec clean-energy programs, projects, obligations and future policy/project graph
+    Canadian/Quebec clean-energy programs, projects and obligations
 
 contracts/world/canada-climate-readiness/
-    adaptation, hazards, resilience obligations and future resilience graph
+    adaptation, hazards and resilience obligations
 
 contracts/world/financial-signals/
     issuers, segments, instruments, capital structure, financial relations and measurements
@@ -69,28 +66,140 @@ contracts/world/resource-allocation/
     resource demand, cross-graph conjunctions, intervention candidates and allocation decisions
 
 contracts/world/financial-opportunities/
-    downstream point-in-time investment qualification over admitted allocation + financial state
+    downstream point-in-time investment qualification
 
 contracts/projects/engineering-pocs/
-    Factory-owned POC hypotheses and decisions; world domains do not decide what Factory builds
+    Factory-owned POC hypotheses and decisions
 ```
 
-Do not introduce a generic `graph` or `multigraph` worker/core package yet. The four graph domains are intentionally independent. Promote shared vocabulary only after their demonstrated intersection warrants it.
+Do not introduce a generic `graph` or `multigraph` package yet. Early domains may duplicate structurally similar vocabulary until their real intersection establishes a shared invariant.
+
+## Industrial epistemic invariants
+
+The industrial system must preserve these distinctions mechanically:
+
+```text
+observed actor label != canonical actor identity
+signal != action
+action after signal != admitted response
+technology evaluation != adoption
+adoption != successful outcome
+funding announcement != authorized award
+authorized award != disbursement
+disbursement != recipient expenditure
+recipient-reported expenditure != audited expenditure
+expenditure != project milestone
+project milestone != industrial outcome
+industrial observation != binding constraint
+```
+
+A missing downstream record is a coverage gap unless positive evidence establishes another state.
+
+## Subsidized-actor accountability
+
+Public support is part of industrial state, not merely a government-news event.
+
+For every material subsidized actor/project where evidence is obtainable, the industrial signal graph should preserve a trajectory such as:
+
+```text
+program / funder
+      |
+      v
+award / authorization
+      |
+      v
+disbursement
+      |
+      v
+recipient expenditure
+      |
+      +--> capital equipment
+      +--> facility construction
+      +--> R&D
+      +--> workforce
+      +--> materials / supplier development
+      |
+      v
+project milestones
+      |
+      v
+commissioning / production / capacity
+      |
+      v
+measured industrial outcome
+```
+
+Different sources remain distinct observations. Actor self-report, funder record, procurement evidence, regulatory filing and audited report are not interchangeable evidence classes merely because they describe the same money.
+
+The current event watch may record each stage as a source-qualified observation. It may not infer that unobserved spending failed to occur, nor may it publish a performance judgment from an award announcement alone.
+
+## Actor and trajectory model
+
+Industrial identity is canonical only in the future graph phase. Actor roles are time- and surface-qualified rather than frozen into organization identity.
+
+Relevant roles include manufacturers, suppliers, operators, developers, integrators, customers, contract manufacturers, equipment vendors, technology providers, logistics providers, utilities and research partners.
+
+The graph target models:
+
+```text
+actor
+  +--> role assignment
+  +--> signal
+  +--> action
+  +--> innovation exposure/adoption state
+  +--> funding award / flow
+  +--> project milestone
+  +--> outcome
+```
+
+Response causality is separately admitted:
+
+```text
+industrial signal
+      |
+      +--> ResponseHypothesis
+                |
+                | actor-explicit / contractual-link / qualified-correlation
+                v
+          AdmittedResponse
+```
+
+Temporal sequence or name similarity is insufficient.
+
+## Constraint boundary
+
+`world.industrial-constraints` retains its current independent `event-watch` for continuity. Its future `relational-pipeline` now explicitly requires a snapshot-qualified `world.industrial-signals` input.
+
+```text
+industrial-signals immutable snapshot
+        |
+        v
+industrial-constraints relational input
+        |
+        v
+correlation / constraint evidence
+        |
+        v
+constraint claim
+```
+
+A binding constraint still requires multi-record evidence. Industrial actions that appear to address a problem are evidence about response, not proof that the problem exists or has been resolved.
 
 ## Current versus target execution
-
-Initial implementation is deliberately asymmetric.
 
 Enabled observation phases:
 
 ```text
 world.engineering-signals.monitor
+world.industrial-signals.monitor
 world.industrial-constraints.monitor
 world.canada-clean-energy.monitor
 world.canada-climate-readiness.monitor
 ```
 
-These run as bounded event watches. They may publish source-qualified observations and coverage gaps, but may not claim that canonical graph/correlation pipelines already exist.
+These are independent Monday watches because scheduler dependencies are not yet part of the generic task contract.
+
+Current `industrial-signals` publication is limited to source-qualified event-watch records and coverage gaps. Canonical identity, admitted response causality, funding-accountability qualification and immutable industrial graph snapshots remain target semantics.
 
 Present but disabled until prerequisites exist:
 
@@ -101,9 +210,7 @@ world.financial-opportunities.qualify
 projects.engineering-pocs.qualify
 ```
 
-This prevents the architecture from inventing issuer coverage, graph bridges, allocation decisions or POC qualification before their evidence paths are implemented.
-
-## Core epistemic invariants
+## Cross-domain invariants
 
 ```text
 domain observation != domain graph fact
@@ -125,105 +232,52 @@ All cross-domain paths must remain snapshot-qualified and reproducible.
 The system should eventually identify independently admitted demands converging on a shared constrained resource:
 
 ```text
+industrial expansion -----+
 renewable deployment -----+
 climate adaptation -------+--> shared resource
-industrial expansion -----+
 AI / strategic demand ----+
 ```
 
-Candidate interventions then compete on dimensions such as:
+Candidate interventions can then be qualified across capacity relieved, number of independent demands relieved, engineering tractability, capital required, time to effect, financial/economic capture, avoided loss, policy leverage, resilience value, strategic value, execution risk and substitution risk.
 
-```text
-resource capacity relieved
-number of independent demands relieved
-engineering tractability
-capital required
-time to effect
-financial/economic capture
-avoided loss
-policy leverage
-resilience value
-strategic value
-execution risk
-substitution risk
-```
+Do not freeze those dimensions into a universal scalar in CUE. Ranking remains an explicit derived analytical projection.
 
-Do not freeze these dimensions into a universal scalar in CUE. Scalar ranking is a derived analytical projection whose weights remain explicit model/configuration state.
+## Sequenced implementation
 
-## Sequenced refactor
+### Phase 0 — authority split
 
-### Phase 0 — preserve current authority
+Implemented:
 
-- Keep `world.industrial-constraints` current phase at `event-watch`.
-- Preserve its future relational pipeline as target semantics only.
-- Do not generalize industrial graph types into worker core.
+- independent engineering, industrial-signal, industrial-constraint, policy-demand and financial authorities;
+- resource-allocation and downstream decision boundaries;
+- registry and validation wiring.
 
-Gate: existing industrial event watch continues to execute independently.
+### Phase 1 — engineering event acquisition
 
-### Phase 1 — engineering signal authority
+Acquire bounded source-qualified engineering mechanisms, tests, prototypes, standards, patents and failure analysis.
 
-- Add `world.engineering-signals` as the primary frontier monitor.
-- Track mechanisms, papers, patents, prototypes, standards, tests, process innovations and failure analysis.
-- Keep `poc-candidate` as a disposition only.
-- Model a future engineering graph without requiring it for current observation.
+Gate: engineering observations do not create industrial adoption or POC admission.
 
-Gate: source-qualified engineering events can be recorded without industrial/POC inference.
+### Phase 2 — industrial actor ecosystem acquisition
 
-### Phase 2 — policy-demand event watches
+Acquire actor-centric industrial updates and build longitudinal event-watch state around:
 
-- Add `world.canada-clean-energy`.
-- Add `world.canada-climate-readiness`.
-- Treat government initiatives as demand/constraint observations only when they materially affect engineering or industrial capacity.
-- Use coordinating surfaces such as major-project registries for discovery while preserving underlying project/program authority.
+- actor/facility/project changes;
+- demand/capacity/supply/lead-time signals;
+- actor actions and industrial responses;
+- innovation evaluation, qualification, deployment and scaling;
+- public funding awards, disbursements and evidenced expenditure;
+- project milestones and realized outcomes.
 
-Gate: initiative observations are independently admissible and do not create industrial shortage or financial claims.
+Gate: actor labels remain source-qualified observations until canonical identity is executable.
 
-### Phase 3 — financial graph authority
+### Phase 3 — policy-demand watches
 
-- Add `world.financial-signals` with financial-specific node/relation vocabulary.
-- Keep issuer filings, financing, capital structure and market measurements distinct from industrial topology.
-- Seed explicit issuer/segment hypotheses before enabling broad recurring acquisition.
+Continue clean-energy and climate-readiness watches as independent demand/obligation authorities.
 
-Gate: financial relations cannot exist from ticker/name matching alone; measurements remain time-qualified.
+Gate: initiative observations do not create industrial shortages or financial claims.
 
-### Phase 4 — cross-domain resource coordination
-
-- Add `world.resource-allocation`.
-- Introduce immutable external snapshot/node/path references.
-- Separate bridge hypotheses from admitted bridges.
-- Add shared-resource identity, resource-demand paths and cross-graph conjunctions.
-- Require at least two independently admitted demands before a conjunction can represent competing/coincident demand.
-
-Gate: no conjunction can be admitted from labels or prose-only correlation.
-
-### Phase 5 — intervention generation and financial qualification
-
-- Generate candidate mechanisms such as capacity expansion, substitution, utilization improvement, lead-time reduction, repair/remanufacture, demand reduction and risk reduction.
-- Join intervention candidates to independently admitted financial state.
-- Preserve multidimensional qualification rather than hiding weights in a single score.
-
-Gate: financial evidence qualifies an intervention but does not rewrite source-domain facts.
-
-### Phase 6 — financial opportunities
-
-- Narrow `financial-opportunities` to downstream investment qualification.
-- Consume a resource-allocation candidate plus financial graph state.
-- Require current valuation, explicit downside/failure scenarios, risk and reproducible evidence before `actionable`.
-
-Gate: missing graph path, issuer mapping, current valuation or downside evidence remains a coverage gap.
-
-### Phase 7 — engineering POC qualification
-
-- Add project-owned `engineering-pocs` authority.
-- Require an admitted engineering mechanism/path and an explicit industrial problem.
-- Let initiative-demand convergence and resource-allocation leverage raise priority without substituting for technical evidence.
-- Require bounded experiment, expected learning and falsifiers before `prototype-ready`.
-
-Gate: world observations never directly instruct Factory to build a POC.
-
-### Phase 8 — graph realization
-
-For each domain independently:
+### Phase 4 — industrial graph realization
 
 ```text
 CUE schema
@@ -231,76 +285,62 @@ CUE schema
   -> generated types
   -> deterministic relational projection
   -> backend adapter
-  -> immutable graph snapshot
+  -> immutable industrial snapshot
 ```
 
-Do not require each domain to use the same backend. Ibis/DuckDB/BigQuery remain realization mechanisms, not authority.
+Gate: response causality, funding-accountability coverage and actor identity are admitted only through their contracted evidence paths.
 
-Gate: each graph can publish immutable snapshot references with mechanically validated provenance.
+### Phase 5 — industrial constraint qualification
+
+Consume a snapshot-qualified industrial-signals input and qualify bottlenecks/choke points.
+
+Gate: no relational constraint run without an admitted industrial snapshot; no binding claim from a single observation.
+
+### Phase 6 — financial graph authority
+
+Build the issuer/segment/instrument universe and time-qualified financial state independently from industrial topology.
+
+### Phase 7 — cross-domain resource coordination
+
+Admit explicit bridges and shared-resource conjunctions only when at least two independent demand paths exist.
+
+### Phase 8 — intervention, financial and POC qualification
+
+Generate candidate interventions from admitted engineering and industrial paths. Financial value or government convergence may raise priority but cannot manufacture the technical rationale.
 
 ### Phase 9 — scheduler dependency semantics
 
-Only after the first enabled correlation task exists, extend the generic task contract with explicit dependencies. Then schedule acquisition before correlation/qualification by declared task IDs rather than by task-name inference.
-
-Do not add dependency semantics merely for disabled future tasks.
+Only when correlation/qualification tasks become executable, add typed task dependencies. Do not infer ordering from names.
 
 ### Phase 10 — calibration
 
-Evaluate predicted technical relevance, industrial impact, economic capture, POC outcomes and investment outcomes against realized state. Preserve forecast assumptions and snapshot identity so calibration is reproducible.
+Compare predicted technical relevance, actor responses, subsidy/project trajectories, industrial outcomes, constraint evolution, economic capture, POC results and investment results against realized state.
 
 ## Initiative placement
 
-Do not create a new graph for every government initiative.
+Do not create a graph for every government initiative. Route observations into the domain whose semantics they actually establish.
 
-Initial routing:
+Examples:
 
 ```text
+industrial subsidy / grant
+    clean-energy or policy source observation when applicable
+    + industrial-signals award/disbursement/spend/milestone trajectory
+    + financial-signals financing state when economically relevant
+
 Major Projects Office
-    discovery/coordinating source across clean-energy, climate, industrial and later allocation
+    coordinating/discovery source; underlying project authority remains source-specific
 
-Defence Industrial Strategy
-    industrial/engineering demand signal initially; candidate independent graph only if topology matures
+Workforce programs
+    industrial-signals actor/workforce progress
+    + later resource-allocation workforce-capacity evidence
 
-Workforce Alliances / workforce programs
-    resource-allocation workforce-capacity evidence via source-domain observations
-
-Strategic Response Fund / diversification funds
-    industrial capacity + financial financing observations
-
-Critical-mineral finance programs
-    industrial project/capacity + financial financing observations
+Critical-mineral finance
+    industrial project/capacity trajectory
+    + financial financing observation
 
 Sovereign AI compute
-    engineering/industrial/clean-energy demand signal
-
-Trade corridors
-    industrial logistics-capacity signal; later shared resource
-
-Build Communities Strong / infrastructure programs
-    climate/clean-energy/industrial demand depending on admitted project purpose
+    engineering + industrial + clean-energy demand observations
 ```
 
-The system monitors initiatives because they change engineering relevance and shared-resource demand, not as an end in themselves.
-
-## Implementation state after this refactor
-
-Implemented now:
-
-- independent semantic authorities for engineering, clean-energy, climate-readiness and financial signals;
-- resource-allocation boundary types;
-- financial-opportunity downstream authority;
-- engineering-POC project authority;
-- Monday registry entries with observation-ready domains enabled and downstream correlation/qualification tasks disabled;
-- contract-validation entries for all new CUE packages.
-
-Still intentionally not implemented:
-
-- canonical graph snapshots for the new domains;
-- cross-domain admitted bridges;
-- source-specific acquisition adapters beyond current web/event-watch actuation;
-- financial issuer/hypothesis universe;
-- resource-allocation correlation execution;
-- POC or investment qualification execution;
-- generic scheduler dependency semantics.
-
-Those remain gated by the sequence above rather than represented as asserted capability.
+The monitor's value is not collecting more announcements. It is preserving enough longitudinal evidence to answer: **who acted, why, with what resources, what changed, what failed to change, and what remains constrained?**
