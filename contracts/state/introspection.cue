@@ -70,16 +70,16 @@ package state
 	"field"
 
 #PythonModelNode: close({
-	id:            #NonEmptyString
-	space:         "python"
-	kind:          #PythonModelNodeKind
-	name:          #NonEmptyString
-	qualifiedName: #NonEmptyString
-	source:        #NonEmptyString
-	cueNode?:      #NonEmptyString
+	id:             #NonEmptyString
+	space:          "python"
+	kind:           #PythonModelNodeKind
+	name:           #NonEmptyString
+	qualifiedName:  #NonEmptyString
+	source:         #NonEmptyString
+	cueNode?:       #NonEmptyString
 	semanticSpace?: #NonEmptyString
-	annotation?:   #NonEmptyString
-	required?:     bool
+	annotation?:    #NonEmptyString
+	required?:      bool
 })
 
 #PythonModelEdgeRelation:
@@ -88,13 +88,13 @@ package state
 	"relates-to"
 
 #PythonModelEdge: close({
-	id:          #NonEmptyString
-	relation:    #PythonModelEdgeRelation
-	label?:      #NonEmptyString
-	source:      #NonEmptyString
-	target:      #NonEmptyString
+	id:           #NonEmptyString
+	relation:     #PythonModelEdgeRelation
+	label?:       #NonEmptyString
+	source:       #NonEmptyString
+	target:       #NonEmptyString
 	cardinality?: "one" | "many"
-	basis:       [#NonEmptyString, ...#NonEmptyString]
+	basis:        [#NonEmptyString, ...#NonEmptyString]
 })
 
 #PythonModelProjection: close({
@@ -104,4 +104,72 @@ package state
 	nodes:          [#PythonModelNode, ...#PythonModelNode]
 	edges:          [...#PythonModelEdge]
 	digest:         #SHA256
+})
+
+#InspectionEdgeRole:
+	"structural" |
+	"model" |
+	"lineage" |
+	"analytical" |
+	"render"
+
+#InspectionAttribute: close({
+	key:   #NonEmptyString
+	value: #NonEmptyString
+})
+
+#InspectionNode: close({
+	id:             #NonEmptyString
+	space:          #IntrospectionSpace
+	kind:           #NonEmptyString
+	label:          #NonEmptyString
+	qualifiedName?: #NonEmptyString
+	attributes:     [...#InspectionAttribute]
+	provenance:     [...#NonEmptyString]
+})
+
+#InspectionEdge: close({
+	id:         #NonEmptyString
+	role:       #InspectionEdgeRole
+	relation:   #NonEmptyString
+	label?:     #NonEmptyString
+	source:     #NonEmptyString
+	target:     #NonEmptyString
+	basis:      [...#NonEmptyString]
+	provenance: [...#NonEmptyString]
+})
+
+#InspectionProjection: close({
+	apiVersion:    #IntrospectionSchema
+	kind:          "InspectionProjection"
+	sourceDigests: [#SHA256, ...#SHA256]
+	nodes:         [#InspectionNode, ...#InspectionNode]
+	edges:         [...#InspectionEdge]
+	digest:        #SHA256
+})
+
+#InspectionDirection:
+	"outgoing" |
+	"incoming" |
+	"both"
+
+#InspectionRequest: close({
+	id:         #NonEmptyString
+	roots:      [#NonEmptyString, ...#NonEmptyString]
+	direction:  #InspectionDirection
+	maxDepth:   int & >=1 & <=32
+	spaces?:    [...#IntrospectionSpace]
+	relations?: [...#NonEmptyString]
+	roles?:     [...#InspectionEdgeRole]
+})
+
+#InspectionResult: close({
+	apiVersion:       #IntrospectionSchema
+	kind:             "InspectionResult"
+	projectionDigest: #SHA256
+	requestID:        #NonEmptyString
+	roots:            [#NonEmptyString, ...#NonEmptyString]
+	nodes:            [#InspectionNode, ...#InspectionNode]
+	edges:            [...#InspectionEdge]
+	digest:           #SHA256
 })

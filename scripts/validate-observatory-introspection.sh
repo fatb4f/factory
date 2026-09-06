@@ -19,7 +19,7 @@ python3 scripts/cue_model_introspection.py state/fixtures/introspection-model/co
 cmp -s "$tmpdir/model-a.json" "$tmpdir/model-b.json"
 cue vet -c=false "$tmpdir/model-a.json" ./contracts/state/*.cue -d '#LogicalModelProjection'
 
-PYTHONPATH=scripts python3 - <<'PY'
+PYTHONPATH=scripts python3 - <<'PY1'
 import json
 import tempfile
 from pathlib import Path
@@ -54,10 +54,10 @@ with tempfile.TemporaryDirectory() as tmp:
         pass
     else:
         raise AssertionError("CUE model introspection accepted a source without a package declaration")
-PY
+PY1
 
 section "Python semantic-model projection"
-PYTHONPATH=. python3 - <<'PY'
+PYTHONPATH=. python3 - <<'PY2'
 import json
 import os
 from dataclasses import dataclass
@@ -113,7 +113,74 @@ Path(os.environ["OBS_INTROSPECTION_TMP"], "python-model.json").write_text(
     json.dumps(first, indent=2, sort_keys=True) + "\n",
     encoding="utf-8",
 )
-PY
+PY2
 cue vet -c=false "$tmpdir/python-model.json" ./contracts/state/*.cue -d '#PythonModelProjection'
+
+section "Unified semantic introspection lineage"
+PYTHONPATH=.:scripts python3 - <<'PY3'
+import json
+import os
+from pathlib import Path
+
+from cue_model_introspection import compile_cue_model
+from runtime.generated.semantic_context import (
+    ContextArtifact,
+    ContextArtifactRef,
+    SemanticAuthorityRef,
+    SemanticRef,
+    SourceOccurrence,
+)
+from runtime.introspection import IntrospectionError, IntrospectionGraph
+from runtime.semantic_metadata import project_python_model
+
+cue_projection = compile_cue_model(
+    {
+        "repository": "github.com/fatb4f/factory",
+        "revision": "fixture",
+        "files": ["contracts/state/semantic-context.cue"],
+    },
+    Path("."),
+)
+python_projection = project_python_model(
+    [SemanticAuthorityRef, SemanticRef, SourceOccurrence, ContextArtifactRef, ContextArtifact]
+)
+first = IntrospectionGraph.from_projections(cue_projection, python_projection)
+second = IntrospectionGraph.from_projections(python_projection, cue_projection)
+assert first.projection == second.projection
+cue_ref = "cue:state:#SemanticRef"
+python_ref = "python:runtime.generated.semantic_context.SemanticRef"
+path = first.lineage_path(cue_ref, python_ref)
+assert path.nodes == (cue_ref, python_ref)
+assert len(path.edges) == 1
+request = {
+    "id": "semantic-ref-lineage",
+    "roots": [cue_ref],
+    "direction": "outgoing",
+    "maxDepth": 2,
+    "roles": ["lineage", "structural"],
+}
+result = first.inspect(request)
+assert any(edge["relation"] == "projects-to" for edge in result["edges"])
+assert any(node["id"] == python_ref for node in result["nodes"])
+
+try:
+    IntrospectionGraph.from_projections(python_projection)
+except IntrospectionError:
+    pass
+else:
+    raise AssertionError("dangling cross-layer Python lineage did not fail closed")
+
+tmp = Path(os.environ["OBS_INTROSPECTION_TMP"])
+(tmp / "inspection-projection.json").write_text(
+    json.dumps(first.projection, indent=2, sort_keys=True) + "\n",
+    encoding="utf-8",
+)
+(tmp / "inspection-result.json").write_text(
+    json.dumps(result, indent=2, sort_keys=True) + "\n",
+    encoding="utf-8",
+)
+PY3
+cue vet -c=false "$tmpdir/inspection-projection.json" ./contracts/state/*.cue -d '#InspectionProjection'
+cue vet -c=false "$tmpdir/inspection-result.json" ./contracts/state/*.cue -d '#InspectionResult'
 
 echo "observatory introspection validation passed"
