@@ -8,9 +8,11 @@ on:
       - "contracts/state/**"
       - "state/fixtures/**"
       - "scripts/repository_context.py"
+      - "scripts/cue_model_introspection.py"
       - "scripts/generate_semantic_runtime_types.py"
       - "scripts/industrial_graph_snapshot.py"
       - "scripts/validate-observatory.sh"
+      - "scripts/validate-observatory-introspection.sh"
       - "scripts/validate-marimo-adapter.sh"
       - "scripts/validate-industrial-workbook.sh"
       - "scripts/validate-observatory-v1.sh"
@@ -23,9 +25,11 @@ on:
       - "contracts/state/**"
       - "state/fixtures/**"
       - "scripts/repository_context.py"
+      - "scripts/cue_model_introspection.py"
       - "scripts/generate_semantic_runtime_types.py"
       - "scripts/industrial_graph_snapshot.py"
       - "scripts/validate-observatory.sh"
+      - "scripts/validate-observatory-introspection.sh"
       - "scripts/validate-marimo-adapter.sh"
       - "scripts/validate-industrial-workbook.sh"
       - "scripts/validate-observatory-v1.sh"
@@ -48,5 +52,7 @@ jobs:
           version: v0.16.1
       - name: Validate Observatory V1 convergence
         run: bash scripts/validate-observatory-v1.sh
+      - name: Validate Observatory semantic introspection
+        run: bash scripts/validate-observatory-introspection.sh
       - name: Validate optional property-graph adapter
         run: bash scripts/validate-property-graph.sh
