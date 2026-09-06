@@ -104,15 +104,12 @@ def _normalize_python(projection: Mapping[str, Any]) -> tuple[list[dict[str, Any
         target = str(item["target"])
         label = item.get("label")
         if native_relation == "projects-from":
-            role = "lineage"
-            relation = "projects-to"
+            role, relation = "lineage", "projects-to"
             source, target = target, source
         elif native_relation == "contains":
-            role = "structural"
-            relation = native_relation
+            role, relation = "structural", native_relation
         elif native_relation == "relates-to":
-            role = "model"
-            relation = native_relation
+            role, relation = "model", native_relation
         else:
             raise IntrospectionError(f"unsupported Python-model edge relation: {native_relation!r}")
         basis = sorted(str(value) for value in item.get("basis", []))
@@ -125,6 +122,47 @@ def _normalize_python(projection: Mapping[str, Any]) -> tuple[list[dict[str, Any
             "target": target,
             "basis": basis,
             "provenance": basis,
+        })
+    return nodes, edges
+
+
+def _normalize_analytics(projection: Mapping[str, Any]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    nodes: list[dict[str, Any]] = []
+    edges: list[dict[str, Any]] = []
+    for item in projection.get("nodes", []):
+        if item.get("space") != "analytics":
+            raise IntrospectionError(f"analytics projection emitted non-analytics node: {item.get('id')!r}")
+        nodes.append({
+            "id": str(item["id"]),
+            "space": "analytics",
+            "kind": str(item["kind"]),
+            "label": str(item.get("name") or item["id"]),
+            **({"qualifiedName": str(item["qualifiedName"])} if item.get("qualifiedName") else {}),
+            "attributes": [
+                {"key": str(attribute["key"]), "value": str(attribute["value"])}
+                for attribute in item.get("attributes", [])
+            ],
+            "provenance": sorted(str(value) for value in item.get("provenance", [])),
+        })
+    for item in projection.get("edges", []):
+        role = str(item["role"])
+        if role not in {"analytical", "lineage"}:
+            raise IntrospectionError(f"unsupported analytics edge role: {role!r}")
+        relation = str(item["relation"])
+        source = str(item["source"])
+        target = str(item["target"])
+        label = item.get("label")
+        basis = sorted(str(value) for value in item.get("basis", []))
+        provenance = sorted(str(value) for value in item.get("provenance", []))
+        edges.append({
+            "id": _edge_id(role, relation, source, target, str(label) if label else None),
+            "role": role,
+            "relation": relation,
+            **({"label": str(label)} if label else {}),
+            "source": source,
+            "target": target,
+            "basis": basis,
+            "provenance": provenance,
         })
     return nodes, edges
 
@@ -186,6 +224,8 @@ class IntrospectionGraph:
                 source_nodes, source_edges = _normalize_logical(projection)
             elif kind == "PythonModelProjection":
                 source_nodes, source_edges = _normalize_python(projection)
+            elif kind == "AnalyticsModelProjection":
+                source_nodes, source_edges = _normalize_analytics(projection)
             else:
                 raise InspectionCapabilityGap(f"unsupported source projection kind: {kind!r}")
             for node in source_nodes:
@@ -283,7 +323,13 @@ class IntrospectionGraph:
         result["digest"] = _digest(payload)
         return result
 
-    def lineage_path(self, source: str, target: str, max_depth: int = 32) -> LineagePath:
+    def lineage_path(
+        self,
+        source: str,
+        target: str,
+        max_depth: int = 32,
+        roles: tuple[str, ...] = ("lineage", "analytical", "render"),
+    ) -> LineagePath:
         if source not in self._nodes:
             raise KeyError(source)
         if target not in self._nodes:
@@ -292,6 +338,7 @@ class IntrospectionGraph:
             raise InspectionCapabilityGap("max_depth must be in [1, 32]")
         queue: deque[tuple[str, tuple[str, ...], tuple[str, ...]]] = deque([(source, (source,), ())])
         visited = {source}
+        allowed_roles = set(roles)
         while queue:
             current, node_path, edge_path = queue.popleft()
             if current == target:
@@ -299,7 +346,7 @@ class IntrospectionGraph:
             if len(edge_path) >= max_depth:
                 continue
             for edge in self._outgoing[current]:
-                if edge["role"] != "lineage":
+                if edge["role"] not in allowed_roles:
                     continue
                 other = str(edge["target"])
                 if other in visited:

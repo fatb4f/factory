@@ -118,6 +118,54 @@ package state
 	value: #NonEmptyString
 })
 
+#AnalyticsModelNodeKind:
+	"source" |
+	"request" |
+	"operation" |
+	"output" |
+	"ibis-expression"
+
+#AnalyticsModelNode: close({
+	id:            #NonEmptyString
+	space:         "analytics"
+	kind:          #AnalyticsModelNodeKind
+	name:          #NonEmptyString
+	qualifiedName: #NonEmptyString
+	attributes:    [...#InspectionAttribute]
+	provenance:    [...#NonEmptyString]
+})
+
+#AnalyticsModelEdge: close({
+	id:         #NonEmptyString
+	role:       "analytical" | "lineage"
+	relation:   #NonEmptyString
+	label?:     #NonEmptyString
+	source:     #NonEmptyString
+	target:     #NonEmptyString
+	basis:      [...#NonEmptyString]
+	provenance: [...#NonEmptyString]
+})
+
+#AnalyticsExecutionTarget: close({
+	id:                "ibis"
+	capabilityVersion: #NonEmptyString
+})
+
+#AnalyticsModelProjection: close({
+	apiVersion:     #IntrospectionSchema
+	kind:           "AnalyticsModelProjection"
+	planID:         #NonEmptyString
+	target:         #AnalyticsExecutionTarget
+	upstreamNode:   #NonEmptyString
+	sourceSnapshot: #SHA256
+	inputGrain:     #AnalyticalGrain
+	outputGrain:    #AnalyticalGrain
+	provenance:     [#NonEmptyString, ...#NonEmptyString]
+	nodes:          [#AnalyticsModelNode, ...#AnalyticsModelNode]
+	edges:          [#AnalyticsModelEdge, ...#AnalyticsModelEdge]
+	digest:         #SHA256
+})
+
 #InspectionNode: close({
 	id:             #NonEmptyString
 	space:          #IntrospectionSpace

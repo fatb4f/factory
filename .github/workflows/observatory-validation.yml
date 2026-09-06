@@ -13,6 +13,7 @@ on:
       - "scripts/industrial_graph_snapshot.py"
       - "scripts/validate-observatory.sh"
       - "scripts/validate-observatory-introspection.sh"
+      - "scripts/validate-ibis-introspection.sh"
       - "scripts/validate-marimo-adapter.sh"
       - "scripts/validate-industrial-workbook.sh"
       - "scripts/validate-observatory-v1.sh"
@@ -30,6 +31,7 @@ on:
       - "scripts/industrial_graph_snapshot.py"
       - "scripts/validate-observatory.sh"
       - "scripts/validate-observatory-introspection.sh"
+      - "scripts/validate-ibis-introspection.sh"
       - "scripts/validate-marimo-adapter.sh"
       - "scripts/validate-industrial-workbook.sh"
       - "scripts/validate-observatory-v1.sh"
@@ -54,5 +56,7 @@ jobs:
         run: bash scripts/validate-observatory-v1.sh
       - name: Validate Observatory semantic introspection
         run: bash scripts/validate-observatory-introspection.sh
+      - name: Validate Analytics IR to Ibis introspection
+        run: bash scripts/validate-ibis-introspection.sh
       - name: Validate optional property-graph adapter
         run: bash scripts/validate-property-graph.sh
