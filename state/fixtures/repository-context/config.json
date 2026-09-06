@@ -1,0 +1,30 @@
+{
+  "acquiredAt": "2026-09-06T00:45:00Z",
+  "analyzers": [
+    {"name": "python-ast", "version": "stdlib-3.13+"},
+    {"name": "jedi", "version": "fixture-contract-v1"},
+    {"grammarRevision": "python-fixture-v1", "name": "tree-sitter", "version": "fixture-contract-v1"}
+  ],
+  "compilerVersion": "1",
+  "externalStructuralObservations": [
+    {"analyzer": "jedi", "kind": "definition-reference", "line": 6, "path": "sample.py", "symbol": "compile_fixture"},
+    {"analyzer": "tree-sitter", "kind": "function-definition", "line": 6, "path": "sample.py", "symbol": "compile_fixture"}
+  ],
+  "files": [
+    {"category": "cue", "path": "authority.cue"},
+    {"category": "markdown", "path": "context.md"},
+    {"category": "python", "path": "sample.py"},
+    {"category": "github-issue", "path": "issue-145.json"},
+    {"category": "run", "path": "run.json"},
+    {"category": "evidence", "path": "evidence.json"}
+  ],
+  "repository": "github.com/fatb4f/factory",
+  "revision": "5fda25a964eb8c55081e3f5cbf4d5ec27f7f5997",
+  "scope": "state/fixtures/repository-context",
+  "subject": {
+    "authority": {"contract": "contracts/state/repository-context.cue", "id": "factory.repository-context"},
+    "kind": "substrate",
+    "subject": "factory.repository-context"
+  },
+  "supportedCueFenceTypes": ["semantic-ref"]
+}

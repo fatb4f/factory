@@ -1,0 +1,38 @@
+name: Observatory validation
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "contracts/state/**"
+      - "state/fixtures/**"
+      - "scripts/repository_context.py"
+      - "scripts/validate-observatory.sh"
+      - ".github/workflows/observatory-validation.yml"
+      - "runtime/**"
+      - "world/industrial-signals/**"
+  pull_request:
+    paths:
+      - "contracts/state/**"
+      - "state/fixtures/**"
+      - "scripts/repository_context.py"
+      - "scripts/validate-observatory.sh"
+      - "runtime/**"
+      - "world/industrial-signals/**"
+
+permissions:
+  contents: read
+
+jobs:
+  validate-observatory:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: cue-lang/setup-cue@v1.0.0
+        with:
+          version: v0.16.1
+      - name: Validate Observatory contracts and fixtures
+        run: bash scripts/validate-observatory.sh
