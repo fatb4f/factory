@@ -60,6 +60,17 @@ jobs:
         run: bash scripts/validate-observatory-introspection.sh
       - name: Validate Analytics IR to Ibis introspection
         run: bash scripts/validate-ibis-introspection.sh
+      - name: Install render validation Python runtimes
+        run: python3 -m pip install --disable-pip-version-check "ibis-framework==12.0.0" "rich==15.0.0"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - name: Install Structurizr validator
+        run: |
+          curl -fsSL "https://download.structurizr.com/structurizr-2026.06.28.war" -o "$RUNNER_TEMP/structurizr.war"
+          test -s "$RUNNER_TEMP/structurizr.war"
+          echo "STRUCTURIZR_WAR=$RUNNER_TEMP/structurizr.war" >> "$GITHUB_ENV"
       - name: Validate Observatory render projections
         run: bash scripts/validate-observatory-rendering.sh
       - name: Validate optional property-graph adapter
