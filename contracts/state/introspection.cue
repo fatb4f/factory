@@ -64,3 +64,44 @@ package state
 	edges:      [...#LogicalModelEdge]
 	digest:     #SHA256
 })
+
+#PythonModelNodeKind:
+	"type" |
+	"field"
+
+#PythonModelNode: close({
+	id:            #NonEmptyString
+	space:         "python"
+	kind:          #PythonModelNodeKind
+	name:          #NonEmptyString
+	qualifiedName: #NonEmptyString
+	source:        #NonEmptyString
+	cueNode?:      #NonEmptyString
+	semanticSpace?: #NonEmptyString
+	annotation?:   #NonEmptyString
+	required?:     bool
+})
+
+#PythonModelEdgeRelation:
+	"projects-from" |
+	"contains" |
+	"relates-to"
+
+#PythonModelEdge: close({
+	id:          #NonEmptyString
+	relation:    #PythonModelEdgeRelation
+	label?:      #NonEmptyString
+	source:      #NonEmptyString
+	target:      #NonEmptyString
+	cardinality?: "one" | "many"
+	basis:       [#NonEmptyString, ...#NonEmptyString]
+})
+
+#PythonModelProjection: close({
+	apiVersion:     #IntrospectionSchema
+	kind:           "PythonModelProjection"
+	sourceCueNodes: [#NonEmptyString, ...#NonEmptyString]
+	nodes:          [#PythonModelNode, ...#PythonModelNode]
+	edges:          [...#PythonModelEdge]
+	digest:         #SHA256
+})

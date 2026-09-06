@@ -5,6 +5,7 @@ cd "$(git rev-parse --show-toplevel)"
 
 tmpdir="$(mktemp -d)"
 trap 'rm -rf "$tmpdir"' EXIT
+export OBS_INTROSPECTION_TMP="$tmpdir"
 
 section() {
   printf '\n== %s ==\n' "$1"
@@ -54,5 +55,65 @@ with tempfile.TemporaryDirectory() as tmp:
     else:
         raise AssertionError("CUE model introspection accepted a source without a package declaration")
 PY
+
+section "Python semantic-model projection"
+PYTHONPATH=. python3 - <<'PY'
+import json
+import os
+from dataclasses import dataclass
+from pathlib import Path
+
+from runtime.generated.semantic_context import (
+    ContextArtifact,
+    ContextArtifactRef,
+    SemanticAuthorityRef,
+    SemanticRef,
+    SourceOccurrence,
+)
+from runtime.semantic_metadata import (
+    SemanticMetadataError,
+    project_python_model,
+    relation_metadata,
+    semantic_relation,
+    semantic_type,
+    type_metadata,
+)
+
+classes = [SemanticAuthorityRef, SemanticRef, SourceOccurrence, ContextArtifactRef, ContextArtifact]
+assert type_metadata(SemanticRef).cue_node == "cue:state:#SemanticRef"
+assert relation_metadata(SemanticRef)[0].name == "authority"
+first = project_python_model(classes)
+second = project_python_model(reversed(classes))
+assert first == second
+nodes = {item["id"]: item for item in first["nodes"]}
+edges = {(item["relation"], item["source"], item["target"], item.get("label")) for item in first["edges"]}
+semantic_ref_id = "python:runtime.generated.semantic_context.SemanticRef"
+assert nodes[semantic_ref_id]["cueNode"] == "cue:state:#SemanticRef"
+assert (
+    "relates-to",
+    semantic_ref_id + ".authority",
+    "python:runtime.generated.semantic_context.SemanticAuthorityRef",
+    "authority",
+) in edges
+
+@semantic_type(cue_package="fixture", cue_type="#Bad", space="semantic", source="fixture.cue")
+@semantic_relation(name="broken", target_cue_type="#Target", via_field="missing")
+@dataclass(frozen=True)
+class Bad:
+    value: str
+
+try:
+    project_python_model([Bad])
+except SemanticMetadataError:
+    pass
+else:
+    raise AssertionError("invalid Python semantic relation metadata did not fail closed")
+
+Path(os.environ["OBS_INTROSPECTION_TMP"], "python-model.json").write_text(
+    json.dumps(first, indent=2, sort_keys=True) + "\n",
+    encoding="utf-8",
+)
+PY
+cue vet -c=false "$tmpdir/python-model.json" ./contracts/state/*.cue -d '#PythonModelProjection'
 
 echo "observatory introspection validation passed"

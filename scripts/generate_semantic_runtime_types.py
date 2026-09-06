@@ -6,12 +6,22 @@ import json
 from pathlib import Path
 from typing import Any
 
-HEADER = """# Generated from Factory CUE projection. Do not edit by hand.\nfrom __future__ import annotations\n\nfrom dataclasses import dataclass\nfrom typing import Any, Mapping\n\n"""
+HEADER = """# Generated from Factory CUE projection. Do not edit by hand.\nfrom __future__ import annotations\n\nfrom dataclasses import dataclass\nfrom typing import Any, Mapping\n\nfrom runtime.semantic_metadata import semantic_relation, semantic_type\n\n"""
 
 
 def render(projection: dict[str, Any]) -> str:
     chunks = [HEADER]
+    source = str(projection["source"])
     for item in projection["types"]:
+        chunks.append(
+            f"@semantic_type(cue_package={item['cuePackage']!r}, cue_type={item['cueType']!r}, space={item['space']!r}, source={source!r})\n"
+        )
+        for relation in reversed(item.get("relations", [])):
+            chunks.append(
+                "@semantic_relation("
+                f"name={relation['name']!r}, target_cue_type={relation['targetCueType']!r}, "
+                f"via_field={relation['viaField']!r}, cardinality={relation.get('cardinality', 'one')!r})\n"
+            )
         chunks.append("@dataclass(frozen=True, slots=True)\n")
         chunks.append(f"class {item['name']}:\n")
         for field in item["fields"]:
