@@ -15,6 +15,7 @@ on:
       - "scripts/validate-observatory-introspection.sh"
       - "scripts/validate-ibis-introspection.sh"
       - "scripts/validate-observatory-rendering.sh"
+      - "scripts/validate-workbook-introspection.sh"
       - "scripts/validate-marimo-adapter.sh"
       - "scripts/validate-industrial-workbook.sh"
       - "scripts/validate-observatory-v1.sh"
@@ -34,6 +35,7 @@ on:
       - "scripts/validate-observatory-introspection.sh"
       - "scripts/validate-ibis-introspection.sh"
       - "scripts/validate-observatory-rendering.sh"
+      - "scripts/validate-workbook-introspection.sh"
       - "scripts/validate-marimo-adapter.sh"
       - "scripts/validate-industrial-workbook.sh"
       - "scripts/validate-observatory-v1.sh"
@@ -58,6 +60,8 @@ jobs:
         run: bash scripts/validate-observatory-v1.sh
       - name: Validate Observatory semantic introspection
         run: bash scripts/validate-observatory-introspection.sh
+      - name: Validate workbook introspection bindings
+        run: bash scripts/validate-workbook-introspection.sh
       - name: Validate Analytics IR to Ibis introspection
         run: bash scripts/validate-ibis-introspection.sh
       - name: Install render validation Python runtimes
