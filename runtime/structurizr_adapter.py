@@ -56,11 +56,17 @@ def render_structurizr_dsl(inspection: Mapping[str, Any], request: Mapping[str, 
     for node in nodes:
         node_id = str(node["id"])
         alias = aliases[node_id]
+        original_label = str(node["label"])
+        # Structurizr requires top-level element names to be unique. The alias is
+        # derived from the stable node-id sort order, so it is terminal-only,
+        # deterministic, and cannot collapse or manufacture Factory identity.
+        element_name = f"{original_label} [{alias}]"
         metadata = f"{node['space']}:{node['kind']}"
         description = str(node.get("qualifiedName") or node_id)
-        lines.append(f"        {alias} = element {_quote(node['label'])} {_quote(metadata)} {_quote(description)} {{")
+        lines.append(f"        {alias} = element {_quote(element_name)} {_quote(metadata)} {_quote(description)} {{")
         lines.append("            properties {")
         lines.append(f"                {_quote('factory.id')} {_quote(node_id)}")
+        lines.append(f"                {_quote('factory.label')} {_quote(original_label)}")
         lines.append(f"                {_quote('factory.space')} {_quote(node['space'])}")
         lines.append(f"                {_quote('factory.kind')} {_quote(node['kind'])}")
         lines.append(f"                {_quote('factory.provenance')} {_quote(_json_property(node.get('provenance', [])))}")
