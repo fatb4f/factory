@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from pathlib import PurePosixPath
 from typing import Any, Mapping, Protocol, Sequence
 
+from .introspection import IntrospectionGraph
 from .semantic_runtime import ContextObject, RuntimeObject, SemanticObject, SemanticRuntime
 
 
@@ -14,6 +15,10 @@ class WorkbookBoundaryError(RuntimeError):
 
 
 class DirectoryBindingError(WorkbookBoundaryError):
+    pass
+
+
+class IntrospectionBindingError(WorkbookBoundaryError):
     pass
 
 
@@ -63,12 +68,35 @@ class WorkbookScope:
 
 
 class Workbook:
-    def __init__(self, *, scope: WorkbookScope, runtime: SemanticRuntime, analytical_executor: AnalyticalExecutor | None = None):
+    def __init__(
+        self,
+        *,
+        scope: WorkbookScope,
+        runtime: SemanticRuntime,
+        analytical_executor: AnalyticalExecutor | None = None,
+        introspection_graph: IntrospectionGraph | None = None,
+        introspection_bindings: Sequence[Mapping[str, Any]] = (),
+    ):
         if scope.snapshot != runtime.snapshot_digest:
             raise WorkbookBoundaryError("workbook scope and semantic runtime reference different snapshots")
+        normalized_bindings: dict[str, dict[str, Any]] = {}
+        for item in introspection_bindings:
+            binding = dict(item)
+            binding_id = str(binding.get("id") or "")
+            if not binding_id:
+                raise IntrospectionBindingError("introspection binding requires a stable id")
+            if binding_id in normalized_bindings:
+                raise IntrospectionBindingError(f"duplicate introspection binding id: {binding_id}")
+            roots = tuple(str(root) for root in binding.get("roots", []))
+            if not roots:
+                raise IntrospectionBindingError(f"introspection binding {binding_id} requires at least one root")
+            binding["roots"] = list(roots)
+            normalized_bindings[binding_id] = binding
         self.scope = scope
         self.runtime = runtime
         self.analytical_executor = analytical_executor
+        self.introspection_graph = introspection_graph
+        self.introspection_bindings = normalized_bindings
 
     @classmethod
     def here(
@@ -81,6 +109,8 @@ class Workbook:
         subject: Mapping[str, Any] | None = None,
         includes: Sequence[Mapping[str, Any]] = (),
         analytical_executor: AnalyticalExecutor | None = None,
+        introspection_graph: IntrospectionGraph | None = None,
+        introspection_bindings: Sequence[Mapping[str, Any]] = (),
     ) -> "Workbook":
         directory = PurePosixPath(file_path).parent.as_posix()
         matches = [binding for binding in bindings if str(binding["directory"]["path"]) == directory]
@@ -110,7 +140,13 @@ class Workbook:
             includes=normalized_includes,
             snapshot=str(snapshot["identity"]["digest"]),
         )
-        return cls(scope=scope, runtime=runtime, analytical_executor=analytical_executor)
+        return cls(
+            scope=scope,
+            runtime=runtime,
+            analytical_executor=analytical_executor,
+            introspection_graph=introspection_graph,
+            introspection_bindings=introspection_bindings,
+        )
 
     def child(self, *, subject: Mapping[str, Any], includes: Sequence[Mapping[str, Any]] = ()) -> "Workbook":
         allowed = {_semantic_key(item) for item in self.scope.binding.get("subjects", [])}
@@ -130,6 +166,8 @@ class Workbook:
             ),
             runtime=self.runtime,
             analytical_executor=self.analytical_executor,
+            introspection_graph=self.introspection_graph,
+            introspection_bindings=tuple(self.introspection_bindings.values()),
         )
 
     def evaluate(self, view: Mapping[str, Any]) -> dict[str, Any]:
@@ -138,6 +176,8 @@ class Workbook:
             return self._evaluate_navigation(view)
         if source["kind"] == "analytical":
             return self._evaluate_analytical(view)
+        if source["kind"] == "introspection":
+            return self._evaluate_introspection(view)
         raise WorkbookCapabilityGap(f"unsupported workbook view source: {source['kind']!r}")
 
     def _object_node(self, obj: RuntimeObject) -> dict[str, Any]:
@@ -232,4 +272,38 @@ class Workbook:
             "rows": list(payload.get("rows", [])),
             "points": list(payload.get("points", [])),
             "provenance": [self.scope.snapshot, f"analytics:{request['id']}"],
+        }
+
+    def _evaluate_introspection(self, view: Mapping[str, Any]) -> dict[str, Any]:
+        if self.introspection_graph is None:
+            raise WorkbookCapabilityGap("introspection view requires an injected IntrospectionGraph")
+        source = view["source"]
+        binding_id = str(source.get("binding") or "")
+        binding = self.introspection_bindings.get(binding_id)
+        if binding is None:
+            raise IntrospectionBindingError(f"unknown introspection binding: {binding_id!r}")
+        if _semantic_key(binding["subject"]) != _semantic_key(self.scope.primary):
+            raise IntrospectionBindingError("introspection binding subject does not match workbook primary subject")
+        projection_digest = str(self.introspection_graph.projection["digest"])
+        if str(binding.get("projection")) != projection_digest:
+            raise IntrospectionBindingError("introspection binding is bound to a different projection digest")
+        request = dict(source["request"])
+        requested_roots = tuple(str(root) for root in request.get("roots", []))
+        allowed_roots = {str(root) for root in binding.get("roots", [])}
+        if not requested_roots:
+            raise IntrospectionBindingError("introspection request requires at least one root")
+        unbound = sorted(set(requested_roots) - allowed_roots)
+        if unbound:
+            raise IntrospectionBindingError(f"introspection request contains roots not admitted by binding: {unbound}")
+        inspection = self.introspection_graph.inspect(request)
+        return {
+            "apiVersion": "factory.workbook/v1",
+            "kind": "InspectionViewResult",
+            "viewID": str(view["id"]),
+            "presentation": "inspection",
+            "snapshot": self.scope.snapshot,
+            "subject": dict(self.scope.primary),
+            "binding": binding_id,
+            "inspection": inspection,
+            "provenance": [self.scope.snapshot, projection_digest, str(inspection["digest"])],
         }
