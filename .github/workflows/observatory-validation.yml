@@ -14,6 +14,7 @@ on:
       - "scripts/validate-observatory.sh"
       - "scripts/validate-observatory-introspection.sh"
       - "scripts/validate-ibis-introspection.sh"
+      - "scripts/validate-observatory-rendering.sh"
       - "scripts/validate-marimo-adapter.sh"
       - "scripts/validate-industrial-workbook.sh"
       - "scripts/validate-observatory-v1.sh"
@@ -32,6 +33,7 @@ on:
       - "scripts/validate-observatory.sh"
       - "scripts/validate-observatory-introspection.sh"
       - "scripts/validate-ibis-introspection.sh"
+      - "scripts/validate-observatory-rendering.sh"
       - "scripts/validate-marimo-adapter.sh"
       - "scripts/validate-industrial-workbook.sh"
       - "scripts/validate-observatory-v1.sh"
@@ -58,5 +60,7 @@ jobs:
         run: bash scripts/validate-observatory-introspection.sh
       - name: Validate Analytics IR to Ibis introspection
         run: bash scripts/validate-ibis-introspection.sh
+      - name: Validate Observatory render projections
+        run: bash scripts/validate-observatory-rendering.sh
       - name: Validate optional property-graph adapter
         run: bash scripts/validate-property-graph.sh

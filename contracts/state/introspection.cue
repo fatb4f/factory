@@ -166,6 +166,64 @@ package state
 	digest:         #SHA256
 })
 
+#RenderRepresentation:
+	"rich-tree" |
+	"structurizr-dsl"
+
+#RenderViewKind:
+	"inspection" |
+	"integration" |
+	"lineage"
+
+#RenderRequest: close({
+	id:             #NonEmptyString
+	representation: #RenderRepresentation
+	view:           #RenderViewKind
+	title:          #NonEmptyString
+	upstreamNode:   #NonEmptyString
+	layout?:        "tb" | "bt" | "lr" | "rl"
+})
+
+#RenderModelNodeKind:
+	"view" |
+	"artifact"
+
+#RenderModelNode: close({
+	id:            #NonEmptyString
+	space:         "render"
+	kind:          #RenderModelNodeKind
+	name:          #NonEmptyString
+	qualifiedName: #NonEmptyString
+	attributes:    [...#InspectionAttribute]
+	provenance:    [#NonEmptyString, ...#NonEmptyString]
+})
+
+#RenderModelEdge: close({
+	id:         #NonEmptyString
+	role:       "render"
+	relation:   #NonEmptyString
+	source:     #NonEmptyString
+	target:     #NonEmptyString
+	basis:      [#NonEmptyString, ...#NonEmptyString]
+	provenance: [#NonEmptyString, ...#NonEmptyString]
+})
+
+#RenderPayload: close({
+	mediaType: #NonEmptyString
+	content:   #NonEmptyString
+})
+
+#RenderProjection: close({
+	apiVersion:       #IntrospectionSchema
+	kind:             "RenderProjection"
+	sourceInspection: #SHA256
+	request:          #RenderRequest
+	nodes:            [#RenderModelNode, ...#RenderModelNode]
+	edges:            [#RenderModelEdge, ...#RenderModelEdge]
+	payload:          #RenderPayload
+	digest:           #SHA256
+})
+
 #InspectionNode: close({
 	id:             #NonEmptyString
 	space:          #IntrospectionSpace

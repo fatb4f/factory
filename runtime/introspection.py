@@ -167,6 +167,44 @@ def _normalize_analytics(projection: Mapping[str, Any]) -> tuple[list[dict[str, 
     return nodes, edges
 
 
+def _normalize_render(projection: Mapping[str, Any]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    nodes: list[dict[str, Any]] = []
+    edges: list[dict[str, Any]] = []
+    for item in projection.get("nodes", []):
+        if item.get("space") != "render":
+            raise IntrospectionError(f"render projection emitted non-render node: {item.get('id')!r}")
+        nodes.append({
+            "id": str(item["id"]),
+            "space": "render",
+            "kind": str(item["kind"]),
+            "label": str(item.get("name") or item["id"]),
+            **({"qualifiedName": str(item["qualifiedName"])} if item.get("qualifiedName") else {}),
+            "attributes": [
+                {"key": str(attribute["key"]), "value": str(attribute["value"])}
+                for attribute in item.get("attributes", [])
+            ],
+            "provenance": sorted(str(value) for value in item.get("provenance", [])),
+        })
+    for item in projection.get("edges", []):
+        if item.get("role") != "render":
+            raise IntrospectionError(f"render projection emitted non-render edge: {item.get('id')!r}")
+        relation = str(item["relation"])
+        source = str(item["source"])
+        target = str(item["target"])
+        basis = sorted(str(value) for value in item.get("basis", []))
+        provenance = sorted(str(value) for value in item.get("provenance", []))
+        edges.append({
+            "id": _edge_id("render", relation, source, target),
+            "role": "render",
+            "relation": relation,
+            "source": source,
+            "target": target,
+            "basis": basis,
+            "provenance": provenance,
+        })
+    return nodes, edges
+
+
 def _merge_node(existing: dict[str, Any], incoming: Mapping[str, Any]) -> None:
     for field in ("space", "kind", "label", "qualifiedName"):
         a = existing.get(field)
@@ -226,6 +264,8 @@ class IntrospectionGraph:
                 source_nodes, source_edges = _normalize_python(projection)
             elif kind == "AnalyticsModelProjection":
                 source_nodes, source_edges = _normalize_analytics(projection)
+            elif kind == "RenderProjection":
+                source_nodes, source_edges = _normalize_render(projection)
             else:
                 raise InspectionCapabilityGap(f"unsupported source projection kind: {kind!r}")
             for node in source_nodes:
