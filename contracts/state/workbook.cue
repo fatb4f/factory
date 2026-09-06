@@ -21,7 +21,14 @@ package state
 	snapshot: #SHA256
 })
 
-#PresentationKind: "topology" | "table" | "chart" | "timeline" | "property-graph"
+#IntrospectionBinding: close({
+	id:         #NonEmptyString
+	subject:    #SemanticRef
+	projection: #SHA256
+	roots:      [#NonEmptyString, ...#NonEmptyString]
+})
+
+#PresentationKind: "topology" | "table" | "chart" | "timeline" | "property-graph" | "inspection"
 
 #BoundedNavigationViewSource: close({
 	kind:     "bounded-navigation"
@@ -35,7 +42,13 @@ package state
 	request: #AnalyticalRequest
 })
 
-#ViewSource: #BoundedNavigationViewSource | #AnalyticalViewSource
+#IntrospectionViewSource: close({
+	kind:    "introspection"
+	binding: #NonEmptyString
+	request: #InspectionRequest
+})
+
+#ViewSource: #BoundedNavigationViewSource | #AnalyticalViewSource | #IntrospectionViewSource
 
 #ViewSpec: close({
 	id:           #NonEmptyString
@@ -108,6 +121,20 @@ package state
 	points:       [...#ProjectionPoint]
 	provenance:   [#NonEmptyString, ...#NonEmptyString]
 })
+
+#InspectionViewResult: close({
+	apiVersion:   #WorkbookSchema
+	kind:         "InspectionViewResult"
+	viewID:       #NonEmptyString
+	presentation: "inspection"
+	snapshot:     #SHA256
+	subject:      #SemanticRef
+	binding:      #NonEmptyString
+	inspection:   #InspectionResult
+	provenance:   [#NonEmptyString, ...#NonEmptyString]
+})
+
+#WorkbookViewResult: #ProjectionResult | #InspectionViewResult
 
 #WorkbookCapabilityGap: close({
 	kind:         "workbook-capability-gap"
