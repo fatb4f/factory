@@ -27,6 +27,13 @@ workbookScope: state.#WorkbookScope & {
 	snapshot: semanticContextSnapshot.identity.digest
 }
 
+inspectionBinding: state.#IntrospectionBinding & {
+	id:         "inspection:world.industrial-signals"
+	subject:    semanticSubject
+	projection: "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+	roots:      ["cue:world.industrial-signals:#IndustrialGraphSnapshot"]
+}
+
 navigationView: state.#ViewSpec & {
 	id:           "industrial-evidence-topology"
 	presentation: "topology"
@@ -44,6 +51,23 @@ analyticalView: state.#ViewSpec & {
 	source: {
 		kind:    "analytical"
 		request: analyticsRequest
+	}
+}
+
+introspectionView: state.#ViewSpec & {
+	id:           "industrial-semantic-inspection"
+	presentation: "inspection"
+	source: {
+		kind:    "introspection"
+		binding: inspectionBinding.id
+		request: {
+			id:        "inspect:industrial-signals"
+			roots:     inspectionBinding.roots
+			direction: "both"
+			maxDepth:  4
+			spaces:    ["cue", "python", "analytics"]
+			roles:     ["model", "lineage", "analytical"]
+		}
 	}
 }
 
@@ -78,4 +102,32 @@ workbookProjectionFixture: state.#ProjectionResult & {
 	rows: []
 	points: []
 	provenance: [semanticContextSnapshot.identity.digest]
+}
+
+inspectionViewResultFixture: state.#InspectionViewResult & {
+	apiVersion:   "factory.workbook/v1"
+	kind:         "InspectionViewResult"
+	viewID:       introspectionView.id
+	presentation: "inspection"
+	snapshot:     semanticContextSnapshot.identity.digest
+	subject:      semanticSubject
+	binding:      inspectionBinding.id
+	inspection: {
+		apiVersion:       "factory.introspection/v1"
+		kind:             "InspectionResult"
+		projectionDigest: inspectionBinding.projection
+		requestID:        introspectionView.source.request.id
+		roots:            inspectionBinding.roots
+		nodes: [{
+			id:         inspectionBinding.roots[0]
+			space:      "cue"
+			kind:       "definition"
+			label:      "IndustrialGraphSnapshot"
+			attributes: []
+			provenance: ["contracts/world/industrial-signals/snapshot-realization.cue"]
+		}]
+		edges:  []
+		digest: "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+	}
+	provenance: [semanticContextSnapshot.identity.digest, inspectionBinding.projection]
 }
