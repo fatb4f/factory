@@ -13,6 +13,7 @@ on:
       - "scripts/validate-observatory.sh"
       - "scripts/validate-marimo-adapter.sh"
       - "scripts/validate-industrial-workbook.sh"
+      - "scripts/validate-property-graph.sh"
       - ".github/workflows/observatory-validation.yml"
       - "runtime/**"
       - "world/industrial-signals/**"
@@ -26,6 +27,7 @@ on:
       - "scripts/validate-observatory.sh"
       - "scripts/validate-marimo-adapter.sh"
       - "scripts/validate-industrial-workbook.sh"
+      - "scripts/validate-property-graph.sh"
       - "runtime/**"
       - "world/industrial-signals/**"
 
@@ -47,3 +49,4 @@ jobs:
           bash scripts/validate-observatory.sh
           bash scripts/validate-marimo-adapter.sh
           bash scripts/validate-industrial-workbook.sh
+          bash scripts/validate-property-graph.sh

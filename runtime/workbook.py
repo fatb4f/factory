@@ -188,7 +188,7 @@ class Workbook:
             if source_id not in node_ids or target_id not in node_ids:
                 continue
             basis = tuple(str(item) for item in relation.get("basis", {}).get("occurrences", []))
-            edges.append({
+            projected_edge: dict[str, Any] = {
                 "id": _digest_id("edge:", relation),
                 "plane": str(relation["plane"]),
                 "relation": relation_name,
@@ -196,7 +196,11 @@ class Workbook:
                 "target": target_id,
                 "basis": list(basis),
                 "provenance": list(basis) or [self.scope.snapshot],
-            })
+            }
+            if source["plane"] == "semantic":
+                projected_edge["relationAuthority"] = dict(relation["authority"])
+                projected_edge["admittedSnapshot"] = dict(relation["snapshot"])
+            edges.append(projected_edge)
         return {
             "apiVersion": "factory.workbook/v1",
             "kind": "ProjectionResult",

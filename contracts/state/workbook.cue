@@ -68,6 +68,12 @@ package state
 	target:     #NonEmptyString
 	basis:      [#NonEmptyString, ...#NonEmptyString]
 	provenance: [#NonEmptyString, ...#NonEmptyString]
+
+	// Semantic navigation preserves the owning relation authority and admitted
+	// domain snapshot so downstream adapters never infer relation authority from
+	// endpoint identity. Context-plane edges do not require these fields.
+	relationAuthority?: #SemanticAuthorityRef
+	admittedSnapshot?:  #AdmittedDomainSnapshotRef
 })
 
 #ProjectionValue: string | number | bool | null
