@@ -9,7 +9,9 @@ on:
       - "state/fixtures/**"
       - "scripts/repository_context.py"
       - "scripts/generate_semantic_runtime_types.py"
+      - "scripts/industrial_graph_snapshot.py"
       - "scripts/validate-observatory.sh"
+      - "scripts/validate-marimo-adapter.sh"
       - ".github/workflows/observatory-validation.yml"
       - "runtime/**"
       - "world/industrial-signals/**"
@@ -19,7 +21,9 @@ on:
       - "state/fixtures/**"
       - "scripts/repository_context.py"
       - "scripts/generate_semantic_runtime_types.py"
+      - "scripts/industrial_graph_snapshot.py"
       - "scripts/validate-observatory.sh"
+      - "scripts/validate-marimo-adapter.sh"
       - "runtime/**"
       - "world/industrial-signals/**"
 
@@ -37,4 +41,6 @@ jobs:
         with:
           version: v0.16.1
       - name: Validate Observatory contracts and fixtures
-        run: bash scripts/validate-observatory.sh
+        run: |
+          bash scripts/validate-observatory.sh
+          bash scripts/validate-marimo-adapter.sh
