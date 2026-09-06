@@ -90,4 +90,26 @@ else:
     raise AssertionError("Python-only semantic relation crossed admission boundary")
 PY
 
+section "Industrial graph snapshot realization"
+cue vet -c=false ./contracts/world/industrial-signals:industrialsignals
+cue vet -c=false ./world/industrial-signals/fixtures:industrialsignalsfixtures
+cue export ./world/industrial-signals/fixtures:industrialsignalsfixtures -e graphSnapshotInput --out json >"$tmpdir/industrial-input.json"
+python3 scripts/industrial_graph_snapshot.py "$tmpdir/industrial-input.json" --output "$tmpdir/industrial-snapshot-a.json"
+python3 scripts/industrial_graph_snapshot.py "$tmpdir/industrial-input.json" --output "$tmpdir/industrial-snapshot-b.json"
+cmp -s "$tmpdir/industrial-snapshot-a.json" "$tmpdir/industrial-snapshot-b.json"
+cue vet -c=false "$tmpdir/industrial-snapshot-a.json" ./contracts/world/industrial-signals/*.cue -d '#IndustrialGraphSnapshot'
+jq '{industrialSignals:{domain:"world.industrial-signals",snapshotID:.snapshotID,digest:.digest,observedThrough:.observedThrough}}' "$tmpdir/industrial-snapshot-a.json" >"$tmpdir/constraint-input.json"
+cue vet -c=false "$tmpdir/constraint-input.json" ./contracts/world/industrial-constraints/*.cue -d '#RelationalConstraintInput'
+if cue vet -c=false ./world/industrial-signals/fixtures/negative:industrialsignalsnegative; then
+  echo "expected event-watch/industrial-graph execution conflict" >&2
+  exit 1
+fi
+
+PYTHONPATH=scripts python3 - <<'PY'
+import json
+from pathlib import Path
+from industrial_graph_snapshot import seal_snapshot
+payload = json.loads(Path("/tmp/nonexistent").read_text()) if False else None
+PY
+
 echo "observatory validation passed"
