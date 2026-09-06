@@ -17,6 +17,7 @@ on:
       - "scripts/validate-observatory-rendering.sh"
       - "scripts/validate-workbook-introspection.sh"
       - "scripts/validate-industrial-inspector.sh"
+      - "scripts/validate-observatory-inspector-experience.sh"
       - "scripts/validate-marimo-adapter.sh"
       - "scripts/validate-industrial-workbook.sh"
       - "scripts/validate-observatory-v1.sh"
@@ -38,6 +39,7 @@ on:
       - "scripts/validate-observatory-rendering.sh"
       - "scripts/validate-workbook-introspection.sh"
       - "scripts/validate-industrial-inspector.sh"
+      - "scripts/validate-observatory-inspector-experience.sh"
       - "scripts/validate-marimo-adapter.sh"
       - "scripts/validate-industrial-workbook.sh"
       - "scripts/validate-observatory-v1.sh"
@@ -79,6 +81,8 @@ jobs:
           curl -fsSL "https://download.structurizr.com/structurizr-2026.06.28.war" -o "$RUNNER_TEMP/structurizr.war"
           test -s "$RUNNER_TEMP/structurizr.war"
           echo "STRUCTURIZR_WAR=$RUNNER_TEMP/structurizr.war" >> "$GITHUB_ENV"
+      - name: Validate Observatory semantic inspector experience
+        run: bash scripts/validate-observatory-inspector-experience.sh
       - name: Validate Observatory render projections
         run: bash scripts/validate-observatory-rendering.sh
       - name: Validate optional property-graph adapter
