@@ -49,6 +49,15 @@ from runtime.semantic_runtime import SemanticRuntime
 from runtime.structurizr_adapter import render_structurizr_dsl
 
 
+def dsl_quote(value: str) -> str:
+    escaped = value.replace("\\", "\\\\").replace('"', '\\"').replace("\r", " ").replace("\n", "\\n")
+    return f'"{escaped}"'
+
+
+def compact_json(value: object) -> str:
+    return json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+
+
 tmp = Path(os.environ["OBS_INSPECTOR_EXPERIENCE_TMP"])
 context = json.loads((tmp / "context.json").read_text())
 directory_binding = json.loads((tmp / "binding.json").read_text())
@@ -178,7 +187,10 @@ assert python_type in dsl
 assert ibis_node in dsl
 for edge in inspection["edges"]:
     assert str(edge["id"]) in dsl
-    assert json.dumps(edge.get("basis", []), sort_keys=True, separators=(",", ":")) in dsl
+    basis = compact_json(edge.get("basis", []))
+    provenance = compact_json(edge.get("provenance", []))
+    assert f'{dsl_quote("factory.basis")} {dsl_quote(basis)}' in dsl
+    assert f'{dsl_quote("factory.provenance")} {dsl_quote(provenance)}' in dsl
 
 end_to_end = IntrospectionGraph.from_projections(
     logical,
