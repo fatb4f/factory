@@ -1,0 +1,111 @@
+package state
+
+#WorkbookSchema: "factory.workbook/v1"
+
+#DirectoryOccurrence: close({
+	repository: #NonEmptyString
+	revision:   #NonEmptyString
+	path:       #RepositoryScopePath
+})
+
+#DirectoryBinding: close({
+	id:        #NonEmptyString
+	directory: #DirectoryOccurrence
+	subjects:  [...#SemanticRef]
+})
+
+#WorkbookScope: close({
+	binding:  #DirectoryBinding
+	primary:  #SemanticRef
+	includes: [...#SemanticRef]
+	snapshot: #SHA256
+})
+
+#PresentationKind: "topology" | "table" | "chart" | "timeline" | "property-graph"
+
+#BoundedNavigationViewSource: close({
+	kind:     "bounded-navigation"
+	root:     #SemanticRef
+	plane:    #ContextPlane
+	maxDepth: int & >=1 & <=32
+})
+
+#AnalyticalViewSource: close({
+	kind:    "analytical"
+	request: #AnalyticalRequest
+})
+
+#ViewSource: #BoundedNavigationViewSource | #AnalyticalViewSource
+
+#ViewSpec: close({
+	id:           #NonEmptyString
+	presentation: #PresentationKind
+	source:       #ViewSource
+})
+
+#SemanticProjectionNode: close({
+	space:      "semantic"
+	id:         #NonEmptyString
+	semantic:   #SemanticRef
+	provenance: [#NonEmptyString, ...#NonEmptyString]
+})
+
+#ContextProjectionNode: close({
+	space:      "context"
+	id:         #NonEmptyString
+	artifact:   #ContextArtifactRef
+	plane:      #ContextOnlyPlane
+	provenance: [#NonEmptyString, ...#NonEmptyString]
+})
+
+#ProjectionNode: #SemanticProjectionNode | #ContextProjectionNode
+
+#ProjectionEdge: close({
+	id:         #NonEmptyString
+	plane:      #ContextPlane
+	relation:   #NonEmptyString
+	source:     #NonEmptyString
+	target:     #NonEmptyString
+	basis:      [#NonEmptyString, ...#NonEmptyString]
+	provenance: [#NonEmptyString, ...#NonEmptyString]
+})
+
+#ProjectionValue: string | number | bool | null
+
+#ProjectionCell: close({
+	field: #NonEmptyString
+	value: #ProjectionValue
+})
+
+#ProjectionRow: close({
+	id:    #NonEmptyString
+	cells: [#ProjectionCell, ...#ProjectionCell]
+})
+
+#ProjectionPoint: close({
+	series:     #NonEmptyString
+	x:          #ProjectionValue
+	y:          #ProjectionValue
+	provenance: [#NonEmptyString, ...#NonEmptyString]
+})
+
+#ProjectionResult: close({
+	apiVersion:   #WorkbookSchema
+	kind:         "ProjectionResult"
+	viewID:       #NonEmptyString
+	presentation: #PresentationKind
+	snapshot:     #SHA256
+	subject:      #SemanticRef
+	nodes:        [...#ProjectionNode]
+	edges:        [...#ProjectionEdge]
+	rows:         [...#ProjectionRow]
+	points:       [...#ProjectionPoint]
+	provenance:   [#NonEmptyString, ...#NonEmptyString]
+})
+
+#WorkbookCapabilityGap: close({
+	kind:         "workbook-capability-gap"
+	viewID:       #NonEmptyString
+	presentation: #PresentationKind
+	description:  #NonEmptyString
+})
