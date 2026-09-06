@@ -14,46 +14,88 @@ def _render_root(
     root: str,
     nodes: Mapping[str, Mapping[str, Any]],
     outgoing: Mapping[str, list[Mapping[str, Any]]],
+    incoming: Mapping[str, list[Mapping[str, Any]]],
 ) -> list[str]:
     lines: list[str] = []
     seen: set[str] = set()
 
-    def walk(node_id: str, prefix: str, connector: str, edge_label: str | None = None) -> None:
+    def walk(
+        node_id: str,
+        prefix: str,
+        connector: str,
+        edge_label: str | None = None,
+        direction: str | None = None,
+        parent_edge_id: str | None = None,
+    ) -> None:
         node = nodes[node_id]
-        lead = f"{connector}{edge_label} → " if edge_label else connector
+        if edge_label:
+            arrow = "→" if direction == "outgoing" else "←"
+            lead = f"{connector}{edge_label} {arrow} "
+        else:
+            lead = connector
         cycle = node_id in seen
         lines.append(prefix + lead + _node_label(node) + (" ↩" if cycle else ""))
         if cycle:
             return
         seen.add(node_id)
-        children = [
-            edge for edge in outgoing.get(node_id, [])
-            if str(edge["target"]) in nodes
-        ]
-        children.sort(key=lambda edge: (str(edge["role"]), str(edge["relation"]), str(edge["target"])))
-        for index, edge in enumerate(children):
-            last = index == len(children) - 1
+
+        neighbors: list[tuple[str, Mapping[str, Any], str]] = []
+        for edge in outgoing.get(node_id, []):
+            if str(edge["id"]) == parent_edge_id:
+                continue
+            target = str(edge["target"])
+            if target in nodes:
+                neighbors.append((target, edge, "outgoing"))
+        for edge in incoming.get(node_id, []):
+            if str(edge["id"]) == parent_edge_id:
+                continue
+            source = str(edge["source"])
+            if source in nodes:
+                neighbors.append((source, edge, "incoming"))
+        neighbors.sort(
+            key=lambda item: (
+                str(item[1]["role"]),
+                str(item[1]["relation"]),
+                item[2],
+                item[0],
+                str(item[1]["id"]),
+            )
+        )
+        for index, (neighbor_id, edge, edge_direction) in enumerate(neighbors):
+            last = index == len(neighbors) - 1
             child_connector = "└─ " if last else "├─ "
             child_prefix = prefix + ("   " if last else "│  ")
             label = f"{edge['role']}:{edge['relation']}"
-            walk(str(edge["target"]), child_prefix, child_connector, label)
+            walk(
+                neighbor_id,
+                child_prefix,
+                child_connector,
+                label,
+                edge_direction,
+                str(edge["id"]),
+            )
 
     walk(root, "", "")
     return lines
 
 
 def render_rich_tree(inspection: Mapping[str, Any], request: Mapping[str, Any]) -> dict[str, Any]:
+    if request.get("representation") != "rich-tree":
+        raise RenderCapabilityGap("Rich adapter requires request representation 'rich-tree'")
+
     nodes = {str(node["id"]): node for node in inspection.get("nodes", [])}
     outgoing: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
+    incoming: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
     for edge in inspection.get("edges", []):
         outgoing[str(edge["source"])].append(edge)
+        incoming[str(edge["target"])].append(edge)
 
     lines = [str(request["title"])]
     for root in inspection.get("roots", []):
         root_id = str(root)
         if root_id not in nodes:
             continue
-        lines.extend(_render_root(root_id, nodes, outgoing))
+        lines.extend(_render_root(root_id, nodes, outgoing, incoming))
     if len(lines) == 1:
         for node_id in sorted(nodes):
             lines.append(_node_label(nodes[node_id]))
