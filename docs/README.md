@@ -17,11 +17,25 @@ A documentation TLD is a navigation and comprehension surface only. It does not 
 
 Cross-project architecture documents may remain under `docs/architecture/` only when they genuinely span independent authorities. Project-specific architecture belongs under that project's documentation TLD.
 
-## Graph-oriented projects
+## Graph- and initiative-oriented projects
 
 When one documentation TLD coordinates several independent graphs, nest each graph by its authoritative graph ID rather than flattening graph-specific material into the umbrella directory.
 
-Each monitored graph documentation directory should identify at least:
+When the same project also consumes independent policy/project-demand authorities, keep them in an explicit initiative/domain branch rather than presenting them as graph directories.
+
+For example:
+
+```text
+docs/industrial-signals/
+  engineering-signals/
+  industrial-signals/
+  financial-signals/
+  canadian-initiatives/
+    canada-clean-energy/
+    canada-climate-readiness/
+```
+
+Each monitored graph or initiative documentation directory should identify at least:
 
 - semantic authority and execution procedure;
 - monitored source families and important named source surfaces;
@@ -29,7 +43,9 @@ Each monitored graph documentation directory should identify at least:
 - projected automated acquisition path;
 - provenance and identity requirements;
 - coverage-gap/fail-closed behavior;
-- graph publication/snapshot boundary;
+- publication/snapshot boundary;
 - downstream consumers and authority exclusions.
 
 The acquisition documentation must distinguish current manual/agent-assisted execution from a projected data pipeline. A projected pipeline is not evidence that an adapter or automated acquisition path is implemented.
+
+Cross-cutting government initiatives should be routed according to the semantic fact their evidence establishes. A coordinating or umbrella initiative surface does not automatically warrant a new graph or replace the underlying project/program authority.
