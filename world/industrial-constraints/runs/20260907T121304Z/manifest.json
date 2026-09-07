@@ -1,0 +1,30 @@
+{
+  "runID": "20260907T121304Z",
+  "phase": "event-watch",
+  "generatedAt": "2026-09-07T12:13:04Z",
+  "contractPath": "contracts/world/industrial-constraints/contract.cue",
+  "contractRevision": "ac5721ecc3e19167757ef0c4be686d0863604418",
+  "immutable": true,
+  "artifacts": {
+    "report": "report.md",
+    "summary": "summary.md",
+    "evidence": "evidence.json"
+  },
+  "digests": {
+    "report": "sha256:f542c0183b1352d865ee6c295066ecc389f4129885945bd06fc46561c697c53b",
+    "summary": "sha256:44341afc8a16adc5a0b56bb81a4a17f9556388cfed79460b5d6482355038f7af",
+    "evidence": "sha256:bfc84d69b11e4ca86b662dbd7a3da4b951940414fc0bc680b0ab2097da601c94"
+  },
+  "publication": {
+    "phase": "event-watch",
+    "decision": "admit",
+    "events": [
+      {"kind": "event-observation", "id": "event.nctl.phase1-groundbreaking.2026-09-03"},
+      {"kind": "event-observation", "id": "event.nrc.advanced-manufacturing-initiative.2026-09-04"}
+    ],
+    "coverageGaps": [
+      {"id": "gap.web-search-exhaustiveness", "description": "Bounded public-web acquisition is not exhaustive across every selected institution, operator or supplier.", "affects": []},
+      {"id": "gap.surface-absence-inference", "description": "No absence-of-event inference is admitted for industrial surfaces not represented by this bounded pass.", "affects": []}
+    ]
+  }
+}
