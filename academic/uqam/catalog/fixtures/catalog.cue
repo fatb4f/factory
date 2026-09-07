@@ -1,6 +1,6 @@
 package uqamcatalogfixtures
 
-import catalog "github.com/fatb4f/factory/contracts/academic/uqam/catalog"
+import catalog "github.com/fatb4f/factory/contracts/academic/uqam/catalog:uqamcatalog"
 
 fixture: catalog.#NormalizedSnapshot & {
 	task_id:     "academic.uqam.catalog"
