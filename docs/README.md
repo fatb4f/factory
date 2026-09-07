@@ -38,13 +38,16 @@ docs/industrial-signals/
 Each monitored graph or initiative documentation directory should identify at least:
 
 - semantic authority and execution procedure;
-- monitored source families and important named source surfaces;
+- the exhaustive monitored source/channel inventory when the authority defines a source registry;
+- acquisition provider, dataset/surface, supported acquisition modes and evidence/authority role for each contracted source channel;
 - current acquisition method;
 - projected automated acquisition path;
 - provenance and identity requirements;
 - coverage-gap/fail-closed behavior;
 - publication/snapshot boundary;
 - downstream consumers and authority exclusions.
+
+When a CUE source registry exists, Markdown source documentation is a projection of that registry. It must enumerate every contracted source/channel individually and be reconciled when the registry changes. Generic phrases such as "and comparable sources" may provide context but must not substitute for the exhaustive inventory. Adding a source only to Markdown does not make it authoritative or monitored.
 
 The acquisition documentation must distinguish current manual/agent-assisted execution from a projected data pipeline. A projected pipeline is not evidence that an adapter or automated acquisition path is implemented.
 

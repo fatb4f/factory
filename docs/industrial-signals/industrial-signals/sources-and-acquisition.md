@@ -4,33 +4,41 @@
 
 Semantic authority: `contracts/world/industrial-signals/`.
 
+Authoritative monitored-source registry: `contracts/world/industrial-signals/sources.cue`.
+
 Current execution procedure: `world/industrial-signals/.agents/AGENTS.md`.
 
 This document is descriptive. It does not establish canonical actor identity, response causality, binding industrial constraints, financial opportunity, resource-allocation decisions, or Factory POC admission.
 
+## Exhaustive monitored source inventory
+
+See [source-catalog.md](source-catalog.md).
+
+That catalog is the exhaustive human-facing projection of `industrialSources` in `contracts/world/industrial-signals/sources.cue`. Source-family prose is explanatory only and must not be used as a substitute for the source/channel inventory.
+
+The authoritative registry currently covers:
+
+- GDELT events through Google BigQuery;
+- Google Patents public data through Google BigQuery;
+- Government of Canada Grants and Contributions;
+- CanadaBuys procurement;
+- Statistics Canada tables;
+- Québec enterprise-register open data;
+- Hydro-Québec open data;
+- NSERC awards and partnerships;
+- OpenAlex;
+- ROR;
+- CIPO / IP Horizons;
+- ATI/ATIP completed-request summaries, released packages and targeted requests;
+- Government of Canada, Government of Québec, NRC, ISED, NRCan, C2MI, CMC and selected higher-education / research / technology-transfer institutional publications;
+- operator, supplier, customer, project-proponent and facility publications;
+- regulatory filings, permits/approvals and standards-participation records.
+
+GDELT and OpenAlex are contracted as discovery-only channels. Google BigQuery is both the provider for the GDELT dataset and the acquisition surface for the separately contracted Google Patents dataset. Transport does not determine evidence authority.
+
 ## Monitoring objective
 
 Track the evolving industrial ecosystem longitudinally: actors, facilities, projects, technologies, capacity, supply/demand/lead-time signals, industrial actions, innovation adoption, public support, project progress, commissioning/production and observed outcomes.
-
-## Monitored source families
-
-Prefer primary operational, institutional, regulatory, procurement, funding and actor records.
-
-| Source family | Typical surfaces | Intended evidence |
-| --- | --- | --- |
-| Industrial actors | company/project publications, technical updates, IR where operationally relevant, supplier/customer disclosures | actor/project state, actions, capacity, deployment, milestones |
-| Government funding | federal/provincial grants and contributions, program records, award/disbursement disclosures | award/authorization, disbursement, program obligations |
-| Research partnerships | NSERC partnership/award records and comparable programs | academic-industry relationships, funded translation activity |
-| Research / organization identity support | OpenAlex, ROR and comparable sources | research/organization discovery and identity evidence; not automatic canonical identity |
-| Procurement | CanadaBuys and other public procurement records | purchases, contracts, equipment/services, execution evidence |
-| Patents / IP | CIPO/IP Horizons, EPO and other primary patent records | industrial IP activity, assignee observations, translation evidence |
-| Regulatory / permitting | regulatory filings, permits, environmental/operational approvals | facility/project obligations and progress |
-| Institutions / networks | universities, colleges, institutes, technology-transfer offices, research networks, specialized academic-industry bridge entities | pilots, partnerships, commercialization, facilities, translation activity |
-| Recipient/project follow-through | recipient updates, project reports, construction/equipment/hiring/qualification/commissioning disclosures | expenditure and milestone trajectory |
-| Access-to-information surfaces | completed ATI/ATIP request summaries, released packages, targeted ATI/ATIP requests where ordinary publication is insufficient | otherwise unavailable official records and follow-through evidence |
-| Standards participation | standards bodies and participation records | qualification/interoperability/adoption trajectory |
-
-Secondary reporting may be used for discovery or triangulation, but missing primary follow-through must remain a coverage gap rather than being replaced by inference.
 
 ## Funding-accountability monitoring
 
@@ -64,51 +72,54 @@ Missing downstream evidence is a coverage gap, not proof of non-performance.
 
 ## Current acquisition — manual / agent-assisted
 
-The current `event-watch` is bounded manual or agent-assisted acquisition.
+The current `event-watch` is bounded manual or agent-assisted acquisition over applicable channels selected from the authoritative source registry.
 
 ```text
-source obligations / reconnaissance
+industrialSources
         ↓
-inspect applicable actor, government, procurement, institutional, IP or ATI/ATIP surface
+select channels applicable to the monitored industrial surface / trajectory
         ↓
-acquire bounded source record
+manual or agent-assisted acquisition
+  browser | HTTP | API | bulk | BigQuery | released package | request
         ↓
-preserve source/channel/record/revision/observed-surface/acquisition provenance
+typed acquisition outcome
+        ↓
+source-qualified captured occurrence
+        ↓
+preserve source/channel/record/revision/observed-surface provenance
         ↓
 classify typed industrial observation
         ↓
-seek longitudinal follow-through
+seek longitudinal follow-through where applicable
         ↓
-observation OR explicit coverage/follow-through gap
+observation OR explicit typed coverage/follow-through gap
         ↓
 admitted event-watch run
 ```
 
-Current acquisition may use browser inspection, public APIs, downloadable datasets, public registers, released record packages, repository/document retrieval, or agent-assisted research.
+`#IndustrialAcquisitionAttempt` represents execution state separately from industrial event semantics. It can preserve source, channel, acquisition mode, outcome, acquisition time, source record/revision hints, payload digest and typed coverage/follow-through state without making the acquisition mechanism part of the semantic observation identity.
 
-The acquisition mechanism is execution metadata, not semantic identity. Actor labels remain source-qualified observations until an explicit identity-admission path establishes equivalence.
+A source being in the registry does not mean every run must query it. Applicability is bounded. An applicable source that is unavailable, inaccessible, machine-unreadable or missing expected follow-through must be represented as typed acquisition/coverage state instead of silently disappearing from the run.
 
 ## Projected automated data pipeline
 
 Target realization is product-neutral:
 
 ```text
-contracted source obligations / source registry
+contracts/world/industrial-signals/sources.cue
         ↓
-scheduler / acquisition request
+source/channel selection + schedule
         ↓
-replaceable source adapters
-  actor API/feed
-  grants/contributions dataset
-  procurement API/dataset
-  research/organization index
-  patent/IP source
-  regulatory/permit source
-  institutional publication source
-  ATI/ATIP released-record source
+replaceable acquisition realization
+  BigQuery query
+  HTTP/API adapter
+  bulk/snapshot adapter
+  browser/manual fallback
+  released-package adapter
+  ATI/ATIP request workflow
         ↓
 immutable raw capture
-  locator + record id + revision hints + observed surface + payload digest + acquiredAt
+  source + channel + record ID + revision + observed surface + payload digest + acquiredAt
         ↓
 canonicalization / structural extraction
         ↓
@@ -116,14 +127,35 @@ identity and relationship candidate resolution
         ↓
 typed industrial observation candidates
         ↓
-CUE validation + coverage/follow-through state
+CUE validation + typed coverage/follow-through state
         ↓
 domain admission
         ↓
 immutable industrial-signals graph snapshot
 ```
 
-Automated identity matching may generate candidates only. It may not create canonical actor equivalence or cross-source relationships without the owning industrial admission path.
+Automation changes acquisition realization, not semantic authority. Automated identity matching may generate candidates only; it may not create canonical actor equivalence or cross-source relationships without the owning industrial admission path.
+
+## GDELT / BigQuery execution boundary
+
+The source registry makes the distinction explicit:
+
+```text
+GDELT event discovery
+  source: gdelt
+  channel: events
+  provider: google-bigquery
+  dataset: gdelt-bq.gdeltv2.events
+  admission use: discovery-only
+
+Google Patents
+  source: google-bigquery
+  channel: google-patents
+  dataset: patents-public-data.patents.publications
+  admission use: source-qualified candidate
+```
+
+The older `contracts/world/industrial-constraints/sources.cue` and acquisition projections still contain these structured reads for the constraint domain's retained pre-refactor event-watch compatibility. Industrial source authority for the engineering-to-industry graph now belongs in `contracts/world/industrial-signals/sources.cue`.
 
 ## Acquisition obligations by trajectory
 
@@ -154,16 +186,17 @@ Failure to obtain the next expected surface produces typed coverage state; it do
 
 Preserve, where available:
 
-- source family and source identity;
-- channel and observed surface;
+- source and channel from the authoritative registry;
+- acquisition mode separately from semantic identity;
 - source-local record identifier;
 - revision/publication/version identity;
+- observed surface;
 - acquisition time as provenance;
 - immutable captured-payload digest for mutable external state;
 - observed actor/project labels separately from canonical identity;
 - evidence supporting any admitted cross-source equivalence;
 - funding stage and evidence class;
-- explicit unresolved identity, relationship, access, or follow-through gaps.
+- explicit unresolved identity, relationship, access, machine-readability or follow-through gaps.
 
 ## Publication boundary
 
@@ -173,5 +206,6 @@ Immutable industrial graph snapshots may be published only through the industria
 
 ## Tracking
 
-- GitHub issue #143 — manual industrial-source acquisition and follow-through gaps.
+- GitHub issue #143 — industrial source acquisition state and follow-through gaps.
+- GitHub issue #200 — exhaustive documentation projection of the industrial source registry.
 - GitHub issue #139 — immutable industrial-signals graph snapshots, completed.

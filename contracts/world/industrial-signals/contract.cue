@@ -59,10 +59,12 @@ package industrialsignals
 })
 
 #CoverageGap: close({
-	id:          string
-	description: string
-	source?:     string
-	channel?:    string
+	id:                  string
+	description:         string
+	source?:             string
+	channel?:            string
+	gapKind?:            #IndustrialCoverageGapKind
+	followThroughStage?: #IndustrialFollowThroughStage
 })
 
 #RunManifest:
@@ -71,6 +73,7 @@ package industrialsignals
 		generatedAt:  #Timestamp
 		outcome:      "events_observed"
 		events:       [#IndustrialWatchEvent, ...#IndustrialWatchEvent]
+		acquisition?: [...#IndustrialAcquisitionAttempt]
 		coverageGaps: [...#CoverageGap]
 	}) |
 	close({
@@ -78,6 +81,7 @@ package industrialsignals
 		generatedAt:  #Timestamp
 		outcome:      "no_material_events"
 		events:       []
+		acquisition?: [...#IndustrialAcquisitionAttempt]
 		coverageGaps: [...#CoverageGap]
 	}) |
 	close({
@@ -85,6 +89,7 @@ package industrialsignals
 		generatedAt:  #Timestamp
 		outcome:      "source_gap"
 		events:       [...#IndustrialWatchEvent]
+		acquisition?: [...#IndustrialAcquisitionAttempt]
 		coverageGaps: [#CoverageGap, ...#CoverageGap]
 	})
 
@@ -116,6 +121,7 @@ package industrialsignals
 	surfaces:    [...#IndustrialSurface] & [_, ...]
 	authority: close({
 		semantic:  "contracts/world/industrial-signals"
+		sources:   "contracts/world/industrial-signals/sources.cue"
 		procedure: "world/industrial-signals/.agents"
 		runs:      "world/industrial-signals/runs"
 	})
@@ -146,6 +152,7 @@ contract: #Contract & {
 	]
 	authority: {
 		semantic:  "contracts/world/industrial-signals"
+		sources:   "contracts/world/industrial-signals/sources.cue"
 		procedure: "world/industrial-signals/.agents"
 		runs:      "world/industrial-signals/runs"
 	}
