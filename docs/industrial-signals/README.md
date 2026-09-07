@@ -16,9 +16,13 @@ industrial-signals
         | admitted industrial state
         v
 industrial-constraints
-
-financial-signals remains an independent time-qualified graph
-and may connect only through explicit admitted bridges.
+        |
+        +-----------------------------+
+                                      |
+canada-clean-energy ------------------+
+canada-climate-readiness -------------+--> resource-allocation
+                                      |
+financial-signals --------------------+
 ```
 
 Graph-specific documentation lives under:
@@ -30,7 +34,19 @@ docs/industrial-signals/
   financial-signals/
 ```
 
-Downstream qualification domains such as `industrial-constraints`, `resource-allocation`, `financial-opportunities`, and `projects.engineering-pocs` are not graph directories merely because they consume graph snapshots.
+Canadian initiative documentation lives separately under:
+
+```text
+docs/industrial-signals/
+  canadian-initiatives/
+    initiative-routing.md
+    canada-clean-energy/
+    canada-climate-readiness/
+```
+
+The initiative branch is intentionally distinct from graph directories. `canada-clean-energy` and `canada-climate-readiness` are independent policy/project-demand authorities with current event-watch execution and future graph targets; they do not become engineering, industrial, or financial graph semantics by documentation placement.
+
+Downstream qualification domains such as `industrial-constraints`, `resource-allocation`, `financial-opportunities`, and `projects.engineering-pocs` are not graph directories merely because they consume graph/domain snapshots.
 
 ## Authority
 
@@ -39,6 +55,8 @@ The documentation tree is descriptive. Semantic authority remains in:
 - `contracts/world/engineering-signals/`
 - `contracts/world/industrial-signals/`
 - `contracts/world/financial-signals/`
+- `contracts/world/canada-clean-energy/`
+- `contracts/world/canada-climate-readiness/`
 
 Execution procedures remain colocated with the corresponding world domains under `.agents/AGENTS.md`.
 
@@ -46,7 +64,7 @@ Execution procedures remain colocated with the corresponding world domains under
 
 See [acquisition-model.md](acquisition-model.md) for the shared acquisition vocabulary.
 
-All monitored graph documentation distinguishes two execution surfaces:
+All monitored graph and initiative documentation distinguishes two execution surfaces:
 
 ```text
 CURRENT
@@ -71,10 +89,14 @@ typed validation + identity/relationship qualification
         ↓
 domain admission
         ↓
-immutable graph snapshot
+immutable domain snapshot
 ```
 
 The projected pipeline is an architectural target. It must not be treated as implemented merely because it is documented.
+
+## Canadian initiative routing
+
+See [canadian-initiatives/initiative-routing.md](canadian-initiatives/initiative-routing.md) for routing of Major Projects Office/coordinating surfaces, industrial subsidies, workforce programs, critical-mineral finance, sovereign-AI/compute initiatives, and comparable cross-cutting Canadian programs into their actual semantic authorities.
 
 ## Project architecture
 
