@@ -1,6 +1,6 @@
 # Shared acquisition model
 
-This document defines the common documentation vocabulary for acquisition across the graph directories under `docs/industrial-signals/`. It is descriptive and does not replace any graph's CUE authority.
+This document defines the common documentation vocabulary for acquisition across monitored graph and initiative directories under `docs/industrial-signals/`. It is descriptive and does not replace any domain's CUE authority.
 
 ## Current control surface
 
@@ -20,7 +20,7 @@ validation / admission OR explicit coverage gap
 run state
 ```
 
-Manual and agent-assisted acquisition may use browsers, APIs, downloadable datasets, public registers, repositories, released record packages, or other bounded retrieval mechanisms. The mechanism is execution metadata rather than semantic identity.
+Manual and agent-assisted acquisition may use browsers, APIs, downloadable datasets, public registers, repositories, released record packages, procurement systems, standards publications, regulatory filings, or request-based access. The mechanism is execution metadata rather than semantic identity.
 
 ## Projected pipeline control surface
 
@@ -39,24 +39,24 @@ structural extraction / normalization
       ↓
 identity and relation candidates
       ↓
-typed graph-specific observation candidates
+typed domain-specific observation candidates
       ↓
 CUE validation
       ↓
-graph-owned admission
+domain-owned admission
       ↓
-immutable graph snapshot
+immutable domain snapshot
 ```
 
 The projected pipeline should preserve the same epistemic constraints as the current manual path. Automation is not a new admission authority.
 
 ## Source obligation record
 
-Graph-specific source documentation should be able to express, at minimum:
+Graph- and initiative-specific source documentation should be able to express, at minimum:
 
 - source family;
 - named source/surface when stable enough to matter operationally;
-- access mode: browser, API, dataset, feed, repository, document package, request-based access;
+- access mode: browser, API, dataset, feed, repository, register, procurement system, document package, request-based access;
 - expected record type or observation surface;
 - current acquisition status;
 - projected adapter class;
@@ -65,6 +65,8 @@ Graph-specific source documentation should be able to express, at minimum:
 - expected refresh/follow-up cadence where contractually meaningful;
 - coverage/failure modes;
 - authority class of the resulting evidence.
+
+Coordinating/index surfaces are discovery sources unless their own record is the fact being observed. When an underlying project, regulator, funder, utility, proponent, issuer, standard, or procurement record exists, preserve that source-specific authority rather than treating an umbrella initiative page as a substitute.
 
 ## Acquisition outcomes
 
@@ -81,7 +83,23 @@ source machine-unreadable
 expected follow-through unavailable
 ```
 
-The exact vocabulary remains graph-contract specific. Documentation must not convert an acquisition failure into evidence that the monitored event/state does not exist.
+The exact vocabulary remains domain-contract specific. Documentation must not convert an acquisition failure into evidence that the monitored event/state does not exist.
+
+## Cross-domain routing
+
+Acquisition and semantic routing are separate operations:
+
+```text
+source occurrence
+      ↓
+typed observation candidate
+      ↓
+which authority does this evidence establish?
+      ↓
+owner-domain admission
+```
+
+One source occurrence may support separately qualified observations in more than one authority, but no downstream domain may copy another domain's topology merely because the same Canadian initiative appears in both contexts.
 
 ## Pipeline realization boundary
 
