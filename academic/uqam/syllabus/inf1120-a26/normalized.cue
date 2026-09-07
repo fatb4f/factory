@@ -1,6 +1,6 @@
 package inf1120a26
 
-import syllabus "github.com/fatb4f/factory/contracts/academic/uqam/syllabus"
+import syllabus "github.com/fatb4f/factory/contracts/academic/uqam/syllabus:uqamsyllabus"
 
 normalized: syllabus.#NormalizedSyllabus & {
     schema: "uqam-syllabus/v1"
