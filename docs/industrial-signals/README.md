@@ -44,6 +44,8 @@ Execution procedures remain colocated with the corresponding world domains under
 
 ## Acquisition model
 
+See [acquisition-model.md](acquisition-model.md) for the shared acquisition vocabulary.
+
 All monitored graph documentation distinguishes two execution surfaces:
 
 ```text
@@ -74,6 +76,8 @@ immutable graph snapshot
 
 The projected pipeline is an architectural target. It must not be treated as implemented merely because it is documented.
 
-## Related architecture
+## Project architecture
 
-The existing implementation/sequencing reference remains `docs/architecture/multi-graph-world-refactor.md` while project-specific documentation is migrated into this TLD.
+See [architecture.md](architecture.md) for the project-relative topology and authority boundaries.
+
+The existing implementation/sequencing record remains `docs/architecture/multi-graph-world-refactor.md` during migration.
