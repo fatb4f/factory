@@ -33,21 +33,22 @@ A — posterior foundation
 GHR
 reverse hyper
 Copenhagen
-+ rear-delt high row
++ unilateral kettlebell overhead press
 
 B — anterior foundation
 ATG split squat
 reverse Nordic
 resisted hip flexion
-+ overhead press
++ kettlebell gorilla row
 
-C — sparse integration
+C — sparse whole-body integration
 low-cost distal state setting
 frog bridge
 exactly one:
   Cossack
   OR modified Standing-Bow SLRDL
-+ lateral raise
++ non-rotational curtsey-stance diagonal pulldown
++ dips
 ```
 
 Activation and gait readouts remain available, but they are not license to accumulate more working volume.
@@ -60,13 +61,15 @@ Upper-body strength is therefore distributed across A/B/C:
 
 | Program | Upper exposure | Main role |
 | --- | --- | --- |
-| A | rear-delt high row | posterior delt / upper-back load sharing |
-| B | overhead press | global shoulder strength and upward-rotation integration |
-| C | lateral raise | direct lateral-delt capacity |
+| A | unilateral kettlebell overhead press | overhead stability, upward rotation, global shoulder strength |
+| B | kettlebell gorilla row | integrated pulling and scapular stability |
+| C | dip | integrated closed-chain pressing |
 
 This is one upper working exposure per training event, not a fourth program.
 
-A-Y-W raises, band pulls, and similar low-load control work remain optional state-setting tools. They are not considered a substitute for progressive upper-body strength and are not automatically performed during hard recovery.
+The earlier rear-delt high-row and lateral-raise proposal is no longer part of the required v2 topology. The high-row experiment produced uncertain target proprioception and substantial clicking; isolation work is therefore retained only as an available exercise-registry surface, not as a required program exposure.
+
+A-Y-W raises, band pulls, and similar low-load control work remain optional state-setting tools. They are not considered a substitute for progressive integrated upper-body strength and are not automatically performed during hard recovery.
 
 ## Recovery contract
 
@@ -128,7 +131,7 @@ cleaner execution
 1. `ghr`
 2. `reverse-hyper`
 3. `copenhagen`
-4. `rear-delt-high-row` as the only loaded upper-body exposure
+4. `overhead-press` as the only loaded upper-body exposure
 
 The posterior foundation is not currently reducible without changing the purpose of the program.
 
@@ -160,28 +163,26 @@ Working reps remain hip-driven with a stable pelvis and no lumbar swing.
 
 Copenhagen remains required because it supplies frontal-plane pelvic control and direct adductor/trunk force transfer that GHR and reverse hyper do not provide.
 
-### Rear-delt high row
-
-Canonical setup:
-
-```text
-seated cable / lat-row station
-Y attachment
-pronated hands
-elbows out
-hands drawn toward sternum
-```
-
-The movement should load posterior delt / upper-back capacity without forcing maximal scapular retraction.
+### Unilateral kettlebell overhead press
 
 Initial prescription:
 
 ```text
-2 × 8–12
+2 × 6–10
 ~3–4 RIR
 ```
 
-Progress only if the neck remains quiet, levator contribution does not rise, scapular excursion stays controlled, and humeral position remains clean.
+The current baseline is unilateral kettlebell pressing with upper-back wall contact available as a constraint. The wall reduces the available compensation space and makes rib-cage, scapular, and humeral control easier to observe.
+
+Preserve:
+
+- quiet neck/levator;
+- stacked rib cage;
+- controlled scapular upward rotation;
+- centered humeral motion;
+- no forced shoulder depression.
+
+Stop or regress if rib flare, trunk escape, sternal tension, neck tension, or loss of humeral control appears. Remove wall feedback only after the same organization is repeatable without it.
 
 ## Program B — anterior foundation
 
@@ -190,7 +191,7 @@ Progress only if the neck remains quiet, levator contribution does not rise, sca
 1. `atg-split-squat`
 2. `reverse-nordic`
 3. `resisted-hip-flexion`
-4. `overhead-press` as the only loaded upper-body exposure
+4. `gorilla-row` as the only loaded upper-body exposure
 
 Poliquin step-up remains a primer/measurement surface rather than another hard quad lift.
 
@@ -219,7 +220,7 @@ Preserve:
 
 ### Resisted hip flexion
 
-This is now treated as the required anterior core / hip-flexor strength slot rather than layering a second dynamic GHD core exposure on top.
+This is the required anterior core / hip-flexor strength slot rather than layering a second dynamic GHD core exposure on top.
 
 Supported implementations remain:
 
@@ -229,7 +230,7 @@ Supported implementations remain:
 
 Pelvic rotation, lumbar arching, rib flare, or momentum terminate the useful set.
 
-### Overhead press
+### Kettlebell gorilla row
 
 Initial prescription:
 
@@ -238,22 +239,23 @@ Initial prescription:
 ~3–4 RIR
 ```
 
-The target is shoulder strength with free scapular upward rotation, not maximal pressing output.
+Use the gorilla row as an integrated scapular-pulling task rather than a rear-delt isolation exercise.
 
-Do not use a forced “shoulders back and down” strategy.
+Preserve:
 
-Stop/regress if:
+- stable hip hinge;
+- organized pelvis and rib cage;
+- quiet neck;
+- controlled scapular excursion;
+- no trunk rotation to complete the pull.
 
-- neck or levator tension rises;
-- sternal/anterior-thorax tension rises;
-- internal-rotation bias becomes more obvious;
-- humeral centering/control deteriorates.
+Alternate sides or complete sides sequentially according to whichever preserves the cleaner trunk strategy. Load increases only after the same hinge and scapular organization are repeatable.
 
-## Program C — sparse integration
+## Program C — sparse whole-body integration
 
 Program C is deliberately reduced relative to v1.
 
-Its job is to test whether A/B adaptations can coexist, not to create a third large lower-body perturbation.
+Its job is to test whether A/B adaptations can coexist while integrating distal control, pelvis/trunk force transfer, and shoulder-girdle organization without creating a third large lower-body perturbation.
 
 ### Entry state
 
@@ -278,7 +280,7 @@ symmetric pelvis
 hip extension without lumbar substitution
 ```
 
-### Exactly one principal integration family
+### Exactly one principal lower-chain integration family
 
 Each Program C run selects one:
 
@@ -301,41 +303,85 @@ Select when the higher-signal problem is:
 
 Do not perform both as working lifts in the same current-baseline C session.
 
-### Lateral raise
+### Non-rotational curtsey-stance diagonal pulldown
+
+Initial baseline:
+
+```text
+1 × 6–10 / side
+light band or cable resistance
+```
+
+This is the primary low-dose cross-chain trunk/girdle integration surface.
+
+Setup and ROM:
+
+```text
+crossed / curtsey stance
+stance knee flexed
+thorax mostly square
+overhead diagonal reach
+        ↓ concentric
+shoulder extends/adducts
+elbow tracks toward the flexed stance-leg hip
+grip gradually returns toward supination
+        ↓
+controlled endpoint around the hip line
+        ↓ eccentric
+slow return to overhead reach
+```
+
+The movement is deliberately non-rotational at baseline so the stance-side hip, QL/lateral trunk, lat, and scapular system must coordinate the diagonal force rather than solving the task through thoracic rotation.
+
+Stop when compensation appears through rib flare, pelvic collapse, excessive thoracic rotation, anterior shoulder glide, or neck/levator recruitment. Add a second set only after the recovery response is baselined; increase resistance after ROM and reps are repeatable.
+
+### Dip
 
 Initial prescription:
 
 ```text
-2 × 10–15
+2 × 5–8
 ~3–4 RIR
+assistance / ROM constrained as needed
 ```
 
-Use a comfortable scapular-plane path. The neck should remain relatively quiet and shrugging should not become the dominant strategy.
+The dip is the Program C upper-body anchor because it provides integrated closed-chain pressing rather than another isolation surface.
+
+Preserve:
+
+- quiet neck;
+- stacked rib cage;
+- controlled scapular excursion;
+- centered shoulder position;
+- no anterior shoulder glide.
+
+Sternal tension, anterior shoulder discomfort, or loss of girdle organization terminate the useful range. Progress clean ROM first, then assistance, then reps, with external load last.
 
 ## Shoulder-girdle hypothesis boundary
 
 Current upper-body programming is based on a working capacity hypothesis:
 
 ```text
-anterior pressing demand
+trunk / rib-cage organization
         +
-possibly underexposed posterior/lateral shoulder capacity
+scapular control
+        +
+integrated press / pull exposures
         ↓
-poor load sharing may become visible as
-neck / levator / anterior-thorax tension
-or an internal-rotation bias
+better shoulder-girdle load sharing
 ```
 
 This is not encoded as a diagnosis.
 
-The relevant controller signal is whether progressive posterior/lateral shoulder strength improves load sharing while preserving:
+The relevant controller signal is whether progressive integrated upper-body strength improves load sharing while preserving:
 
 - quiet cervical musculature;
 - controlled humeral position;
 - free scapular motion;
-- comfortable thoracic mechanics.
+- comfortable thoracic mechanics;
+- stable rib-cage-to-pelvis organization.
 
-A movement that increases the current neck/sternal tension is not admitted merely because the target muscle can complete the reps.
+A movement that increases current neck/sternal tension, painful clicking, or instability is not admitted merely because the target muscle can complete the reps.
 
 ## Progress model
 
