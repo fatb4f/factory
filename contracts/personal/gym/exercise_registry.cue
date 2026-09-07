@@ -207,6 +207,39 @@ package gym
 	videoPerspectives: ["front", "rear"]
 }
 
+#GorillaRowProfile: #ExerciseProfile & {
+	id:   "gorilla-row"
+	name: "Kettlebell gorilla row"
+	requiredConstraints: ["pelvic-control", "lumbar-substitution-avoided", "neck-quiet", "controlled-scapular-excursion"]
+	optionalConstraints: ["no-trunk-rotation", "stance-foot-control"]
+	rangeRequired: false
+	setupDimensions: ["implement", "stance-width", "external-load"]
+	supportedMetrics: ["reps", "load"]
+	videoPerspectives: ["front", "rear", "oblique"]
+}
+
+#DipProfile: #ExerciseProfile & {
+	id:   "dip"
+	name: "Dip"
+	requiredConstraints: ["rib-flare-control", "neck-quiet", "humeral-centering-control", "controlled-scapular-excursion"]
+	optionalConstraints: ["assistance", "range-limited-as-needed"]
+	rangeRequired: false
+	setupDimensions: ["implement", "assistance", "external-load"]
+	supportedMetrics: ["reps", "load"]
+	videoPerspectives: ["front", "side", "oblique"]
+}
+
+#CurtseyStanceDiagonalPulldownProfile: #ExerciseProfile & {
+	id:   "curtsey-stance-diagonal-pulldown"
+	name: "Curtsey-stance diagonal pulldown"
+	requiredConstraints: ["pelvic-control", "rib-flare-control", "neck-quiet", "controlled-scapular-excursion"]
+	optionalConstraints: ["thorax-square", "controlled-supination", "stance-foot-control"]
+	rangeRequired: false
+	setupDimensions: ["resistance-source", "anchor-height", "stance-side", "external-load"]
+	supportedMetrics: ["reps", "load"]
+	videoPerspectives: ["front", "rear", "oblique"]
+}
+
 #YRaiseProfile: #ExerciseProfile & {
 	id:   "y-raise"
 	name: "Y raise"
@@ -249,6 +282,9 @@ exerciseProfiles: close({
 	"rear-delt-high-row":             #RearDeltHighRowProfile
 	"overhead-press":                 #OverheadPressProfile
 	"lateral-raise":                  #LateralRaiseProfile
+	"gorilla-row":                    #GorillaRowProfile
+	dip:                               #DipProfile
+	"curtsey-stance-diagonal-pulldown": #CurtseyStanceDiagonalPulldownProfile
 	"y-raise":                        #YRaiseProfile
 })
 
