@@ -39,4 +39,16 @@
 | `src:quiz-2016` | `Quiz(1).zip` | historical practice evidence only |
 | `src:quiz-history-2018-2019` | `QuizSessionsAnterieures(1).zip` | historical A18/H19 practice evidence only |
 
+## Weekly filesystem projection
+
+`weeks/` is a nested term-time projection keyed to `schedule.cue`. It is intended for source material and environment/study artifacts acquired week by week.
+
+Week 1 currently contains:
+
+- a Git-readable projection of `Slides-Introduction_v1.0.pdf`;
+- a source capsule for `INF1120_A26_planDeCours.pdf`;
+- the recommended BlueJ / Java 21 environment contract.
+
+Exact supplied PDFs are mirrored privately in Google Drive under `factory/inf1120/syllabus/`.
+
 `src:*` entries in `sources.cue` carry the SHA-256 digest, byte size and archive member inventory. `material:*` nodes retain the member path and role (`slides`, `example`, `exercise`, `solution`, `helper-library`, `sample-data`, `assessment`, or `reference`). Raw course binaries are intentionally not duplicated in Git.

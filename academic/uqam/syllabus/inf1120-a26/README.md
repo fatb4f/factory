@@ -35,6 +35,7 @@ source artifacts
 - `normalized.cue` — projection against `contracts/academic/uqam/syllabus/#NormalizedSyllabus`.
 - `material-index.md` and `learning-graph.md` — readable projections.
 - `source-material/` — readable Git-native projections of currently accessible PDF course material.
+- `weeks/` — nested weekly filesystem projection for material acquired during the term; week semantics still come from `schedule.cue`.
 
 ## Authority rule
 
@@ -44,6 +45,6 @@ Current A26 claims come from the supplied Moodle snapshot and signed evaluation 
 
 Original binary/source identities remain canonical in `sources.cue`, including filenames, archive membership, byte sizes and SHA-256 digests where acquired.
 
-Readable text projections of the currently accessible PDF material are vendored under `source-material/`. The File Library interface available to this run exposes parsed document content rather than transferable raw bytes, so the original PDF/ZIP/JAR binaries are not copied by this commit. Topic archives and historical archives therefore remain inventory-backed until their original bytes can be reacquired through a writable Git path.
+Git keeps readable projections/manifests rather than duplicating raw course binaries. Exact acquired course PDFs are mirrored in the private Google Drive course folder `factory/inf1120/syllabus/`; the weekly tree records their source identity and Git-readable projections.
 
 A text projection improves Git-native reading/search but does not replace its original artifact when exact wording, visual layout or byte identity is authoritative.
