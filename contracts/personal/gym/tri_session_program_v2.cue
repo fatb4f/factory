@@ -31,6 +31,11 @@ package gym
 	maxUpperWorkingExposures: int & >=0
 })
 
+#TrainingPriorityV2: close({
+	primaryAdaptationSystems:  [...string] & [_, ...]
+	constrainedSupportSystems: [...string] & [_, ...]
+})
+
 #TriSessionTemplateV2: close({
 	kind:      #TriSessionKind
 	objective: string
@@ -71,6 +76,8 @@ package gym
 	progressOneDimensionAtATime: bool
 	exerciseCountIncreaseRequiresStableChain: bool
 	upperProgressionRequiresQuietNeckShoulder: bool
+	loadAndVolumeFixedUntilRecoveryBaseline: bool
+	supportSystemVolumeConstrained: bool
 })
 
 #TriSessionProgramV2: close({
@@ -80,6 +87,7 @@ package gym
 	version:  string
 	status:   "draft" | "baselining" | "active" | "hold" | "retired"
 	invariant: string
+	priority: #TrainingPriorityV2
 	sessions: [#TriSessionTemplateV2, #TriSessionTemplateV2, #TriSessionTemplateV2]
 	transition:  #TriSessionTransitionPolicyV2
 	observation: #TriSessionObservationPolicyV2
@@ -92,6 +100,10 @@ ankleKneePelvisTriSessionV2: #TriSessionProgramV2 & {
 	version:    "v2"
 	status:     "baselining"
 	invariant:  "Preserve lower-chain organization and academic/cognitive recovery while adding only the minimum loaded exposure required to build capacity."
+	priority: {
+		primaryAdaptationSystems:  ["posterior-lower-chain", "anterior-lower-chain"]
+		constrainedSupportSystems: ["trunk-core", "shoulder-girdle"]
+	}
 
 	sessions: [
 		{
@@ -105,28 +117,28 @@ ankleKneePelvisTriSessionV2: #TriSessionProgramV2 & {
 				{exercise: {id: "heel-dig-bridge"}, phase: "activation", role: "activation-gate", sets: 1, hold: {min: 10, max: 15}, intent: "Acquire hamstring tension before long-lever loading.", constraints: ["graded-tension", "no-cramping"]},
 				{exercise: {id: "cross-supported-bridge-march"}, phase: "activation", role: "activation-gate", sets: 1, reps: {min: 5, max: 6}, intent: "Establish low-cost trunk-pelvis control."},
 				{exercise: {id: "reverse-hyper"}, phase: "primer", role: "primer", sets: 1, reps: {min: 6, max: 10}, intent: "Very-light proximal posterior-chain primer only.", constraints: ["very-light-load", "pelvis-organized", "no-lumbar-swing", "stop-before-fatigue"]},
-				{exercise: {id: "ghr"}, phase: "main", role: "primary", sets: 3, reps: {min: 5, max: 8}, assistance: "enough-to-preserve-control", constraints: ["ankle-neutral", "femoral-position-organized", "hamstring-acquired-before-rep", "hips-torso-stacked", "pelvis-neutral", "slow-eccentric", "no-lumbar-rescue"], stopOn: ["pelvic-rotation-or-tilt", "lumbar-takeover", "delayed-hamstring-acquisition", "gastroc-cramp-threat", "medial-hamstring-cramp-threat", "femoral-control-loss"], progression: ["increase-clean-eccentric-rom", "reduce-assistance", "increase-reps-or-load"]},
+				{exercise: {id: "ghr"}, phase: "main", role: "primary", sets: 3, reps: {min: 5, max: 8}, assistance: "enough-to-preserve-control", constraints: ["ankle-neutral", "femoral-position-organized", "hamstring-acquired-before-rep", "hips-torso-stacked", "pelvis-neutral", "slow-eccentric", "no-lumbar-rescue"], stopOn: ["pelvic-rotation-or-tilt", "lumbar-takeover", "delayed-hamstring-acquisition", "gastroc-cramp-threat", "medial-hamstring-cramp-threat", "femoral-control-loss"], progression: ["hold-load-and-volume-until-recovery-baseline", "increase-clean-eccentric-rom", "reduce-assistance", "increase-reps-or-load-after-baseline"]},
 				{exercise: {id: "reverse-hyper"}, phase: "main", role: "secondary", sets: 3, reps: {min: 8, max: 12}, constraints: ["hip-driven-extension", "controlled-turnaround", "small-controlled-eccentric-end-range", "no-lumbar-substitution"]},
 				{exercise: {id: "copenhagen"}, phase: "core", role: "core", sets: 2, hold: {min: 10, max: 20}, constraints: ["short-lever", "hips-torso-stacked", "no-rib-flare", "no-pelvic-rotation", "no-hip-hike"]},
-				{exercise: {id: "overhead-press"}, phase: "upper", role: "upper-strength", sets: 2, reps: {min: 6, max: 10}, intent: "Unilateral kettlebell overhead press, initially around 3-4 RIR. Upper-back wall contact is the preferred baseline constraint until rib-cage, scapular, and humeral control are repeatable.", constraints: ["unilateral-load", "neck-quiet", "ribs-stacked", "scapular-upward-rotation-controlled", "humeral-centering-controlled", "no-forced-shoulder-depression"], stopOn: ["neck-or-levator-tension-rises", "sternal-tension-rises", "rib-flare-or-trunk-escape", "humeral-centering-lost"], progression: ["increase-repeatable-reps", "reduce-wall-feedback-when-control-is-repeatable", "increase-load-only-with-unchanged-neck-and-shoulder-state"]},
+				{exercise: {id: "overhead-press"}, phase: "upper", role: "upper-strength", sets: 2, reps: {min: 6, max: 10}, intent: "Unilateral kettlebell overhead press, initially around 3-4 RIR. Upper-back wall contact is the preferred baseline constraint until rib-cage, scapular, and humeral control are repeatable.", constraints: ["unilateral-load", "neck-quiet", "ribs-stacked", "scapular-upward-rotation-controlled", "humeral-centering-controlled", "no-forced-shoulder-depression"], stopOn: ["neck-or-levator-tension-rises", "sternal-tension-rises", "rib-flare-or-trunk-escape", "humeral-centering-lost"], progression: ["hold-load-and-volume-until-recovery-baseline", "reduce-wall-feedback-when-control-is-repeatable", "increase-load-only-after-recovery-baseline"]},
 				{exercise: {id: "treadmill-walk"}, phase: "downregulation", role: "downregulation", sets: 1, intent: "Easy gait readout and circulation only.", constraints: ["easy-pace", "stop-if-gait-degrades"]},
 			]
 			completion: {mechanicalFailureAllowed: false, compensationAllowed: false, requiresGaitReadout: true}
 		},
 		{
 			kind: "anterior"
-			objective: "Maintain the irreducible anterior-chain foundation while adding one integrated horizontal-pull/scapular stability exposure inside the same recovery event."
-			invariant: "ATG split squat, reverse Nordic, and resisted hip flexion remain the anterior foundation; rotational accessories do not accumulate while chain reorganization remains high."
+			objective: "Maintain the irreducible anterior-chain foundation while adding one constrained anterior trunk/hip-flexion exposure and one integrated horizontal-pull/scapular stability exposure inside the same recovery event."
+			invariant: "ATG split squat, reverse Nordic, and the fixed-dose supine GHD leg raise remain the anterior foundation; trunk and shoulder-girdle work stay support-volume constrained while recovery is baselined."
 			budget: {maxLowerWorkingExposures: 3, maxUpperWorkingExposures: 1}
 			exposures: [
 				{exercise: {id: "ankle-dorsiflexion"}, phase: "activation", role: "activation-gate", sets: 1, reps: {min: 8, max: 12}, intent: "Establish distal anterior control without fatigue."},
 				{exercise: {id: "dead-bug"}, phase: "activation", role: "activation-gate", sets: 1, reps: {min: 5, max: 8}, intent: "Establish anterior trunk-pelvis control."},
 				{exercise: {id: "backward-walk"}, phase: "primer", role: "primer", sets: 1, optional: true, intent: "Low-cost backward locomotion only when it improves knee-extension organization.", constraints: ["low-fatigue", "controlled-knee-track"]},
 				{exercise: {id: "poliquin-step-up"}, phase: "primer", role: "primer", sets: 1, reps: {min: 5, max: 8}, intent: "Measurement/primer surface, not an additional hard quad exposure.", constraints: ["pelvis-organized", "controlled-knee-track", "no-hip-hike"]},
-				{exercise: {id: "atg-split-squat"}, phase: "main", role: "primary", sets: 2, reps: {min: 5, max: 8}, intent: "Load deep unilateral knee flexion, dorsiflexion, rear-hip extension tolerance, and cross-pelvic transfer.", constraints: ["pelvis-organized", "controlled-knee-track", "rear-hip-extension-without-lumbar-extension"], stopOn: ["pelvic-position-loss", "lumbar-substitution", "uncontrolled-knee-or-femoral-rotation"], progression: ["increase-clean-rom", "reduce-front-foot-elevation-or-assistance", "add-external-load"]},
-				{exercise: {id: "reverse-nordic"}, phase: "main", role: "primary", sets: 3, reps: {min: 4, max: 8}, constraints: ["hips-extended", "ribs-stacked", "pelvis-organized", "starting-knee-spacing-preserved", "no-lumbar-extension-for-depth"], stopOn: ["pelvic-position-loss", "lumbar-substitution", "uncontrolled-knee-separation-or-femoral-rotation"], progression: ["increase-clean-rom", "slow-eccentric", "improve-controlled-concentric-reversal", "add-external-load"]},
-				{exercise: {id: "resisted-hip-flexion"}, phase: "core", role: "core", sets: 2, reps: {min: 5, max: 10}, intent: "Required loaded anterior core/hip-flexor exposure; cable or controlled foot-suspended implementation.", constraints: ["pelvis-organized", "ribs-stacked", "no-lumbar-arching", "controlled-eccentric", "no-momentum"], stopOn: ["pelvic-position-loss", "lumbar-substitution", "uncontrolled-pelvic-rotation"], progression: ["increase-clean-rom", "increase-reps", "increase-external-load"]},
-				{exercise: {id: "gorilla-row"}, phase: "upper", role: "upper-strength", sets: 2, reps: {min: 6, max: 10}, intent: "Kettlebell gorilla row as the integrated pulling/scapular stability anchor. Use a stable hinge and alternate or complete sides without allowing trunk rotation; begin around 3-4 RIR.", constraints: ["neck-quiet", "stable-hip-hinge", "pelvis-organized", "ribs-stacked", "controlled-scapular-excursion", "no-trunk-rotation"], stopOn: ["neck-or-levator-tension-rises", "lumbar-substitution", "pelvic-rotation", "scapular-control-lost"], progression: ["increase-repeatable-reps", "increase-load-only-with-stable-trunk-and-scapular-state"]},
+				{exercise: {id: "atg-split-squat"}, phase: "main", role: "primary", sets: 2, reps: {min: 5, max: 8}, intent: "Load deep unilateral knee flexion, dorsiflexion, rear-hip extension tolerance, and cross-pelvic transfer.", constraints: ["pelvis-organized", "controlled-knee-track", "rear-hip-extension-without-lumbar-extension"], stopOn: ["pelvic-position-loss", "lumbar-substitution", "uncontrolled-knee-or-femoral-rotation"], progression: ["hold-load-and-volume-until-recovery-baseline", "increase-clean-rom", "reduce-front-foot-elevation-or-assistance", "add-external-load-after-baseline"]},
+				{exercise: {id: "reverse-nordic"}, phase: "main", role: "primary", sets: 3, reps: {min: 4, max: 8}, constraints: ["hips-extended", "ribs-stacked", "pelvis-organized", "starting-knee-spacing-preserved", "no-lumbar-extension-for-depth"], stopOn: ["pelvic-position-loss", "lumbar-substitution", "uncontrolled-knee-separation-or-femoral-rotation"], progression: ["hold-load-and-volume-until-recovery-baseline", "increase-clean-rom", "slow-eccentric", "improve-controlled-concentric-reversal", "add-external-load-after-baseline"]},
+				{exercise: {id: "ghd-leg-raise"}, phase: "core", role: "core", sets: 2, reps: {min: 8, max: 8}, intent: "Fixed-dose supine GHD leg raise: hips at the pad edge, same baseline setup and ROM, two sets of eight. Treat as constrained anterior trunk/hip-flexion support work while recovery cost is established.", constraints: ["hips-at-pad-edge", "pelvis-organized", "ribs-stacked", "controlled-eccentric", "no-lumbar-substitution", "same-baseline-rom"], stopOn: ["pelvic-position-loss", "lumbar-substitution", "sharp-or-focal-abdominal-pain", "uncontrolled-pelvic-rotation"], progression: ["hold-load-and-volume-until-recovery-baseline"]},
+				{exercise: {id: "gorilla-row"}, phase: "upper", role: "upper-strength", sets: 2, reps: {min: 6, max: 10}, intent: "Kettlebell gorilla row as the integrated pulling/scapular stability anchor. Use a stable hinge and alternate or complete sides without allowing trunk rotation; begin around 3-4 RIR.", constraints: ["neck-quiet", "stable-hip-hinge", "pelvis-organized", "ribs-stacked", "controlled-scapular-excursion", "no-trunk-rotation"], stopOn: ["neck-or-levator-tension-rises", "lumbar-substitution", "pelvic-rotation", "scapular-control-lost"], progression: ["hold-load-and-volume-until-recovery-baseline", "increase-load-only-after-recovery-baseline-with-stable-trunk-and-scapular-state"]},
 				{exercise: {id: "treadmill-walk"}, phase: "downregulation", role: "downregulation", sets: 1, intent: "Easy gait readout without adding loaded stretching."},
 			]
 			completion: {mechanicalFailureAllowed: false, compensationAllowed: false, requiresGaitReadout: true}
@@ -143,10 +155,10 @@ ankleKneePelvisTriSessionV2: #TriSessionProgramV2 & {
 				{exercise: {id: "ankle-dorsiflexion"}, phase: "activation", role: "activation-gate", sets: 1, reps: {min: 8, max: 12}, intent: "Prepare active dorsiflexion without fatigue."},
 				{exercise: {id: "calf-raise-neutral"}, phase: "activation", role: "activation-gate", sets: 1, reps: {min: 8, max: 10}, intent: "Prepare plantar-flexion/push-off without chasing fatigue."},
 				{exercise: {id: "frog-glute-bridge"}, phase: "integration", role: "integration", sets: 1, reps: {min: 8, max: 12}, intent: "Low-dose glute-adductor cooperation primer before the selected principal integration family.", constraints: ["soles-together", "knees-near-90-degrees", "active-outward-knee-drive", "symmetric-pelvis", "no-lumbar-extension-substitution"]},
-				{exercise: {id: "cossack-squat"}, phase: "main", role: "primary", sets: 2, reps: {min: 5, max: 8}, optional: true, selectionGroup: "c-primary-integration", assistance: "as-needed-for-clean-range", intent: "Selected when frontal-plane/adductor negotiation is the higher-signal integration surface.", constraints: ["receiving-foot-organized", "controlled-knee-track", "pelvis-organized", "extended-leg-position-controlled"], stopOn: ["foot-collapse", "uncontrolled-knee-or-femoral-rotation", "pelvic-position-loss"], progression: ["increase-clean-rom", "reduce-assistance", "increase-reps", "add-external-load"]},
-				{exercise: {id: "modified-standing-bow-slrdl"}, phase: "main", role: "primary", sets: 2, reps: {min: 5, max: 8}, optional: true, selectionGroup: "c-primary-integration", assistance: "enough-to-preserve-whole-body-organization", intent: "Selected when unilateral hinge, stance-hip lateral control, and contralateral integration are the higher-signal surface.", constraints: ["stance-foot-organized", "controlled-knee-track", "pelvis-organized", "rear-leg-active", "contralateral-reach-controlled", "no-lumbar-rescue"], stopOn: ["stance-foot-collapse", "uncontrolled-femoral-rotation", "pelvic-hike-or-rotation", "trunk-escape", "lumbar-substitution"], progression: ["increase-clean-range", "reduce-assistance", "increase-reps", "add-external-load"]},
-				{exercise: {id: "curtsey-stance-diagonal-pulldown"}, phase: "core", role: "core", sets: 1, reps: {min: 6, max: 10}, intent: "Low-load band or cable cross-chain integration. Start from an overhead diagonal reach in a crossed/curtsey stance with the thorax mostly square; concentrically draw the grip toward the flexed stance-leg hip while gradually supinating, then control the eccentric return.", constraints: ["thorax-mostly-square", "pelvis-organized", "stance-foot-organized", "ribs-stacked", "controlled-supination", "controlled-scapular-excursion", "no-lumbar-substitution"], stopOn: ["compensatory-thoracic-rotation", "rib-flare", "pelvic-collapse", "anterior-shoulder-glide", "neck-or-levator-tension-rises"], progression: ["increase-repeatable-rom", "increase-repeatable-reps", "add-second-set-after-recovery-baseline", "increase-resistance-last"]},
-				{exercise: {id: "dip"}, phase: "upper", role: "upper-strength", sets: 2, reps: {min: 5, max: 8}, assistance: "as-needed-for-clean-range", intent: "Integrated closed-chain pressing anchor, initially around 3-4 RIR. Use only the range in which the shoulder girdle remains organized and the sternum stays quiet.", constraints: ["neck-quiet", "ribs-stacked", "controlled-scapular-excursion", "humeral-centering-controlled", "no-anterior-shoulder-glide"], stopOn: ["sternal-tension-rises", "anterior-shoulder-discomfort", "humeral-centering-lost", "neck-or-levator-tension-rises"], progression: ["increase-clean-rom", "reduce-assistance", "increase-repeatable-reps", "add-external-load-last"]},
+				{exercise: {id: "cossack-squat"}, phase: "main", role: "primary", sets: 2, reps: {min: 5, max: 8}, optional: true, selectionGroup: "c-primary-integration", assistance: "as-needed-for-clean-range", intent: "Selected when frontal-plane/adductor negotiation is the higher-signal integration surface.", constraints: ["receiving-foot-organized", "controlled-knee-track", "pelvis-organized", "extended-leg-position-controlled"], stopOn: ["foot-collapse", "uncontrolled-knee-or-femoral-rotation", "pelvic-position-loss"], progression: ["hold-load-and-volume-until-recovery-baseline", "increase-clean-rom", "reduce-assistance", "add-external-load-after-baseline"]},
+				{exercise: {id: "modified-standing-bow-slrdl"}, phase: "main", role: "primary", sets: 2, reps: {min: 5, max: 8}, optional: true, selectionGroup: "c-primary-integration", assistance: "enough-to-preserve-whole-body-organization", intent: "Selected when unilateral hinge, stance-hip lateral control, and contralateral integration are the higher-signal surface.", constraints: ["stance-foot-organized", "controlled-knee-track", "pelvis-organized", "rear-leg-active", "contralateral-reach-controlled", "no-lumbar-rescue"], stopOn: ["stance-foot-collapse", "uncontrolled-femoral-rotation", "pelvic-hike-or-rotation", "trunk-escape", "lumbar-substitution"], progression: ["hold-load-and-volume-until-recovery-baseline", "increase-clean-range", "reduce-assistance", "add-external-load-after-baseline"]},
+				{exercise: {id: "curtsey-stance-diagonal-pulldown"}, phase: "core", role: "core", sets: 1, reps: {min: 6, max: 10}, intent: "Low-load band or cable cross-chain integration. Start from an overhead diagonal reach in a crossed/curtsey stance with the thorax mostly square; concentrically draw the grip toward the flexed stance-leg hip while gradually supinating, then control the eccentric return. This replaces routine Roman-chair side bends while the lateral-trunk support slot is baselined.", constraints: ["thorax-mostly-square", "pelvis-organized", "stance-foot-organized", "ribs-stacked", "controlled-supination", "controlled-scapular-excursion", "no-lumbar-substitution"], stopOn: ["compensatory-thoracic-rotation", "rib-flare", "pelvic-collapse", "anterior-shoulder-glide", "neck-or-levator-tension-rises"], progression: ["hold-load-and-volume-until-recovery-baseline"]},
+				{exercise: {id: "dip"}, phase: "upper", role: "upper-strength", sets: 2, reps: {min: 5, max: 8}, assistance: "as-needed-for-clean-range", intent: "Integrated closed-chain pressing anchor, initially around 3-4 RIR. Use only the range in which the shoulder girdle remains organized and the sternum stays quiet.", constraints: ["neck-quiet", "ribs-stacked", "controlled-scapular-excursion", "humeral-centering-controlled", "no-anterior-shoulder-glide"], stopOn: ["sternal-tension-rises", "anterior-shoulder-discomfort", "humeral-centering-lost", "neck-or-levator-tension-rises"], progression: ["hold-load-and-volume-until-recovery-baseline", "increase-clean-rom", "reduce-assistance", "add-external-load-after-baseline"]},
 				{exercise: {id: "treadmill-walk"}, phase: "downregulation", role: "downregulation", sets: 1, intent: "Final gait readout; no conditioning target.", constraints: ["easy-pace", "stop-if-gait-degrades"]},
 			]
 			completion: {mechanicalFailureAllowed: false, compensationAllowed: false, requiresGaitReadout: true}
@@ -173,5 +185,7 @@ ankleKneePelvisTriSessionV2: #TriSessionProgramV2 & {
 		progressOneDimensionAtATime: true
 		exerciseCountIncreaseRequiresStableChain: true
 		upperProgressionRequiresQuietNeckShoulder: true
+		loadAndVolumeFixedUntilRecoveryBaseline: true
+		supportSystemVolumeConstrained: true
 	}
 }
