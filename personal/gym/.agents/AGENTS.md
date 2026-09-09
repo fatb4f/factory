@@ -24,10 +24,24 @@ For every planned or executed prescription, resolve `exercise.id` through `exerc
 The active v2 program deliberately does **not** create a separate upper-body Program D. One upper-body strength exposure is projected into each A/B/C session:
 
 ```text
-A -> rear-delt high row
-B -> overhead press
-C -> lateral raise
+A -> unilateral kettlebell overhead press
+B -> kettlebell gorilla row
+C -> dip
 ```
+
+The active adaptation priority is asymmetric:
+
+```text
+PRIMARY
+posterior lower chain
+anterior lower chain
+
+CONSTRAINED SUPPORT
+trunk / core
+shoulder girdle
+```
+
+Trunk/core and shoulder-girdle work are support systems, not independent volume-progression targets during the current baselining phase.
 
 Recovery is currently a hard no-training domain. Do not schedule or encourage another training exposure, including a separate upper-body session, while the current session remains inside its recovery gate. Time alone does not admit training; lower-chain state, systemic state, and cognitive/academic availability all matter.
 
@@ -39,31 +53,59 @@ Program B / anterior  -> 48 h
 Program C             -> not yet baselined
 ```
 
-These are calibration observations, not guarantees that a future session will recover on the same clock.
+These are calibration observations, not guarantees that a future session will recover on the same clock. Program B's composition has changed by replacing resisted hip flexion with the supine GHD leg raise, so new B recovery observations are especially important before any dose progression.
 
-A and B retain their irreducible foundations:
+A and B retain their current foundations:
 
 ```text
 A
 GHR
 reverse hyper
 Copenhagen
++ unilateral kettlebell overhead press
 
 B
 ATG split squat
 reverse Nordic
-resisted hip flexion
+supine GHD leg raise
++ kettlebell gorilla row
 ```
 
-Program C is deliberately sparse while the lower chain continues to reorganize materially: low-cost state setting, frog bridge, exactly one principal integration family (`cossack-squat` or `modified-standing-bow-slrdl`), lateral raise, gait readout.
+Program C is deliberately sparse while the lower chain continues to reorganize materially: low-cost state setting, frog bridge, exactly one principal integration family (`cossack-squat` or `modified-standing-bow-slrdl`), one non-rotational curtsey-stance diagonal pulldown, one dip exposure, gait readout.
 
-Do not add accessory lower-chain work simply because equipment or time is available. Exercise-count progression itself is gated on a more stable chain and acceptable cognitive recovery cost.
+Roman-chair side bends remain a valid registry surface but are not routine Program C work while the curtsey-stance diagonal pulldown occupies the lateral-trunk integration slot.
+
+Do not add accessory lower-chain, trunk, or shoulder-girdle work simply because equipment or time is available. Exercise-count progression itself is gated on a more stable chain and acceptable cognitive recovery cost.
+
+## Fixed-dose baselining boundary
+
+Until meaningful recovery-volume data exists for the current topology:
+
+- keep working-set count fixed;
+- keep external load/assistance fixed;
+- preserve the current exercise selection where practical;
+- preserve setup and ROM for high-signal exposures where possible;
+- do not progress trunk, shoulder-girdle, and lower-chain dose simultaneously.
+
+The current controller is learning the recovery function of the dose. Cleaner execution, reduced soreness, or improved movement quality are observations; they do not automatically authorize more sets, reps, or resistance.
+
+Program B's current trunk slot is canonicalized as `ghd-leg-raise`:
+
+```text
+supine GHD leg raise
+hips at pad edge
+2 x 8
+same baseline setup / ROM
+no added load
+```
+
+Do not alias this to `ghd-knee-to-chest`. The knee-to-chest profile remains a distinct historical/current registry exercise.
 
 ## Shoulder-girdle programming boundary
 
-The distributed upper-body layer is a capacity-building hypothesis, not a diagnosis. Current programming assumes that posterior/lateral shoulder strength may be underexposed relative to anterior pressing, but capture must not promote that hypothesis into a causal medical assertion.
+The distributed upper-body layer is a capacity-building and organization hypothesis, not a diagnosis.
 
-Upper-body progression requires:
+Upper-body exposure requires:
 
 - quiet neck/levator behavior;
 - no increase in sternal/anterior-thorax tension;
@@ -73,7 +115,7 @@ Upper-body progression requires:
 
 If those constraints fail, stop or regress the upper exposure rather than increasing load.
 
-A-Y-W, band pulls, and similar low-load control work are not substitutes for the loaded upper slot. During hard recovery they are not automatically prescribed as daily training.
+Rear-delt high rows, lateral raises, A-Y-W raises, band pulls, and similar isolation/control surfaces remain available where useful but are not required v2 upper-body slots. During hard recovery they are not automatically prescribed as daily training.
 
 ## Operating invariant
 
