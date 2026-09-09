@@ -37,7 +37,8 @@ On start:
 3. Resolve every `exercise.id` through `exerciseProfiles`.
 4. Present a compact ordered plan.
 5. Preserve the loaded-exposure budget.
-6. Capture baseline systemic/movement state only when already stated, quickly observable, or materially useful.
+6. Preserve the fixed-dose baselining policy.
+7. Capture baseline systemic/movement state only when already stated, quickly observable, or materially useful.
 
 The start response should optimize for execution, not documentation ceremony.
 
@@ -69,6 +70,20 @@ modified-standing-bow-slrdl
 
 Do not schedule both as working lifts in the same current-baseline C run.
 
+### Active adaptation priority
+
+```text
+PRIMARY
+posterior lower chain
+anterior lower chain
+
+CONSTRAINED SUPPORT
+trunk / core
+shoulder girdle
+```
+
+The support systems may improve, but they are not independent volume-progression targets during baselining.
+
 ## 2. Exposure setup
 
 Before the first working observation for an exercise, establish only the setup that later sets should inherit:
@@ -80,6 +95,8 @@ Before the first working observation for an exercise, establish only the setup t
 - intended mechanical constraints.
 
 When setup remains unchanged, later set reports are deltas.
+
+For high-signal baselining exposures, preserve setup and ROM where practical so recovery comparisons remain attributable.
 
 ## 3. In-session capture
 
@@ -110,19 +127,39 @@ posterior delt weakness caused cervical compensation
 
 If the user corrects a prior statement, append the replacement observation and link supersession when persisted.
 
-## 4. Upper-body distributed slot
+## 4. Distributed support slots
 
 There is no separate Program D in v2.
 
+Upper-body strength is distributed as:
+
 ```text
-A -> rear-delt high row
-B -> overhead press
-C -> lateral raise
+A -> unilateral kettlebell overhead press
+B -> kettlebell gorilla row
+C -> dip
 ```
 
-The upper exposure occurs after the required lower/core work and before final gait/down-regulation unless equipment/state requires a harmless reorder.
+Trunk/core support is distributed as:
 
-Initial upper work is conservative, generally around 3–4 RIR.
+```text
+A -> Copenhagen
+B -> supine GHD leg raise
+C -> non-rotational curtsey-stance diagonal pulldown
+```
+
+The current Program B GHD baseline is:
+
+```text
+ghd-leg-raise
+2 x 8
+supine / hips at pad edge
+same baseline setup and ROM
+no added load
+```
+
+Do not normalize this exposure to `ghd-knee-to-chest`; the two registry identities remain distinct.
+
+Roman-chair side bends are not routine Program C work while the curtsey-stance diagonal pulldown occupies the lateral-trunk integration slot.
 
 Upper progression requires:
 
@@ -134,9 +171,36 @@ Upper progression requires:
 
 If those constraints fail, stop or regress the upper exposure. Do not chase the programmed rep range.
 
-A-Y-W, band pulls, dip-bar push-ups, and similar habitual work are not automatically added to the formal session. During hard recovery they are not automatically treated as permissible training.
+Rear-delt high rows, lateral raises, A-Y-W raises, band pulls, and similar isolation/control work are not automatically added to the formal session. During hard recovery they are not automatically treated as permissible training.
 
-## 5. Program deviations
+## 5. Fixed-dose baselining
+
+Until meaningful recovery-volume data is available for the current topology:
+
+```text
+working-set count = fixed
+external load / assistance = fixed
+exercise topology = fixed where practical
+high-signal setup / ROM = fixed where practical
+```
+
+Do not convert improved execution, lower DOMS, or a good immediate gait readout into same-session or next-session dose progression.
+
+The controller is currently identifying the recovery function:
+
+```text
+fixed dose
+-> mechanical-quality observation
+-> local recovery observation
+-> systemic/cognitive recovery observation
+-> comparable repeat
+-> recovery baseline
+-> progression consideration
+```
+
+Do not progress lower-chain dose, trunk volume, and shoulder-girdle load simultaneously.
+
+## 6. Program deviations
 
 The prescription is a controller, not a requirement to finish every listed exposure.
 
@@ -146,9 +210,9 @@ If the user skips, substitutes, changes assistance, shortens ROM, or ends early:
 - preserve planned prescription separately;
 - do not synthesize observations for planned-only work.
 
-Do not fill an open equipment slot with an unplanned lower-chain accessory merely because it is available. Current v2 explicitly constrains exercise-count creep.
+Do not fill an open equipment slot with an unplanned lower-chain, trunk, or shoulder accessory merely because it is available. Current v2 explicitly constrains exercise-count creep.
 
-## 6. Down-regulation
+## 7. Down-regulation
 
 Down-regulation remains part of the ACTIVE session.
 
@@ -156,7 +220,7 @@ Use easy gait as a readout, not conditioning.
 
 Capture only observed changes. A good post-session gait readout does not itself admit progression.
 
-## 7. Session close
+## 8. Session close
 
 On close:
 
@@ -179,7 +243,7 @@ notable pain / instability / compensation events
 
 Do not label the session successful, failed, progressed, or excessive at close.
 
-## 8. Hard recovery gate
+## 9. Hard recovery gate
 
 Recovery is currently a no-training domain.
 
@@ -191,7 +255,7 @@ anterior / B:  last observed ~48 h
 C:             not yet baselined
 ```
 
-These are observations, not guaranteed timers.
+These are observations, not guaranteed timers. Because Program B's trunk slot has changed from resisted hip flexion to the supine GHD leg raise, do not assume the historical B recovery calibration predicts the new composition.
 
 No new training session is admitted until:
 
@@ -215,7 +279,7 @@ T+72
 
 Capture the smallest useful vector when observations actually occur. Do not fabricate checkpoints.
 
-## 9. Analysis admission
+## 10. Analysis admission
 
 For `ankle-knee-pelvis-tri-session-v2`:
 
@@ -224,6 +288,7 @@ mechanical quality required
 AND recovery cost required
 AND cognitive cost required
 AND partial runs are not comparable
+AND load/volume remain fixed until a recovery baseline exists
 ```
 
 Therefore:
@@ -243,11 +308,9 @@ or greater cognitive recovery cost
 != automatic progress
 ```
 
-Progress one dimension at a time.
-
 Exercise-count expansion is itself a progression dimension and remains blocked until the lower chain is substantially more stable across repeated sessions.
 
-## 10. Historical compatibility
+## 11. Historical compatibility
 
 Do not reinterpret sessions explicitly captured against `ankle-knee-pelvis-tri-session-v1` as if the v2 exposure budget had applied at the time.
 
