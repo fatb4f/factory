@@ -55,6 +55,21 @@ package gym
 	videoPerspectives: ["left-side", "right-side", "oblique"]
 }
 
+#GHDLegRaiseProfile: #ExerciseProfile & {
+	id:   "ghd-leg-raise"
+	name: "Supine GHD leg raise"
+	requiredConstraints: [
+		"pelvic-control",
+		"lumbar-substitution-avoided",
+		"rib-flare-control",
+	]
+	optionalConstraints: ["controlled-eccentric", "hips-at-pad-edge"]
+	rangeRequired:    false
+	setupDimensions:  ["pad-position", "knee-angle", "leg-lever", "external-load"]
+	supportedMetrics: ["reps", "hip-angle", "load"]
+	videoPerspectives: ["left-side", "right-side", "oblique"]
+}
+
 #HeelDigBridgeProfile: #ExerciseProfile & {
 	id:   "heel-dig-bridge"
 	name: "Heel-dig bridge"
@@ -268,6 +283,7 @@ exerciseProfiles: close({
 	"backward-walk":                  #BackwardWalkProfile
 	"dead-bug":                       #DeadBugProfile
 	"ghd-knee-to-chest":              #GHDKneeToChestProfile
+	"ghd-leg-raise":                  #GHDLegRaiseProfile
 	"heel-dig-bridge":                #HeelDigBridgeProfile
 	"pallof-press":                   #PallofPressProfile
 	"roman-chair-side-bend":          #RomanChairSideBendProfile
