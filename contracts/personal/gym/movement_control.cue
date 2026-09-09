@@ -2,6 +2,9 @@ package gym
 
 // Movement control separates internal athlete state from imposed training inputs.
 // Derived exposure/cost metrics are projections over both, not raw capture facts.
+// Recovery is not assumed to be passive: trained complexes can retain unavoidable
+// stabilizing, transmitting, braking, and driving duties during stance, gait, and
+// ordinary activity while recovering from the controlled training exposure.
 
 #VariableParty: "first-party" | "second-party" | "derived"
 
@@ -36,12 +39,12 @@ package gym
 // ROM is an internal range property. Distinguish what is available, established,
 // supported under the movement contract, demonstrated, targeted, and novel.
 #ROMCapacity: close({
-	available?:   #ROMWindow
-	established?: #ROMWindow
-	supported?:   #ROMWindow
+	available?:    #ROMWindow
+	established?:  #ROMWindow
+	supported?:    #ROMWindow
 	demonstrated?: #ROMWindow
-	target?:      #ROMWindow
-	novel?:       #ROMWindow
+	target?:       #ROMWindow
+	novel?:        #ROMWindow
 	progressionStep?: #ROMIncrement
 })
 
@@ -50,14 +53,14 @@ package gym
 #LandmarkDomain: "local" | "support" | "integration" | "coordination" | "systemic" | "cognitive" | "effective"
 
 #LandmarkEstimate: close({
-	kind:       #LandmarkKind
-	domain:     #LandmarkDomain
-	metric:     string
-	value:      number
-	unit:       string
+	kind:        #LandmarkKind
+	domain:      #LandmarkDomain
+	metric:      string
+	value:       number
+	unit:        string
 	confidence?: number & >=0 & <=1
 	observations?: int & >=0
-	note?:      string
+	note?:       string
 })
 
 #RIRTarget: close({
@@ -65,7 +68,7 @@ package gym
 	max: number & >=0
 })
 
-#FunctionalContext: "exercise" | "stance" | "gait" | "transition" | "carry" | "other"
+#FunctionalContext: "exercise" | "stance" | "gait" | "transition" | "carry" | "posture" | "stairs" | "adl" | "other"
 
 #MovementPhase: "setup" | "eccentric" | "transition" | "concentric" | "isometric" | "terminal" | "stance" | "swing" | "other"
 
@@ -93,6 +96,50 @@ package gym
 #IntegrationContract: close({
 	participation: [...#ComplexParticipation]
 	costDrivers?:  [...#IntegrationCostDriver]
+	note?:         string
+})
+
+// Recovery-context demand describes work imposed outside the controlled training
+// exposure. It is separate from second-party programming inputs because ordinary
+// stance, gait, posture, and ADL duties are not prescribed set/rep variables.
+#DutyCycle: "continuous" | "recurrent" | "intermittent" | "episodic" | "unknown"
+
+#FunctionalNecessity: "unavoidable" | "usually-required" | "optional" | "unknown"
+
+#AmbientDemandSource: "bodyweight" | "stance" | "locomotion" | "posture" | "stairs" | "carried-load" | "task" | "environment" | "other"
+
+#AmbientComplexDuty: close({
+	complex:      string
+	context:      #FunctionalContext
+	role:         #ComplexRole
+	dutyCycle:    #DutyCycle
+	necessity:    #FunctionalNecessity
+	source?:      #AmbientDemandSource
+	primary?:     bool
+	adjacent?:    bool
+	stability?:   #DemandEstimate
+	coordination?: #DemandEstimate
+	mechanical?:  #DemandEstimate
+	frequencyPerDay?: number & >=0
+	durationMinPerDay?: number & >=0
+	note?:        string
+})
+
+#AmbientFunctionalDemand: close({
+	duties: [...#AmbientComplexDuty]
+	overall?: #DemandEstimate
+	note?:    string
+})
+
+#RecoveryInteractionDriver: "ambient-duty" | "role-criticality" | "role-transition" | "stance-stability" | "gait-stability" | "postural-support" | "carried-load" | "coordination" | "breathing" | "sleep" | "fatigue" | "other"
+
+// A training exposure can reduce available capacity in a complex that remains
+// functionally required outside the gym. Recovery cost therefore depends on both
+// the training perturbation and the complex's continuing ambient duty.
+#RecoveryIntegrationContract: close({
+	ambient:       #AmbientFunctionalDemand
+	drivers?:      [...#RecoveryInteractionDriver]
+	protectedComplexes?: [...string]
 	note?:         string
 })
 
@@ -138,7 +185,7 @@ package gym
 	control?: [...string]
 })
 
-#FeedbackDomain: "rom" | "support" | "integration" | "effort" | "quality" | "fatigue" | "control" | "systemic" | "cognitive" | "symptom"
+#FeedbackDomain: "rom" | "support" | "integration" | "effort" | "quality" | "fatigue" | "control" | "systemic" | "cognitive" | "symptom" | "ambient-demand" | "recovery-margin"
 
 #FeedbackCadence: "continuous" | "threshold" | "per-rep" | "post-set" | "post-exercise" | "recovery"
 
@@ -171,11 +218,11 @@ package gym
 #ProgressionAxis: "rom" | "reps" | "sets" | "load" | "density" | "frequency" | "integration-complexity"
 
 #ProgressionContract: close({
-	allowedAxes:        [...#ProgressionAxis]
+	allowedAxes:         [...#ProgressionAxis]
 	preferredAxisOrder?: [...#ProgressionAxis]
-	singleAxisDefault?: bool
-	romStep?:           #ROMIncrement
-	gates?:             [...string]
+	singleAxisDefault?:  bool
+	romStep?:            #ROMIncrement
+	gates?:              [...string]
 })
 
 #MovementContract: close({
@@ -184,14 +231,15 @@ package gym
 	intent:   string
 	version?: string
 
-	firstParty:  #FirstPartyState
-	secondParty: #SecondPartyInputs
-	integration?: #IntegrationContract
-	demand?:      #DemandProfile
-	cues:         #CueSet
-	feedback:     [...#FeedbackSignalDefinition]
-	failures:     [...#FailureCondition]
-	progression?: #ProgressionContract
+	firstParty:      #FirstPartyState
+	secondParty:     #SecondPartyInputs
+	integration?:    #IntegrationContract
+	recoveryContext?: #RecoveryIntegrationContract
+	demand?:         #DemandProfile
+	cues:            #CueSet
+	feedback:        [...#FeedbackSignalDefinition]
+	failures:        [...#FailureCondition]
+	progression?:    #ProgressionContract
 })
 
 #ObservedComplexParticipation: close({
@@ -228,25 +276,48 @@ package gym
 // #ExposureObservation until per-movement contracts are projected and capture
 // migration is performed.
 #MovementExecutionObservation: close({
-	contract:      string
-	actualROM?:    #ROMWindow
-	rir?:          number & >=0
-	quality?:      #DemandEstimate
-	controlCost?:  #DemandEstimate
+	contract:        string
+	actualROM?:      #ROMWindow
+	rir?:            number & >=0
+	quality?:        #DemandEstimate
+	controlCost?:    #DemandEstimate
 	integrationCost?: #DemandEstimate
-	complexes?:    [...#ObservedComplexParticipation]
-	feedback?:     [...#FeedbackObservation]
-	failures?:     [...#FailureObservation]
+	complexes?:      [...#ObservedComplexParticipation]
+	feedback?:       [...#FeedbackObservation]
+	failures?:       [...#FailureObservation]
 })
 
-#DerivedMetricKind: "effective-exposure" | "rom-novelty" | "integration-cost" | "systemic-demand" | "mrv-proximity" | "mev-proximity" | "rom-sensitivity" | "rep-sensitivity" | "load-sensitivity" | "support-threshold" | "recovery-cost"
+// Candidate recovery observation surface. Actual ordinary activity is captured
+// independently from the controlled training exposure because it can consume
+// capacity while recovery is still in progress.
+#AmbientDutyObservation: close({
+	complex:       string
+	context:       #FunctionalContext
+	role?:         #ComplexRole
+	dutyCycle?:    #DutyCycle
+	demand?:       #DemandEstimate
+	durationMin?:  number & >=0
+	note?:         string
+})
+
+#RecoveryIntegrationObservation: close({
+	hoursPostExposure?: number & >=0
+	ambientDuties?:     [...#AmbientDutyObservation]
+	physicalAvailability?: #DemandEstimate
+	cognitiveAvailability?: #DemandEstimate
+	integrationCost?:       #DemandEstimate
+	recoveryMargin?:        #DemandEstimate
+	note?:                  string
+})
+
+#DerivedMetricKind: "effective-exposure" | "rom-novelty" | "integration-cost" | "ambient-demand" | "reintegration-cost" | "functional-reserve" | "recovery-margin" | "duty-weighted-recovery-cost" | "systemic-demand" | "mrv-proximity" | "mev-proximity" | "rom-sensitivity" | "rep-sensitivity" | "load-sensitivity" | "support-threshold" | "recovery-cost"
 
 #DerivedMetric: close({
-	kind:       #DerivedMetricKind
-	value:      number
-	unit?:      string
+	kind:        #DerivedMetricKind
+	value:       number
+	unit?:       string
 	confidence?: number & >=0 & <=1
-	basis?:     [...string]
+	basis?:      [...string]
 })
 
 #DerivedMovementState: close({
