@@ -5,6 +5,8 @@ package gym
 // Recovery is not assumed to be passive: trained complexes can retain unavoidable
 // stabilizing, transmitting, braking, and driving duties during stance, gait, and
 // ordinary activity while recovering from the controlled training exposure.
+// A neutral biomechanical baseline is not assumed: execution, recovery, and
+// adaptation can all be biased by an evolving generalized strategy state.
 
 #VariableParty: "first-party" | "second-party" | "derived"
 
@@ -50,7 +52,7 @@ package gym
 
 #LandmarkKind: "mv" | "mev" | "mav-lower" | "mav-upper" | "mrv"
 
-#LandmarkDomain: "local" | "support" | "integration" | "coordination" | "systemic" | "cognitive" | "effective"
+#LandmarkDomain: "local" | "support" | "integration" | "coordination" | "ambient" | "strategy" | "functional" | "systemic" | "cognitive" | "effective"
 
 #LandmarkEstimate: close({
 	kind:        #LandmarkKind
@@ -91,7 +93,7 @@ package gym
 	note?:      string
 })
 
-#IntegrationCostDriver: "rom" | "rom-novelty" | "role" | "role-transition" | "stability" | "adjacent-recruitment" | "coordination" | "lever" | "load" | "fatigue" | "breathing" | "other"
+#IntegrationCostDriver: "rom" | "rom-novelty" | "role" | "role-transition" | "stability" | "adjacent-recruitment" | "coordination" | "lever" | "load" | "fatigue" | "breathing" | "strategy-state" | "other"
 
 #IntegrationContract: close({
 	participation: [...#ComplexParticipation]
@@ -131,7 +133,7 @@ package gym
 	note?:    string
 })
 
-#RecoveryInteractionDriver: "ambient-duty" | "role-criticality" | "role-transition" | "stance-stability" | "gait-stability" | "postural-support" | "carried-load" | "coordination" | "breathing" | "sleep" | "fatigue" | "other"
+#RecoveryInteractionDriver: "ambient-duty" | "role-criticality" | "role-transition" | "stance-stability" | "gait-stability" | "postural-support" | "carried-load" | "coordination" | "breathing" | "strategy-state" | "load-redistribution" | "compensation" | "adaptation" | "reorganization" | "sleep" | "fatigue" | "other"
 
 // A training exposure can reduce available capacity in a complex that remains
 // functionally required outside the gym. Recovery cost therefore depends on both
@@ -161,9 +163,11 @@ package gym
 })
 
 // First-party variables describe the internal movement/capacity state against
-// which a prescription is executed.
+// which a prescription is executed. Strategy is the current generalized
+// biomechanical state, not an assumed neutral baseline.
 #FirstPartyState: close({
 	rom:                #ROMCapacity
+	strategy?:          #StrategyStateRef
 	rirTarget?:         #RIRTarget
 	qualityInvariants?: [...string]
 	integration?:       #IntegrationContract
@@ -179,13 +183,20 @@ package gym
 	cognitive?:    #DemandEstimate
 })
 
+#StrategyInteractionContract: close({
+	domains:             [...#StrategyInfluenceDomain]
+	unilateralPurpose?:  #UnilateralPurpose
+	observe?:             [...string]
+	note?:                string
+})
+
 #CueSet: close({
 	setup?:   [...string]
 	motion?:  [...string]
 	control?: [...string]
 })
 
-#FeedbackDomain: "rom" | "support" | "integration" | "effort" | "quality" | "fatigue" | "control" | "systemic" | "cognitive" | "symptom" | "ambient-demand" | "recovery-margin"
+#FeedbackDomain: "rom" | "support" | "integration" | "effort" | "quality" | "fatigue" | "control" | "strategy-state" | "compensation" | "systemic" | "cognitive" | "symptom" | "ambient-demand" | "recovery-margin"
 
 #FeedbackCadence: "continuous" | "threshold" | "per-rep" | "post-set" | "post-exercise" | "recovery"
 
@@ -231,15 +242,16 @@ package gym
 	intent:   string
 	version?: string
 
-	firstParty:      #FirstPartyState
-	secondParty:     #SecondPartyInputs
-	integration?:    #IntegrationContract
-	recoveryContext?: #RecoveryIntegrationContract
-	demand?:         #DemandProfile
-	cues:            #CueSet
-	feedback:        [...#FeedbackSignalDefinition]
-	failures:        [...#FailureCondition]
-	progression?:    #ProgressionContract
+	firstParty:         #FirstPartyState
+	secondParty:        #SecondPartyInputs
+	integration?:       #IntegrationContract
+	strategyInteraction?: #StrategyInteractionContract
+	recoveryContext?:   #RecoveryIntegrationContract
+	demand?:            #DemandProfile
+	cues:               #CueSet
+	feedback:           [...#FeedbackSignalDefinition]
+	failures:           [...#FailureCondition]
+	progression?:       #ProgressionContract
 })
 
 #ObservedComplexParticipation: close({
@@ -277,6 +289,8 @@ package gym
 // migration is performed.
 #MovementExecutionObservation: close({
 	contract:        string
+	strategyState?:  #StrategyStateRef
+	functionalState?: #BiomechanicalFunctionalStateRef
 	actualROM?:      #ROMWindow
 	rir?:            number & >=0
 	quality?:        #DemandEstimate
@@ -289,7 +303,8 @@ package gym
 
 // Candidate recovery observation surface. Actual ordinary activity is captured
 // independently from the controlled training exposure because it can consume
-// capacity while recovery is still in progress.
+// capacity while recovery is still in progress. Strategy/functional-state refs
+// allow recovery observations to capture concurrent biomechanical reorganization.
 #AmbientDutyObservation: close({
 	complex:       string
 	context:       #FunctionalContext
@@ -302,6 +317,8 @@ package gym
 
 #RecoveryIntegrationObservation: close({
 	hoursPostExposure?: number & >=0
+	strategyState?:     #StrategyStateRef
+	functionalState?:   #BiomechanicalFunctionalStateRef
 	ambientDuties?:     [...#AmbientDutyObservation]
 	physicalAvailability?: #DemandEstimate
 	cognitiveAvailability?: #DemandEstimate
@@ -310,7 +327,7 @@ package gym
 	note?:                  string
 })
 
-#DerivedMetricKind: "effective-exposure" | "rom-novelty" | "integration-cost" | "ambient-demand" | "reintegration-cost" | "functional-reserve" | "recovery-margin" | "duty-weighted-recovery-cost" | "systemic-demand" | "mrv-proximity" | "mev-proximity" | "rom-sensitivity" | "rep-sensitivity" | "load-sensitivity" | "support-threshold" | "recovery-cost"
+#DerivedMetricKind: "effective-exposure" | "rom-novelty" | "integration-cost" | "strategy-cost" | "strategy-shift" | "compensation-cost" | "load-redistribution" | "ambient-demand" | "reintegration-cost" | "functional-reserve" | "recovery-margin" | "duty-weighted-recovery-cost" | "systemic-demand" | "mrv-proximity" | "mev-proximity" | "rom-sensitivity" | "rep-sensitivity" | "load-sensitivity" | "support-threshold" | "recovery-cost"
 
 #DerivedMetric: close({
 	kind:        #DerivedMetricKind
