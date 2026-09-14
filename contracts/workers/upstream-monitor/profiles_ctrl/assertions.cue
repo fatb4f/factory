@@ -34,6 +34,9 @@ ctrlForbiddenAttractors: [
 	"Arrow, DuckDB, Ibis, Polars, or Marimo execution/projection treated as DPI semantic or qualification authority",
 	"Weaver validation, resolution, diff, generation, or projection treated as semantic or qualification authority",
 	"Weaver interface compatibility result treated as a ctrl qualification verdict without a CUE criterion",
+	"Ascent, Hydro, egglog, Salsa, Flix, or Timoni treated as ctrl semantic or qualification authority",
+	"CALM monotonicity or coordination classification treated as automatic authorization for admission or external actuation",
+	"candidate closure, equivalence, incremental, or composition mechanism promoted into the kernel solely because it is monitored",
 	"DPI machine topology treated as the source domain semantic topology",
 	"semantic lowering allowed to change contracted meaning",
 	"computed closure treated as a qualified fixpoint merely because derivation terminated",
@@ -100,6 +103,7 @@ ctrlValidationAssertions: close({
 	codexChannelsDistinct: true
 	cpythonChannelsDistinct: true
 	cuePinAndForecastDistinct: true
+	cueEvolutionSurfacesExplicit: true
 	astralSourceExplicit: true
 	astralAnalyzerEvidenceOnly: true
 	astralLockBaselineDistinctFromMainForecast: true
@@ -129,6 +133,10 @@ ctrlValidationAssertions: close({
 	relationalProjectionProvidersExplicit: true
 	relationalProjectionNotAuthority: true
 	relationalExecutionDoesNotDefineDpiSemantics: true
+	semanticMechanismWatchSourcesExplicit: true
+	semanticMechanismCandidatesEvidenceOnly: true
+	semanticMechanismCandidatesNonBlockingByDefault: true
+	calmClassificationDoesNotAuthorizeActuation: true
 	monitorAndQualificationStateDistinct: true
 	authorityRevisionExplicit: true
 	publicationRevisionMeansManifestSeal: true
@@ -153,5 +161,5 @@ ctrlValidationPlan: close({
 		"cue vet -c=false ./...",
 		"cue export ./profiles_ctrl -e publicContract --out json",
 	]
-	adapterLimitation: "The GitHub App actuator cannot execute CUE, the projected EvaluationWorld/DPI/fixpoint kernel, Weaver DiagnosticPacket projection, CPython regrtest, local probes, Astral analyzer correlation, SCIP indexing, OpenTelemetry pipelines, OTLP/OTAP round-trip checks, Arrow/DuckDB/Ibis/Polars projections, Marimo, or pydantic-graph. Executable validation belongs to repository CI or a checked local environment."
+	adapterLimitation: "The GitHub App actuator cannot execute CUE, the projected EvaluationWorld/DPI/fixpoint kernel, Weaver DiagnosticPacket projection, CPython regrtest, local probes, Astral analyzer correlation, SCIP indexing, OpenTelemetry pipelines, OTLP/OTAP round-trip checks, Arrow/DuckDB/Ibis/Polars projections, Marimo, pydantic-graph, or candidate Ascent/Hydro/egglog/Salsa/Flix/Timoni experiments. Executable validation belongs to repository CI or a checked local environment."
 })
