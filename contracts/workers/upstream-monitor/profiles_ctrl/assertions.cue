@@ -22,18 +22,27 @@ ctrlForbiddenAttractors: [
 	"Ruff and ty analyzer observations collapsed into CPython observations",
 	"unresolved Astral symbol or import resolution promoted to a runtime fact",
 	"Astral main forecast treated as the lock-selected ctrl analyzer baseline",
-	"OpenTelemetry span, metric, log, or event treated as a qualification verdict",
-	"OpenTelemetry telemetry treated as AST, symbol, scope, compiler, or runtime semantic authority",
+	"OpenTelemetry span, metric, log, event, profile, entity, or registry observation treated as a qualification verdict",
+	"OpenTelemetry telemetry treated as AST, symbol, scope, compiler, runtime, or ctrl semantic authority",
+	"OpenTelemetry Entity identifying attributes treated as ctrl semantic identity without a qualified identity relation",
+	"OpenTelemetry declarative configuration treated as ctrl semantic or qualification authority",
 	"generic contrib instrumentation treated as a substitute for CPython or qualification semantic probes",
 	"GenAI semantic conventions treated as ctrl qualification authority",
 	"OTAP projection treated as adding semantic facts not present in OTLP or declared ctrl correlation identity",
 	"OTLP and OTAP observations collapsed without transport/projection identity",
+	"Weaver validation, resolution, diff, generation, inference, packaging, policy, or projection treated as semantic or qualification authority",
+	"Weaver live-check finding or inferred registry promoted to fact or qualification without ctrl verification and admission",
+	"Weaver interface compatibility result treated as a ctrl qualification verdict without a CUE criterion",
+	"OTTL transform treated as semantic-preserving or qualification-bearing by construction",
+	"OBI out-of-process observation treated as ground truth or as automatically overriding SDK/manual observation",
+	"OpAMP remote configuration or agent status treated as ctrl qualification state or direct semantic mutation authority",
+	"OpenTelemetry Profile data treated as a qualification verdict rather than another observation signal",
+	"OpenTelemetry Telemetry Schema transform treated as proof of semantic equivalence across convention versions",
+	"custom OpenTelemetry semantic registry treated as replacement for ctrl CUE authority",
 	"dlt acquired records labeled facts before provenance/admission/qualification",
 	"dlt external observations collapsed into OpenTelemetry execution observations",
 	"fsspec addressability treated as evidence truth or semantic admission",
 	"Arrow, DuckDB, Ibis, Polars, or Marimo execution/projection treated as DPI semantic or qualification authority",
-	"Weaver validation, resolution, diff, generation, or projection treated as semantic or qualification authority",
-	"Weaver interface compatibility result treated as a ctrl qualification verdict without a CUE criterion",
 	"Ascent, Hydro, egglog, Salsa, Flix, or Timoni treated as ctrl semantic or qualification authority",
 	"CALM monotonicity or coordination classification treated as automatic authorization for admission or external actuation",
 	"candidate closure, equivalence, incremental, or composition mechanism promoted into the kernel solely because it is monitored",
@@ -113,10 +122,22 @@ ctrlValidationAssertions: close({
 	scipGraphBindingExplicit: true
 	scipIdentityDistinctFromCpythonSemantics: true
 	otelSourcesExplicit: true
+	otelSpecificationSourceExplicit: true
+	otelGeneralSemconvSourceExplicit: true
 	otelTelemetryEvidenceOnly: true
 	otelGenericAndDomainInstrumentationSeparated: true
 	otelGenaiSemconvNotQualificationAuthority: true
 	otelTraceIdentityDistinctFromSemanticIdentity: true
+	otelEntityIdentityDistinctFromCtrlSemanticIdentity: true
+	otelDeclarativeConfigProjectionOnly: true
+	otelProfilesObservationOnly: true
+	otelSchemaTransformNotEquivalenceProof: true
+	weaverSemanticCompilerSurfaceExplicit: true
+	weaverFindingsRequireAdmission: true
+	weaverInferenceObservationOnly: true
+	ottlObservationAdapterOnly: true
+	obiIndependentObserverNonAuthoritative: true
+	opampControlStateDistinctFromQualification: true
 	evaluationWorldIdentityDistinctFromTraceIdentity: true
 	sealedBundleIdentityPostdatesEvaluation: true
 	telemetryCarrierPolicyExplicit: true
@@ -161,5 +182,5 @@ ctrlValidationPlan: close({
 		"cue vet -c=false ./...",
 		"cue export ./profiles_ctrl -e publicContract --out json",
 	]
-	adapterLimitation: "The GitHub App actuator cannot execute CUE, the projected EvaluationWorld/DPI/fixpoint kernel, Weaver DiagnosticPacket projection, CPython regrtest, local probes, Astral analyzer correlation, SCIP indexing, OpenTelemetry pipelines, OTLP/OTAP round-trip checks, Arrow/DuckDB/Ibis/Polars projections, Marimo, pydantic-graph, or candidate Ascent/Hydro/egglog/Salsa/Flix/Timoni experiments. Executable validation belongs to repository CI or a checked local environment."
+	adapterLimitation: "The GitHub App actuator cannot execute CUE, the projected EvaluationWorld/DPI/fixpoint kernel, Weaver DiagnosticPacket projection/live-check/infer/diff loop, CPython regrtest, local probes, Astral analyzer correlation, SCIP indexing, OpenTelemetry SDK/Profiles pipelines, OTTL Collector transforms, OBI observation, OpAMP control, OTLP/OTAP round-trip checks, Arrow/DuckDB/Ibis/Polars projections, Marimo, pydantic-graph, or candidate Ascent/Hydro/egglog/Salsa/Flix/Timoni experiments. Executable validation belongs to repository CI or a checked local environment."
 })
