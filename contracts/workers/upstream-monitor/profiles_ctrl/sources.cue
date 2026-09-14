@@ -20,6 +20,7 @@ ctrlSources: {
 		role: "upstream_evidence_only"
 		channels: {
 			"3.14": {id: "3.14", ref: "3.14", mode: "active-baseline", required: true}
+			"3.15": {id: "3.15", ref: "3.15", mode: "forecast", required: true}
 			main: {id: "main", ref: "main", mode: "forecast", required: true}
 		}
 	}
@@ -98,6 +99,14 @@ ctrlSources: {
 	"otel-semconv": {
 		id: "otel-semconv"
 		repository: "open-telemetry/semantic-conventions"
+		role: "upstream_evidence_only"
+		channels: {
+			main: {id: "main", ref: "main", mode: "forecast", required: true}
+		}
+	}
+	"otel-semconv-conformance": {
+		id: "otel-semconv-conformance"
+		repository: "open-telemetry/semantic-conventions-conformance"
 		role: "upstream_evidence_only"
 		channels: {
 			main: {id: "main", ref: "main", mode: "forecast", required: true}
@@ -269,6 +278,7 @@ ctrlSources: {
 ctrlSourcePolicy: close({
 	requireSourceQualifiedObservations: true
 	activeRuntimeSource: "cpython/3.14"
+	cpythonNextReleaseSource: "cpython/3.15"
 	cpythonForecastSource: "cpython/main"
 	astralStaticSource: "astral-python/main"
 	astralInstalledBaselineSource: "fatb4f/ctrl@main uv.lock"
@@ -281,6 +291,7 @@ ctrlSourcePolicy: close({
 	semanticInterfaceSource: "weaver/main"
 	otelSpecificationSource: "otel-spec/main"
 	otelSemanticConventionSource: "otel-semconv/main"
+	otelSemanticConformanceSource: "otel-semconv-conformance/main"
 	collectorTransformationSource: "otel-collector-contrib/main"
 	independentObserverSource: "otel-obi/main"
 	telemetryControlPlaneSource: "opamp/main"
@@ -301,12 +312,18 @@ ctrlSourcePolicy: close({
 	cueForecastSource: "cue/master"
 	codexChannelsDistinct: true
 	cpythonChannelsDistinct: true
+	cpythonNextReleaseDistinctFromActiveAndMain: true
 	cuePinnedDistinctFromForecast: true
 	astralAnalyzerIsEvidenceOnly: true
 	scipIdentityDoesNotOverrideCpythonSemantics: true
+	cpython315ProjectionPrimitivesAreProjectionOnly: true
+	cpython315ObservabilityIsEvidenceOnly: true
 	otelTelemetryIsObservationOnly: true
 	otelArrowPreservesOTLPOTAPDistinction: true
 	otelSpecificationAndSemconvAreExternalVocabularyOnly: true
+	otelSemconvConformanceIsEvidenceOnly: true
+	otelConformanceExpectationsRequireCtrlAdmission: true
+	otelTelemetryPolicyIsControlIntentOnly: true
 	otelEntityIdentityDoesNotOverrideCtrlSemanticIdentity: true
 	weaverIsInterfaceRealizationOnly: true
 	weaverCannotQualifyWorlds: true
