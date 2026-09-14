@@ -87,6 +87,46 @@ ctrlSources: {
 			main: {id: "main", ref: "main", mode: "forecast", required: true}
 		}
 	}
+	"otel-spec": {
+		id: "otel-spec"
+		repository: "open-telemetry/opentelemetry-specification"
+		role: "upstream_evidence_only"
+		channels: {
+			main: {id: "main", ref: "main", mode: "forecast", required: true}
+		}
+	}
+	"otel-semconv": {
+		id: "otel-semconv"
+		repository: "open-telemetry/semantic-conventions"
+		role: "upstream_evidence_only"
+		channels: {
+			main: {id: "main", ref: "main", mode: "forecast", required: true}
+		}
+	}
+	"otel-collector-contrib": {
+		id: "otel-collector-contrib"
+		repository: "open-telemetry/opentelemetry-collector-contrib"
+		role: "upstream_evidence_only"
+		channels: {
+			main: {id: "main", ref: "main", mode: "release-watch", required: false}
+		}
+	}
+	"otel-obi": {
+		id: "otel-obi"
+		repository: "open-telemetry/opentelemetry-ebpf-instrumentation"
+		role: "upstream_evidence_only"
+		channels: {
+			main: {id: "main", ref: "main", mode: "release-watch", required: false}
+		}
+	}
+	opamp: {
+		id: "opamp"
+		repository: "open-telemetry/opamp-spec"
+		role: "upstream_evidence_only"
+		channels: {
+			main: {id: "main", ref: "main", mode: "release-watch", required: false}
+		}
+	}
 	dlt: {
 		id: "dlt"
 		repository: "dlt-hub/dlt"
@@ -239,6 +279,11 @@ ctrlSourcePolicy: close({
 	genaiPythonRealizationSource: "otel-python-genai/main"
 	columnarTelemetrySource: "otel-arrow/main"
 	semanticInterfaceSource: "weaver/main"
+	otelSpecificationSource: "otel-spec/main"
+	otelSemanticConventionSource: "otel-semconv/main"
+	collectorTransformationSource: "otel-collector-contrib/main"
+	independentObserverSource: "otel-obi/main"
+	telemetryControlPlaneSource: "opamp/main"
 	externalObservationAcquisitionSource: "dlt/devel"
 	externalAddressSpaceSource: "fsspec/master"
 	columnarRelationSource: "arrow/main"
@@ -261,8 +306,18 @@ ctrlSourcePolicy: close({
 	scipIdentityDoesNotOverrideCpythonSemantics: true
 	otelTelemetryIsObservationOnly: true
 	otelArrowPreservesOTLPOTAPDistinction: true
+	otelSpecificationAndSemconvAreExternalVocabularyOnly: true
+	otelEntityIdentityDoesNotOverrideCtrlSemanticIdentity: true
 	weaverIsInterfaceRealizationOnly: true
 	weaverCannotQualifyWorlds: true
+	weaverConformanceFindingsRequireCtrlAdmission: true
+	weaverInferredRegistriesAreCandidateObservations: true
+	declarativeOtelConfigIsProjectionOnly: true
+	ottlNormalizationIsObservationAdapterOnly: true
+	obiIndependentObservationIsNonAuthoritative: true
+	opampStatusIsControlStateNotQualification: true
+	profilesAreObservationSignalOnly: true
+	telemetrySchemaTransformDoesNotProveSemanticEquivalence: true
 	dltAcquiredRecordsRequireAdmissionBeforeFactStatus: true
 	externalObservationsDistinctFromRuntimeObservations: true
 	fsspecIsAddressSpaceOnly: true
