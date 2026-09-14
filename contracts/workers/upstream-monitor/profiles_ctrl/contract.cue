@@ -78,6 +78,7 @@ ctrlAuthorityModel: close({
 		"open-telemetry/weaver",
 		"open-telemetry/opentelemetry-specification",
 		"open-telemetry/semantic-conventions",
+		"open-telemetry/semantic-conventions-conformance",
 		"open-telemetry/opentelemetry-collector-contrib",
 		"open-telemetry/opentelemetry-ebpf-instrumentation",
 		"open-telemetry/opamp-spec",
