@@ -1,0 +1,1 @@
+`terminal_success` / `observation_only`. ctrl subject revision is unchanged. Codex Guardian parent-history reset semantics widen the existing critical runtime/policy gate. CPython 3.14, Astral ty, Weaver live-check and telemetry forecast surfaces moved; no declared executable qualification witnesses were available through the GitHub actuator.
