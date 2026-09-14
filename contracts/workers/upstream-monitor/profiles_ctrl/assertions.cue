@@ -7,6 +7,9 @@ ctrlForbiddenAttractors: [
 	"upstream repository state treated as factory authority",
 	"source channel compared without source identity",
 	"cpython/main forecast treated as active Python 3.14 baseline",
+	"cpython/3.15 forecast treated as active Python 3.14 baseline",
+	"Python 3.15 frozendict, sentinel, TypedDict, TypeForm, or lazy-import machinery treated as ctrl semantic authority",
+	"CPython profiler, frame-pointer, JIT, native-unwind, or eBPF-visible execution observation treated as qualification truth",
 	"CUE master treated as the pinned evaluator revision",
 	"Codex Rust protocol, generated schema, Python SDK, and runtime collapsed into one observation",
 	"rollout evidence treated as equivalent to live runtime without declared reconstruction correlation",
@@ -26,6 +29,9 @@ ctrlForbiddenAttractors: [
 	"OpenTelemetry telemetry treated as AST, symbol, scope, compiler, runtime, or ctrl semantic authority",
 	"OpenTelemetry Entity identifying attributes treated as ctrl semantic identity without a qualified identity relation",
 	"OpenTelemetry declarative configuration treated as ctrl semantic or qualification authority",
+	"OpenTelemetry Telemetry Policy treated as ctrl semantic or qualification authority merely because an applier enforces it",
+	"SemConv v2 manifest, resolved registry, dependency resolution, materialization, or diff treated as replacement for ctrl CUE authority",
+	"Semantic Conventions Conformance expectation or runner result treated as ctrl qualification without ctrl verification and admission",
 	"generic contrib instrumentation treated as a substitute for CPython or qualification semantic probes",
 	"GenAI semantic conventions treated as ctrl qualification authority",
 	"OTAP projection treated as adding semantic facts not present in OTLP or declared ctrl correlation identity",
@@ -111,6 +117,9 @@ ctrlValidationAssertions: close({
 	sourceQualifiedEvidenceRequired: true
 	codexChannelsDistinct: true
 	cpythonChannelsDistinct: true
+	cpython315ForecastDistinctFromActiveBaseline: true
+	cpython315ProjectionPrimitivesProjectionOnly: true
+	cpython315ObservabilityEvidenceOnly: true
 	cuePinAndForecastDistinct: true
 	cueEvolutionSurfacesExplicit: true
 	astralSourceExplicit: true
@@ -124,6 +133,11 @@ ctrlValidationAssertions: close({
 	otelSourcesExplicit: true
 	otelSpecificationSourceExplicit: true
 	otelGeneralSemconvSourceExplicit: true
+	otelSemconvConformanceSourceExplicit: true
+	otelSemconvV2FederationSurfaceExplicit: true
+	otelSemconvConformanceEvidenceOnly: true
+	otelConformanceExpectationsRequireAdmission: true
+	otelTelemetryPolicyControlIntentOnly: true
 	otelTelemetryEvidenceOnly: true
 	otelGenericAndDomainInstrumentationSeparated: true
 	otelGenaiSemconvNotQualificationAuthority: true
@@ -182,5 +196,5 @@ ctrlValidationPlan: close({
 		"cue vet -c=false ./...",
 		"cue export ./profiles_ctrl -e publicContract --out json",
 	]
-	adapterLimitation: "The GitHub App actuator cannot execute CUE, the projected EvaluationWorld/DPI/fixpoint kernel, Weaver DiagnosticPacket projection/live-check/infer/diff loop, CPython regrtest, local probes, Astral analyzer correlation, SCIP indexing, OpenTelemetry SDK/Profiles pipelines, OTTL Collector transforms, OBI observation, OpAMP control, OTLP/OTAP round-trip checks, Arrow/DuckDB/Ibis/Polars projections, Marimo, pydantic-graph, or candidate Ascent/Hydro/egglog/Salsa/Flix/Timoni experiments. Executable validation belongs to repository CI or a checked local environment."
+	adapterLimitation: "The GitHub App actuator cannot execute CUE, the projected EvaluationWorld/DPI/fixpoint kernel, Weaver DiagnosticPacket projection/live-check/infer/diff loop, the Semantic Conventions Conformance runner, CPython regrtest, local probes, CPython 3.15 profiler/native-stack/eBPF observation, Astral analyzer correlation, SCIP indexing, OpenTelemetry SDK/Profiles pipelines, OTTL Collector transforms, OBI observation, OpAMP control, OTLP/OTAP round-trip checks, Arrow/DuckDB/Ibis/Polars projections, Marimo, pydantic-graph, or candidate Ascent/Hydro/egglog/Salsa/Flix/Timoni experiments. Executable validation belongs to repository CI or a checked local environment."
 })
