@@ -151,6 +151,54 @@ ctrlSources: {
 			main: {id: "main", ref: "main", mode: "release-watch", required: false}
 		}
 	}
+	ascent: {
+		id: "ascent"
+		repository: "s-arash/ascent"
+		role: "upstream_evidence_only"
+		channels: {
+			master: {id: "master", ref: "master", mode: "release-watch", required: false}
+		}
+	}
+	hydro: {
+		id: "hydro"
+		repository: "hydro-project/hydro"
+		role: "upstream_evidence_only"
+		channels: {
+			main: {id: "main", ref: "main", mode: "release-watch", required: false}
+		}
+	}
+	egglog: {
+		id: "egglog"
+		repository: "egraphs-good/egglog"
+		role: "upstream_evidence_only"
+		channels: {
+			main: {id: "main", ref: "main", mode: "release-watch", required: false}
+		}
+	}
+	salsa: {
+		id: "salsa"
+		repository: "salsa-rs/salsa"
+		role: "upstream_evidence_only"
+		channels: {
+			master: {id: "master", ref: "master", mode: "release-watch", required: false}
+		}
+	}
+	flix: {
+		id: "flix"
+		repository: "flix/flix"
+		role: "upstream_evidence_only"
+		channels: {
+			master: {id: "master", ref: "master", mode: "release-watch", required: false}
+		}
+	}
+	timoni: {
+		id: "timoni"
+		repository: "stefanprodan/timoni"
+		role: "upstream_evidence_only"
+		channels: {
+			main: {id: "main", ref: "main", mode: "release-watch", required: false}
+		}
+	}
 	cue: {
 		id: "cue"
 		repository: "cue-lang/cue"
@@ -199,6 +247,13 @@ ctrlSourcePolicy: close({
 	dataframeExecutionSource: "polars/main"
 	diagnosticProjectionSource: "marimo/main"
 	executionGraphImplementationSource: "pydantic-graph/main"
+	latticeClosureReferenceSource: "ascent/master"
+	monotonicCoordinationReferenceSource: "hydro/main"
+	equivalenceSaturationReferenceSource: "egglog/main"
+	incrementalReconciliationReferenceSource: "salsa/master"
+	fixpointLanguageReferenceSource: "flix/master"
+	cueCompositionReferenceSource: "timoni/main"
+	cueForecastSource: "cue/master"
 	codexChannelsDistinct: true
 	cpythonChannelsDistinct: true
 	cuePinnedDistinctFromForecast: true
@@ -214,5 +269,8 @@ ctrlSourcePolicy: close({
 	relationalAndWorkbenchProvidersAreProjectionOnly: true
 	relationalExecutionCannotDefineDPISemantics: true
 	executionGraphImplementationIsReplaceable: true
+	candidateSemanticMechanismsAreEvidenceOnly: true
+	candidateSemanticMechanismsCannotDefineKernelSemantics: true
+	candidateSemanticMechanismsCannotQualifyWorlds: true
 	optionalSatellitesCannotBlockWithoutLocalConsumer: true
 })
