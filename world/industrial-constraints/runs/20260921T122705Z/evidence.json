@@ -1,0 +1,32 @@
+[
+  {
+    "kind": "document",
+    "id": "doc.finance.marathon-cgf.2026-09-15",
+    "documentKind": "government-announcement",
+    "provenance": {
+      "source": "institutional-web",
+      "channel": "official-publication",
+      "publisher": "department-finance-canada",
+      "recordID": "cgf-generation-mining-marathon-2026-09-15",
+      "revision": "2026-09-15",
+      "observedSurface": "critical-minerals",
+      "observedAt": "2026-09-15T00:00:00Z",
+      "acquiredAt": "2026-09-21T12:27:05Z"
+    },
+    "uri": "https://www.canada.ca/en/department-finance/news/2026/09/minister-champagne-welcomes-canada-growth-fund-investment-in-ontario-copper-and-palladium-mine.html",
+    "contentType": "text/html"
+  },
+  {
+    "kind": "event-observation",
+    "id": "event.marathon.cgf-investment.2026-09-15",
+    "eventKind": "funding-awarded",
+    "headline": "Canada Growth Fund committed approximately C$140 million to Generation Mining Limited's Marathon copper-palladium project.",
+    "actors": [{"label":"Canada Growth Fund","entityKind":"organization"},{"label":"Generation Mining Limited","entityKind":"organization"}],
+    "subjects": [{"label":"Marathon Project","entityKind":"project"}],
+    "occurredAt": "2026-09-15T00:00:00Z",
+    "announcedAt": "2026-09-15T00:00:00Z",
+    "relevance": {"geographies":["canada"],"industrialSurfaces":["critical-minerals"],"disposition":"track"},
+    "provenance": {"source":"institutional-web","channel":"official-publication","publisher":"department-finance-canada","recordID":"cgf-generation-mining-marathon-2026-09-15","revision":"2026-09-15","observedSurface":"critical-minerals","observedAt":"2026-09-15T00:00:00Z","acquiredAt":"2026-09-21T12:27:05Z"},
+    "evidence": [{"kind":"document","id":"doc.finance.marathon-cgf.2026-09-15"}]
+  }
+]
