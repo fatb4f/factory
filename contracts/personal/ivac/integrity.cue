@@ -17,7 +17,22 @@ package ivac
 	trace:               [#TransitionRef, ...#TransitionRef]
 })
 
-#ValidatedPlant: #Plant & {
+#ValidatedPlant: close({
+	authorities:         [string]: #Authority
+	actors:              [string]: #Actor
+	axes:                [string]: #ClaimAxis
+	evidence:            [string]: #EvidenceArtifact
+	findings:            [string]: #Finding
+	mandates:            [string]: #Mandate
+	grounds:             [string]: #ReviewGround
+	submissions:         [string]: #Submission
+	decisions:           [string]: #Decision
+	states:              [string]: #PlantStateSnapshot
+	transitions:         [string]: #Transition
+	transitionDecisions: [string]: #TransitionDecision
+	grants:              [string]: #TransitionGrant
+	trace:               [#TransitionRef, ...#TransitionRef]
+
 	_actorIdentity: [for id, actor in actors {
 		_value: actor & {id: id}
 	}]
@@ -147,4 +162,5 @@ package ivac
 			_contiguous: transitions[ref.id] & {fromState: _previous.toState}
 		}
 	}]
-}
+
+})
