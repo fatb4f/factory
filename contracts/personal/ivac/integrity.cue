@@ -34,7 +34,7 @@ package ivac
 	transitions:         [string]: #Transition
 	transitionDecisions: [string]: #TransitionDecision
 	grants:              [string]: #TransitionGrant
-	trace:               [#TransitionRef, ...#TransitionRef]
+	trace:               [...#TransitionRef]
 
 	_actorIdentity: [for id, actor in actors {
 		_value: actor & {id: id}
@@ -201,13 +201,14 @@ package ivac
 			transition & {id: transitionID}
 		}] & [_, ...]
 		_transition: _transitionMatches[0]
+		_transitionRef: decision.transition
 
 		if decision.state == "admitted" {
 			_grantMatches: [for grantID, grant in grants if grantID == decision.grant.id {
 				grant & {
 					id:         grantID
 					decision:   {id: id}
-					transition: decision.transition
+					transition: _transitionRef
 					primitive:  _transition.primitive
 				}
 			}] & [_, ...]
