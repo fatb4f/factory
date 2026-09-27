@@ -62,9 +62,13 @@ This prevents:
 ```text
 s0 --preserve--> s1
 s1 --commission--> s2
-s2 --opine--> s3
-s3 --submit--> s4
-s4 --adjudicate--> s5
+s2 --disclose--> s3
+s3 --observe--> s4
+s4 --opine--> s5
+s5 --qualify--> s6
+s6 --bind--> s7
+s7 --submit--> s8
+s8 --adjudicate--> s9
 ```
 
 The fixture includes one recognized primary axis and three independent supplemental hypothesis axes. Supplemental axes intentionally remain hypotheses until their own evidence gates are satisfied.
