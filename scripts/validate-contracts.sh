@@ -240,6 +240,12 @@ cue vet -c=false ./personal/gym/fixtures:fixtures
 bash personal/gym/fixtures/negative/run.sh
 validate_gym_public
 
+section "IVAC"
+cue vet -c=false ./contracts/personal/ivac:ivac
+cue export ./contracts/personal/ivac:ivac -e public --out json >/dev/null
+cue vet -c=false ./contracts/personal/ivac/evaluations:ivaceval
+cue export ./contracts/personal/ivac/evaluations:ivaceval -e public --out json >/dev/null
+
 section "worker-procedure uniqueness"
 grep -Fq 'This path is non-normative compatibility only.' .agents/workers/upstream-monitor/AGENTS.md
 ! grep -q '^## \(Read order\|Actuator model\|Publication\)' .agents/workers/upstream-monitor/AGENTS.md
