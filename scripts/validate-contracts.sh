@@ -243,6 +243,8 @@ validate_gym_public
 section "IVAC"
 cue vet -c=false ./contracts/personal/ivac:ivac
 cue export ./contracts/personal/ivac:ivac -e public --out json >/dev/null
+cue export ./contracts/personal/ivac:ivac -e edgeTransforms --out json >/dev/null
+cue export ./contracts/personal/ivac:ivac -e indexTransforms --out json >/dev/null
 cue vet -c=false ./contracts/personal/ivac/evaluations:ivaceval
 cue export ./contracts/personal/ivac/evaluations:ivaceval -e public --out json >/dev/null
 

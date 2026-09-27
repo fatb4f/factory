@@ -75,7 +75,7 @@ ibisTarget: state.#ExecutionTargetCapability & {
 	capabilityVersion: "fixture-v1"
 	transport:         "dataframe"
 	supportedOperations: [
-		"project", "filter", "join", "group", "aggregate", "grain-change", "order", "window", "derive",
+		"project", "rename", "filter", "join", "semi-join", "anti-join", "distinct", "union", "intersect", "difference", "group", "aggregate", "grain-change", "order", "window", "derive",
 	]
 }
 
@@ -84,7 +84,7 @@ substraitTarget: state.#ExecutionTargetCapability & {
 	capabilityVersion: "fixture-v1"
 	transport:         "logical-plan"
 	supportedOperations: [
-		"project", "filter", "join", "group", "aggregate", "grain-change", "order", "window", "derive",
+		"project", "rename", "filter", "join", "semi-join", "anti-join", "distinct", "union", "intersect", "difference", "group", "aggregate", "grain-change", "order", "window", "derive",
 	]
 }
 
@@ -101,4 +101,36 @@ windowGap: state.#AnalyticsCapabilityGap & {
 	target:    limitedTarget.id
 	operation: "window"
 	reason:    "The fixture target does not declare window capability."
+}
+
+
+graphPrimitiveRight: state.#AnalyticalSourceRef & {
+	id:             "graph-right"
+	snapshotDigest: "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+	provenance: ["graph-right:fixture"]
+	admissibility: {
+		state:     "admitted"
+		authority: "contracts/state/analytics-ir.cue"
+		basis:     ["graph-right:fixture"]
+	}
+}
+
+graphPrimitiveRequest: state.#AnalyticalRequest & {
+	apiVersion: "factory.analytics-ir/v1"
+	kind:       "AnalyticalRequest"
+	id:         "graph-primitive-fixture"
+	source:     analyticsSource
+	grain: {
+		keys: ["edgeID"]
+		unit: "graph-edge"
+	}
+	operations: [
+		{kind: "rename", fields: [{from: "source", to: "subjectID"}]},
+		{kind: "semi-join", right: graphPrimitiveRight, on: [{left: "subjectID", right: "subjectID"}]},
+		{kind: "anti-join", right: graphPrimitiveRight, on: [{left: "objectID", right: "objectID"}]},
+		{kind: "distinct", on: ["edgeID"]},
+		{kind: "union", right: graphPrimitiveRight, distinct: true},
+		{kind: "intersect", right: graphPrimitiveRight, distinct: true},
+		{kind: "difference", right: graphPrimitiveRight, distinct: true},
+	]
 }

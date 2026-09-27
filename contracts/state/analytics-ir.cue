@@ -23,8 +23,15 @@ package state
 
 #OperationKind:
 	"project" |
+	"rename" |
 	"filter" |
 	"join" |
+	"semi-join" |
+	"anti-join" |
+	"distinct" |
+	"union" |
+	"intersect" |
+	"difference" |
 	"group" |
 	"aggregate" |
 	"grain-change" |
@@ -35,6 +42,16 @@ package state
 #ProjectOperation: close({
 	kind:   "project"
 	fields: [#NonEmptyString, ...#NonEmptyString]
+})
+
+#RenameField: close({
+	from: #NonEmptyString
+	to:   #NonEmptyString
+})
+
+#RenameOperation: close({
+	kind:   "rename"
+	fields: [#RenameField, ...#RenameField]
 })
 
 #FilterOperation: close({
@@ -53,6 +70,41 @@ package state
 	joinType: "inner" | "left" | "right" | "full"
 	right:    #AnalyticalSourceRef
 	on:       [#JoinKey, ...#JoinKey]
+})
+
+#SemiJoinOperation: close({
+	kind:  "semi-join"
+	right: #AnalyticalSourceRef
+	on:    [#JoinKey, ...#JoinKey]
+})
+
+#AntiJoinOperation: close({
+	kind:  "anti-join"
+	right: #AnalyticalSourceRef
+	on:    [#JoinKey, ...#JoinKey]
+})
+
+#DistinctOperation: close({
+	kind: "distinct"
+	on?:  [#NonEmptyString, ...#NonEmptyString]
+})
+
+#UnionOperation: close({
+	kind:     "union"
+	right:    #AnalyticalSourceRef
+	distinct: bool
+})
+
+#IntersectOperation: close({
+	kind:     "intersect"
+	right:    #AnalyticalSourceRef
+	distinct: bool
+})
+
+#DifferenceOperation: close({
+	kind:     "difference"
+	right:    #AnalyticalSourceRef
+	distinct: bool
 })
 
 #GroupOperation: close({
@@ -112,8 +164,15 @@ package state
 
 #RelationalOperation:
 	#ProjectOperation |
+	#RenameOperation |
 	#FilterOperation |
 	#JoinOperation |
+	#SemiJoinOperation |
+	#AntiJoinOperation |
+	#DistinctOperation |
+	#UnionOperation |
+	#IntersectOperation |
+	#DifferenceOperation |
 	#GroupOperation |
 	#AggregateOperation |
 	#GrainChangeOperation |
