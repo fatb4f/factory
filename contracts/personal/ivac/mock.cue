@@ -384,55 +384,55 @@ mockReviewPlant: #ValidatedPlant & {
 	}
 
 	transitionDecisions: {
-		d-preserve: {
+		"d-preserve": {
 			id: "d-preserve"
 			transition: {id: "preserve"}
 			state: "admitted"
 			grant: {id: "g-preserve"}
 		}
-		d-commission: {
+		"d-commission": {
 			id: "d-commission"
 			transition: {id: "commission"}
 			state: "admitted"
 			grant: {id: "g-commission"}
 		}
-		d-disclose: {
+		"d-disclose": {
 			id: "d-disclose"
 			transition: {id: "disclose"}
 			state: "admitted"
 			grant: {id: "g-disclose"}
 		}
-		d-observe: {
+		"d-observe": {
 			id: "d-observe"
 			transition: {id: "observe"}
 			state: "admitted"
 			grant: {id: "g-observe"}
 		}
-		d-opine: {
+		"d-opine": {
 			id: "d-opine"
 			transition: {id: "opine"}
 			state: "admitted"
 			grant: {id: "g-opine"}
 		}
-		d-qualify: {
+		"d-qualify": {
 			id: "d-qualify"
 			transition: {id: "qualify"}
 			state: "admitted"
 			grant: {id: "g-qualify"}
 		}
-		d-bind: {
+		"d-bind": {
 			id: "d-bind"
 			transition: {id: "bind"}
 			state: "admitted"
 			grant: {id: "g-bind"}
 		}
-		d-submit: {
+		"d-submit": {
 			id: "d-submit"
 			transition: {id: "submit"}
 			state: "admitted"
 			grant: {id: "g-submit"}
 		}
-		d-adjudicate: {
+		"d-adjudicate": {
 			id: "d-adjudicate"
 			transition: {id: "adjudicate"}
 			state: "admitted"
@@ -441,55 +441,55 @@ mockReviewPlant: #ValidatedPlant & {
 	}
 
 	grants: {
-		g-preserve: {
+		"g-preserve": {
 			id: "g-preserve"
 			decision: {id: "d-preserve"}
 			transition: {id: "preserve"}
 			primitive: "preserve"
 		}
-		g-commission: {
+		"g-commission": {
 			id: "g-commission"
 			decision: {id: "d-commission"}
 			transition: {id: "commission"}
 			primitive: "commission"
 		}
-		g-disclose: {
+		"g-disclose": {
 			id: "g-disclose"
 			decision: {id: "d-disclose"}
 			transition: {id: "disclose"}
 			primitive: "disclose"
 		}
-		g-observe: {
+		"g-observe": {
 			id: "g-observe"
 			decision: {id: "d-observe"}
 			transition: {id: "observe"}
 			primitive: "observe"
 		}
-		g-opine: {
+		"g-opine": {
 			id: "g-opine"
 			decision: {id: "d-opine"}
 			transition: {id: "opine"}
 			primitive: "opine"
 		}
-		g-qualify: {
+		"g-qualify": {
 			id: "g-qualify"
 			decision: {id: "d-qualify"}
 			transition: {id: "qualify"}
 			primitive: "qualify"
 		}
-		g-bind: {
+		"g-bind": {
 			id: "g-bind"
 			decision: {id: "d-bind"}
 			transition: {id: "bind"}
 			primitive: "bind"
 		}
-		g-submit: {
+		"g-submit": {
 			id: "g-submit"
 			decision: {id: "d-submit"}
 			transition: {id: "submit"}
 			primitive: "submit"
 		}
-		g-adjudicate: {
+		"g-adjudicate": {
 			id: "g-adjudicate"
 			decision: {id: "d-adjudicate"}
 			transition: {id: "adjudicate"}
