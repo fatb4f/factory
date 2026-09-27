@@ -406,8 +406,10 @@ relationTransforms: close({
 	profile: #NormalizedSubjectProfile
 })
 
-#ValidatedCasePlant: #CasePlant & {
-	review: #ValidatedPlant
+#ValidatedCasePlant: close({
+	review:  #ValidatedPlant
+	world:   #EvidenceWorld
+	profile: #NormalizedSubjectProfile
 
 	_subject:        review.actors[world.subject.id] & {kind: "claimant"}
 	_profileSubject: profile.subject & world.subject
@@ -458,9 +460,11 @@ relationTransforms: close({
 		_evidence: [for ref in capacity.provenance.evidence {
 			_artifact: review.evidence[ref.id]
 		}]
-		_support: [for ref in capacity.support {
-			_intervention: world.interventions[ref.id]
-		}]
+		if capacity.support != _|_ {
+			_support: [for ref in capacity.support {
+				_intervention: world.interventions[ref.id]
+			}]
+		}
 		if capacity.provenance.assertedBy != _|_ {
 			_actor: review.actors[capacity.provenance.assertedBy.id]
 		}
@@ -556,4 +560,4 @@ relationTransforms: close({
 	_profileInterventions:     [for ref in profile.interventions {world.interventions[ref.id]}]
 	_profileRelations:         [for ref in profile.relations {world.relations[ref.id]}]
 	_profileEvidence:          [for ref in profile.evidence {review.evidence[ref.id]}]
-}
+})
