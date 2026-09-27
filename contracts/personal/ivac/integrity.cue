@@ -17,6 +17,9 @@ package ivac
 	trace:               [#TransitionRef, ...#TransitionRef]
 })
 
+// #ValidatedPlant is the executable integrity root over the canonical review
+// graph. Dictionary references are resolved through explicit non-empty matches:
+// indexing {[string]: T} alone is not an existence proof in CUE.
 #ValidatedPlant: close({
 	authorities:         [string]: #Authority
 	actors:              [string]: #Actor
@@ -47,120 +50,198 @@ package ivac
 
 	_stateIdentity: [for id, state in states {
 		_value: state & {id: id}
-		_decision: decisions[state.recognizedDecision.id]
+		_decisionMatches: [for decisionID, decision in decisions if decisionID == state.recognizedDecision.id {
+			decision & {id: decisionID}
+		}] & [_, ...]
 		_axes: [for _, axisState in state.axes {
-			_axis: axes[axisState.axis.id]
+			_matches: [for axisID, axis in axes if axisID == axisState.axis.id {
+				axis & {id: axisID}
+			}] & [_, ...]
 		}]
 	}]
 
 	_evidenceIntegrity: [for id, artifact in evidence {
 		_value: artifact & {id: id}
-		_producer: actors[artifact.producer.id]
+		_producerMatches: [for actorID, actor in actors if actorID == artifact.producer.id {
+			actor & {id: actorID}
+		}] & [_, ...]
 		_axes: [for axisRef in artifact.axes {
-			_axis: axes[axisRef.id]
+			_matches: [for axisID, axis in axes if axisID == axisRef.id {
+				axis & {id: axisID}
+			}] & [_, ...]
 		}]
 	}]
 
 	_findingIntegrity: [for id, finding in findings {
 		_value: finding & {id: id}
-		_producer: actors[finding.producer.id] & {
-			kind: "medical-expert" | "treating-clinician"
-		}
-		_axis: axes[finding.axis.id]
+		_producerMatches: [for actorID, actor in actors if actorID == finding.producer.id {
+			actor & {id: actorID, kind: "medical-expert" | "treating-clinician"}
+		}] & [_, ...]
+		_axisMatches: [for axisID, axis in axes if axisID == finding.axis.id {
+			axis & {id: axisID}
+		}] & [_, ...]
 		_evidence: [for ref in finding.evidence {
-			_artifact: evidence[ref.id]
+			_matches: [for evidenceID, artifact in evidence if evidenceID == ref.id {
+				artifact & {id: evidenceID}
+			}] & [_, ...]
 		}]
 	}]
 
 	_mandateIntegrity: [for id, mandate in mandates {
 		_value: mandate & {id: id}
-		_principal: actors[mandate.principal.id]
-		_agent: actors[mandate.agent.id]
+		_principalMatches: [for actorID, actor in actors if actorID == mandate.principal.id {
+			actor & {id: actorID}
+		}] & [_, ...]
+		_agentMatches: [for actorID, actor in actors if actorID == mandate.agent.id {
+			actor & {id: actorID}
+		}] & [_, ...]
 		if mandate.kind == "legal" {
-			_legalAgent: actors[mandate.agent.id] & {kind: "legal-representative"}
+			_legalAgentMatches: [for actorID, actor in actors if actorID == mandate.agent.id {
+				actor & {id: actorID, kind: "legal-representative"}
+			}] & [_, ...]
 		}
 		if mandate.kind == "expert" {
-			_expertAgent: actors[mandate.agent.id] & {kind: "medical-expert"}
+			_expertAgentMatches: [for actorID, actor in actors if actorID == mandate.agent.id {
+				actor & {id: actorID, kind: "medical-expert"}
+			}] & [_, ...]
 		}
 	}]
 
 	_groundIntegrity: [for id, ground in grounds {
 		_value: ground & {id: id}
-		_author: actors[ground.author.id] & {kind: "legal-representative"}
-		_axis: axes[ground.axis.id]
+		_authorMatches: [for actorID, actor in actors if actorID == ground.author.id {
+			actor & {id: actorID, kind: "legal-representative"}
+		}] & [_, ...]
+		_axisMatches: [for axisID, axis in axes if axisID == ground.axis.id {
+			axis & {id: axisID}
+		}] & [_, ...]
 		_findings: [for ref in ground.findings {
-			_finding: findings[ref.id] & {axis: ground.axis}
+			_matches: [for findingID, finding in findings if findingID == ref.id {
+				finding & {id: findingID, axis: ground.axis}
+			}] & [_, ...]
 		}]
 	}]
 
 	_submissionIntegrity: [for id, submission in submissions {
 		_value: submission & {id: id}
-		_author: actors[submission.author.id]
+		_authorMatches: [for actorID, actor in actors if actorID == submission.author.id {
+			actor & {id: actorID}
+		}] & [_, ...]
 		_grounds: [for ref in submission.grounds {
-			_ground: grounds[ref.id]
+			_matches: [for groundID, ground in grounds if groundID == ref.id {
+				ground & {id: groundID}
+			}] & [_, ...]
 		}]
 		_evidence: [for ref in submission.evidence {
-			_artifact: evidence[ref.id]
+			_matches: [for evidenceID, artifact in evidence if evidenceID == ref.id {
+				artifact & {id: evidenceID}
+			}] & [_, ...]
 		}]
 	}]
 
 	_decisionIdentity: [for id, decision in decisions {
 		_value: decision & {id: id}
-		_authorityActor: actors[decision.authority.id] & {kind: "adjudicator"}
+		_authorityMatches: [for actorID, actor in actors if actorID == decision.authority.id {
+			actor & {id: actorID, kind: "adjudicator"}
+		}] & [_, ...]
 		_axes: [for _, axisDecision in decision.axes {
-			_axis: axes[axisDecision.axis.id]
+			_matches: [for axisID, axis in axes if axisID == axisDecision.axis.id {
+				axis & {id: axisID}
+			}] & [_, ...]
 		}]
 	}]
 
 	_transitionIntegrity: [for id, transition in transitions {
 		_value: transition & {id: id}
-		_actor: actors[transition.actor.id] & {kind: transition.requiredActorKind}
-		_authority: authorities[transition.authority.id] & {kind: transition.requiredAuthorityKind}
-		_capability: [for capability in actors[transition.actor.id].capabilities if capability == transition.primitive {
+
+		_actorMatches: [for actorID, actor in actors if actorID == transition.actor.id {
+			actor & {id: actorID, kind: transition.requiredActorKind}
+		}] & [_, ...]
+		_actor: _actorMatches[0]
+
+		_authorityMatches: [for authorityID, authority in authorities if authorityID == transition.authority.id {
+			authority & {id: authorityID, kind: transition.requiredAuthorityKind}
+		}] & [_, ...]
+
+		_capability: [for capability in _actor.capabilities if capability == transition.primitive {
 			capability
 		}] & [_, ...]
-		_from: states[transition.fromState.id]
-		_to: states[transition.toState.id]
-		_requires: [for ref in transition.requires {
-			_grant: grants[ref.id]
-		}]
-		if transition.mandate != _|_ {
-			_mandate: mandates[transition.mandate.id]
+
+		_fromMatches: [for stateID, state in states if stateID == transition.fromState.id {
+			state & {id: stateID}
+		}] & [_, ...]
+		_toMatches: [for stateID, state in states if stateID == transition.toState.id {
+			state & {id: stateID}
+		}] & [_, ...]
+
+		if transition.requires != _|_ {
+			_requires: [for ref in transition.requires {
+				_matches: [for grantID, grant in grants if grantID == ref.id {
+					grant & {id: grantID}
+				}] & [_, ...]
+			}]
 		}
+
+		if transition.mandate != _|_ {
+			_mandateMatches: [for mandateID, mandate in mandates if mandateID == transition.mandate.id {
+				mandate & {id: mandateID}
+			}] & [_, ...]
+		}
+
 		if transition.primitive != "adjudicate" {
-			_recognitionInvariant: states[transition.toState.id].recognizedDecision &
-				states[transition.fromState.id].recognizedDecision
+			_from: _fromMatches[0]
+			_to:   _toMatches[0]
+			_recognitionInvariant: _to.recognizedDecision & _from.recognizedDecision
 		}
 	}]
 
 	_transitionDecisionIntegrity: [for id, decision in transitionDecisions {
 		_value: decision & {id: id}
-		_transition: transitions[decision.transition.id]
+		_transitionMatches: [for transitionID, transition in transitions if transitionID == decision.transition.id {
+			transition & {id: transitionID}
+		}] & [_, ...]
+		_transition: _transitionMatches[0]
+
 		if decision.state == "admitted" {
-			_grant: grants[decision.grant.id] & {
-				decision:   {id: id}
-				transition: decision.transition
-				primitive:  transitions[decision.transition.id].primitive
-			}
+			_grantMatches: [for grantID, grant in grants if grantID == decision.grant.id {
+				grant & {
+					id:         grantID
+					decision:   {id: id}
+					transition: decision.transition
+					primitive:  _transition.primitive
+				}
+			}] & [_, ...]
 		}
 	}]
 
-	_grantIdentity: [for id, grant in grants {
+	_grantIntegrity: [for id, grant in grants {
 		_value: grant & {id: id}
-		_decision: transitionDecisions[grant.decision.id] & {
-			state: "admitted"
-			grant: {id: id}
-		}
-		_transition: transitions[grant.transition.id] & {primitive: grant.primitive}
+		_decisionMatches: [for decisionID, decision in transitionDecisions if decisionID == grant.decision.id {
+			decision & {
+				id:    decisionID
+				state: "admitted"
+				grant: {id: id}
+			}
+		}] & [_, ...]
+		_transitionMatches: [for transitionID, transition in transitions if transitionID == grant.transition.id {
+			transition & {id: transitionID, primitive: grant.primitive}
+		}] & [_, ...]
 	}]
 
 	_traceIntegrity: [for i, ref in trace {
-		_transition: transitions[ref.id]
+		_transitionMatches: [for transitionID, transition in transitions if transitionID == ref.id {
+			transition & {id: transitionID}
+		}] & [_, ...]
+
 		if i > 0 {
 			_previousRef: trace[i-1]
-			_previous: transitions[_previousRef.id]
-			_contiguous: transitions[ref.id] & {fromState: _previous.toState}
+			_previousMatches: [for transitionID, transition in transitions if transitionID == _previousRef.id {
+				transition & {id: transitionID}
+			}] & [_, ...]
+			_previous: _previousMatches[0]
+			_contiguousMatches: [for transitionID, transition in transitions if transitionID == ref.id {
+				transition & {id: transitionID, fromState: _previous.toState}
+			}] & [_, ...]
 		}
 	}]
-
 })
