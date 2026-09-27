@@ -2,7 +2,7 @@ package ivac
 
 // Public, de-identified structural fixture. Provider identities and personal
 // medical facts are runtime bindings and deliberately do not appear here.
-mockReviewPlant: #ValidatedPlant & {
+mockReviewPlant: #Plant & #ValidatedPlant & {
 	authorities: {
 		personal: {id: "personal", kind: "personal"}
 		legal:    {id: "legal", kind: "legal"}
