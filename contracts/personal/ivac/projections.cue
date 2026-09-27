@@ -133,6 +133,94 @@ projectionPolicy: close({
 	primitive:    #TransitionPrimitive
 })
 
+#EvidenceWorldRow: close({
+	worldID:   #EvidenceWorldID
+	subjectID: #ActorID
+})
+
+#ObservationRow: close({
+	observationID:   #ObservationID
+	observationKind: #ObservationKind
+	subjectID:       #ActorID
+	concept:         string
+	basis:           #AssertionBasis
+})
+
+#EpisodeRow: close({
+	episodeID:   #EpisodeID
+	episodeKind: #EpisodeKind
+	subjectID:   #ActorID
+	label:       string
+	basis:       #AssertionBasis
+})
+
+#EpisodeObservationRow: close({
+	episodeID:     #EpisodeID
+	observationID: #ObservationID
+})
+
+#CapacityRow: close({
+	capacityID: #CapacityID
+	subjectID:  #ActorID
+	domain:     #CapacityDomain
+	state:      #CapacityState
+	label:      string
+	basis:      #AssertionBasis
+})
+
+#InterventionRow: close({
+	interventionID:   #InterventionID
+	subjectID:        #ActorID
+	interventionKind: #InterventionKind
+	state:            #InterventionState
+	label:            string
+	basis:            #AssertionBasis
+})
+
+#ClinicalRelationRow: close({
+	relationID:    #ClinicalRelationID
+	subjectKind:   #ClinicalNodeKind
+	subjectID:     #ID
+	predicate:     #ClinicalPredicate
+	objectKind:    #ClinicalNodeKind
+	objectID:      #ID
+	assertionMode: #RelationAssertionMode
+	attributedByID?: #ActorID
+})
+
+#SubjectProfileRow: close({
+	profileID:     #SubjectProfileID
+	subjectID:     #ActorID
+	sourceWorldID: #EvidenceWorldID
+	asOf:          string
+})
+
+#ProfileObservationRow: close({
+	profileID:     #SubjectProfileID
+	partition:     #ProfilePartition
+	observationID: #ObservationID
+})
+
+#ProfileEpisodeRow: close({
+	profileID: #SubjectProfileID
+	episodeID: #EpisodeID
+})
+
+#ProfileCapacityRow: close({
+	profileID:  #SubjectProfileID
+	capacityID: #CapacityID
+})
+
+#ProfileInterventionRow: close({
+	profileID:      #SubjectProfileID
+	interventionID: #InterventionID
+})
+
+#ProfileRelationRow: close({
+	profileID:  #SubjectProfileID
+	relationID: #ClinicalRelationID
+})
+
 projectionRelations: close({
 	actors:                 "#ActorRow"
 	authorities:            "#AuthorityRow"
@@ -154,4 +242,17 @@ projectionRelations: close({
 	transitionDependencies: "#TransitionDependencyRow"
 	transitionDecisions:    "#TransitionDecisionRow"
 	transitionGrants:       "#TransitionGrantRow"
+	evidenceWorlds:         "#EvidenceWorldRow"
+	observations:           "#ObservationRow"
+	episodes:               "#EpisodeRow"
+	episodeObservations:    "#EpisodeObservationRow"
+	capacities:             "#CapacityRow"
+	interventions:          "#InterventionRow"
+	clinicalRelations:      "#ClinicalRelationRow"
+	subjectProfiles:        "#SubjectProfileRow"
+	profileObservations:    "#ProfileObservationRow"
+	profileEpisodes:        "#ProfileEpisodeRow"
+	profileCapacities:      "#ProfileCapacityRow"
+	profileInterventions:   "#ProfileInterventionRow"
+	profileRelations:       "#ProfileRelationRow"
 })
