@@ -110,8 +110,20 @@ class FakeTable:
         self.operations.append(("select", list(fields))); return self
     def filter(self, predicate):
         self.operations.append(("filter", predicate.name)); return self
+    def rename(self, substitutions):
+        self.operations.append(("rename", dict(substitutions))); return self
     def join(self, right, predicates, how="inner"):
         self.operations.append(("join", right.name, list(predicates), how)); return self
+    def distinct(self, on=None):
+        self.operations.append(("distinct", None if on is None else list(on))); return self
+    def union(self, right, distinct=False):
+        self.operations.append(("union", right.name, distinct)); return self
+    def intersect(self, right, distinct=True):
+        self.operations.append(("intersect", right.name, distinct)); return self
+    def difference(self, right, distinct=True):
+        self.operations.append(("difference", right.name, distinct)); return self
+    def view(self):
+        self.operations.append(("view",)); return FakeTable(self.name + ":view")
     def group_by(self, *keys):
         self.operations.append(("group_by", list(keys))); return FakeGrouped(self)
     def aggregate(self, **metrics):
@@ -145,7 +157,8 @@ fake_plan = {
     },
     "steps": [
         {"kind": "project", "fields": ["id", "a", "b"]},
-        {"kind": "filter", "predicate": "a > 0 and b < 10", "basis": ["fixture"]},
+        {"kind": "rename", "fields": [{"from": "a", "to": "a_value"}]},
+        {"kind": "filter", "predicate": "a_value > 0 and b < 10", "basis": ["fixture"]},
         {
             "kind": "join",
             "joinType": "inner",
@@ -159,6 +172,57 @@ fake_plan = {
         },
         {"kind": "group", "keys": ["id"]},
         {"kind": "aggregate", "measures": [{"id": "total", "op": "sum", "field": "a"}]},
+        {"kind": "distinct", "on": ["id"]},
+        {
+            "kind": "semi-join",
+            "right": {
+                "id": "right",
+                "snapshotDigest": "sha256:" + "2" * 64,
+                "provenance": ["right-source"],
+                "admissibility": {"state": "admitted", "authority": "fixture.cue", "basis": ["right-source"]},
+            },
+            "on": [{"left": "id", "right": "id"}],
+        },
+        {
+            "kind": "anti-join",
+            "right": {
+                "id": "right",
+                "snapshotDigest": "sha256:" + "2" * 64,
+                "provenance": ["right-source"],
+                "admissibility": {"state": "admitted", "authority": "fixture.cue", "basis": ["right-source"]},
+            },
+            "on": [{"left": "id", "right": "id"}],
+        },
+        {
+            "kind": "union",
+            "right": {
+                "id": "right",
+                "snapshotDigest": "sha256:" + "2" * 64,
+                "provenance": ["right-source"],
+                "admissibility": {"state": "admitted", "authority": "fixture.cue", "basis": ["right-source"]},
+            },
+            "distinct": True,
+        },
+        {
+            "kind": "intersect",
+            "right": {
+                "id": "right",
+                "snapshotDigest": "sha256:" + "2" * 64,
+                "provenance": ["right-source"],
+                "admissibility": {"state": "admitted", "authority": "fixture.cue", "basis": ["right-source"]},
+            },
+            "distinct": True,
+        },
+        {
+            "kind": "difference",
+            "right": {
+                "id": "right",
+                "snapshotDigest": "sha256:" + "2" * 64,
+                "provenance": ["right-source"],
+                "admissibility": {"state": "admitted", "authority": "fixture.cue", "basis": ["right-source"]},
+            },
+            "distinct": True,
+        },
         {"kind": "grain-change", "output": {"keys": ["id"], "unit": "summary"}},
         {"kind": "order", "by": [{"field": "total", "direction": "desc"}]},
         {
@@ -183,7 +247,7 @@ lowering = lower_relational_plan(
 assert lowering.expression is left
 assert lowering.ibis_version == "fixture"
 kinds = [operation[0] for operation in left.operations]
-for expected in ("select", "filter", "join", "group_by", "aggregate", "order_by", "mutate"):
+for expected in ("select", "rename", "filter", "join", "distinct", "union", "intersect", "difference", "group_by", "aggregate", "order_by", "mutate"):
     assert expected in kinds
 
 try:

@@ -2,7 +2,7 @@ package ivac
 
 projectionPolicy: close({
 	authority: "derived-qualification-target"
-	generationPath: ["cue", "json-schema", "pydantic", "relational"]
+	generationPath: ["cue", "json-schema", "pydantic", "relational", "ibis"]
 })
 
 #ActorRow: close({
@@ -46,11 +46,11 @@ projectionPolicy: close({
 })
 
 #MandateRow: close({
-	mandateID:  #MandateID
-	kind:       #MandateKind
-	principalID:#ActorID
-	agentID:    #ActorID
-	state:      string
+	mandateID:   #MandateID
+	kind:        #MandateKind
+	principalID: #ActorID
+	agentID:     #ActorID
+	state:       string
 })
 
 #ReviewGroundRow: close({
@@ -98,20 +98,20 @@ projectionPolicy: close({
 })
 
 #StateAxisRow: close({
-	stateID:        #PlantStateID
-	axisID:         #ClaimAxisID
-	state:          string
+	stateID:         #PlantStateID
+	axisID:          #ClaimAxisID
+	state:           string
 	recognizedBand?: string
 })
 
 #TransitionRow: close({
-	transitionID:    #TransitionID
-	primitive:       #TransitionPrimitive
-	actorID:         #ActorID
-	authorityID:     #AuthorityID
-	fromStateID:     #PlantStateID
-	toStateID:       #PlantStateID
-	mandateID?:      #MandateID
+	transitionID: #TransitionID
+	primitive:    #TransitionPrimitive
+	actorID:      #ActorID
+	authorityID:  #AuthorityID
+	fromStateID:  #PlantStateID
+	toStateID:    #PlantStateID
+	mandateID?:   #MandateID
 })
 
 #TransitionDependencyRow: close({
@@ -143,15 +143,30 @@ projectionPolicy: close({
 	observationKind: #ObservationKind
 	subjectID:       #ActorID
 	concept:         string
-	basis:           #AssertionBasis
+	valueKind:       "boolean" | "number" | "categorical" | "text"
+	valueText:       string
+	temporalStatus:  #TemporalExtentStatus
+	temporalStart?:  string
+	temporalEnd?:    string
+	basis:            #AssertionBasis
+	assertedByID?:   #ActorID
+})
+
+#ObservationEvidenceRow: close({
+	observationID: #ObservationID
+	evidenceID:    #EvidenceArtifactID
 })
 
 #EpisodeRow: close({
-	episodeID:   #EpisodeID
-	episodeKind: #EpisodeKind
-	subjectID:   #ActorID
-	label:       string
-	basis:       #AssertionBasis
+	episodeID:      #EpisodeID
+	episodeKind:    #EpisodeKind
+	subjectID:      #ActorID
+	label:          string
+	temporalStatus: #TemporalExtentStatus
+	temporalStart?: string
+	temporalEnd?:   string
+	basis:           #AssertionBasis
+	assertedByID?:  #ActorID
 })
 
 #EpisodeObservationRow: close({
@@ -159,13 +174,32 @@ projectionPolicy: close({
 	observationID: #ObservationID
 })
 
+#EpisodeEvidenceRow: close({
+	episodeID:  #EpisodeID
+	evidenceID: #EvidenceArtifactID
+})
+
 #CapacityRow: close({
+	capacityID:      #CapacityID
+	subjectID:       #ActorID
+	domain:          #CapacityDomain
+	state:           #CapacityState
+	label:           string
+	temporalStatus:  #TemporalExtentStatus
+	temporalStart?:  string
+	temporalEnd?:    string
+	basis:            #AssertionBasis
+	assertedByID?:   #ActorID
+})
+
+#CapacityEvidenceRow: close({
 	capacityID: #CapacityID
-	subjectID:  #ActorID
-	domain:     #CapacityDomain
-	state:      #CapacityState
-	label:      string
-	basis:      #AssertionBasis
+	evidenceID: #EvidenceArtifactID
+})
+
+#CapacitySupportRow: close({
+	capacityID:     #CapacityID
+	interventionID: #InterventionID
 })
 
 #InterventionRow: close({
@@ -174,18 +208,36 @@ projectionPolicy: close({
 	interventionKind: #InterventionKind
 	state:            #InterventionState
 	label:            string
-	basis:            #AssertionBasis
+	temporalStatus:   #TemporalExtentStatus
+	temporalStart?:   string
+	temporalEnd?:     string
+	basis:             #AssertionBasis
+	assertedByID?:    #ActorID
+	providerID?:      #ActorID
+})
+
+#InterventionEvidenceRow: close({
+	interventionID: #InterventionID
+	evidenceID:     #EvidenceArtifactID
 })
 
 #ClinicalRelationRow: close({
-	relationID:    #ClinicalRelationID
-	subjectKind:   #ClinicalNodeKind
-	subjectID:     #ID
-	predicate:     #ClinicalPredicate
-	objectKind:    #ClinicalNodeKind
-	objectID:      #ID
-	assertionMode: #RelationAssertionMode
+	relationID:      #ClinicalRelationID
+	subjectKind:     #ClinicalNodeKind
+	subjectID:       #ID
+	predicate:       #ClinicalPredicate
+	objectKind:      #ClinicalNodeKind
+	objectID:        #ID
+	assertionMode:   #RelationAssertionMode
 	attributedByID?: #ActorID
+	temporalStatus?: #TemporalExtentStatus
+	temporalStart?:  string
+	temporalEnd?:    string
+})
+
+#RelationEvidenceRow: close({
+	relationID: #ClinicalRelationID
+	evidenceID: #EvidenceArtifactID
 })
 
 #SubjectProfileRow: close({
@@ -221,6 +273,32 @@ projectionPolicy: close({
 	relationID: #ClinicalRelationID
 })
 
+#GraphEdgeClass: "clinical" | "membership" | "evidence" | "support" | "review"
+
+#GraphEdgeRow: close({
+	edgeID:          #ID
+	edgeClass:       #GraphEdgeClass
+	subjectKind:     string & !=""
+	subjectID:       #ID
+	predicate:       string & !=""
+	objectKind:      string & !=""
+	objectID:        #ID
+	assertionMode?:  #RelationAssertionMode
+	attributedByID?: #ActorID
+	temporalStatus?: #TemporalExtentStatus
+	temporalStart?:  string
+	temporalEnd?:    string
+})
+
+#GraphIndexRow: close({
+	indexID:    #ID
+	keyName:    string & !=""
+	keyValue:   string
+	memberKind: string & !=""
+	memberID:   #ID
+	edgeID?:    #ID
+})
+
 projectionRelations: close({
 	actors:                 "#ActorRow"
 	authorities:            "#AuthorityRow"
@@ -244,15 +322,23 @@ projectionRelations: close({
 	transitionGrants:       "#TransitionGrantRow"
 	evidenceWorlds:         "#EvidenceWorldRow"
 	observations:           "#ObservationRow"
+	observationEvidence:    "#ObservationEvidenceRow"
 	episodes:               "#EpisodeRow"
 	episodeObservations:    "#EpisodeObservationRow"
+	episodeEvidence:        "#EpisodeEvidenceRow"
 	capacities:             "#CapacityRow"
+	capacityEvidence:       "#CapacityEvidenceRow"
+	capacitySupport:        "#CapacitySupportRow"
 	interventions:          "#InterventionRow"
+	interventionEvidence:   "#InterventionEvidenceRow"
 	clinicalRelations:      "#ClinicalRelationRow"
+	relationEvidence:       "#RelationEvidenceRow"
 	subjectProfiles:        "#SubjectProfileRow"
 	profileObservations:    "#ProfileObservationRow"
 	profileEpisodes:        "#ProfileEpisodeRow"
 	profileCapacities:      "#ProfileCapacityRow"
 	profileInterventions:   "#ProfileInterventionRow"
 	profileRelations:       "#ProfileRelationRow"
+	graphEdges:             "#GraphEdgeRow"
+	graphIndices:           "#GraphIndexRow"
 })

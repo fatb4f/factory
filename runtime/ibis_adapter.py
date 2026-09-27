@@ -411,19 +411,43 @@ def lower_relational_plan(
         kind = str(operation["kind"])
         if kind == "project":
             expr = expr.select(*[str(field) for field in operation["fields"]])
+        elif kind == "rename":
+            substitutions = {
+                str(field["to"]): str(field["from"])
+                for field in operation["fields"]
+            }
+            expr = expr.rename(substitutions)
         elif kind == "filter":
             expr = expr.filter(compile_expression(str(operation["predicate"]), expr))
-        elif kind == "join":
+        elif kind in {"join", "semi-join", "anti-join"}:
             right_source = operation["right"]
             right_id = str(right_source["id"])
             if right_id not in tables:
                 raise IbisCapabilityGap(f"missing Ibis join relation for {right_id!r}")
             right = tables[right_id]
+            if right_id == source_id:
+                view = getattr(right, "view", None)
+                if view is not None and callable(view):
+                    right = view()
             predicates = [
                 (str(key["left"]), str(key["right"]))
                 for key in operation["on"]
             ]
-            expr = expr.join(right, predicates, how=str(operation["joinType"]))
+            how = str(operation["joinType"]) if kind == "join" else ("semi" if kind == "semi-join" else "anti")
+            expr = expr.join(right, predicates, how=how)
+        elif kind == "distinct":
+            on = [str(field) for field in operation.get("on", [])] or None
+            expr = expr.distinct(on=on)
+        elif kind in {"union", "intersect", "difference"}:
+            right_source = operation["right"]
+            right_id = str(right_source["id"])
+            if right_id not in tables:
+                raise IbisCapabilityGap(f"missing Ibis set relation for {right_id!r}")
+            right = tables[right_id]
+            method = getattr(expr, kind, None)
+            if method is None or not callable(method):
+                raise IbisCapabilityGap(f"Ibis table does not support set operation {kind!r}")
+            expr = method(right, distinct=bool(operation["distinct"]))
         elif kind == "group":
             group_keys = [str(key) for key in operation["keys"]]
         elif kind == "aggregate":
