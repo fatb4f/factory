@@ -68,6 +68,11 @@ units: close({
 		kind:   "personal"
 		agents: "personal/gym/.agents"
 	}
+	"personal.ivac": unit.#Unit & {
+		id:     "personal.ivac"
+		kind:   "personal"
+		agents: "personal/ivac/.agents"
+	}
 })
 
 tasks: close({
