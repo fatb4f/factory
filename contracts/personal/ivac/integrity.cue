@@ -75,7 +75,7 @@ package ivac
 	_findingIntegrity: [for id, finding in findings {
 		_value: finding & {id: id}
 		_producerMatches: [for actorID, actor in actors if actorID == finding.producer.id {
-			actor & {id: actorID, kind: "medical-expert" | "treating-clinician"}
+			actor & {id: actorID, kind: "clinical-expert" | "medical-expert" | "treating-clinician"}
 		}] & [_, ...]
 		_axisMatches: [for axisID, axis in axes if axisID == finding.axis.id {
 			axis & {id: axisID}
@@ -102,7 +102,7 @@ package ivac
 		}
 		if mandate.kind == "expert" {
 			_expertAgentMatches: [for actorID, actor in actors if actorID == mandate.agent.id {
-				actor & {id: actorID, kind: "medical-expert"}
+				actor & {id: actorID, kind: "clinical-expert" | "medical-expert"}
 			}] & [_, ...]
 		}
 	}]
