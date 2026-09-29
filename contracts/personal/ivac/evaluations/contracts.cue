@@ -9,6 +9,9 @@ import ivac "github.com/fatb4f/factory/contracts/personal/ivac:ivac"
 	"permanent-sequela" |
 	"gp-addendum" |
 	"neuroscience-expertise" |
+	"neuropsychological-reassessment" |
+	"speech-language-assessment" |
+	"psychological-dissociation-assessment" |
 	"legal-review"
 
 #AssessmentDisposition: "supported" | "contradicted" | "insufficient-evidence" | "not-applicable"
@@ -20,6 +23,22 @@ import ivac "github.com/fatb4f/factory/contracts/personal/ivac:ivac"
 	"coverage-gap"
 
 #DependencyKind: "edge-transform" | "index-transform"
+
+#CommissioningMode: "direct" | "mandated"
+
+#AssessmentRootBinding: close({
+	evaluatorKinds:      [ivac.#ActorKind, ...ivac.#ActorKind]
+	authorityKinds:      [ivac.#AuthorityKind, ...ivac.#AuthorityKind]
+	commissioningModes:  [#CommissioningMode, ...#CommissioningMode]
+	mandateKinds?:       [ivac.#MandateKind, ...ivac.#MandateKind]
+	requiredTransitions: [ivac.#TransitionPrimitive, ...ivac.#TransitionPrimitive]
+})
+
+#AssessmentDeliverableContract: close({
+	evidenceClasses: [ivac.#EvidenceClass, ...ivac.#EvidenceClass]
+	findingKinds:    [...ivac.#FindingKind]
+	admission:       "candidate-until-qualified"
+})
 
 #EvaluationDependencyRef: close({
 	kind: #DependencyKind
@@ -58,6 +77,11 @@ import ivac "github.com/fatb4f/factory/contracts/personal/ivac:ivac"
 	boundary:   #EvaluationBoundary
 	invariants: [string & !="", ...(string & !="")]
 })
+
+#ProfessionalAssessmentContract: #EvaluationContract & {
+	root:        #AssessmentRootBinding
+	deliverable: #AssessmentDeliverableContract
+}
 
 #EvaluationContractRef: close({
 	id:      #EvaluationID
