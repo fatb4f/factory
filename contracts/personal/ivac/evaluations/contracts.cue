@@ -69,13 +69,15 @@ import ivac "github.com/fatb4f/factory/contracts/personal/ivac:ivac"
 })
 
 #EvaluationContract: close({
-	id:         #EvaluationID
-	version:    string & !=""
-	purpose:    #EvaluationPurpose
-	input:      #EvaluationInputContract
-	questions:  [#EvaluationQuestion, ...#EvaluationQuestion]
-	boundary:   #EvaluationBoundary
-	invariants: [string & !="", ...(string & !="")]
+	id:           #EvaluationID
+	version:      string & !=""
+	purpose:      #EvaluationPurpose
+	root?:        #AssessmentRootBinding
+	deliverable?: #AssessmentDeliverableContract
+	input:        #EvaluationInputContract
+	questions:    [#EvaluationQuestion, ...#EvaluationQuestion]
+	boundary:     #EvaluationBoundary
+	invariants:   [string & !="", ...(string & !="")]
 })
 
 #ProfessionalAssessmentContract: #EvaluationContract & {
