@@ -313,6 +313,40 @@ edgeTransforms: close({
 			requiredOperations: ["filter", "join", "union", "distinct", "project"]
 		}
 	}
+	"assessment-input-surface": #EdgeTransform & {
+		id:        "assessment-input-surface"
+		primitive: "bounded-expand"
+		input:     "graphEdges"
+		output:    "graphEdges.assessment-input"
+		selector: {edgeClasses: ["clinical", "membership", "evidence", "support", "review"]}
+		parameters: [{name: "roots", type: "string", required: true}]
+		maxDepth: 4
+		lowering: {
+			target: "ibis"
+			ir: "factory.analytics-ir/v1"
+			materialization: "lazy"
+			physicalIndex: false
+			requiredOperations: ["filter", "join", "union", "distinct", "project"]
+		}
+	}
+	"assessment-evidence-links": #EdgeTransform & {
+		id:        "assessment-evidence-links"
+		primitive: "select"
+		input:     "graphEdges"
+		output:    "graphEdges.assessment-evidence"
+		selector: {
+			edgeClasses: ["evidence", "review"]
+			objectKinds: ["evidence-artifact"]
+		}
+		lowering: {
+			target: "ibis"
+			ir: "factory.analytics-ir/v1"
+			materialization: "lazy"
+			physicalIndex: false
+			requiredOperations: ["filter", "project", "distinct"]
+		}
+	}
+
 })
 
 indexTransforms: close({
@@ -377,4 +411,65 @@ indexTransforms: close({
 			requiredOperations: ["filter", "project", "distinct"]
 		}
 	}
+	"assessment-by-subject": #IndexTransform & {
+		id:        "assessment-by-subject"
+		primitive: "build"
+		inputs:    ["graphEdges.assessment-input"]
+		output:    "graphIndices.assessment-by-subject"
+		key:       {name: "subject", fields: ["subjectKind", "subjectID"]}
+		member:    {kindValue: "edge", idField: "edgeID", edgeIDField: "edgeID"}
+		lowering: {
+			target: "ibis"
+			ir: "factory.analytics-ir/v1"
+			materialization: "lazy"
+			physicalIndex: false
+			requiredOperations: ["project", "distinct"]
+		}
+	}
+	"assessment-by-object": #IndexTransform & {
+		id:        "assessment-by-object"
+		primitive: "build"
+		inputs:    ["graphEdges.assessment-input"]
+		output:    "graphIndices.assessment-by-object"
+		key:       {name: "object", fields: ["objectKind", "objectID"]}
+		member:    {kindValue: "edge", idField: "edgeID", edgeIDField: "edgeID"}
+		lowering: {
+			target: "ibis"
+			ir: "factory.analytics-ir/v1"
+			materialization: "lazy"
+			physicalIndex: false
+			requiredOperations: ["project", "distinct"]
+		}
+	}
+	"assessment-by-predicate": #IndexTransform & {
+		id:        "assessment-by-predicate"
+		primitive: "build"
+		inputs:    ["graphEdges.assessment-input"]
+		output:    "graphIndices.assessment-by-predicate"
+		key:       {name: "predicate", fields: ["predicate"]}
+		member:    {kindValue: "edge", idField: "edgeID", edgeIDField: "edgeID"}
+		lowering: {
+			target: "ibis"
+			ir: "factory.analytics-ir/v1"
+			materialization: "lazy"
+			physicalIndex: false
+			requiredOperations: ["project", "distinct"]
+		}
+	}
+	"assessment-by-evidence": #IndexTransform & {
+		id:        "assessment-by-evidence"
+		primitive: "build"
+		inputs:    ["graphEdges.assessment-evidence"]
+		output:    "graphIndices.assessment-by-evidence"
+		key:       {name: "evidence", fields: ["objectID"]}
+		member:    {kindValue: "edge", idField: "edgeID", edgeIDField: "edgeID"}
+		lowering: {
+			target: "ibis"
+			ir: "factory.analytics-ir/v1"
+			materialization: "lazy"
+			physicalIndex: false
+			requiredOperations: ["project", "distinct"]
+		}
+	}
+
 })
