@@ -92,7 +92,8 @@ package ivac
 	"clinical-report" |
 	"expert-report" |
 	"objective-test" |
-	"legal-submission"
+	"legal-submission" |
+	"legal-work-product"
 
 #EvidenceArtifact: close({
 	id:       #EvidenceArtifactID
