@@ -8,7 +8,7 @@ mockClinicalCase: #ValidatedCasePlant & {
 	world: {
 		id:      "mock-world"
 		subject: {id: "claimant"}
-		evidence: [{id: "expertReport"}]
+		evidence: [{id: "sourceRecord"}, {id: "expertReport"}]
 
 		observations: {
 			functionalFailure: {
@@ -150,6 +150,6 @@ mockClinicalCase: #ValidatedCasePlant & {
 		capacities:    [{id: "structuredObligation"}]
 		interventions: [{id: "humanSupport"}]
 		relations:     [{id: "documentsFailure"}, {id: "episodeImpairsCapacity"}]
-		evidence:      [{id: "expertReport"}]
+		evidence:      [{id: "sourceRecord"}, {id: "expertReport"}]
 	}
 }
