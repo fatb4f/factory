@@ -26,6 +26,11 @@ mockReviewPlant: #Plant & #ValidatedPlant & {
 			kind: "medical-expert"
 			capabilities: ["observe", "opine", "assert"]
 		}
+		treatingClinician: {
+			id: "treatingClinician"
+			kind: "treating-clinician"
+			capabilities: ["observe", "assert"]
+		}
 		reviewAuthority: {
 			id: "reviewAuthority"
 			kind: "adjudicator"
@@ -47,6 +52,12 @@ mockReviewPlant: #Plant & #ValidatedPlant & {
 			producer: {id: "reviewAuthority"}
 			axes: [{id: "primary"}]
 		}
+		sourceRecord: {
+			id: "sourceRecord"
+			class: "medical-record"
+			producer: {id: "treatingClinician"}
+			axes: [{id: "primary"}]
+		}
 		expertReport: {
 			id: "expertReport"
 			class: "expert-report"
@@ -56,6 +67,12 @@ mockReviewPlant: #Plant & #ValidatedPlant & {
 		legalSubmission: {
 			id: "legalSubmission"
 			class: "legal-submission"
+			producer: {id: "counsel"}
+			axes: [{id: "primary"}]
+		}
+		legalWorkProduct: {
+			id: "legalWorkProduct"
+			class: "legal-work-product"
 			producer: {id: "counsel"}
 			axes: [{id: "primary"}]
 		}
