@@ -299,6 +299,89 @@ projectionPolicy: close({
 	edgeID?:    #ID
 })
 
+#ArtifactEnvelopeRow: close({
+	envelopeID:         #ArtifactEnvelopeID
+	evidenceID:         #EvidenceArtifactID
+	layer:              #ArtifactLayer
+	defaultDisposition: #PortabilityDisposition
+	authorityPreserved: true
+})
+
+#ArtifactEnvelopeGateRow: close({
+	envelopeID: #ArtifactEnvelopeID
+	gate:       #DisclosureGate
+})
+
+#ArtifactEnvelopeProtectionRow: close({
+	envelopeID: #ArtifactEnvelopeID
+	protection: #PotentialProtection
+})
+
+#ReuseConsumerProfileRow: close({
+	profileID:            #PortabilityProfileID
+	forum:                #ForumKind
+	selectionMode:        "purpose-bound-subset"
+	wholeCorpusByDefault: false
+	admissibility:        "not-determined"
+	authority:            "consumer-specific-qualification"
+})
+
+#ReuseProfilePurposeRow: close({
+	profileID: #PortabilityProfileID
+	purpose:   #ReusePurpose
+})
+
+#ReuseProfileRuleRow: close({
+	profileID:   #PortabilityProfileID
+	layer:       #ArtifactLayer
+	disposition: #PortabilityDisposition
+})
+
+#ReuseProfileRuleGateRow: close({
+	profileID: #PortabilityProfileID
+	layer:     #ArtifactLayer
+	gate:      #DisclosureGate
+})
+
+#DerivativePackageRow: close({
+	packageID:         #DerivativePackageID
+	consumerProfileID: #PortabilityProfileID
+	worldID:           #EvidenceWorldID
+	subjectProfileID:  #SubjectProfileID
+	purpose:           #ReusePurpose
+	selectionMode:     "purpose-bound-subset"
+	authority:         "derived-non-authoritative"
+	state:             #DerivativePackageState
+})
+
+#DerivativeArtifactRow: close({
+	packageID:          #DerivativePackageID
+	evidenceID:         #EvidenceArtifactID
+	envelopeID:         #ArtifactEnvelopeID
+	disposition:        #PortabilityDisposition
+	decision:           #SelectionDecision
+	scopeReview:        #GateState
+	clinicalScope:      #GateState
+	forumQualification: #GateState
+	protectionReview:   #GateState
+})
+
+#DerivativeFindingRow: close({
+	packageID: #DerivativePackageID
+	findingID: #FindingID
+})
+
+#DerivativeRelationRow: close({
+	packageID:  #DerivativePackageID
+	relationID: #ClinicalRelationID
+})
+
+#ReuseSeedRow: close({
+	seedID:            #ReuseSeedID
+	consumerProfileID: #PortabilityProfileID
+	purpose:           #ReusePurpose
+})
+
 projectionRelations: close({
 	actors:                 "#ActorRow"
 	authorities:            "#AuthorityRow"
@@ -341,4 +424,16 @@ projectionRelations: close({
 	profileRelations:       "#ProfileRelationRow"
 	graphEdges:             "#GraphEdgeRow"
 	graphIndices:           "#GraphIndexRow"
+	artifactEnvelopes:      "#ArtifactEnvelopeRow"
+	artifactEnvelopeGates:  "#ArtifactEnvelopeGateRow"
+	artifactProtections:    "#ArtifactEnvelopeProtectionRow"
+	reuseConsumerProfiles:  "#ReuseConsumerProfileRow"
+	reuseProfilePurposes:   "#ReuseProfilePurposeRow"
+	reuseProfileRules:      "#ReuseProfileRuleRow"
+	reuseProfileRuleGates:  "#ReuseProfileRuleGateRow"
+	derivativePackages:     "#DerivativePackageRow"
+	derivativeArtifacts:    "#DerivativeArtifactRow"
+	derivativeFindings:     "#DerivativeFindingRow"
+	derivativeRelations:    "#DerivativeRelationRow"
+	reuseSeeds:             "#ReuseSeedRow"
 })
