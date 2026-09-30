@@ -23,7 +23,7 @@ package ivac
 	"source-record" |
 	"clinical-expert-opinion" |
 	"filed-legal-material" |
-	"privileged-legal-work-product"
+	"legal-work-product"
 
 #ReusePurpose:
 	"fact-corroboration" |
@@ -140,6 +140,23 @@ package ivac
 	note:            string & !=""
 })
 
+#ValidatedReuseSeed: #ReuseSeed & {
+	_profileMatches: [for profileID, profile in reuseProfiles if profileID == consumerProfile.id {
+		profile & {id: profileID}
+	}] & [_, ...]
+	_profile: _profileMatches[0]
+
+	_purposeMatches: [for allowedPurpose in _profile.purposes if allowedPurpose == purpose {
+		allowedPurpose
+	}] & [_, ...]
+
+	_layerIntegrity: [for layer in candidateLayers {
+		_ruleMatches: [for rule in _profile.rules if rule.layer == layer {
+			rule
+		}] & [_, ...]
+	}]
+}
+
 reuseProfiles: close({
 	"criminal-defence": #ReuseConsumerProfile & {
 		id:      "criminal-defence"
@@ -149,7 +166,7 @@ reuseProfiles: close({
 			{layer: "source-record", disposition: "supporting-candidate", requiredGates: ["purpose-scope", "forum-requalification"]},
 			{layer: "clinical-expert-opinion", disposition: "requires-requalification", requiredGates: ["purpose-scope", "clinical-scope", "forum-requalification", "counsel-protection-review"]},
 			{layer: "filed-legal-material", disposition: "supporting-candidate", requiredGates: ["purpose-scope", "forum-requalification", "counsel-protection-review"]},
-			{layer: "privileged-legal-work-product", disposition: "withhold-by-default", requiredGates: ["purpose-scope", "counsel-protection-review"]},
+			{layer: "legal-work-product", disposition: "withhold-by-default", requiredGates: ["purpose-scope", "counsel-protection-review"]},
 		]
 		selectionMode:         "purpose-bound-subset"
 		wholeCorpusByDefault: false
@@ -166,7 +183,7 @@ reuseProfiles: close({
 			{layer: "source-record", disposition: "direct-candidate", requiredGates: ["purpose-scope", "forum-requalification"]},
 			{layer: "clinical-expert-opinion", disposition: "requires-requalification", requiredGates: ["purpose-scope", "clinical-scope", "forum-requalification", "counsel-protection-review"]},
 			{layer: "filed-legal-material", disposition: "supporting-candidate", requiredGates: ["purpose-scope", "forum-requalification", "counsel-protection-review"]},
-			{layer: "privileged-legal-work-product", disposition: "withhold-by-default", requiredGates: ["purpose-scope", "counsel-protection-review"]},
+			{layer: "legal-work-product", disposition: "withhold-by-default", requiredGates: ["purpose-scope", "counsel-protection-review"]},
 		]
 		selectionMode:         "purpose-bound-subset"
 		wholeCorpusByDefault: false
@@ -182,7 +199,7 @@ reuseProfiles: close({
 			{layer: "source-record", disposition: "direct-candidate", requiredGates: ["purpose-scope"]},
 			{layer: "clinical-expert-opinion", disposition: "supporting-candidate", requiredGates: ["purpose-scope", "clinical-scope", "forum-requalification"]},
 			{layer: "filed-legal-material", disposition: "supporting-candidate", requiredGates: ["purpose-scope", "forum-requalification", "counsel-protection-review"]},
-			{layer: "privileged-legal-work-product", disposition: "withhold-by-default", requiredGates: ["purpose-scope", "counsel-protection-review"]},
+			{layer: "legal-work-product", disposition: "withhold-by-default", requiredGates: ["purpose-scope", "counsel-protection-review"]},
 		]
 		selectionMode:         "purpose-bound-subset"
 		wholeCorpusByDefault: false
@@ -198,7 +215,7 @@ reuseProfiles: close({
 			{layer: "source-record", disposition: "direct-candidate", requiredGates: ["purpose-scope"]},
 			{layer: "clinical-expert-opinion", disposition: "requires-requalification", requiredGates: ["purpose-scope", "clinical-scope", "forum-requalification"]},
 			{layer: "filed-legal-material", disposition: "supporting-candidate", requiredGates: ["purpose-scope", "forum-requalification", "counsel-protection-review"]},
-			{layer: "privileged-legal-work-product", disposition: "withhold-by-default", requiredGates: ["purpose-scope", "counsel-protection-review"]},
+			{layer: "legal-work-product", disposition: "withhold-by-default", requiredGates: ["purpose-scope", "counsel-protection-review"]},
 		]
 		selectionMode:         "purpose-bound-subset"
 		wholeCorpusByDefault: false
@@ -214,7 +231,7 @@ reuseProfiles: close({
 			{layer: "source-record", disposition: "supporting-candidate", requiredGates: ["purpose-scope", "forum-requalification"]},
 			{layer: "clinical-expert-opinion", disposition: "supporting-candidate", requiredGates: ["purpose-scope", "clinical-scope", "forum-requalification"]},
 			{layer: "filed-legal-material", disposition: "supporting-candidate", requiredGates: ["purpose-scope", "forum-requalification", "counsel-protection-review"]},
-			{layer: "privileged-legal-work-product", disposition: "withhold-by-default", requiredGates: ["purpose-scope", "counsel-protection-review"]},
+			{layer: "legal-work-product", disposition: "withhold-by-default", requiredGates: ["purpose-scope", "counsel-protection-review"]},
 		]
 		selectionMode:         "purpose-bound-subset"
 		wholeCorpusByDefault: false
@@ -231,7 +248,7 @@ reuseProfiles: close({
 			{layer: "source-record", disposition: "supporting-candidate", requiredGates: ["purpose-scope", "forum-requalification"]},
 			{layer: "clinical-expert-opinion", disposition: "supporting-candidate", requiredGates: ["purpose-scope", "clinical-scope", "forum-requalification"]},
 			{layer: "filed-legal-material", disposition: "supporting-candidate", requiredGates: ["purpose-scope", "forum-requalification", "counsel-protection-review"]},
-			{layer: "privileged-legal-work-product", disposition: "withhold-by-default", requiredGates: ["purpose-scope", "counsel-protection-review"]},
+			{layer: "legal-work-product", disposition: "withhold-by-default", requiredGates: ["purpose-scope", "counsel-protection-review"]},
 		]
 		selectionMode:         "purpose-bound-subset"
 		wholeCorpusByDefault: false
@@ -247,7 +264,7 @@ reuseProfiles: close({
 			{layer: "source-record", disposition: "supporting-candidate", requiredGates: ["purpose-scope", "forum-requalification"]},
 			{layer: "clinical-expert-opinion", disposition: "requires-requalification", requiredGates: ["purpose-scope", "clinical-scope", "forum-requalification", "counsel-protection-review"]},
 			{layer: "filed-legal-material", disposition: "supporting-candidate", requiredGates: ["purpose-scope", "forum-requalification", "counsel-protection-review"]},
-			{layer: "privileged-legal-work-product", disposition: "withhold-by-default", requiredGates: ["purpose-scope", "counsel-protection-review"]},
+			{layer: "legal-work-product", disposition: "withhold-by-default", requiredGates: ["purpose-scope", "counsel-protection-review"]},
 		]
 		selectionMode:         "purpose-bound-subset"
 		wholeCorpusByDefault: false
