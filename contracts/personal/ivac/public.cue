@@ -9,6 +9,9 @@ _publicLegacyTransforms:  relationTransforms
 _publicEdgeBindings:      graphEdgeBindings
 _publicEdgeTransforms:    edgeTransforms
 _publicIndexTransforms:   indexTransforms
+_publicReuseProfiles:     reuseProfiles
+_publicReuseSeeds:        reuseSeeds
+_publicPortabilitySeed:   portabilitySeed
 
 public: {
 	contract:         _publicContract
@@ -20,4 +23,7 @@ public: {
 	edgeBindings:     _publicEdgeBindings
 	edgeTransforms:   _publicEdgeTransforms
 	indexTransforms:  _publicIndexTransforms
+	reuseProfiles:    _publicReuseProfiles
+	reuseSeeds:       _publicReuseSeeds
+	portabilitySeed:  _publicPortabilitySeed
 }
