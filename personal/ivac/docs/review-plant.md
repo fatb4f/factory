@@ -86,6 +86,49 @@ Legal evaluation cannot manufacture clinical findings. Clinical evaluation canno
 
 Evaluation-owned cutoffs, selected relation transforms, questions, and report wording do not alter canonical subject history.
 
+## Cross-forum portability
+
+The IVAC review plant is the first consumer of the normalized legal-medical evidence layer, not its semantic boundary.
+
+The reusable path is:
+
+```text
+master legal-medical corpus
+        ↓ preserve source authority
+artifact portability envelopes
+        ↓ forum + purpose qualification
+reuse consumer profile
+        ↓ explicit disclosure gates
+purpose-bound artifact selection
+        ↓
+derived downstream package
+```
+
+`contracts/personal/ivac/portability.cue` distinguishes four artifact layers:
+
+- source records;
+- clinical expert opinions;
+- filed legal material;
+- privileged legal work product.
+
+The distinction is intentionally asymmetric. A source record may be a direct or supporting candidate in another forum. An expert report may require a new mandate, forum-specific qualification, or a statutory assessment. Filed legal material may be reusable as supporting material. Legal work product is withheld by default pending explicit protection review.
+
+No portability profile determines admissibility, privilege, waiver, entitlement, criminal responsibility, capacity, damages, or any other forum-specific outcome. Those remain downstream qualifications owned by the competent legal/adjudicative authority.
+
+The current consumer profiles seed:
+
+- criminal defence;
+- civil litigation;
+- administrative/benefits proceedings;
+- insurance/disability proceedings;
+- capacity/protective proceedings;
+- employment/human-rights proceedings;
+- family proceedings.
+
+Every derivative package is a `purpose-bound-subset`. The master corpus is never inferred to be an appropriate disclosure package.
+
+`contracts/personal/ivac/portability_seed.cue` contains only de-identified structural reuse seeds. It demonstrates explicit inclusion of selected source/expert material and explicit exclusion of legal work product. It does not encode actual claimant facts or provider identities.
+
 ## Runtime bindings
 
 Concrete providers are runtime bindings to semantic roles:

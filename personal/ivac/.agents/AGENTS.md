@@ -22,3 +22,7 @@ Rules:
 10. Keep evaluation-owned cutoffs, selectors, relation transforms, questions, and report wording outside canonical subject history.
 11. Keep public fixtures de-identified and free of real claimant medical facts.
 12. Relational/JSON/Python outputs are disposable projections of CUE authority.
+13. Treat IVAC review as one consumer of the normalized legal-medical evidence layer; downstream reuse must preserve source authority rather than copying review conclusions as universal facts.
+14. Build every downstream disclosure as an explicit purpose-bound subset. Never infer that the master corpus should be disclosed wholesale.
+15. Preserve separate portability semantics for source records, expert opinions, filed legal material, and legal work product; potential privilege/confidentiality always requires explicit legal review.
+16. A prior private expertise may support a downstream question but never becomes a statutory assessment, admissibility ruling, or forum-specific legal conclusion by projection alone.

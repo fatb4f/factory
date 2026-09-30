@@ -245,6 +245,9 @@ cue vet -c=false ./contracts/personal/ivac:ivac
 cue export ./contracts/personal/ivac:ivac -e public --out json >/dev/null
 cue export ./contracts/personal/ivac:ivac -e edgeTransforms --out json >/dev/null
 cue export ./contracts/personal/ivac:ivac -e indexTransforms --out json >/dev/null
+cue export ./contracts/personal/ivac:ivac -e reuseProfiles --out json >/dev/null
+cue export ./contracts/personal/ivac:ivac -e reuseSeeds --out json >/dev/null
+cue export ./contracts/personal/ivac:ivac -e portabilitySeed --out json >/dev/null
 cue vet -c=false ./contracts/personal/ivac/evaluations:ivaceval
 cue export ./contracts/personal/ivac/evaluations:ivaceval -e public --out json >/dev/null
 
