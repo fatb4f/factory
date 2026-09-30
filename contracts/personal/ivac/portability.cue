@@ -140,7 +140,13 @@ package ivac
 	note:            string & !=""
 })
 
-#ValidatedReuseSeed: #ReuseSeed & {
+#ValidatedReuseSeed: close({
+	id:              #ReuseSeedID
+	consumerProfile: #ReuseConsumerProfileRef
+	purpose:         #ReusePurpose
+	candidateLayers: [#ArtifactLayer, ...#ArtifactLayer]
+	note:            string & !=""
+
 	_profileMatches: [for profileID, profile in reuseProfiles if profileID == consumerProfile.id {
 		profile & {id: profileID}
 	}] & [_, ...]
@@ -155,7 +161,7 @@ package ivac
 			rule
 		}] & [_, ...]
 	}]
-}
+})
 
 reuseProfiles: close({
 	"criminal-defence": #ReuseConsumerProfile & {
