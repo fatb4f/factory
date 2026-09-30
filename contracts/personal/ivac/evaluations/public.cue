@@ -5,6 +5,7 @@ evaluationContracts: close({
 	"gp-addendum":            gpAddendumContract
 	"neuroscience-expertise": neuroscienceExpertiseContract
 	"legal-review":            legalReviewContract
+	"downstream-reuse":        downstreamReuseContract
 })
 
 public: close({
