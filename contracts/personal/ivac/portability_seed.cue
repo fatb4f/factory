@@ -4,49 +4,49 @@ package ivac
 // surfaces only; they contain no claimant facts and do not establish
 // admissibility, privilege, waiver, or forum-specific entitlement.
 reuseSeeds: close({
-	"criminal-defence": #ReuseSeed & {
+	"criminal-defence": #ValidatedReuseSeed & {
 		id:              "criminal-defence"
 		consumerProfile: {id: "criminal-defence"}
 		purpose:         "statutory-assessment-support"
 		candidateLayers: ["source-record", "clinical-expert-opinion"]
 		note:            "Seed defence review from source records and private expert material while preserving the boundary to any court-ordered statutory assessment."
 	}
-	"civil-litigation": #ReuseSeed & {
+	"civil-litigation": #ValidatedReuseSeed & {
 		id:              "civil-litigation"
 		consumerProfile: {id: "civil-litigation"}
 		purpose:         "functional-capacity"
 		candidateLayers: ["source-record", "clinical-expert-opinion", "filed-legal-material"]
 		note:            "Seed a purpose-bound civil package; expert scope and forum qualification remain explicit gates."
 	}
-	"administrative-benefits": #ReuseSeed & {
+	"administrative-benefits": #ValidatedReuseSeed & {
 		id:              "administrative-benefits"
 		consumerProfile: {id: "administrative-benefits"}
 		purpose:         "legal-qualification"
 		candidateLayers: ["source-record", "clinical-expert-opinion", "filed-legal-material"]
 		note:            "Seed reuse for a new administrative or benefits test without treating the IVAC legal test as portable."
 	}
-	"insurance-disability": #ReuseSeed & {
+	"insurance-disability": #ValidatedReuseSeed & {
 		id:              "insurance-disability"
 		consumerProfile: {id: "insurance-disability"}
 		purpose:         "functional-capacity"
 		candidateLayers: ["source-record", "clinical-expert-opinion"]
 		note:            "Seed disability or insurance qualification from the admitted clinical record while retaining contract-specific requalification."
 	}
-	"capacity-protective": #ReuseSeed & {
+	"capacity-protective": #ValidatedReuseSeed & {
 		id:              "capacity-protective"
 		consumerProfile: {id: "capacity-protective"}
 		purpose:         "capacity-assessment"
 		candidateLayers: ["source-record", "clinical-expert-opinion"]
 		note:            "Seed longitudinal baseline evidence without substituting prior expertise for a distinct statutory medical or psychosocial assessment."
 	}
-	"employment-human-rights": #ReuseSeed & {
+	"employment-human-rights": #ValidatedReuseSeed & {
 		id:              "employment-human-rights"
 		consumerProfile: {id: "employment-human-rights"}
 		purpose:         "accommodation"
 		candidateLayers: ["source-record", "clinical-expert-opinion"]
 		note:            "Seed a narrow functional/accommodation package rather than exposing the master legal-medical corpus."
 	}
-	"family": #ReuseSeed & {
+	"family": #ValidatedReuseSeed & {
 		id:              "family"
 		consumerProfile: {id: "family"}
 		purpose:         "functional-capacity"
@@ -88,7 +88,7 @@ portabilitySeed: #ValidatedPortabilityCase & {
 		legalWorkProduct: {
 			id:                 "legalWorkProduct"
 			artifact:           {id: "legalWorkProduct"}
-			layer:              "privileged-legal-work-product"
+			layer:              "legal-work-product"
 			defaultDisposition: "withhold-by-default"
 			requiredGates:      ["purpose-scope", "counsel-protection-review"]
 			potentialProtections: ["solicitor-client-privilege", "litigation-privilege"]
