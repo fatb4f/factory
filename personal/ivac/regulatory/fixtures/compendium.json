@@ -1,0 +1,124 @@
+{
+  "id": "synthetic-compendium",
+  "source": {
+    "id": "synthetic-2021",
+    "instrument": "SYNTHETIC-NOT-LAW",
+    "jurisdiction": "CA-QC",
+    "language": "fr",
+    "publisher": "synthetic test publisher",
+    "url": "https://example.invalid/synthetic",
+    "consolidatedAsOf": "2021-10-13",
+    "retrievedAt": "2026-10-16T00:00:00Z",
+    "contentKind": "synthetic",
+    "mediaType": "text/plain; charset=utf-8",
+    "snapshotDigest": "sha256:9f085d031090ad585a35148ac93fe236a663eb65dcb3aa781d301a1413847048",
+    "snapshotPath": "personal/ivac/regulatory/fixtures/synthetic.txt",
+    "origin": {
+      "digest": "sha256:9f085d031090ad585a35148ac93fe236a663eb65dcb3aa781d301a1413847048",
+      "path": "personal/ivac/regulatory/fixtures/synthetic.txt",
+      "mediaType": "text/plain; charset=utf-8",
+      "conversion": "identity/v1"
+    },
+    "provision": "synthetic schedule",
+    "effective": {
+      "end": "bounded",
+      "until": "2027-01-01",
+      "from": "2021-10-13"
+    }
+  },
+  "coverage": "partial",
+  "coverageNote": "Invented data tests structure only.",
+  "units": {
+    "unitA": {
+      "id": "unitA",
+      "number": "A",
+      "label": "Synthetic unit",
+      "kind": "functional",
+      "citation": {
+        "sourceVersion": "synthetic-2021",
+        "locator": "synthetic unit A",
+        "start": 32,
+        "end": 59,
+        "exactText": "Unit A: synthetic function."
+      },
+      "evaluationRules": [
+        {
+          "sourceVersion": "synthetic-2021",
+          "locator": "synthetic rule",
+          "start": 60,
+          "end": 116,
+          "exactText": "Rule: retain separate clinical and statutory assessment."
+        }
+      ],
+      "classes": {
+        "classA": {
+          "id": "classA",
+          "label": "Synthetic class",
+          "citation": {
+            "sourceVersion": "synthetic-2021",
+            "locator": "synthetic class",
+            "start": 117,
+            "end": 157,
+            "exactText": "Class A: synthetic schedule value 12.5%."
+          },
+          "percentage": {
+            "kind": "fixed",
+            "value": 12.5
+          },
+          "qualification": {
+            "operator": "any-of",
+            "alternatives": [
+              {
+                "id": "pathA",
+                "operator": "all-of",
+                "criteria": [
+                  {
+                    "id": "alpha",
+                    "citation": {
+                      "sourceVersion": "synthetic-2021",
+                      "locator": "synthetic alpha",
+                      "start": 166,
+                      "end": 191,
+                      "exactText": "synthetic criterion alpha"
+                    }
+                  },
+                  {
+                    "id": "beta",
+                    "citation": {
+                      "sourceVersion": "synthetic-2021",
+                      "locator": "synthetic beta",
+                      "start": 196,
+                      "end": 220,
+                      "exactText": "synthetic criterion beta"
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "pathB",
+                "operator": "all-of",
+                "criteria": [
+                  {
+                    "id": "gamma",
+                    "citation": {
+                      "sourceVersion": "synthetic-2021",
+                      "locator": "synthetic gamma",
+                      "start": 233,
+                      "end": 258,
+                      "exactText": "synthetic criterion gamma"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "review": {
+    "state": "reviewed",
+    "reviewer": "synthetic fixture author",
+    "rationale": "Invented structural fixture only."
+  }
+}
