@@ -14,10 +14,19 @@ class ID(RootModel[str]):
     root: Annotated[str, Field(min_length=1)]
 
 
+class ComparisonKind(Enum):
+    genuine_scope_dispute = 'genuine-scope-dispute'
+    overrestriction_regression = 'overrestriction-regression'
+
+
 class PercentageKind(Enum):
     fixed = 'fixed'
     range = 'range'
     not_specified = 'not-specified'
+
+
+class Fact(RootModel[str]):
+    root: Annotated[str, Field(min_length=1)]
 
 
 class Kind(Enum):
@@ -32,6 +41,21 @@ class ReviewState(Enum):
 
 class Field23ID(RootModel[str]):
     root: Annotated[str, Field(min_length=1)]
+
+
+class Field23InterpretationComparisonRow(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    claimantCandidate: bool
+    comparisonKind: ComparisonKind
+    decisionBoundary: Literal['unresolved-no-automatic-selection'] = (
+        'unresolved-no-automatic-selection'
+    )
+    opportunityID: Field23ID
+    restrictiveCandidate: bool
+    scenarioID: Field23ID
+    sourceVersion: Field23ID
 
 
 class Field23RegulatoryAlternativeRow(BaseModel):
@@ -89,6 +113,24 @@ class Field23RegulatoryCriterionRow(BaseModel):
     unitID: Field23ID
 
 
+class Field23RegulatoryInterpretationScenario(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    adjudication: Literal['not-determined'] = 'not-determined'
+    claimantOutput: Annotated[str, Field(min_length=1)]
+    decisionBoundary: Literal['unresolved-no-automatic-selection'] = (
+        'unresolved-no-automatic-selection'
+    )
+    divergence: Annotated[str, Field(min_length=1)]
+    facts: Annotated[list[Fact], Field(min_length=1)]
+    opportunityID: Field23ID
+    resolutionEvidence: Annotated[str, Field(min_length=1)]
+    restrictiveOutput: Annotated[str, Field(min_length=1)]
+    scenarioID: Field23ID
+    synthetic: Literal[True] = True
+
+
 class Field23RegulatoryRuleRow(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
@@ -121,8 +163,25 @@ class Model(BaseModel):
     citation: Field23RegulatoryCitationRow
     class_: Annotated[Field23RegulatoryClassRow, Field(alias='class')]
     criterion: Field23RegulatoryCriterionRow
+    interpretationComparison: Field23InterpretationComparisonRow
+    interpretationScenario: Field23RegulatoryInterpretationScenario
     rule: Field23RegulatoryRuleRow
     unit: Field23RegulatoryUnitRow
+
+
+class InterpretationComparisonRow(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    claimantCandidate: bool
+    comparisonKind: ComparisonKind
+    decisionBoundary: Literal['unresolved-no-automatic-selection'] = (
+        'unresolved-no-automatic-selection'
+    )
+    opportunityID: Field23ID
+    restrictiveCandidate: bool
+    scenarioID: Field23ID
+    sourceVersion: Field23ID
 
 
 class RegulatoryAlternativeRow(BaseModel):
@@ -178,6 +237,24 @@ class RegulatoryCriterionRow(BaseModel):
     position: Annotated[int, Field(ge=0)]
     sourceVersion: Field23ID
     unitID: Field23ID
+
+
+class RegulatoryInterpretationScenario(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    adjudication: Literal['not-determined'] = 'not-determined'
+    claimantOutput: Annotated[str, Field(min_length=1)]
+    decisionBoundary: Literal['unresolved-no-automatic-selection'] = (
+        'unresolved-no-automatic-selection'
+    )
+    divergence: Annotated[str, Field(min_length=1)]
+    facts: Annotated[list[Fact], Field(min_length=1)]
+    opportunityID: Field23ID
+    resolutionEvidence: Annotated[str, Field(min_length=1)]
+    restrictiveOutput: Annotated[str, Field(min_length=1)]
+    scenarioID: Field23ID
+    synthetic: Literal[True] = True
 
 
 class RegulatoryRuleRow(BaseModel):

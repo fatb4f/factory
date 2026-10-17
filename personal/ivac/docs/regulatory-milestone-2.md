@@ -267,3 +267,21 @@ version-scoped anti-join correctness. CI installs its pinned integration
 requirements explicitly. Original M1 qualification and M2 source suites remain
 mandatory. Online acquisition and the cross-format comparison are reproducible
 commands, not network-dependent CI assertions.
+
+## Dependent legal-semantics investigation
+
+Issue #226 (`engineering:contract:personal.ivac:investigation:regulatory-interpretation-opportunities`)
+tracks the expanded legal analysis separately from #222 acceptance. See
+`regulatory-semantic-specification.md` and `../regulatory/interpretation/` for the
+25-opportunity register, 25 synthetic review scenarios, source/rubric coverage,
+primary-authority ledger and eight executable Ibis comparison outputs.
+
+Two primary TAQ texts were inspected: C.M., 2026 QCTAQ 02260 (IVAC settlement and
+reconsideration; psychiatric class not contested), and J.V., 2012 QCTAQ 04180
+(SAAQ; favorable full-evidence psychiatric classification and adverse analogy
+reasoning). Neither is presented as a binding resolution of all IVAC class paths.
+Appeal/finality verification, exhaustive jurisprudence, full class/table semantics
+and independent legal review remain open. Research annotation contracts and
+arithmetic/scenario programs cannot establish clinical support or entitlement.
+The original M1 documentation's mistaken reference to article25 for permanence
+is corrected to article23; canonical M1 qualification contracts are preserved.

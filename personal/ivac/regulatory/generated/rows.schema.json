@@ -4,6 +4,44 @@
       "minLength": 1,
       "type": "string"
     },
+    "#InterpretationComparisonRow": {
+      "additionalProperties": false,
+      "properties": {
+        "claimantCandidate": {
+          "type": "boolean"
+        },
+        "comparisonKind": {
+          "enum": [
+            "genuine-scope-dispute",
+            "overrestriction-regression"
+          ]
+        },
+        "decisionBoundary": {
+          "const": "unresolved-no-automatic-selection"
+        },
+        "opportunityID": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "restrictiveCandidate": {
+          "type": "boolean"
+        },
+        "scenarioID": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "sourceVersion": {
+          "$ref": "#/$defs/%23ID"
+        }
+      },
+      "required": [
+        "claimantCandidate",
+        "comparisonKind",
+        "opportunityID",
+        "restrictiveCandidate",
+        "scenarioID",
+        "sourceVersion"
+      ],
+      "type": "object"
+    },
     "#RegulatoryAlternativeRow": {
       "additionalProperties": false,
       "properties": {
@@ -174,6 +212,66 @@
       ],
       "type": "object"
     },
+    "#RegulatoryInterpretationScenario": {
+      "additionalProperties": false,
+      "properties": {
+        "adjudication": {
+          "const": "not-determined"
+        },
+        "claimantOutput": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "decisionBoundary": {
+          "const": "unresolved-no-automatic-selection"
+        },
+        "divergence": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "facts": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minLength": 1,
+          "prefixItems": [
+            {
+              "minLength": 1,
+              "type": "string"
+            }
+          ],
+          "type": "array"
+        },
+        "opportunityID": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "resolutionEvidence": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "restrictiveOutput": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "scenarioID": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "synthetic": {
+          "const": true
+        }
+      },
+      "required": [
+        "claimantOutput",
+        "divergence",
+        "facts",
+        "opportunityID",
+        "resolutionEvidence",
+        "restrictiveOutput",
+        "scenarioID"
+      ],
+      "type": "object"
+    },
     "#RegulatoryRuleRow": {
       "additionalProperties": false,
       "properties": {
@@ -263,6 +361,12 @@
     "criterion": {
       "$ref": "#/$defs/%23RegulatoryCriterionRow"
     },
+    "interpretationComparison": {
+      "$ref": "#/$defs/%23InterpretationComparisonRow"
+    },
+    "interpretationScenario": {
+      "$ref": "#/$defs/%23RegulatoryInterpretationScenario"
+    },
     "rule": {
       "$ref": "#/$defs/%23RegulatoryRuleRow"
     },
@@ -275,6 +379,8 @@
     "citation",
     "class",
     "criterion",
+    "interpretationComparison",
+    "interpretationScenario",
     "rule",
     "unit"
   ],
