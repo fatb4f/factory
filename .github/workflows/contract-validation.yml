@@ -23,5 +23,9 @@ jobs:
         with:
           version: v0.16.1
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
       - name: Validate contracts, fixtures, and admitted artifacts
         run: bash scripts/validate-contracts.sh
