@@ -1,0 +1,170 @@
+{
+  "asOf": "2026-10-17",
+  "format": "ivac.regulatory-research-log/v1",
+  "j3BulkSource": {
+    "applicability": "requires-version-selection",
+    "artifactDigest": "sha256:10347d759e475d8ca49154278f135436aad79250b178025f608359bfd11cef8f",
+    "memberPath": "Statutes\\J-3\\FR\\J-3_FR.xml",
+    "originalRedistribution": "not-mirrored-pending-license-review",
+    "provisions": [
+      {
+        "code": "se:15",
+        "end": 8923,
+        "publisherAttributes": {
+          "Code": "se:15",
+          "date-eev": "19990401",
+          "full-id": "25556"
+        },
+        "start": 8489,
+        "textDigest": "sha256:f3e0959a2e57490dcd46808b93618e4094a0c040c9d1e421af9a3a5c8588e2d5",
+        "xmlByteEnd": 16178,
+        "xmlByteStart": 15447,
+        "xmlSpanDigest": "sha256:b63df1d9890da086594cf5a101e3d3a9e90168fdcd4448812b3b8ba2d99f2243"
+      },
+      {
+        "code": "se:106",
+        "end": 54000,
+        "publisherAttributes": {
+          "Code": "se:106",
+          "date-eev": "20060101",
+          "full-id": "25648"
+        },
+        "start": 53602,
+        "textDigest": "sha256:f4c6b74feea9596732c542ed4b93f08f84034ee9890fd45fcf0b809803bfcc8a",
+        "xmlByteEnd": 102028,
+        "xmlByteStart": 101358,
+        "xmlSpanDigest": "sha256:2f4654958e22a3022e6ea9693c84c3657e52f2583eda3e12e7c33202a9c95e48"
+      },
+      {
+        "code": "se:110",
+        "end": 56399,
+        "publisherAttributes": {
+          "Code": "se:110",
+          "date-eev": "20060701",
+          "full-id": "25652"
+        },
+        "start": 55553,
+        "textDigest": "sha256:6ac94e2df026810af764ee04e4490142cbeecd4df1b1ccd48e18f23bc6c088cf",
+        "xmlByteEnd": 106023,
+        "xmlByteStart": 104825,
+        "xmlSpanDigest": "sha256:b4deea89de9d96af965ee8644877d25164640a8ab49c44565c17d28984b56b9e"
+      },
+      {
+        "code": "se:114",
+        "end": 58646,
+        "publisherAttributes": {
+          "Code": "se:114",
+          "date-eev": "20051001",
+          "full-id": "25656"
+        },
+        "start": 57613,
+        "textDigest": "sha256:6440e9a2bc1d4b0858879f086729c511be99eabcd2d0f33fb203c35e5b0fde8b",
+        "xmlByteEnd": 109602,
+        "xmlByteStart": 108137,
+        "xmlSpanDigest": "sha256:126c63f3b5155dd7e946c47995236c7c2ec124758e072570154dbacb0d858c5d"
+      },
+      {
+        "code": "se:154",
+        "end": 91665,
+        "publisherAttributes": {
+          "Code": "se:154",
+          "date-eev": "19990401",
+          "full-id": "25698"
+        },
+        "start": 90942,
+        "textDigest": "sha256:3273c75bfe51e5b40c93e9f040c01c0a64d2f3ab3ed204ea21b38c09041804fb",
+        "xmlByteEnd": 166052,
+        "xmlByteStart": 164761,
+        "xmlSpanDigest": "sha256:fda2ea77d6733d833593e255957a07b1dbc05019dc85e396336ebefd05c7784c"
+      }
+    ],
+    "rootAttributes": {
+      "DocumentType": "cs",
+      "date-eev": "20260401",
+      "{http://www.w3.org/XML/1998/namespace}lang": "fr"
+    },
+    "zipDigest": "sha256:9ecd4b069c227951819ca4efdf0a235c136d802ba3657f657ce4ceae04b27696"
+  },
+  "limitations": [
+    "Not an exhaustive jurisprudence survey; no verified new-regime IVAC ruling resolves every analogy/path issue.",
+    "No appeal/finality docket verification; no independent legal review.",
+    "Higher-court cases cited within inspected decisions are not independently analyzed holdings in this checkpoint.",
+    "No personal medical records accessed; synthetic facts only.",
+    "Primary published judgments are cited and hashed; their claimant narratives and original files are not committed."
+  ],
+  "primaryAuthorities": {
+    "act-2021-13": {
+      "artifactDigest": "sha256:ac71907c87f38b45f85ca0912e4e8d98bfe17c328a89a4c080133b387fb6fdee",
+      "citation": "2021,c.13, P-9.2.1 original Act",
+      "id": "act-2021-13",
+      "kind": "statute",
+      "notes": "Original publication only; temporal applicability and later amendment audit remain separate.",
+      "url": "https://www.publicationsduquebec.gouv.qc.ca/fileadmin/Fichiers_client/lois_et_reglements/LoisAnnuelles/fr/2021/2021C13F.PDF",
+      "verification": "original-bytes-inspected",
+      "weight": "binding-text-subject-to-applicability"
+    },
+    "cm-2026-2260": {
+      "artifactDigest": "sha256:fcf16da8c0608d30d78655aafe577b05b256eb3ca38e79ec5c758d8668a32f3a",
+      "citation": "C.M. c. Ministre de la Justice (IVAC),2026QCTAQ02260,12February2026,SAS-M-336316-2409",
+      "id": "cm-2026-2260",
+      "kind": "decision",
+      "notes": "Primary published full text inspected2026-10-17. Settlement anti-cumulation and reconsideration; psychiatric class3 expressly not contested. Does not decide analogy, EGF paths or class selection. Appeal/finality not checked.",
+      "url": "https://citoyens.soquij.qc.ca/php/decision.php?ID=FB95BCDDBEF93A8D5737BF2A0400EABF",
+      "verification": "original-bytes-inspected",
+      "weight": "persuasive-not-binding"
+    },
+    "gazette-2021-39": {
+      "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+      "citation": "D.1266-2021 and Annex I",
+      "id": "gazette-2021-39",
+      "kind": "regulation",
+      "notes": "Original publication only; temporal applicability and later amendment audit remain separate.",
+      "url": "https://www.publicationsduquebec.gouv.qc.ca/fileadmin/gazette/pdf_encrypte/gaz_entiere/2139-F.pdf",
+      "verification": "original-bytes-inspected",
+      "weight": "binding-text-subject-to-applicability"
+    },
+    "ivac-directive-2-7": {
+      "artifactDigest": "sha256:05915f7de46982bdd6c5c048459abc4b5e9c5c8a2ac8f594b358a3e1bc91e1d2",
+      "citation": "IVAC Directive2.7, pp2–3,5; states effective2021-10-13, revision placeholder",
+      "id": "ivac-directive-2-7",
+      "kind": "administrative-policy",
+      "notes": "Downloaded and inspected2026-10-17; not an amendment. Contains rounding shorthand and a24-heading/unit conflation.",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/2-7-forfaitaire-sequelles-aggravation-atteinte-integrite.pdf",
+      "verification": "original-bytes-inspected",
+      "weight": "policy-only"
+    },
+    "saaq-jv-2012-4180": {
+      "artifactDigest": "sha256:f5518ae9fea3d1f5682b1c8aa0cfeee7dea00ac2e14d5ca0876b534d70a5c98b",
+      "citation": "J.V. c. Societe de l’assurance automobile du Quebec,2012QCTAQ04180,16April2012,paras59–113",
+      "id": "saaq-jv-2012-4180",
+      "kind": "decision",
+      "notes": "Primary full text inspected2026-10-17. SAAQ regulation article5, not IVAC article25. Paras67–95 reject proposed consciousness analogy on scope and evidence; paras97–113 assign psychic class4 after global evidence, despite reported EGF55 opinions. Does not create an automatic EGF override. Finality/appeal status not checked.",
+      "url": "https://citoyens.soquij.qc.ca/php/decision.php?ID=7D6DF36832DE28C2857E0B469AA5566E",
+      "verification": "original-bytes-inspected",
+      "weight": "persuasive-not-binding"
+    }
+  },
+  "searches": [
+    {
+      "query": "IVAC + situations analogues / fonction psychique / classe de gravite + QCTAQ",
+      "result": "Broad queries had irrelevant results; no absence-of-precedent conclusion."
+    },
+    {
+      "query": "Official IVAC Directive2.7 and permanent-sequela page",
+      "result": "Original Directive PDF downloaded; policy-only; revision placeholder noted."
+    },
+    {
+      "query": "SOQUIJ June18,2026 settlement article -> C.M. primary text",
+      "result": "2026 QCTAQ02260 primary full text acquired through published decision link; adverse settlement/reconsideration reasoning inspected."
+    },
+    {
+      "query": "Practitioner index -> J.V. primary published decision",
+      "result": "2012 QCTAQ04180 full text acquired; favorable class4 and adverse analogy reasoning inspected; distinct SAAQ regime."
+    },
+    {
+      "query": "CanLII QCTAQ and LégisQuébec direct endpoints",
+      "result": "Search service direct access failed/502; official bulk XML and primary SOQUIJ direct download used instead."
+    }
+  ],
+  "status": "partial"
+}

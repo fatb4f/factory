@@ -1,0 +1,1995 @@
+{
+  "authorities": {
+    "act-2021-13": {
+      "artifactDigest": "sha256:ac71907c87f38b45f85ca0912e4e8d98bfe17c328a89a4c080133b387fb6fdee",
+      "citation": "2021,c.13, P-9.2.1 original Act",
+      "id": "act-2021-13",
+      "kind": "statute",
+      "notes": "Original publication only; temporal applicability and later amendment audit remain separate.",
+      "url": "https://www.publicationsduquebec.gouv.qc.ca/fileadmin/Fichiers_client/lois_et_reglements/LoisAnnuelles/fr/2021/2021C13F.PDF",
+      "verification": "original-bytes-inspected",
+      "weight": "binding-text-subject-to-applicability"
+    },
+    "cm-2026-2260": {
+      "artifactDigest": "sha256:fcf16da8c0608d30d78655aafe577b05b256eb3ca38e79ec5c758d8668a32f3a",
+      "citation": "C.M. c. Ministre de la Justice (IVAC),2026QCTAQ02260,12February2026,SAS-M-336316-2409",
+      "id": "cm-2026-2260",
+      "kind": "decision",
+      "notes": "Primary published full text inspected2026-10-17. Settlement anti-cumulation and reconsideration; psychiatric class3 expressly not contested. Does not decide analogy, EGF paths or class selection. Appeal/finality not checked.",
+      "url": "https://citoyens.soquij.qc.ca/php/decision.php?ID=FB95BCDDBEF93A8D5737BF2A0400EABF",
+      "verification": "original-bytes-inspected",
+      "weight": "persuasive-not-binding"
+    },
+    "gazette-2021-39": {
+      "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+      "citation": "D.1266-2021 and Annex I",
+      "id": "gazette-2021-39",
+      "kind": "regulation",
+      "notes": "Original publication only; temporal applicability and later amendment audit remain separate.",
+      "url": "https://www.publicationsduquebec.gouv.qc.ca/fileadmin/gazette/pdf_encrypte/gaz_entiere/2139-F.pdf",
+      "verification": "original-bytes-inspected",
+      "weight": "binding-text-subject-to-applicability"
+    },
+    "ivac-directive-2-7": {
+      "artifactDigest": "sha256:05915f7de46982bdd6c5c048459abc4b5e9c5c8a2ac8f594b358a3e1bc91e1d2",
+      "citation": "IVAC Directive2.7, pp2–3,5; states effective2021-10-13, revision placeholder",
+      "id": "ivac-directive-2-7",
+      "kind": "administrative-policy",
+      "notes": "Downloaded and inspected2026-10-17; not an amendment. Contains rounding shorthand and a24-heading/unit conflation.",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/2-7-forfaitaire-sequelles-aggravation-atteinte-integrite.pdf",
+      "verification": "original-bytes-inspected",
+      "weight": "policy-only"
+    },
+    "saaq-jv-2012-4180": {
+      "artifactDigest": "sha256:f5518ae9fea3d1f5682b1c8aa0cfeee7dea00ac2e14d5ca0876b534d70a5c98b",
+      "citation": "J.V. c. Societe de l’assurance automobile du Quebec,2012QCTAQ04180,16April2012,paras59–113",
+      "id": "saaq-jv-2012-4180",
+      "kind": "decision",
+      "notes": "Primary full text inspected2026-10-17. SAAQ regulation article5, not IVAC article25. Paras67–95 reject proposed consciousness analogy on scope and evidence; paras97–113 assign psychic class4 after global evidence, despite reported EGF55 opinions. Does not create an automatic EGF override. Finality/appeal status not checked.",
+      "url": "https://citoyens.soquij.qc.ca/php/decision.php?ID=7D6DF36832DE28C2857E0B469AA5566E",
+      "verification": "original-bytes-inspected",
+      "weight": "persuasive-not-binding"
+    }
+  },
+  "authority": "none",
+  "coverage": {
+    "aestheticUnitLabels": 8,
+    "exhaustiveClassPathReview": false,
+    "functionalUnitLabels": 40,
+    "independentLegalReview": false,
+    "jurisprudenceCoverage": "partial",
+    "rubricSourceAnchors": 25
+  },
+  "format": "ivac.regulatory-interpretation-research/v1",
+  "opportunities": [
+    {
+      "adjudication": "not-determined",
+      "claimantReading": "An unlisted permanent presentation must be evaluated against an analogous described situation of equivalent daily-life consequences, instead of rejected merely because its diagnosis is absent.",
+      "clinicalConfidence": "not-assessed",
+      "clinicalPrerequisites": [
+        "Qualified clinician explains matched and differing functional consequences, permanence and attribution."
+      ],
+      "confidence": "supported",
+      "counterAuthority": [
+        "The comparator must preserve equivalent severity, relevant unit function, objective clinical support and specific exclusions; analogy cannot bypass an express rule or create an unlisted free-standing unit.",
+        "Express unit-specific exclusions and professional proof remain controlling; no contrary cases were invented.",
+        "J.V. c. SAAQ,2012 QCTAQ 04180,paras67–95: analogy rejected where an appropriate psychiatric unit applied and the proposed consciousness comparator lacked medical support. SAAQ regime; persuasive only."
+      ],
+      "coverageGaps": [
+        "Comparator boundaries and burden in post-2021 IVAC jurisprudence remain incompletely researched.",
+        "Independent legal review and complete class-path audit pending."
+      ],
+      "evidenceRequired": [
+        "Comparator matrix, clinical exam, longitudinal function and reasoned alternative comparator."
+      ],
+      "legalSource": [
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 451301,
+            "exactText": "Lorsque l’évaluation des séquelles permanentes révèle",
+            "locator": "P-9.2.1, r.1, art.25 al.2",
+            "sourceVersion": "gazette-2021-39",
+            "start": 451248
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        },
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 450394,
+            "exactText": "appuyées par des données objectives retrouvées",
+            "locator": "P-9.2.1, r.1, art.24 al.2",
+            "sourceVersion": "gazette-2021-39",
+            "start": 450348
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        }
+      ],
+      "legalSupport": [
+        "Express provisions anchored in legalSource; this is a candidate analysis, not a case-specific legal opinion."
+      ],
+      "opportunityID": "ivac-interpretation-analogy-equivalence",
+      "potentialImpact": "classification",
+      "prioritization": {
+        "counterargumentVulnerability": "medium",
+        "evidentiaryFeasibility": "specialist-comparison",
+        "legalSupport": "express-text",
+        "materiality": "classification"
+      },
+      "priority": "p1",
+      "restrictiveReading": "The comparator must preserve equivalent severity, relevant unit function, objective clinical support and specific exclusions; analogy cannot bypass an express rule or create an unlisted free-standing unit.",
+      "reviewStatus": "candidate",
+      "semanticIssue": "Unlisted presentation and comparator scope"
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantReading": "Unit1 class4 places psychiatric EGF41–50 and moderate cognitive impairment on alternative branches; do not require cognitive impairment as an additional prerequisite to the psychiatric path.",
+      "clinicalConfidence": "not-assessed",
+      "clinicalPrerequisites": [
+        "Psychiatrist assesses EGF with source criteria, persistent functional effects and clinical attribution; neuropsychology where cognition is relied upon."
+      ],
+      "confidence": "plausible",
+      "counterAuthority": [
+        "The row’s final support paragraph may qualify the whole class; in any event EGF must represent the relevant permanent injury and globally assessed daily function, not a label alone.",
+        "Express unit-specific exclusions and professional proof remain controlling; no contrary cases were invented."
+      ],
+      "coverageGaps": [
+        "Scope of the final class4 assistance paragraph needs original-page and jurisprudential review.",
+        "Independent legal review and complete class-path audit pending."
+      ],
+      "evidenceRequired": [
+        "Reasoned EGF assessment, mental status findings, daily-life function, independent cognitive evidence where relevant."
+      ],
+      "legalSource": [
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 611152,
+            "exactText": "lequel se situe entre 41 et 50",
+            "locator": "Annex I unit1 class4 EGF path",
+            "sourceVersion": "gazette-2021-39",
+            "start": 611122
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        },
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 602763,
+            "exactText": "le degré d’autonomie et l’efficience sociale appréciés",
+            "locator": "Annex I unit1 evaluation rule2",
+            "sourceVersion": "gazette-2021-39",
+            "start": 602709
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        },
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 450674,
+            "exactText": "La classe de gravité de l’unité fonctionnelle ou",
+            "locator": "P-9.2.1, r.1, art.25 al.1",
+            "sourceVersion": "gazette-2021-39",
+            "start": 450626
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        }
+      ],
+      "legalSupport": [
+        "Express provisions anchored in legalSource; this is a candidate analysis, not a case-specific legal opinion."
+      ],
+      "opportunityID": "ivac-interpretation-psychiatric-or-cognitive",
+      "potentialImpact": "classification",
+      "prioritization": {
+        "counterargumentVulnerability": "high",
+        "evidentiaryFeasibility": "professional-records",
+        "legalSupport": "textual-inference",
+        "materiality": "classification"
+      },
+      "priority": "p1",
+      "restrictiveReading": "The row’s final support paragraph may qualify the whole class; in any event EGF must represent the relevant permanent injury and globally assessed daily function, not a label alone.",
+      "reviewStatus": "candidate",
+      "semanticIssue": "EGF and cognition: separate routes or cumulative conditions"
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantReading": "Class3 cognitive wording permits support that could be justified; absence of a paid helper does not itself exclude substantial adaptation.",
+      "clinicalConfidence": "not-assessed",
+      "clinicalPrerequisites": [
+        "Professional assessment of complex-task impairment and compensatory demands."
+      ],
+      "confidence": "supported",
+      "counterAuthority": [
+        "Substantial reorganization and meaningful impairment of complex tasks must still be demonstrated; optional assistance does not remove those conditions.",
+        "Express unit-specific exclusions and professional proof remain controlling; no contrary cases were invented."
+      ],
+      "coverageGaps": [
+        "No verified post-2021 decision fixes the threshold between light and substantial adaptation.",
+        "Independent legal review and complete class-path audit pending."
+      ],
+      "evidenceRequired": [
+        "Task-based examples, adaptation records, documented unmet need and reasons support is unavailable."
+      ],
+      "legalSource": [
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 610667,
+            "exactText": "Les difficultés vécues requièrent une adaptation substantielle",
+            "locator": "Annex I unit1 class3 cognitive path",
+            "sourceVersion": "gazette-2021-39",
+            "start": 610605
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        },
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 602763,
+            "exactText": "le degré d’autonomie et l’efficience sociale appréciés",
+            "locator": "Annex I unit1 evaluation rule2",
+            "sourceVersion": "gazette-2021-39",
+            "start": 602709
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        }
+      ],
+      "legalSupport": [
+        "Express provisions anchored in legalSource; this is a candidate analysis, not a case-specific legal opinion."
+      ],
+      "opportunityID": "ivac-interpretation-cognitive-support-necessity",
+      "potentialImpact": "classification",
+      "prioritization": {
+        "counterargumentVulnerability": "medium",
+        "evidentiaryFeasibility": "professional-records",
+        "legalSupport": "express-text",
+        "materiality": "classification"
+      },
+      "priority": "p1",
+      "restrictiveReading": "Substantial reorganization and meaningful impairment of complex tasks must still be demonstrated; optional assistance does not remove those conditions.",
+      "reviewStatus": "candidate",
+      "semanticIssue": "Class3 possible justified assistance versus actual assistance"
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantReading": "Regular permanent prescribed medication is an express class1 alternative; good symptom control is not an automatic below-threshold finding.",
+      "clinicalConfidence": "not-assessed",
+      "clinicalPrerequisites": [
+        "Prescriber confirms medical necessity, enduring regular use, indication and attribution."
+      ],
+      "confidence": "supported",
+      "counterAuthority": [
+        "A prescription alone does not establish permanent necessity, relation to the accepted prejudice or applicable baseline; incidental or temporary medication is insufficient.",
+        "Express unit-specific exclusions and professional proof remain controlling; no contrary cases were invented."
+      ],
+      "coverageGaps": [
+        "Independent clinical qualification and baseline are not established by dispensing records.",
+        "Independent legal review and complete class-path audit pending."
+      ],
+      "evidenceRequired": [
+        "Prescription history, treatment response, necessity rationale and baseline medication history."
+      ],
+      "legalSource": [
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 609150,
+            "exactText": "Nécessité, sur une base régulière et permanente de prendre une",
+            "locator": "Annex I unit1 class1 medication path",
+            "sourceVersion": "gazette-2021-39",
+            "start": 609088
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        },
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 448031,
+            "exactText": "Toute séquelle d’ordre fonctionnel ou esthétique",
+            "locator": "P-9.2.1, r.1, art.23",
+            "sourceVersion": "gazette-2021-39",
+            "start": 447983
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        }
+      ],
+      "legalSupport": [
+        "Express provisions anchored in legalSource; this is a candidate analysis, not a case-specific legal opinion."
+      ],
+      "opportunityID": "ivac-interpretation-medication-independent-path",
+      "potentialImpact": "classification",
+      "prioritization": {
+        "counterargumentVulnerability": "low",
+        "evidentiaryFeasibility": "professional-records",
+        "legalSupport": "express-text",
+        "materiality": "classification"
+      },
+      "priority": "p1",
+      "restrictiveReading": "A prescription alone does not establish permanent necessity, relation to the accepted prejudice or applicable baseline; incidental or temporary medication is insufficient.",
+      "reviewStatus": "candidate",
+      "semanticIssue": "Permanent prescribed medication as an alternative criterion"
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantReading": "Describe performance with strategies, technical aids and human support; observed success achieved through significant compensation is evidence of adaptation costs, not automatic intact function.",
+      "clinicalConfidence": "not-assessed",
+      "clinicalPrerequisites": [
+        "Clinician distinguishes supported performance, residual capacity, symptoms and safety."
+      ],
+      "confidence": "plausible",
+      "counterAuthority": [
+        "Useful compensatory strategies can demonstrate preserved autonomy; effort and subjective burden do not by themselves prove the class threshold.",
+        "Express unit-specific exclusions and professional proof remain controlling; no contrary cases were invented."
+      ],
+      "coverageGaps": [
+        "Counterfactual unsupported capacity cannot be assumed or experimentally tested by removing necessary care.",
+        "Independent legal review and complete class-path audit pending."
+      ],
+      "evidenceRequired": [
+        "Time/cueing/task analyses, functional failures, collateral support records and performance validity findings."
+      ],
+      "legalSource": [
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 602763,
+            "exactText": "le degré d’autonomie et l’efficience sociale appréciés",
+            "locator": "Annex I unit1 evaluation rule2",
+            "sourceVersion": "gazette-2021-39",
+            "start": 602709
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        },
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 610667,
+            "exactText": "Les difficultés vécues requièrent une adaptation substantielle",
+            "locator": "Annex I unit1 class3 cognitive path",
+            "sourceVersion": "gazette-2021-39",
+            "start": 610605
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        }
+      ],
+      "legalSupport": [
+        "Express provisions anchored in legalSource; this is a candidate analysis, not a case-specific legal opinion."
+      ],
+      "opportunityID": "ivac-interpretation-compensated-function",
+      "potentialImpact": "classification",
+      "prioritization": {
+        "counterargumentVulnerability": "medium",
+        "evidentiaryFeasibility": "professional-records",
+        "legalSupport": "textual-inference",
+        "materiality": "classification"
+      },
+      "priority": "p1",
+      "restrictiveReading": "Useful compensatory strategies can demonstrate preserved autonomy; effort and subjective burden do not by themselves prove the class threshold.",
+      "reviewStatus": "candidate",
+      "semanticIssue": "Adapted performance versus unassisted capacity"
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantReading": "When multiple situations are genuinely supported by the permanent-sequela evaluation, select the one with greatest impact within the unit; arithmetic symptom averaging is not the prescribed selector.",
+      "clinicalConfidence": "not-assessed",
+      "clinicalPrerequisites": [
+        "Clinician explains longitudinal permanence, frequency and representativeness of the qualifying situation."
+      ],
+      "confidence": "supported",
+      "counterAuthority": [
+        "A brief unrepresentative exacerbation is not necessarily the permanent-sequela evaluation result; identify the stable function and frequency before using a higher situation.",
+        "Express unit-specific exclusions and professional proof remain controlling; no contrary cases were invented."
+      ],
+      "coverageGaps": [
+        "Representative temporal window is not fully specified by the class prose.",
+        "Independent legal review and complete class-path audit pending."
+      ],
+      "evidenceRequired": [
+        "Repeated assessments and chronology separating persistent limitations from temporary exacerbations."
+      ],
+      "legalSource": [
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 450674,
+            "exactText": "La classe de gravité de l’unité fonctionnelle ou",
+            "locator": "P-9.2.1, r.1, art.25 al.1",
+            "sourceVersion": "gazette-2021-39",
+            "start": 450626
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        },
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 448031,
+            "exactText": "Toute séquelle d’ordre fonctionnel ou esthétique",
+            "locator": "P-9.2.1, r.1, art.23",
+            "sourceVersion": "gazette-2021-39",
+            "start": 447983
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        }
+      ],
+      "legalSupport": [
+        "Express provisions anchored in legalSource; this is a candidate analysis, not a case-specific legal opinion."
+      ],
+      "opportunityID": "ivac-interpretation-maximum-impact-stability",
+      "potentialImpact": "classification",
+      "prioritization": {
+        "counterargumentVulnerability": "medium",
+        "evidentiaryFeasibility": "professional-records",
+        "legalSupport": "express-text",
+        "materiality": "classification"
+      },
+      "priority": "p1",
+      "restrictiveReading": "A brief unrepresentative exacerbation is not necessarily the permanent-sequela evaluation result; identify the stable function and frequency before using a higher situation.",
+      "reviewStatus": "candidate",
+      "semanticIssue": "Maximum supported situation versus transient worst episode"
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantReading": "Unit14 expressly calls for assessment of associated hand sensory consequences in the upper-limb cutaneous sensitivity unit; a blanket one-diagnosis/one-unit restriction is unjustified.",
+      "clinicalConfidence": "not-assessed",
+      "clinicalPrerequisites": [
+        "Independent sensory and dexterity findings plus attribution."
+      ],
+      "confidence": "supported",
+      "counterAuthority": [
+        "Only demonstrably separate unit consequences may be assessed; do not count the same functional effect twice or ignore another overriding inclusion rule.",
+        "Express unit-specific exclusions and professional proof remain controlling; no contrary cases were invented."
+      ],
+      "coverageGaps": [
+        "Full cross-unit exclusion manifest is not yet semantically transcribed.",
+        "Independent legal review and complete class-path audit pending."
+      ],
+      "evidenceRequired": [
+        "Mapped sensory examination, hand function testing and explicit nonduplication analysis."
+      ],
+      "legalSource": [
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 716058,
+            "exactText": "Le cas échéant, les retentissements résultant d’une atteinte à la sensibilité cutanée de la",
+            "locator": "Annex I unit14 rule3",
+            "sourceVersion": "gazette-2021-39",
+            "start": 715967
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        },
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 452204,
+            "exactText": "On ne peut déterminer qu’une seule classe de gravité",
+            "locator": "P-9.2.1, r.1, art.25 al.3",
+            "sourceVersion": "gazette-2021-39",
+            "start": 452152
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        }
+      ],
+      "legalSupport": [
+        "Express provisions anchored in legalSource; this is a candidate analysis, not a case-specific legal opinion."
+      ],
+      "opportunityID": "ivac-interpretation-separate-sensory-hand",
+      "potentialImpact": "classification",
+      "prioritization": {
+        "counterargumentVulnerability": "low",
+        "evidentiaryFeasibility": "professional-records",
+        "legalSupport": "express-text",
+        "materiality": "classification"
+      },
+      "priority": "p1",
+      "restrictiveReading": "Only demonstrably separate unit consequences may be assessed; do not count the same functional effect twice or ignore another overriding inclusion rule.",
+      "reviewStatus": "candidate",
+      "semanticIssue": "Manual dexterity and cutaneous sensation"
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantReading": "Unit17 routes respiratory/digestive consequences to their own units; distinct assessed effects can survive a shared anatomical cause.",
+      "clinicalConfidence": "not-assessed",
+      "clinicalPrerequisites": [
+        "Clinicians separate the causal effect, functional mechanism and applicable bundling/routing rule."
+      ],
+      "confidence": "supported",
+      "counterAuthority": [
+        "Unit2 seizure-related downstream effects and unit24 paraplegia/tetraplegia effects are expressly bundled; those cannot be stacked as separate units merely by relabeling consequences.",
+        "Express unit-specific exclusions and professional proof remain controlling; no contrary cases were invented."
+      ],
+      "coverageGaps": [
+        "Mixed independent and bundled causes require individualized legal review.",
+        "Independent legal review and complete class-path audit pending."
+      ],
+      "evidenceRequired": [
+        "Unit-to-effect map with inclusion/exclusion justifications."
+      ],
+      "legalSource": [
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 751133,
+            "exactText": "Les retentissements sur les fonctions digestives ou respiratoires",
+            "locator": "Annex I unit17 rule3",
+            "sourceVersion": "gazette-2021-39",
+            "start": 751068
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        },
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 613586,
+            "exactText": "Les retentissements sur les autres unités fonctionnelles, par exemple une incontinence",
+            "locator": "Annex I unit2 rule2",
+            "sourceVersion": "gazette-2021-39",
+            "start": 613500
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        },
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 805829,
+            "exactText": "Le présent chapitre est exclusivement réservé aux états de paraplégie",
+            "locator": "Annex I unit24 rule2",
+            "sourceVersion": "gazette-2021-39",
+            "start": 805760
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        }
+      ],
+      "legalSupport": [
+        "Express provisions anchored in legalSource; this is a candidate analysis, not a case-specific legal opinion."
+      ],
+      "opportunityID": "ivac-interpretation-overlap-routing-vs-inclusion",
+      "potentialImpact": "classification",
+      "prioritization": {
+        "counterargumentVulnerability": "medium",
+        "evidentiaryFeasibility": "specialist-comparison",
+        "legalSupport": "express-text",
+        "materiality": "classification"
+      },
+      "priority": "p1",
+      "restrictiveReading": "Unit2 seizure-related downstream effects and unit24 paraplegia/tetraplegia effects are expressly bundled; those cannot be stacked as separate units merely by relabeling consequences.",
+      "reviewStatus": "candidate",
+      "semanticIssue": "Different rule scopes: refer to another unit or include within the current unit"
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantReading": "Deduct the class representative of actual pre-offence functional state; a prior diagnosis alone does not establish the highest conceivable baseline percentage.",
+      "clinicalConfidence": "not-assessed",
+      "clinicalPrerequisites": [
+        "Qualified retrospective baseline and current evaluation with causal attribution."
+      ],
+      "confidence": "supported",
+      "counterAuthority": [
+        "Absence of contemporaneous documentation does not prove a zero baseline; clinically justified retrospective findings may establish pre-existing impairment.",
+        "Express unit-specific exclusions and professional proof remain controlling; no contrary cases were invented."
+      ],
+      "coverageGaps": [
+        "Unknown baseline remains unresolved; neither zero nor an adverse default is supplied by this implementation.",
+        "Independent legal review and complete class-path audit pending."
+      ],
+      "evidenceRequired": [
+        "Prior records, function history, medication/support history and reasoned baseline class."
+      ],
+      "legalSource": [
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 453643,
+            "exactText": "Dans chaque cas, le pourcentage retenu en relation avec",
+            "locator": "P-9.2.1, r.1, art.26(1)(d)",
+            "sourceVersion": "gazette-2021-39",
+            "start": 453588
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        },
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 450394,
+            "exactText": "appuyées par des données objectives retrouvées",
+            "locator": "P-9.2.1, r.1, art.24 al.2",
+            "sourceVersion": "gazette-2021-39",
+            "start": 450348
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        }
+      ],
+      "legalSupport": [
+        "Express provisions anchored in legalSource; this is a candidate analysis, not a case-specific legal opinion."
+      ],
+      "opportunityID": "ivac-interpretation-baseline-not-diagnosis",
+      "potentialImpact": "calculation",
+      "prioritization": {
+        "counterargumentVulnerability": "medium",
+        "evidentiaryFeasibility": "historical-records",
+        "legalSupport": "express-text",
+        "materiality": "calculation"
+      },
+      "priority": "p1",
+      "restrictiveReading": "Absence of contemporaneous documentation does not prove a zero baseline; clinically justified retrospective findings may establish pre-existing impairment.",
+      "reviewStatus": "candidate",
+      "semanticIssue": "Historical impairment percentage versus historical diagnosis"
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantReading": "The specified upper-limb bilateral step includes qualifying sequelae related to the offence or already present, provided at least one qualifying related permanent sequela exists; do not exclude the opposite side solely because it predates the offence.",
+      "clinicalConfidence": "not-assessed",
+      "clinicalPrerequisites": [
+        "Bilateral upper-limb classifications, baseline and causal attribution."
+      ],
+      "confidence": "supported",
+      "counterAuthority": [
+        "Only the two named unit families are eligible; unrelated later injuries are excluded, and any prior bilateral allowance must be accounted for before residual aggregation.",
+        "Express unit-specific exclusions and professional proof remain controlling; no contrary cases were invented."
+      ],
+      "coverageGaps": [
+        "Cap/rounding order and precise eligible input states require confirmation where they diverge.",
+        "Independent legal review and complete class-path audit pending."
+      ],
+      "evidenceRequired": [
+        "Four unit percentages, dates, dominant-side classification and baseline bilateral calculation."
+      ],
+      "legalSource": [
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 451501,
+            "exactText": "Le minimum est de 0,5 % et le maximum correspond",
+            "locator": "P-9.2.1, r.1, art.26(1)(c)(iii)",
+            "sourceVersion": "gazette-2021-39",
+            "start": 451453
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        },
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 453643,
+            "exactText": "Dans chaque cas, le pourcentage retenu en relation avec",
+            "locator": "P-9.2.1, r.1, art.26(1)(d)",
+            "sourceVersion": "gazette-2021-39",
+            "start": 453588
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        }
+      ],
+      "legalSupport": [
+        "Express provisions anchored in legalSource; this is a candidate analysis, not a case-specific legal opinion."
+      ],
+      "opportunityID": "ivac-interpretation-bilateral-preexisting-side",
+      "potentialImpact": "calculation",
+      "prioritization": {
+        "counterargumentVulnerability": "low",
+        "evidentiaryFeasibility": "professional-records",
+        "legalSupport": "express-text",
+        "materiality": "calculation"
+      },
+      "priority": "p1",
+      "restrictiveReading": "Only the two named unit families are eligible; unrelated later injuries are excluded, and any prior bilateral allowance must be accounted for before residual aggregation.",
+      "reviewStatus": "candidate",
+      "semanticIssue": "Bilateral allowance may include a pre-existing contralateral impairment"
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantReading": "Do not load speculative future deterioration into the current class; preserve the separate right to seek reassessment when permanent related worsening is professionally established.",
+      "clinicalConfidence": "not-assessed",
+      "clinicalPrerequisites": [
+        "Updated professional findings confirming actual related permanent aggravation."
+      ],
+      "confidence": "supported",
+      "counterAuthority": [
+        "Later deterioration must be a confirmed aggravation of the qualifying sequela with attribution and permanence, not an unrelated intervening disease or a short-term flare.",
+        "Express unit-specific exclusions and professional proof remain controlling; no contrary cases were invented."
+      ],
+      "coverageGaps": [
+        "Payment-credit and prior-award reconciliation are not implemented as simple subtraction of monetary awards.",
+        "Independent legal review and complete class-path audit pending."
+      ],
+      "evidenceRequired": [
+        "Previous baseline award/evaluation, intervening chronology, new examination and attribution opinion."
+      ],
+      "legalSource": [
+        {
+          "artifactDigest": "sha256:ac71907c87f38b45f85ca0912e4e8d98bfe17c328a89a4c080133b387fb6fdee",
+          "artifactID": "act-2021-13",
+          "citation": {
+            "end": 49775,
+            "exactText": "Lorsque les séquelles des préjudices qui sont confirmées",
+            "locator": "P-9.2.1, art.41",
+            "sourceVersion": "act-2021-13",
+            "start": 49719
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        },
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 449649,
+            "exactText": "Les aggravations pouvant survenir à long terme ne doivent",
+            "locator": "P-9.2.1, r.1, art.24 al.1",
+            "sourceVersion": "gazette-2021-39",
+            "start": 449592
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        }
+      ],
+      "legalSupport": [
+        "Express provisions anchored in legalSource; this is a candidate analysis, not a case-specific legal opinion."
+      ],
+      "opportunityID": "ivac-interpretation-later-aggravation",
+      "potentialImpact": "process",
+      "prioritization": {
+        "counterargumentVulnerability": "low",
+        "evidentiaryFeasibility": "professional-records",
+        "legalSupport": "express-text",
+        "materiality": "process"
+      },
+      "priority": "p1",
+      "restrictiveReading": "Later deterioration must be a confirmed aggravation of the qualifying sequela with attribution and permanence, not an unrelated intervening disease or a short-term flare.",
+      "reviewStatus": "candidate",
+      "semanticIssue": "Prospective deterioration excluded now versus later established worsening"
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantReading": "Where clinically greater loss exists, unit20 permits other parameters and relevant specific examinations; a single preferred measure need not mechanically foreclose clinical qualification.",
+      "clinicalConfidence": "not-assessed",
+      "clinicalPrerequisites": [
+        "Specialist explains clinical/test discordance and validates supplementary testing."
+      ],
+      "confidence": "supported",
+      "counterAuthority": [
+        "Assessment must remain under optimal/maximal therapy and recognized medicine; supplementary findings do not authorize a non-specified formula or an unsupported higher class.",
+        "Express unit-specific exclusions and professional proof remain controlling; no contrary cases were invented."
+      ],
+      "coverageGaps": [
+        "Threshold harmonization and disease-specific evidence remain specialist issues.",
+        "Independent legal review and complete class-path audit pending."
+      ],
+      "evidenceRequired": [
+        "Effort testing, pulmonary parameters, imaging/plethysmography where pertinent and treatment status."
+      ],
+      "legalSource": [
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 777262,
+            "exactText": "perte réelle plus importante au plan clinique",
+            "locator": "Annex I unit20 rule4(2)",
+            "sourceVersion": "gazette-2021-39",
+            "start": 777217
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        },
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 450394,
+            "exactText": "appuyées par des données objectives retrouvées",
+            "locator": "P-9.2.1, r.1, art.24 al.2",
+            "sourceVersion": "gazette-2021-39",
+            "start": 450348
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        }
+      ],
+      "legalSupport": [
+        "Express provisions anchored in legalSource; this is a candidate analysis, not a case-specific legal opinion."
+      ],
+      "opportunityID": "ivac-interpretation-alternative-measurement",
+      "potentialImpact": "classification",
+      "prioritization": {
+        "counterargumentVulnerability": "medium",
+        "evidentiaryFeasibility": "specialist-comparison",
+        "legalSupport": "express-text",
+        "materiality": "classification"
+      },
+      "priority": "p1",
+      "restrictiveReading": "Assessment must remain under optimal/maximal therapy and recognized medicine; supplementary findings do not authorize a non-specified formula or an unsupported higher class.",
+      "reviewStatus": "candidate",
+      "semanticIssue": "Preferred respiratory test versus permitted supplementary objective assessment"
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantReading": "Unit11 expressly compares weighted evaluation with other described situations, including functional restrictions; a relatively preserved motion score cannot alone extinguish a supported restriction path.",
+      "clinicalConfidence": "not-assessed",
+      "clinicalPrerequisites": [
+        "Professional statement of restrictions and recognized medical explanation."
+      ],
+      "confidence": "supported",
+      "counterAuthority": [
+        "Restrictions must be clinically justified and correspond to a described or legally defensible analogous situation, not an unsupported self-imposed avoidance.",
+        "Express unit-specific exclusions and professional proof remain controlling; no contrary cases were invented."
+      ],
+      "coverageGaps": [
+        "The complete tables and unit-specific restrictions are not yet all encoded.",
+        "Independent legal review and complete class-path audit pending."
+      ],
+      "evidenceRequired": [
+        "Active/passive motion, strength, consistency testing and medically necessary restrictions."
+      ],
+      "legalSource": [
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 683045,
+            "exactText": "soit le\n       résultat de l’évaluation globale pondérée ou une autre situation décrite",
+            "locator": "Annex I unit11 rule2",
+            "sourceVersion": "gazette-2021-39",
+            "start": 682958
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        },
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 450394,
+            "exactText": "appuyées par des données objectives retrouvées",
+            "locator": "P-9.2.1, r.1, art.24 al.2",
+            "sourceVersion": "gazette-2021-39",
+            "start": 450348
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        }
+      ],
+      "legalSupport": [
+        "Express provisions anchored in legalSource; this is a candidate analysis, not a case-specific legal opinion."
+      ],
+      "opportunityID": "ivac-interpretation-restriction-vs-motion",
+      "potentialImpact": "classification",
+      "prioritization": {
+        "counterargumentVulnerability": "low",
+        "evidentiaryFeasibility": "professional-records",
+        "legalSupport": "express-text",
+        "materiality": "classification"
+      },
+      "priority": "p1",
+      "restrictiveReading": "Restrictions must be clinically justified and correspond to a described or legally defensible analogous situation, not an unsupported self-imposed avoidance.",
+      "reviewStatus": "candidate",
+      "semanticIssue": "Weighted range-of-motion score versus a separately described restriction"
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantReading": "A qualifying apparent static alteration is not excluded merely because clothing or hair normally covers it.",
+      "clinicalConfidence": "not-assessed",
+      "clinicalPrerequisites": [
+        "Standardized clinical aesthetic examination, measurement and causal attribution."
+      ],
+      "confidence": "supported",
+      "counterAuthority": [
+        "It must be clearly apparent at50cm and meet the weighted table; gait, devices and specified bundled aesthetic effects are excluded from separate aesthetic compensation.",
+        "Express unit-specific exclusions and professional proof remain controlling; no contrary cases were invented."
+      ],
+      "coverageGaps": [
+        "Weighted table cells, same-area overlap and boundary cases require complete transcription.",
+        "Independent legal review and complete class-path audit pending."
+      ],
+      "evidenceRequired": [
+        "50cm examination conditions, mapped anatomy, measurements and standardized documentation."
+      ],
+      "legalSource": [
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 810958,
+            "exactText": "Est\n           prise en considération toute atteinte apparente nonobstant",
+            "locator": "Annex I unit25 rule4",
+            "sourceVersion": "gazette-2021-39",
+            "start": 810885
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        },
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 810008,
+            "exactText": "Cette composante dynamique est déjà incluse",
+            "locator": "Annex I unit25 rule2",
+            "sourceVersion": "gazette-2021-39",
+            "start": 809965
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        }
+      ],
+      "legalSupport": [
+        "Express provisions anchored in legalSource; this is a candidate analysis, not a case-specific legal opinion."
+      ],
+      "opportunityID": "ivac-interpretation-covered-static-scar",
+      "potentialImpact": "classification",
+      "prioritization": {
+        "counterargumentVulnerability": "low",
+        "evidentiaryFeasibility": "professional-records",
+        "legalSupport": "express-text",
+        "materiality": "classification"
+      },
+      "priority": "p1",
+      "restrictiveReading": "It must be clearly apparent at50cm and meet the weighted table; gait, devices and specified bundled aesthetic effects are excluded from separate aesthetic compensation.",
+      "reviewStatus": "candidate",
+      "semanticIssue": "Clothed static aesthetic damage versus dynamic components already included"
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantReading": "Unit23 class1 includes regular permanent preventive measures for transmission/infection risk; do not require medication in addition to the express preventive-measures alternative.",
+      "clinicalConfidence": "not-assessed",
+      "clinicalPrerequisites": [
+        "Qualified professional documents risk and medically required prevention."
+      ],
+      "confidence": "supported",
+      "counterAuthority": [
+        "The risk and measures must be medically necessary, regular, permanent and related to the qualifying injury; voluntary lifestyle precautions are insufficient.",
+        "Express unit-specific exclusions and professional proof remain controlling; no contrary cases were invented."
+      ],
+      "coverageGaps": [
+        "Illustrative examples do not define every comparable clinical situation.",
+        "Independent legal review and complete class-path audit pending."
+      ],
+      "evidenceRequired": [
+        "Clinical risk assessment, prescribed preventive plan and duration/causation rationale."
+      ],
+      "legalSource": [
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 802412,
+            "exactText": "d’adopter des mesures et des comportements préventifs",
+            "locator": "Annex I unit23 class1 alternative",
+            "sourceVersion": "gazette-2021-39",
+            "start": 802359
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        },
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 448031,
+            "exactText": "Toute séquelle d’ordre fonctionnel ou esthétique",
+            "locator": "P-9.2.1, r.1, art.23",
+            "sourceVersion": "gazette-2021-39",
+            "start": 447983
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        }
+      ],
+      "legalSupport": [
+        "Express provisions anchored in legalSource; this is a candidate analysis, not a case-specific legal opinion."
+      ],
+      "opportunityID": "ivac-interpretation-endocrine-preventive-alternative",
+      "potentialImpact": "classification",
+      "prioritization": {
+        "counterargumentVulnerability": "low",
+        "evidentiaryFeasibility": "professional-records",
+        "legalSupport": "express-text",
+        "materiality": "classification"
+      },
+      "priority": "p2",
+      "restrictiveReading": "The risk and measures must be medically necessary, regular, permanent and related to the qualifying injury; voluntary lifestyle precautions are insufficient.",
+      "reviewStatus": "candidate",
+      "semanticIssue": "Preventive measures as a branch distinct from medication"
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantReading": "The text requires objective data found at clinical examination, not a universal imaging abnormality; accepted clinical examination findings can support psychiatric/cognitive evaluation.",
+      "clinicalConfidence": "not-assessed",
+      "clinicalPrerequisites": [
+        "Professional findings with recognized methods and explicit validity/differential analysis."
+      ],
+      "confidence": "plausible",
+      "counterAuthority": [
+        "Self-report alone does not satisfy every required clinical finding; assess validity, consistency, differential diagnosis and the specific tests required by the unit.",
+        "Express unit-specific exclusions and professional proof remain controlling; no contrary cases were invented."
+      ],
+      "coverageGaps": [
+        "No general burden-shifting rule or automatic acceptance of any test is established.",
+        "Independent legal review and complete class-path audit pending."
+      ],
+      "evidenceRequired": [
+        "Mental status, validated testing where indicated, observed function and collateral corroboration."
+      ],
+      "legalSource": [
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 450394,
+            "exactText": "appuyées par des données objectives retrouvées",
+            "locator": "P-9.2.1, r.1, art.24 al.2",
+            "sourceVersion": "gazette-2021-39",
+            "start": 450348
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        },
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 449708,
+            "exactText": "le diagnostic, l’impression diagnostique ou une des-",
+            "locator": "P-9.2.1, r.1, art.20(6)",
+            "sourceVersion": "gazette-2021-39",
+            "start": 449656
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        }
+      ],
+      "legalSupport": [
+        "Express provisions anchored in legalSource; this is a candidate analysis, not a case-specific legal opinion."
+      ],
+      "opportunityID": "ivac-interpretation-clinical-objectivity-not-imaging",
+      "potentialImpact": "classification",
+      "prioritization": {
+        "counterargumentVulnerability": "medium",
+        "evidentiaryFeasibility": "professional-records",
+        "legalSupport": "textual-inference",
+        "materiality": "classification"
+      },
+      "priority": "p2",
+      "restrictiveReading": "Self-report alone does not satisfy every required clinical finding; assess validity, consistency, differential diagnosis and the specific tests required by the unit.",
+      "reviewStatus": "candidate",
+      "semanticIssue": "Objective clinical data versus an invented universal imaging requirement"
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantReading": "Select the applicable transitional provision using prior admissibility, definitive decision, existing incapacity/need and timing of the particular benefit, rather than occurrence date alone.",
+      "clinicalConfidence": "not-assessed",
+      "clinicalPrerequisites": [
+        "No new clinical conclusion for legal selection; clinical dates of incapacity/need may require professional reconstruction."
+      ],
+      "confidence": "supported",
+      "counterAuthority": [
+        "Articles179–184 preserve old-law benefits in specified situations; a new decision date cannot simply migrate all old rights into the more favorable schedule.",
+        "Express unit-specific exclusions and professional proof remain controlling; no contrary cases were invented."
+      ],
+      "coverageGaps": [
+        "Later amendments, extensions and the applicable version of transitional time limits remain unaudited; no personal deadline is calculated.",
+        "Independent legal review and complete class-path audit pending."
+      ],
+      "evidenceRequired": [
+        "Prior decisions, applications, notification dates, benefit cessation/recurrence and need chronology."
+      ],
+      "legalSource": [
+        {
+          "artifactDigest": "sha256:ac71907c87f38b45f85ca0912e4e8d98bfe17c328a89a4c080133b387fb6fdee",
+          "artifactID": "act-2021-13",
+          "citation": {
+            "end": 145743,
+            "exactText": "Toute décision définitive qui, avant la date de l’entrée en vigueur",
+            "locator": "P-9.2.1, art.179",
+            "sourceVersion": "act-2021-13",
+            "start": 145676
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        }
+      ],
+      "legalSupport": [
+        "Express provisions anchored in legalSource; this is a candidate analysis, not a case-specific legal opinion."
+      ],
+      "opportunityID": "ivac-interpretation-transition-benefit-specific",
+      "potentialImpact": "applicability",
+      "prioritization": {
+        "counterargumentVulnerability": "medium",
+        "evidentiaryFeasibility": "historical-records",
+        "legalSupport": "express-text",
+        "materiality": "applicability"
+      },
+      "priority": "p1",
+      "restrictiveReading": "Articles179–184 preserve old-law benefits in specified situations; a new decision date cannot simply migrate all old rights into the more favorable schedule.",
+      "reviewStatus": "candidate",
+      "semanticIssue": "Old occurrence date versus benefit-specific transitional branch"
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantReading": "Article39 permits establishment/payment for an individually confirmed stable sequela; another unit’s ongoing treatment is not necessarily a reason to defer all evaluation.",
+      "clinicalConfidence": "not-assessed",
+      "clinicalPrerequisites": [
+        "Professional confirmation of permanence for the particular sequela."
+      ],
+      "confidence": "supported",
+      "counterAuthority": [
+        "Interdependent sequelae and residual-aggregation/payment reconciliation may require coordination; early treatment of one unit does not permit duplicate awards or a provisional unsupported class.",
+        "Express unit-specific exclusions and professional proof remain controlling; no contrary cases were invented."
+      ],
+      "coverageGaps": [
+        "Detailed staged-payment reconciliation and procedural implementation need legal/administrative confirmation.",
+        "Independent legal review and complete class-path audit pending."
+      ],
+      "evidenceRequired": [
+        "Unit-specific prognosis and separate pending-unit record."
+      ],
+      "legalSource": [
+        {
+          "artifactDigest": "sha256:ac71907c87f38b45f85ca0912e4e8d98bfe17c328a89a4c080133b387fb6fdee",
+          "artifactID": "act-2021-13",
+          "citation": {
+            "end": 48944,
+            "exactText": "l’établissement et le versement se font pour chaque séquelle",
+            "locator": "P-9.2.1, art.39 al.2",
+            "sourceVersion": "act-2021-13",
+            "start": 48884
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        },
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 448031,
+            "exactText": "Toute séquelle d’ordre fonctionnel ou esthétique",
+            "locator": "P-9.2.1, r.1, art.23",
+            "sourceVersion": "gazette-2021-39",
+            "start": 447983
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        }
+      ],
+      "legalSupport": [
+        "Express provisions anchored in legalSource; this is a candidate analysis, not a case-specific legal opinion."
+      ],
+      "opportunityID": "ivac-interpretation-per-unit-establishment",
+      "potentialImpact": "process",
+      "prioritization": {
+        "counterargumentVulnerability": "medium",
+        "evidentiaryFeasibility": "professional-records",
+        "legalSupport": "express-text",
+        "materiality": "process"
+      },
+      "priority": "p2",
+      "restrictiveReading": "Interdependent sequelae and residual-aggregation/payment reconciliation may require coordination; early treatment of one unit does not permit duplicate awards or a provisional unsupported class.",
+      "reviewStatus": "candidate",
+      "semanticIssue": "One stable sequela versus waiting for every unit to stabilize"
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantReading": "The regulation rounds a multi-rate global result with any decimal upward to the next integer; do not replace it by rounding only when the decimal exceeds0.4.",
+      "clinicalConfidence": "not-assessed",
+      "clinicalPrerequisites": [
+        "Professionally/legal selected unit rates; arithmetic cannot select classes."
+      ],
+      "confidence": "supported",
+      "counterAuthority": [
+        "Confirm that multiple rates were determined and that intermediate contributions were rounded at the prescribed stage; a single fractional rate raises a different textual question.",
+        "Express unit-specific exclusions and professional proof remain controlling; no contrary cases were invented."
+      ],
+      "coverageGaps": [
+        "Directive2.7 example explanation is not an amendment; single-rate treatment is explicitly kept separate.",
+        "Independent legal review and complete class-path audit pending."
+      ],
+      "evidenceRequired": [
+        "Versioned rate worksheet, ordered contributions and stage-specific rounding trace."
+      ],
+      "legalSource": [
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 458454,
+            "exactText": "Si le résultat a des",
+            "locator": "P-9.2.1, r.1, art.26 global rounding",
+            "sourceVersion": "gazette-2021-39",
+            "start": 458434
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        },
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 458277,
+            "exactText": "les pourcentages ainsi calculés sont additionnés",
+            "locator": "P-9.2.1, r.1, art.26 final global stage",
+            "sourceVersion": "gazette-2021-39",
+            "start": 458229
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        }
+      ],
+      "legalSupport": [
+        "Express provisions anchored in legalSource; this is a candidate analysis, not a case-specific legal opinion."
+      ],
+      "opportunityID": "ivac-interpretation-global-rounding-ceiling",
+      "potentialImpact": "calculation",
+      "prioritization": {
+        "counterargumentVulnerability": "low",
+        "evidentiaryFeasibility": "professional-records",
+        "legalSupport": "express-text",
+        "materiality": "calculation"
+      },
+      "priority": "p1",
+      "restrictiveReading": "Confirm that multiple rates were determined and that intermediate contributions were rounded at the prescribed stage; a single fractional rate raises a different textual question.",
+      "reviewStatus": "candidate",
+      "semanticIssue": "Final residual percentage rounding versus directive shorthand"
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantReading": "Read the first-decimal truncation literally before raising0.1–0.4 to0.5 or0.6–0.9 to the next integer; do not use ordinary nearest-half rounding.",
+      "clinicalConfidence": "not-assessed",
+      "clinicalPrerequisites": [
+        "Eligible four-unit rates and baseline qualified independently."
+      ],
+      "confidence": "speculative",
+      "counterAuthority": [
+        "The less-affected-side cap constrains the allowance; any apparent cap/round conflict must be resolved under applicable unit rates and law, not selected for the larger output.",
+        "Express unit-specific exclusions and professional proof remain controlling; no contrary cases were invented."
+      ],
+      "coverageGaps": [
+        "Some synthetic fractional cap conflicts may be unreachable under actual class rates; no real opportunity is asserted without a reachability proof.",
+        "Independent legal review and complete class-path audit pending."
+      ],
+      "evidenceRequired": [
+        "Original fraction/table, exact input rates and both rounding traces."
+      ],
+      "legalSource": [
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 451501,
+            "exactText": "Le minimum est de 0,5 % et le maximum correspond",
+            "locator": "P-9.2.1, r.1, art.26(1)(c)(iii)",
+            "sourceVersion": "gazette-2021-39",
+            "start": 451453
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        }
+      ],
+      "legalSupport": [
+        "Express provisions anchored in legalSource; this is a candidate analysis, not a case-specific legal opinion."
+      ],
+      "opportunityID": "ivac-interpretation-bilateral-rounding-stage",
+      "potentialImpact": "calculation",
+      "prioritization": {
+        "counterargumentVulnerability": "high",
+        "evidentiaryFeasibility": "specialist-comparison",
+        "legalSupport": "textual-inference",
+        "materiality": "calculation"
+      },
+      "priority": "p2",
+      "restrictiveReading": "The less-affected-side cap constrains the allowance; any apparent cap/round conflict must be resolved under applicable unit rates and law, not selected for the larger output.",
+      "reviewStatus": "candidate",
+      "semanticIssue": "Truncation precedes half-step rounding; cap precedence is under-specified"
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantReading": "Seek reasons addressing the material route, contrary evidence, baseline and version; review can correct a legally erroneous or incompletely evaluated decision.",
+      "clinicalConfidence": "not-assessed",
+      "clinicalPrerequisites": [
+        "Clinical material remains an independent professional input; procedural proof is the actual decision/file."
+      ],
+      "confidence": "supported",
+      "counterAuthority": [
+        "An unfavorable result is not itself inadequate reasoning; decision-maker may reject evidence for explained reasons and the tribunal must act within jurisdiction.",
+        "Express unit-specific exclusions and professional proof remain controlling; no contrary cases were invented."
+      ],
+      "coverageGaps": [
+        "No case-specific remedy, prejudicial error or outcome is assumed.",
+        "Independent legal review and complete class-path audit pending."
+      ],
+      "evidenceRequired": [
+        "Decision, complete administrative file, submitted reports, proof of delivery and focused issue list."
+      ],
+      "legalSource": [
+        {
+          "artifactDigest": "sha256:ac71907c87f38b45f85ca0912e4e8d98bfe17c328a89a4c080133b387fb6fdee",
+          "artifactID": "act-2021-13",
+          "citation": {
+            "end": 88697,
+            "exactText": "Cette décision est motivée. Elle mentionne le droit de demander",
+            "locator": "P-9.2.1, art.79",
+            "sourceVersion": "act-2021-13",
+            "start": 88634
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        },
+        {
+          "artifactDigest": "sha256:ac71907c87f38b45f85ca0912e4e8d98bfe17c328a89a4c080133b387fb6fdee",
+          "artifactID": "act-2021-13",
+          "citation": {
+            "end": 92562,
+            "exactText": "l’occasion de présenter ses observations",
+            "locator": "P-9.2.1, art.88",
+            "sourceVersion": "act-2021-13",
+            "start": 92522
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        },
+        {
+          "artifactDigest": "sha256:ac71907c87f38b45f85ca0912e4e8d98bfe17c328a89a4c080133b387fb6fdee",
+          "artifactID": "act-2021-13",
+          "citation": {
+            "end": 93025,
+            "exactText": "Toute décision ayant fait l’objet d’une révision peut être",
+            "locator": "P-9.2.1, art.90",
+            "sourceVersion": "act-2021-13",
+            "start": 92967
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        }
+      ],
+      "legalSupport": [
+        "Express provisions anchored in legalSource; this is a candidate analysis, not a case-specific legal opinion."
+      ],
+      "opportunityID": "ivac-interpretation-reasons-overlooked-evidence",
+      "potentialImpact": "process",
+      "prioritization": {
+        "counterargumentVulnerability": "medium",
+        "evidentiaryFeasibility": "professional-records",
+        "legalSupport": "express-text",
+        "materiality": "process"
+      },
+      "priority": "p1",
+      "restrictiveReading": "An unfavorable result is not itself inadequate reasoning; decision-maker may reject evidence for explained reasons and the tribunal must act within jurisdiction.",
+      "reviewStatus": "candidate",
+      "semanticIssue": "Unexplained comparator/criterion choice or overlooked material professional evidence"
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantReading": "Review is normally requested within90days of communication under article85; article87 permits reasonable-cause lateness relief, and article90 creates a delayed-review route subject to its extension/reset rules.",
+      "clinicalConfidence": "not-assessed",
+      "clinicalPrerequisites": [
+        "No clinical prerequisite to ordinary review; any health reason for delay requires appropriate independent evidence."
+      ],
+      "confidence": "supported",
+      "counterAuthority": [
+        "A reasonable cause must actually be demonstrated; request-driven extensions and necessary examination/document extensions can alter article90 timing, and maximum-aid exceptions must be considered.",
+        "Express unit-specific exclusions and professional proof remain controlling; no contrary cases were invented."
+      ],
+      "coverageGaps": [
+        "TAQ deadline arises separately under J-3 art110 (normally60days in social affairs); no individual deadline or automatic relief is determined.",
+        "Independent legal review and complete class-path audit pending."
+      ],
+      "evidenceRequired": [
+        "Notification/reception proof, request dates, extension notices, submission chronology and reasons for delay."
+      ],
+      "legalSource": [
+        {
+          "artifactDigest": "sha256:ac71907c87f38b45f85ca0912e4e8d98bfe17c328a89a4c080133b387fb6fdee",
+          "artifactID": "act-2021-13",
+          "citation": {
+            "end": 91546,
+            "exactText": "dans les 90 jours de la date à laquelle lui a été communiquée",
+            "locator": "P-9.2.1, art.85",
+            "sourceVersion": "act-2021-13",
+            "start": 91485
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        },
+        {
+          "artifactDigest": "sha256:ac71907c87f38b45f85ca0912e4e8d98bfe17c328a89a4c080133b387fb6fdee",
+          "artifactID": "act-2021-13",
+          "citation": {
+            "end": 92333,
+            "exactText": "un\nmotif raisonnable de ne pas avoir respecté ce délai",
+            "locator": "P-9.2.1, art.87",
+            "sourceVersion": "act-2021-13",
+            "start": 92279
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        },
+        {
+          "artifactDigest": "sha256:ac71907c87f38b45f85ca0912e4e8d98bfe17c328a89a4c080133b387fb6fdee",
+          "artifactID": "act-2021-13",
+          "citation": {
+            "end": 93025,
+            "exactText": "Toute décision ayant fait l’objet d’une révision peut être",
+            "locator": "P-9.2.1, art.90",
+            "sourceVersion": "act-2021-13",
+            "start": 92967
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        }
+      ],
+      "legalSupport": [
+        "Express provisions anchored in legalSource; this is a candidate analysis, not a case-specific legal opinion."
+      ],
+      "opportunityID": "ivac-interpretation-review-delay-and-reconsideration",
+      "potentialImpact": "process",
+      "prioritization": {
+        "counterargumentVulnerability": "medium",
+        "evidentiaryFeasibility": "historical-records",
+        "legalSupport": "express-text",
+        "materiality": "process"
+      },
+      "priority": "p1",
+      "restrictiveReading": "A reasonable cause must actually be demonstrated; request-driven extensions and necessary examination/document extensions can alter article90 timing, and maximum-aid exceptions must be considered.",
+      "reviewStatus": "candidate",
+      "semanticIssue": "Review, lateness relief and delayed administrative response are distinct procedural gates"
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantReading": "The Act directs use of amounts in force at establishment; do not blindly multiply by the original2021 amount or select the offence-year base.",
+      "clinicalConfidence": "not-assessed",
+      "clinicalPrerequisites": [
+        "Qualified percentage remains separate from monetary valuation."
+      ],
+      "confidence": "supported",
+      "counterAuthority": [
+        "Identify the lawful establishment date, applicable published indexation, prior payments and any specific transitional rule; a later demand does not automatically select a larger current base.",
+        "Express unit-specific exclusions and professional proof remain controlling; no contrary cases were invented."
+      ],
+      "coverageGaps": [
+        "No current monetary base or award is computed here.",
+        "Independent legal review and complete class-path audit pending."
+      ],
+      "evidenceRequired": [
+        "Actual establishment decision/date and official applicable annual indexed amount."
+      ],
+      "legalSource": [
+        {
+          "artifactDigest": "sha256:ac71907c87f38b45f85ca0912e4e8d98bfe17c328a89a4c080133b387fb6fdee",
+          "artifactID": "act-2021-13",
+          "citation": {
+            "end": 48518,
+            "exactText": "Les montants considérés pour l’établissement de la somme",
+            "locator": "P-9.2.1, art.38 al.2",
+            "sourceVersion": "act-2021-13",
+            "start": 48462
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        }
+      ],
+      "legalSupport": [
+        "Express provisions anchored in legalSource; this is a candidate analysis, not a case-specific legal opinion."
+      ],
+      "opportunityID": "ivac-interpretation-indexed-establishment-date",
+      "potentialImpact": "calculation",
+      "prioritization": {
+        "counterargumentVulnerability": "medium",
+        "evidentiaryFeasibility": "historical-records",
+        "legalSupport": "express-text",
+        "materiality": "calculation"
+      },
+      "priority": "p2",
+      "restrictiveReading": "Identify the lawful establishment date, applicable published indexation, prior payments and any specific transitional rule; a later demand does not automatically select a larger current base.",
+      "reviewStatus": "candidate",
+      "semanticIssue": "Applicable indexed monetary amount versus original nominal amount"
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantReading": "Ask whether a received civil sum truly concerns the same objects, sequelae or prejudice before offset; distinguish supported allocations to different losses.",
+      "clinicalConfidence": "not-assessed",
+      "clinicalPrerequisites": [
+        "No automatic new clinical finding; distinct losses require appropriate professional/legal proof."
+      ],
+      "confidence": "plausible",
+      "counterAuthority": [
+        "A settlement without a filed lawsuit is not automatically exempt: C.M.2026QCTAQ02260 rejects that narrow reading and confirms reconsideration on its facts.",
+        "Express unit-specific exclusions and professional proof remain controlling; no contrary cases were invented."
+      ],
+      "coverageGaps": [
+        "C.M. is a persuasive single TAQ decision; finality/appeal status was not independently checked; no general allocation holding is claimed.",
+        "Independent legal review and complete class-path audit pending."
+      ],
+      "evidenceRequired": [
+        "Settlement text, allocation evidence, receipt/payment records and statutory reconciliation."
+      ],
+      "legalSource": [
+        {
+          "artifactDigest": "sha256:ac71907c87f38b45f85ca0912e4e8d98bfe17c328a89a4c080133b387fb6fdee",
+          "artifactID": "act-2021-13",
+          "citation": {
+            "end": 40341,
+            "exactText": "ne peut pas cumuler une aide en vertu du présent titre et une\nsomme",
+            "locator": "P-9.2.1, art.33",
+            "sourceVersion": "act-2021-13",
+            "start": 40274
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        }
+      ],
+      "legalSupport": [
+        "Express provisions anchored in legalSource; this is a candidate analysis, not a case-specific legal opinion."
+      ],
+      "opportunityID": "ivac-interpretation-settlement-offset-limits",
+      "potentialImpact": "calculation",
+      "prioritization": {
+        "counterargumentVulnerability": "high",
+        "evidentiaryFeasibility": "historical-records",
+        "legalSupport": "textual-inference",
+        "materiality": "calculation"
+      },
+      "priority": "p2",
+      "restrictiveReading": "A settlement without a filed lawsuit is not automatically exempt: C.M.2026QCTAQ02260 rejects that narrow reading and confirms reconsideration on its facts.",
+      "reviewStatus": "candidate",
+      "semanticIssue": "Separate prejudice allocation versus double recovery"
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantReading": "Where the full specialist evidence supports a more serious representative functional situation, seek a reasoned comparison rather than treating one EGF opinion as an absolute numerical ceiling; older SAAQ J.V.2012QCTAQ04180 illustrates this evidentiary argument under similar wording.",
+      "clinicalConfidence": "not-assessed",
+      "clinicalPrerequisites": [
+        "Specialist reconciles EGF uncertainty, daily-life function, compensations and the proposed class with recognized clinical evidence."
+      ],
+      "confidence": "plausible",
+      "counterAuthority": [
+        "The IVAC EGF bands and specific class descriptions remain controlling. A different-regime decision does not authorize ignoring a sound EGF assessment, treating unemployment as automatic class4 or bypassing support and causation findings.",
+        "Express unit-specific exclusions and professional proof remain controlling; no contrary cases were invented."
+      ],
+      "coverageGaps": [
+        "SAAQ precedent is persuasive only after text/version comparison; no verified new-regime IVAC case establishes a general EGF override.",
+        "Independent legal review and complete class-path audit pending."
+      ],
+      "evidenceRequired": [
+        "Full reasoned psychiatric/functional evaluations, longitudinal records and explicit comparator analysis; source-regime comparison of J.V. paragraphs97–113."
+      ],
+      "legalSource": [
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 611152,
+            "exactText": "lequel se situe entre 41 et 50",
+            "locator": "Annex I unit1 class4 EGF path",
+            "sourceVersion": "gazette-2021-39",
+            "start": 611122
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        },
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 450674,
+            "exactText": "La classe de gravité de l’unité fonctionnelle ou",
+            "locator": "P-9.2.1, r.1, art.25 al.1",
+            "sourceVersion": "gazette-2021-39",
+            "start": 450626
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        },
+        {
+          "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+          "artifactID": "gazette-2021-39",
+          "citation": {
+            "end": 602763,
+            "exactText": "le degré d’autonomie et l’efficience sociale appréciés",
+            "locator": "Annex I unit1 evaluation rule2",
+            "sourceVersion": "gazette-2021-39",
+            "start": 602709
+          },
+          "versionDescription": "Official original 2021 publication; later applicability unresolved; compare bulk XML observation separately."
+        }
+      ],
+      "legalSupport": [
+        "Express provisions anchored in legalSource; this is a candidate analysis, not a case-specific legal opinion.",
+        "J.V. c. SAAQ,2012 QCTAQ 04180,paras97–113: primary text verified; class4 selected after full functional evidence despite reported EGF55 opinions. Different SAAQ regime; no automatic IVAC override."
+      ],
+      "opportunityID": "ivac-interpretation-egf-not-mechanical-ceiling",
+      "potentialImpact": "classification",
+      "prioritization": {
+        "counterargumentVulnerability": "high",
+        "evidentiaryFeasibility": "specialist-comparison",
+        "legalSupport": "textual-inference",
+        "materiality": "classification"
+      },
+      "priority": "p1",
+      "restrictiveReading": "The IVAC EGF bands and specific class descriptions remain controlling. A different-regime decision does not authorize ignoring a sound EGF assessment, treating unemployment as automatic class4 or bypassing support and causation findings.",
+      "reviewStatus": "candidate",
+      "semanticIssue": "EGF numerical opinion versus the supported global functional class"
+    }
+  ],
+  "scenarios": [
+    {
+      "adjudication": "not-determined",
+      "claimantOutput": "Evaluate the identified analogous class as a candidate.",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "divergence": "Unlisted presentation and comparator scope",
+      "facts": [
+        "Synthetic unlisted deficit has professionally documented comparator-equivalent daily-life consequences; etiology differs.",
+        "All facts are invented; professional/legal prerequisites are hypothetical, never inferred."
+      ],
+      "opportunityID": "ivac-interpretation-analogy-equivalence",
+      "resolutionEvidence": "Comparator matrix, clinical exam, longitudinal function and reasoned alternative comparator. Resolve the stated scope with the applicable source version and verified authorities.",
+      "restrictiveOutput": "Seek a narrower same-function comparator; equivalence remains unproven.",
+      "scenarioID": "synthetic-analogy-equivalence",
+      "synthetic": true
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantOutput": "Class4 psychiatric route remains available for assessment.",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "divergence": "EGF and cognition: separate routes or cumulative conditions",
+      "facts": [
+        "Synthetic EGF45 psychiatric state is professionally supported; cognition is preserved; regular help is disputed.",
+        "All facts are invented; professional/legal prerequisites are hypothetical, never inferred."
+      ],
+      "opportunityID": "ivac-interpretation-psychiatric-or-cognitive",
+      "resolutionEvidence": "Reasoned EGF assessment, mental status findings, daily-life function, independent cognitive evidence where relevant. Resolve the stated scope with the applicable source version and verified authorities.",
+      "restrictiveOutput": "Require additional support-need findings under a shared-tail reading.",
+      "scenarioID": "synthetic-psychiatric-or-cognitive",
+      "synthetic": true
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantOutput": "Assess class3 cognitive path without inventing a requirement of assistance actually received.",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "divergence": "Class3 possible justified assistance versus actual assistance",
+      "facts": [
+        "Synthetic complex-task failures require substantial restructuring; the person lives alone without purchased assistance.",
+        "All facts are invented; professional/legal prerequisites are hypothetical, never inferred."
+      ],
+      "opportunityID": "ivac-interpretation-cognitive-support-necessity",
+      "resolutionEvidence": "Task-based examples, adaptation records, documented unmet need and reasons support is unavailable. Resolve the stated scope with the applicable source version and verified authorities.",
+      "restrictiveOutput": "Insufficient evidence of substantial adaptation until professional findings are completed.",
+      "scenarioID": "synthetic-cognitive-support-necessity",
+      "synthetic": true
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantOutput": "Retain the medication branch for assessment.",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "divergence": "Permanent prescribed medication as an alternative criterion",
+      "facts": [
+        "Synthetic treated permanent condition has little current symptom burden; regular indefinite prescribed medication is professionally confirmed.",
+        "All facts are invented; professional/legal prerequisites are hypothetical, never inferred."
+      ],
+      "opportunityID": "ivac-interpretation-medication-independent-path",
+      "resolutionEvidence": "Prescription history, treatment response, necessity rationale and baseline medication history. Resolve the stated scope with the applicable source version and verified authorities.",
+      "restrictiveOutput": "Exclude if permanence, necessity or attribution is not adequately established.",
+      "scenarioID": "synthetic-medication-independent-path",
+      "synthetic": true
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantOutput": "Assess the support-dependent function and adaptation.",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "divergence": "Adapted performance versus unassisted capacity",
+      "facts": [
+        "Synthetic person completes tasks only with daily cueing and structured assistance.",
+        "All facts are invented; professional/legal prerequisites are hypothetical, never inferred."
+      ],
+      "opportunityID": "ivac-interpretation-compensated-function",
+      "resolutionEvidence": "Time/cueing/task analyses, functional failures, collateral support records and performance validity findings. Resolve the stated scope with the applicable source version and verified authorities.",
+      "restrictiveOutput": "Credit demonstrable preserved capacities while requiring evidence that support is medically necessary.",
+      "scenarioID": "synthetic-compensated-function",
+      "synthetic": true
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantOutput": "Consider the highest supported permanent situation.",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "divergence": "Maximum supported situation versus transient worst episode",
+      "facts": [
+        "Synthetic persistent severe limitations alternate with compensated better days; examination occurs on a better day.",
+        "All facts are invented; professional/legal prerequisites are hypothetical, never inferred."
+      ],
+      "opportunityID": "ivac-interpretation-maximum-impact-stability",
+      "resolutionEvidence": "Repeated assessments and chronology separating persistent limitations from temporary exacerbations. Resolve the stated scope with the applicable source version and verified authorities.",
+      "restrictiveOutput": "Require proof that the severe situation is persistent/representative rather than an isolated episode.",
+      "scenarioID": "synthetic-maximum-impact-stability",
+      "synthetic": true
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantOutput": "Assess both specified units independently.",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "divergence": "Manual dexterity and cutaneous sensation",
+      "facts": [
+        "Synthetic independently verified hand dexterity loss and cutaneous loss arise from one injury.",
+        "All facts are invented; professional/legal prerequisites are hypothetical, never inferred."
+      ],
+      "opportunityID": "ivac-interpretation-separate-sensory-hand",
+      "resolutionEvidence": "Mapped sensory examination, hand function testing and explicit nonduplication analysis. Resolve the stated scope with the applicable source version and verified authorities.",
+      "restrictiveOutput": "Exclude any overlapping consequence or insufficiently established second deficit.",
+      "scenarioID": "synthetic-separate-sensory-hand",
+      "synthetic": true
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantOutput": "Evaluate the referred respiratory consequence in its proper unit.",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "divergence": "Different rule scopes: refer to another unit or include within the current unit",
+      "facts": [
+        "Synthetic thoracic protection defect and separately demonstrated respiratory loss share an injury.",
+        "All facts are invented; professional/legal prerequisites are hypothetical, never inferred."
+      ],
+      "opportunityID": "ivac-interpretation-overlap-routing-vs-inclusion",
+      "resolutionEvidence": "Unit-to-effect map with inclusion/exclusion justifications. Resolve the stated scope with the applicable source version and verified authorities.",
+      "restrictiveOutput": "Require proof the additional effect is independent and not already captured by a specific inclusion.",
+      "scenarioID": "synthetic-overlap-routing-vs-inclusion",
+      "synthetic": true
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantOutput": "Require a justified baseline before deduction.",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "divergence": "Historical impairment percentage versus historical diagnosis",
+      "facts": [
+        "Synthetic current percentage35 is established; prior diagnosis exists but pre-event class is unknown.",
+        "All facts are invented; professional/legal prerequisites are hypothetical, never inferred."
+      ],
+      "opportunityID": "ivac-interpretation-baseline-not-diagnosis",
+      "resolutionEvidence": "Prior records, function history, medication/support history and reasoned baseline class. Resolve the stated scope with the applicable source version and verified authorities.",
+      "restrictiveOutput": "Obtain retrospective evidence; decline to treat missing baseline records as zero.",
+      "scenarioID": "synthetic-baseline-not-diagnosis",
+      "synthetic": true
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantOutput": "Include eligible pre-existing contralateral state in the bilateral calculation.",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "divergence": "Bilateral allowance may include a pre-existing contralateral impairment",
+      "facts": [
+        "Synthetic newly related upper-limb loss meets a qualifying class; the opposite side was already impaired.",
+        "All facts are invented; professional/legal prerequisites are hypothetical, never inferred."
+      ],
+      "opportunityID": "ivac-interpretation-bilateral-preexisting-side",
+      "resolutionEvidence": "Four unit percentages, dates, dominant-side classification and baseline bilateral calculation. Resolve the stated scope with the applicable source version and verified authorities.",
+      "restrictiveOutput": "Apply eligibility limits, exclusions and historical bilateral deduction.",
+      "scenarioID": "synthetic-bilateral-preexisting-side",
+      "synthetic": true
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantOutput": "Consider a new aggravation evaluation.",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "divergence": "Prospective deterioration excluded now versus later established worsening",
+      "facts": [
+        "Synthetic previously stable qualifying sequela later worsens after a documented related progression.",
+        "All facts are invented; professional/legal prerequisites are hypothetical, never inferred."
+      ],
+      "opportunityID": "ivac-interpretation-later-aggravation",
+      "resolutionEvidence": "Previous baseline award/evaluation, intervening chronology, new examination and attribution opinion. Resolve the stated scope with the applicable source version and verified authorities.",
+      "restrictiveOutput": "Reject automatic escalation until permanence and causation of the worsening are established.",
+      "scenarioID": "synthetic-later-aggravation",
+      "synthetic": true
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantOutput": "Evaluate permitted supplementary measurements.",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "divergence": "Preferred respiratory test versus permitted supplementary objective assessment",
+      "facts": [
+        "Synthetic standard measure suggests mild loss but specialist-confirmed other objective findings show materially greater functional impairment.",
+        "All facts are invented; professional/legal prerequisites are hypothetical, never inferred."
+      ],
+      "opportunityID": "ivac-interpretation-alternative-measurement",
+      "resolutionEvidence": "Effort testing, pulmonary parameters, imaging/plethysmography where pertinent and treatment status. Resolve the stated scope with the applicable source version and verified authorities.",
+      "restrictiveOutput": "Require explanation of discordance and class comparability under optimal treatment.",
+      "scenarioID": "synthetic-alternative-measurement",
+      "synthetic": true
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantOutput": "Assess both prescribed routes and retain the highest supported situation.",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "divergence": "Weighted range-of-motion score versus a separately described restriction",
+      "facts": [
+        "Synthetic motion remains nearly normal while specialist-prescribed permanent restrictions match another class situation.",
+        "All facts are invented; professional/legal prerequisites are hypothetical, never inferred."
+      ],
+      "opportunityID": "ivac-interpretation-restriction-vs-motion",
+      "resolutionEvidence": "Active/passive motion, strength, consistency testing and medically necessary restrictions. Resolve the stated scope with the applicable source version and verified authorities.",
+      "restrictiveOutput": "Require clinically necessary restrictions and correct comparator.",
+      "scenarioID": "synthetic-restriction-vs-motion",
+      "synthetic": true
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantOutput": "Assess the static alteration under its aesthetic unit.",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "divergence": "Clothed static aesthetic damage versus dynamic components already included",
+      "facts": [
+        "Synthetic permanent scar is clearly apparent at50cm but normally concealed by clothing.",
+        "All facts are invented; professional/legal prerequisites are hypothetical, never inferred."
+      ],
+      "opportunityID": "ivac-interpretation-covered-static-scar",
+      "resolutionEvidence": "50cm examination conditions, mapped anatomy, measurements and standardized documentation. Resolve the stated scope with the applicable source version and verified authorities.",
+      "restrictiveOutput": "Require apparent-visibility and proper table conditions; exclude dynamic duplicate effects.",
+      "scenarioID": "synthetic-covered-static-scar",
+      "synthetic": true
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantOutput": "Assess the express prevention branch.",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "divergence": "Preventive measures as a branch distinct from medication",
+      "facts": [
+        "Synthetic permanent related immune-risk condition requires ongoing preventive behavior but no chronic medication.",
+        "All facts are invented; professional/legal prerequisites are hypothetical, never inferred."
+      ],
+      "opportunityID": "ivac-interpretation-endocrine-preventive-alternative",
+      "resolutionEvidence": "Clinical risk assessment, prescribed preventive plan and duration/causation rationale. Resolve the stated scope with the applicable source version and verified authorities.",
+      "restrictiveOutput": "Require recognized risk and medical necessity rather than mere preference.",
+      "scenarioID": "synthetic-endocrine-preventive-alternative",
+      "synthetic": true
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantOutput": "Consider recognized objective clinical findings without inventing mandatory imaging.",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "divergence": "Objective clinical data versus an invented universal imaging requirement",
+      "facts": [
+        "Synthetic structured mental status and neuropsychological findings are abnormal while structural imaging is normal.",
+        "All facts are invented; professional/legal prerequisites are hypothetical, never inferred."
+      ],
+      "opportunityID": "ivac-interpretation-clinical-objectivity-not-imaging",
+      "resolutionEvidence": "Mental status, validated testing where indicated, observed function and collateral corroboration. Resolve the stated scope with the applicable source version and verified authorities.",
+      "restrictiveOutput": "Require validity and sufficient objective support for the particular sequela.",
+      "scenarioID": "synthetic-clinical-objectivity-not-imaging",
+      "synthetic": true
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantOutput": "Analyze the benefit-specific transitional route.",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "divergence": "Old occurrence date versus benefit-specific transitional branch",
+      "facts": [
+        "Synthetic offence predates2021; prior qualification and a later new benefit need have distinct timelines.",
+        "All facts are invented; professional/legal prerequisites are hypothetical, never inferred."
+      ],
+      "opportunityID": "ivac-interpretation-transition-benefit-specific",
+      "resolutionEvidence": "Prior decisions, applications, notification dates, benefit cessation/recurrence and need chronology. Resolve the stated scope with the applicable source version and verified authorities.",
+      "restrictiveOutput": "Retain old-law treatment where the preservation conditions apply.",
+      "scenarioID": "synthetic-transition-benefit-specific",
+      "synthetic": true
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantOutput": "Request evaluation of the individually stable sequela.",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "divergence": "One stable sequela versus waiting for every unit to stabilize",
+      "facts": [
+        "Synthetic leg sequela is stable while independent back treatment continues.",
+        "All facts are invented; professional/legal prerequisites are hypothetical, never inferred."
+      ],
+      "opportunityID": "ivac-interpretation-per-unit-establishment",
+      "resolutionEvidence": "Unit-specific prognosis and separate pending-unit record. Resolve the stated scope with the applicable source version and verified authorities.",
+      "restrictiveOutput": "Coordinate interdependent assessment or documented unresolved permanence.",
+      "scenarioID": "synthetic-per-unit-establishment",
+      "synthetic": true
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantOutput": "Global result3 under the regulation.",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "divergence": "Final residual percentage rounding versus directive shorthand",
+      "facts": [
+        "Synthetic selected rates2 and1 yield residual total2.98.",
+        "All facts are invented; professional/legal prerequisites are hypothetical, never inferred."
+      ],
+      "opportunityID": "ivac-interpretation-global-rounding-ceiling",
+      "resolutionEvidence": "Versioned rate worksheet, ordered contributions and stage-specific rounding trace. Resolve the stated scope with the applicable source version and verified authorities.",
+      "restrictiveOutput": "Do not generalize the multi-rate clause to an isolated fractional rate without legal analysis.",
+      "scenarioID": "synthetic-global-rounding-ceiling",
+      "synthetic": true
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantOutput": "Retain cap-then-round trace as one candidate.",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "divergence": "Truncation precedes half-step rounding; cap precedence is under-specified",
+      "facts": [
+        "Synthetic mathematical stress case uses fractional side totals producing different cap-before/after outputs; not asserted as a real class combination.",
+        "All facts are invented; professional/legal prerequisites are hypothetical, never inferred."
+      ],
+      "opportunityID": "ivac-interpretation-bilateral-rounding-stage",
+      "resolutionEvidence": "Original fraction/table, exact input rates and both rounding traces. Resolve the stated scope with the applicable source version and verified authorities.",
+      "restrictiveOutput": "Retain round-then-cap trace and flag any breached hard cap.",
+      "scenarioID": "synthetic-bilateral-rounding-stage",
+      "synthetic": true
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantOutput": "Request reasoned review of the material omitted route.",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "divergence": "Unexplained comparator/criterion choice or overlooked material professional evidence",
+      "facts": [
+        "Synthetic decision discusses only EGF and gives no answer to a separately supported cognitive route raised in the record.",
+        "All facts are invented; professional/legal prerequisites are hypothetical, never inferred."
+      ],
+      "opportunityID": "ivac-interpretation-reasons-overlooked-evidence",
+      "resolutionEvidence": "Decision, complete administrative file, submitted reports, proof of delivery and focused issue list. Resolve the stated scope with the applicable source version and verified authorities.",
+      "restrictiveOutput": "Assess whether the reasons as a whole already address or lawfully reject the route.",
+      "scenarioID": "synthetic-reasons-overlooked-evidence",
+      "synthetic": true
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantOutput": "Ask for article87 relief and compute article90 timing using the actual events.",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "divergence": "Review, lateness relief and delayed administrative response are distinct procedural gates",
+      "facts": [
+        "Synthetic review request is late with documented incapacity; a separate review timeline has a notified medical-exam extension.",
+        "All facts are invented; professional/legal prerequisites are hypothetical, never inferred."
+      ],
+      "opportunityID": "ivac-interpretation-review-delay-and-reconsideration",
+      "resolutionEvidence": "Notification/reception proof, request dates, extension notices, submission chronology and reasons for delay. Resolve the stated scope with the applicable source version and verified authorities.",
+      "restrictiveOutput": "Require reasonable-cause proof and apply valid extension/reset conditions.",
+      "scenarioID": "synthetic-review-delay-and-reconsideration",
+      "synthetic": true
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantOutput": "Verify the amount legally in force at establishment.",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "divergence": "Applicable indexed monetary amount versus original nominal amount",
+      "facts": [
+        "Synthetic establishment occurs in a later year than the offence.",
+        "All facts are invented; professional/legal prerequisites are hypothetical, never inferred."
+      ],
+      "opportunityID": "ivac-interpretation-indexed-establishment-date",
+      "resolutionEvidence": "Actual establishment decision/date and official applicable annual indexed amount. Resolve the stated scope with the applicable source version and verified authorities.",
+      "restrictiveOutput": "Reject arbitrary choice of valuation date or unverified indexation.",
+      "scenarioID": "synthetic-indexed-establishment-date",
+      "synthetic": true
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantOutput": "Investigate genuine distinct-loss allocation before subtraction.",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "divergence": "Separate prejudice allocation versus double recovery",
+      "facts": [
+        "Synthetic settlement allocates amounts to documented distinct heads; overlap with the claimed benefit is disputed.",
+        "All facts are invented; professional/legal prerequisites are hypothetical, never inferred."
+      ],
+      "opportunityID": "ivac-interpretation-settlement-offset-limits",
+      "resolutionEvidence": "Settlement text, allocation evidence, receipt/payment records and statutory reconciliation. Resolve the stated scope with the applicable source version and verified authorities.",
+      "restrictiveOutput": "Apply same-prejudice anti-cumulation; absence of a filed lawsuit does not itself defeat offset.",
+      "scenarioID": "synthetic-settlement-offset-limits",
+      "synthetic": true
+    },
+    {
+      "adjudication": "not-determined",
+      "claimantOutput": "Request a reasoned full-evidence class comparison; no automatic higher class.",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "divergence": "EGF numerical opinion versus the supported global functional class",
+      "facts": [
+        "Synthetic EGF opinion55 conflicts with professionally documented persistent functional consequences argued comparable to class4; exact support needs remain disputed.",
+        "All facts are invented; professional/legal prerequisites are hypothetical, never inferred."
+      ],
+      "opportunityID": "ivac-interpretation-egf-not-mechanical-ceiling",
+      "resolutionEvidence": "Full reasoned psychiatric/functional evaluations, longitudinal records and explicit comparator analysis; source-regime comparison of J.V. paragraphs97–113. Resolve the stated scope with the applicable source version and verified authorities.",
+      "restrictiveOutput": "Retain the supported EGF band unless clinical and legal reasons justify another described or analogous route.",
+      "scenarioID": "synthetic-egf-not-mechanical-ceiling",
+      "synthetic": true
+    }
+  ],
+  "sourceArtifacts": {
+    "act-2021-13": {
+      "artifactDigest": "sha256:ac71907c87f38b45f85ca0912e4e8d98bfe17c328a89a4c080133b387fb6fdee",
+      "coordinateSystem": "unicode-codepoints-in-pinned-utf8-snapshot",
+      "snapshotDigest": "sha256:fc4efa7f080285f226c4455d6eb656d6bac863741506fc8914e9b3426176ad01"
+    },
+    "gazette-2021-39": {
+      "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+      "coordinateSystem": "unicode-codepoints-in-pinned-utf8-snapshot",
+      "snapshotDigest": "sha256:bb4b3f8a0e2a531b3e8061cf9642c8b8462327934cf64a8e16c6a58eb087b862"
+    }
+  },
+  "status": "candidate-partial"
+}
