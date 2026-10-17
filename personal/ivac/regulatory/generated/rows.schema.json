@@ -1,0 +1,282 @@
+{
+  "$defs": {
+    "#ID": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "#RegulatoryAlternativeRow": {
+      "additionalProperties": false,
+      "properties": {
+        "alternativeID": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "classID": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "compendiumID": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "operator": {
+          "const": "all-of"
+        },
+        "position": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "sourceVersion": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "unitID": {
+          "$ref": "#/$defs/%23ID"
+        }
+      },
+      "required": [
+        "alternativeID",
+        "classID",
+        "compendiumID",
+        "position",
+        "sourceVersion",
+        "unitID"
+      ],
+      "type": "object"
+    },
+    "#RegulatoryCitationRow": {
+      "additionalProperties": false,
+      "properties": {
+        "compendiumID": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "end": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "exactText": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "locator": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "ownerPath": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "sourceVersion": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "start": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "compendiumID",
+        "end",
+        "exactText",
+        "locator",
+        "ownerPath",
+        "sourceVersion",
+        "start"
+      ],
+      "type": "object"
+    },
+    "#RegulatoryClassRow": {
+      "additionalProperties": false,
+      "properties": {
+        "classID": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "compendiumID": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "label": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "maximum": {
+          "maximum": 100,
+          "minimum": 0,
+          "type": "number"
+        },
+        "minimum": {
+          "maximum": 100,
+          "minimum": 0,
+          "type": "number"
+        },
+        "percentageKind": {
+          "enum": [
+            "fixed",
+            "range",
+            "not-specified"
+          ]
+        },
+        "reason": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "sourceVersion": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "unitID": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "value": {
+          "maximum": 100,
+          "minimum": 0,
+          "type": "number"
+        }
+      },
+      "required": [
+        "classID",
+        "compendiumID",
+        "label",
+        "percentageKind",
+        "sourceVersion",
+        "unitID"
+      ],
+      "type": "object"
+    },
+    "#RegulatoryCriterionRow": {
+      "additionalProperties": false,
+      "properties": {
+        "alternativeID": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "classID": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "compendiumID": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "criterionID": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "position": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "sourceVersion": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "unitID": {
+          "$ref": "#/$defs/%23ID"
+        }
+      },
+      "required": [
+        "alternativeID",
+        "classID",
+        "compendiumID",
+        "criterionID",
+        "position",
+        "sourceVersion",
+        "unitID"
+      ],
+      "type": "object"
+    },
+    "#RegulatoryRuleRow": {
+      "additionalProperties": false,
+      "properties": {
+        "compendiumID": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "ownerPath": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "position": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "sourceVersion": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "unitID": {
+          "$ref": "#/$defs/%23ID"
+        }
+      },
+      "required": [
+        "compendiumID",
+        "ownerPath",
+        "position",
+        "sourceVersion",
+        "unitID"
+      ],
+      "type": "object"
+    },
+    "#RegulatoryUnitRow": {
+      "additionalProperties": false,
+      "properties": {
+        "compendiumID": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "kind": {
+          "enum": [
+            "functional",
+            "aesthetic"
+          ]
+        },
+        "label": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "number": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "reviewState": {
+          "enum": [
+            "candidate",
+            "reviewed"
+          ]
+        },
+        "sourceVersion": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "unitID": {
+          "$ref": "#/$defs/%23ID"
+        }
+      },
+      "required": [
+        "compendiumID",
+        "kind",
+        "label",
+        "number",
+        "reviewState",
+        "sourceVersion",
+        "unitID"
+      ],
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "alternative": {
+      "$ref": "#/$defs/%23RegulatoryAlternativeRow"
+    },
+    "citation": {
+      "$ref": "#/$defs/%23RegulatoryCitationRow"
+    },
+    "class": {
+      "$ref": "#/$defs/%23RegulatoryClassRow"
+    },
+    "criterion": {
+      "$ref": "#/$defs/%23RegulatoryCriterionRow"
+    },
+    "rule": {
+      "$ref": "#/$defs/%23RegulatoryRuleRow"
+    },
+    "unit": {
+      "$ref": "#/$defs/%23RegulatoryUnitRow"
+    }
+  },
+  "required": [
+    "alternative",
+    "citation",
+    "class",
+    "criterion",
+    "rule",
+    "unit"
+  ],
+  "type": "object"
+}

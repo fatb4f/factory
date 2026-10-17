@@ -142,3 +142,128 @@ The original Milestone 1 qualification tests remain part of the same suite.
 
 The separate Milestone 2 PR is a draft checkpoint, not a completed regulatory
 database, and must not merge automatically.
+
+## Continuation — 17 October 2026
+
+Implemented on the existing Milestone 2 branch, starting at `61ca486`. The prior
+PR CI failure was a missing `pdftotext` executable; the workflow now installs
+`poppler-utils` instead of skipping conversion verification.
+
+### Official bulk acquisition
+
+`ivac_regulatory_bulk.py` verifies the live CKAN dataset identity and selects
+resources by exact catalogue names, rather than assuming dated filenames. The
+catalogue now advertises **20261009**, not the previously discovered October 6
+archives. Both XML ZIPs and the French CSV were downloaded and verified. Exact
+catalogue response bytes are retained with a digest; acquisition observations
+include actual resource IDs, URLs, retrieval timestamps, ZIP/member digests,
+original member paths, media types, publisher XML attributes and byte counts.
+`bulk-observations-20261017.json` is CUE-validated metadata, not a compendium.
+
+Actual ZIP paths use backslashes. The adapter treats them as separators for safe
+inspection without rewriting original member identities. It rejects traversal,
+absolute/drive paths, duplicate/case-colliding names, encrypted and symlink
+members, excessive sizes/ratios and unexpected identities. XML parsing forbids
+DTD, entity and external expansion. Selected members must independently identify
+the exact French instrument. CRC checking and SHA-256 verification are required.
+The member bytes remain unchanged; deterministic text views are separately hashed.
+Provision anchors include **byte offsets in original XML** and **Unicode code-point
+offsets in the derived text**, explicitly separate coordinate systems.
+
+The regulation and Act roots each expose `date-eev="20241201"`; Annex I and the
+selected evaluation/transitional provisions expose their own attributes. These
+are publisher observations. Neither a ZIP filename nor a root attribute is
+silently promoted to publication date, consolidation date or a legal interval.
+Those dates remain unknown/review-required where not separately established.
+
+The catalogue declares **CC-BY-NC-ND 4.0**. This checkpoint publishes acquisition
+metadata, hashes, code and a content-free comparison summary. Bulk archives,
+extracted XML and transformed text remain in the acquisition workspace; they are
+**not mirrored in Git** pending redistribution/licensing review. Reacquisition
+is supported; durable archival and permission to redistribute derivative content
+remain open. Existing Gazette PDFs/text remain unchanged.
+
+Reproduce (network acquisition is opt-in; use a new directory):
+
+```sh
+python3 -m pip install -r scripts/requirements-ivac-regulatory.txt
+python3 scripts/ivac_regulatory_bulk.py acquire /tmp/ivac-official-new
+python3 scripts/ivac_regulatory_bulk.py verify /tmp/ivac-official-new
+python3 scripts/ivac_regulatory_coverage.py /tmp/ivac-official-new
+```
+
+The coverage report binds the original 2021 PDF/text offsets to the acquired ZIP,
+XML member and exact Annex I byte span. A whitespace-token comparison records
+representation changes only. PDF headers, layout and XML table boundaries differ;
+**it establishes neither an amendment nor semantic equality**. Article 18/24/25/26,
+Annex I and regulation amendment-list anchors, plus Act articles 179–184, are
+included for the next legal audit. The January 2026 proposal remains a proposal;
+the later XML acquisition does not itself establish that proposal's disposition.
+
+### Native types and analytical execution
+
+Repository reconciliation found an existing CUE-owned dataclass projection
+(`generate_semantic_runtime_types.py`), CUE source introspection, and a working
+`runtime/ibis_adapter.py`. No executable CUE→JSON Schema→Pydantic generator or
+IVAC typeshed bridge was present. Typeshed/type introspection cannot express
+regulatory semantics or replace schema validation.
+
+Added CUE-owned disposable row schemas for units, classes, alternatives, criteria,
+citations and unit evaluation rules. A new deterministic generator invokes CUE's
+JSON Schema exporter and pinned `datamodel-code-generator`, then adapts numeric
+Python fields to Decimal. No Python domain classes are handwritten. Scalar
+intersection normalization and nonempty-string normalization are explicit,
+equivalent exporter compatibility transformations. Generated rows forbid extras;
+identifiers, source-version keys, alternative order, unknown percentage kinds
+and exact zero are preserved. Decimal is emitted as JSON numeric tokens for CUE
+round-trip checks, not strings or binary floats.
+
+**Partial:** these are native row types, not a generated canonical compendium or
+qualification model. Direct CUE v0.16.1 export of `#RegulatoryCompendium` and
+`#RegulatoryExtraction` fails with `bad argument to unary comparison` on
+field-dependent constraints. Discriminated canonical percentage unions,
+conditional presence, range ordering, map identity, clinical actor/reference
+integrity and criterion-path completeness are not fully represented in these row
+schemas. The adapter therefore requires full upstream CUE validation and source
+verification before projection, then validates every Pydantic row back through
+CUE. Never reconstruct or admit a compendium from row validity alone. Source and
+qualification native model generation remains blocked on a qualified exporter
+strategy; no canonical CUE constraint was weakened to obtain generated output.
+
+The analytical adapter reuses `factory.analytics-ir/v1` and the existing Ibis
+lowerer. A tested source-version/compendium/unit anti-join exposes units missing
+class rows. The caller must explicitly authorize diagnostic projection sources;
+IR's `admitted` state is authorization of diagnostic input, **not legal admission**.
+Arrow transfers typed test tables into in-memory DuckDB. Missing rows remain
+coverage gaps. This view emits no clinical qualification, applicability or award.
+BigQuery is an optional untested backend, not an installed requirement. General
+evidence-linked views, global/shared rule rows, conditional calculations and
+weighted aesthetic tables remain pending.
+
+No dlt/fsspec dependency is added: bounded official HTTP acquisition already has
+immutable-byte verification and needs no incremental cursor/loading machinery.
+A future recurring transport can supply bytes to the same verifier; it must not
+create a parallel provenance or admission system.
+
+### Coverage and validation
+
+Official initial unit-label coverage remains **40 functional + 8 aesthetic**.
+Normalized official class/criterion coverage and independently reviewed unit
+coverage remain **0**. Complete semantic transcription, conditional and weighted
+percentages, all-of/any-of paths, exclusions, comparability and global rules are
+not claimed by this increment. Synthetic rows exercise those projection shapes
+without asserting invented official records.
+
+```sh
+bash scripts/validate-ivac-regulatory.sh
+bash scripts/validate-contracts.sh
+bash scripts/validate-ivac-regulatory-integration.sh
+```
+
+The optional integration suite verifies deterministic generation, six bulk
+security/integrity test groups, Pydantic/CUE row round trips, exact Decimal values,
+unknown versus zero, rejected source-version mismatches, and real Ibis/DuckDB
+version-scoped anti-join correctness. CI installs its pinned integration
+requirements explicitly. Original M1 qualification and M2 source suites remain
+mandatory. Online acquisition and the cross-format comparison are reproducible
+commands, not network-dependent CI assertions.
