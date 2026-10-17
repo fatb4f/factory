@@ -251,6 +251,9 @@ cue export ./contracts/personal/ivac:ivac -e portabilitySeed --out json >/dev/nu
 cue vet -c=false ./contracts/personal/ivac/evaluations:ivaceval
 cue export ./contracts/personal/ivac/evaluations:ivaceval -e public --out json >/dev/null
 
+section "IVAC regulatory milestone"
+bash scripts/validate-ivac-regulatory.sh
+
 section "worker-procedure uniqueness"
 grep -Fq 'This path is non-normative compatibility only.' .agents/workers/upstream-monitor/AGENTS.md
 ! grep -q '^## \(Read order\|Actuator model\|Publication\)' .agents/workers/upstream-monitor/AGENTS.md

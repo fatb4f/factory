@@ -1,0 +1,6 @@
+SYNTHETIC ONLY — NOT QUÉBEC LAW
+Unit A: synthetic function.
+Rule: retain separate clinical and statutory assessment.
+Class A: synthetic schedule value 12.5%.
+Path A: synthetic criterion alpha AND synthetic criterion beta.
+OR Path B: synthetic criterion gamma.

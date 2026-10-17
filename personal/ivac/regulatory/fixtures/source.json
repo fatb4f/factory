@@ -1,0 +1,26 @@
+{
+  "id": "synthetic-2021",
+  "instrument": "SYNTHETIC-NOT-LAW",
+  "jurisdiction": "CA-QC",
+  "language": "fr",
+  "publisher": "synthetic test publisher",
+  "url": "https://example.invalid/synthetic",
+  "consolidatedAsOf": "2021-10-13",
+  "retrievedAt": "2026-10-16T00:00:00Z",
+  "contentKind": "synthetic",
+  "mediaType": "text/plain; charset=utf-8",
+  "snapshotDigest": "sha256:9f085d031090ad585a35148ac93fe236a663eb65dcb3aa781d301a1413847048",
+  "snapshotPath": "personal/ivac/regulatory/fixtures/synthetic.txt",
+  "origin": {
+    "digest": "sha256:9f085d031090ad585a35148ac93fe236a663eb65dcb3aa781d301a1413847048",
+    "path": "personal/ivac/regulatory/fixtures/synthetic.txt",
+    "mediaType": "text/plain; charset=utf-8",
+    "conversion": "identity/v1"
+  },
+  "provision": "synthetic schedule",
+  "effective": {
+    "end": "bounded",
+    "until": "2027-01-01",
+    "from": "2021-10-13"
+  }
+}
