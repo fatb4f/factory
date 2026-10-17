@@ -1,0 +1,16 @@
+{
+  "artifactBytes": 559979,
+  "artifactDigest": "sha256:ac71907c87f38b45f85ca0912e4e8d98bfe17c328a89a4c080133b387fb6fdee",
+  "artifactPath": "personal/ivac/regulatory/sources/act-2021-13.pdf",
+  "conversion": "pdftotext -layout -enc UTF-8",
+  "converterVersion": "pdftotext version 24.02.0",
+  "id": "act-2021-13",
+  "legalEffect": "initial-enactment",
+  "mediaType": "application/pdf",
+  "publicationDate": "2021-05-13",
+  "publicationKind": "enacted-act",
+  "retrievedAt": "2026-10-17T16:50:02.810926Z",
+  "textDigest": "sha256:fc4efa7f080285f226c4455d6eb656d6bac863741506fc8914e9b3426176ad01",
+  "textPath": "personal/ivac/regulatory/sources/act-2021-13.txt",
+  "url": "https://www.publicationsduquebec.gouv.qc.ca/fileadmin/Fichiers_client/lois_et_reglements/LoisAnnuelles/fr/2021/2021C13F.PDF"
+}
