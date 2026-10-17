@@ -11,3 +11,5 @@ python3 scripts/test_ivac_regulatory_interpretation.py
 
 python3 scripts/generate_ivac_workbench_types.py --check
 python3 scripts/test_ivac_workbench.py
+python3 scripts/generate_ivac_timeline_types.py --check
+python3 scripts/test_ivac_timeline.py
