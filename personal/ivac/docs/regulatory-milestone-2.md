@@ -285,3 +285,14 @@ and independent legal review remain open. Research annotation contracts and
 arithmetic/scenario programs cannot establish clinical support or entitlement.
 The original M1 documentation's mistaken reference to article25 for permanence
 is corrected to article23; canonical M1 qualification contracts are preserved.
+
+
+A final exporter probe distinguishes two failure modes: direct compendium and
+extraction export fails with `bad argument to unary comparison`; qualification
+export returns success but only an unconstrained `$schema` document. That output
+is rejected, not accepted as a qualification projection. Reproduce with
+`python3 scripts/ivac_regulatory_projection_gaps.py`; the retained report is
+`../regulatory/generated/projection-gaps.json`. Native generation now explicitly
+refuses a vacuous schema. The canonical projection remains blocked pending a
+qualified exporter and constraint-loss audit, rather than every root failing
+with the same diagnostic.

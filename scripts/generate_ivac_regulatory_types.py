@@ -12,10 +12,12 @@ from ivac_regulatory_sources import encoded
 TARGET = ROOT / 'personal/ivac/regulatory/generated'
 
 
-def generate():
+def generate(expression='regulatoryRowSchemas', package='./contracts/personal/ivac:ivac'):
     schema = json.loads(subprocess.check_output([
-        'cue', 'export', './contracts/personal/ivac:ivac', '-e', 'regulatoryRowSchemas',
+        'cue', 'export', package, '-e', expression,
         '--out', 'jsonschema'], cwd=ROOT))
+    if not any(schema.get(key) for key in ('properties', '$defs', 'oneOf', 'anyOf', 'allOf')):
+        raise ValueError('CUE exporter produced an unconstrained schema; refuse native type generation')
     # Normalize equivalent scalar intersections emitted by CUE for this generator.
     # Keep the raw CUE authority and fail closed on any unsupported intersection.
     def adapt(value):

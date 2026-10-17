@@ -35,6 +35,11 @@ class AnalyticsTests(unittest.TestCase):
         self.assertEqual(exact.value,Decimal('12.1234567890123456789'))
         analytics.cue_row({**c,'value':exact.value}, '#RegulatoryClassRow')
 
+    def test_unconstrained_qualification_export_rejected(self):
+        from generate_ivac_regulatory_types import generate
+        with self.assertRaisesRegex(ValueError, 'unconstrained schema'):
+            generate(expression='#RegulatoryQualification', package='./contracts/personal/ivac/evaluations:ivaceval')
+
     def test_version_or_citation_mismatch_rejected(self):
         v = copy.deepcopy(self.compendium)
         v['units']['unitA']['citation']['sourceVersion']='wrong'
