@@ -296,3 +296,13 @@ is rejected, not accepted as a qualification projection. Reproduce with
 refuses a vacuous schema. The canonical projection remains blocked pending a
 qualified exporter and constraint-loss audit, rather than every root failing
 with the same diagnostic.
+
+## Dependent workbench base
+
+Issue #228 (`engineering:contract:personal.ivac:schema:regulatory-workbench-base`)
+tracks the base assembly contract in `contracts/personal/ivac/workbench/`.
+It reuses regulatory/clinical/evaluation authority, adds source-anchored case
+snapshots and attributed statement comparisons, and generates disposable native
+Python rows with a scoped analytics IR/Ibis diagnostic. This is a partial base,
+not corpus completion or a change to #222 acceptance. See
+[regulatory-workbench.md](regulatory-workbench.md) for boundaries and commands.

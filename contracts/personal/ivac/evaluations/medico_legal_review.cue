@@ -77,7 +77,9 @@ import ivac "github.com/fatb4f/factory/contracts/personal/ivac:ivac"
 
 // A draft is *always* an internal candidate. It cannot sign itself, issue a
 // clinical finding, author a legal ground, submit, or adjudicate.
-#MedicoLegalReviewDraft: close({
+// Definitions stay implicitly closed. Explicit close() around these deferred
+// integrity comprehensions rejects valid instances in CUE 0.16.1.
+#MedicoLegalReviewDraft: {
     apiVersion: "ivac.medico-legal-review/v1"
     kind: "MedicoLegalReviewDraft"
     id: ivac.#ID
@@ -137,12 +139,12 @@ import ivac "github.com/fatb4f/factory/contracts/personal/ivac:ivac"
             }]
         }]
     }
-})
+}
 
 // These are *links to existing, independently authored records*, not a model
 // endorsement. External authentication and professional mandate checks remain
 // required before relying on the linked record.
-#MedicoLegalClinicalReviewLink: close({
+#MedicoLegalClinicalReviewLink: {
     draft: #MedicoLegalReviewDraft
     issueID: ivac.#ID
     reviewer: ivac.#ActorRef
@@ -151,7 +153,9 @@ import ivac "github.com/fatb4f/factory/contracts/personal/ivac:ivac"
     professionalVerification: "external-required"
     adjudication: "not-determined"
     if issueID != "" {
-        _issue: [for id, issue in draft.issues if id == issueID {issue}] & [_, ...]
+        _issue: [for id, issue in draft.issues if id == issueID {
+            issue & {category: "clinical-function" | "clinical-causation"}
+        }] & [_, ...]
         _actor: [for id, actor in draft.case.review.actors if id == reviewer.id {
             actor & {kind: "medical-expert" | "treating-clinician"}
         }] & [_, ...]
@@ -159,9 +163,9 @@ import ivac "github.com/fatb4f/factory/contracts/personal/ivac:ivac"
             f & {producer: reviewer, axis: _issue[0].axis}
         }] & [_, ...]
     }
-})
+}
 
-#MedicoLegalLegalReviewLink: close({
+#MedicoLegalLegalReviewLink: {
     draft: #MedicoLegalReviewDraft
     issueID: ivac.#ID
     reviewer: ivac.#ActorRef
@@ -170,7 +174,9 @@ import ivac "github.com/fatb4f/factory/contracts/personal/ivac:ivac"
     professionalVerification: "external-required"
     adjudication: "not-determined"
     if issueID != "" {
-        _issue: [for id, issue in draft.issues if id == issueID {issue}] & [_, ...]
+        _issue: [for id, issue in draft.issues if id == issueID {
+            issue & {category: "regulatory-interpretation" | "procedural" | "evidence-integrity" | "unit-overlap" | "percentage-method"}
+        }] & [_, ...]
         _actor: [for id, actor in draft.case.review.actors if id == reviewer.id {
             actor & {kind: "legal-representative"}
         }] & [_, ...]
@@ -178,7 +184,7 @@ import ivac "github.com/fatb4f/factory/contracts/personal/ivac:ivac"
             g & {author: reviewer, axis: _issue[0].axis}
         }] & [_, ...]
     }
-})
+}
 
 medicoLegalReviewContract: close({
     id: "personal.ivac.medico-legal-review"

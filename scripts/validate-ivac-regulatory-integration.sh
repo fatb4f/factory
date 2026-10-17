@@ -8,3 +8,6 @@ python3 scripts/test_ivac_regulatory_bulk.py
 python3 scripts/test_ivac_regulatory_analytics.py
 cue vet -c personal/ivac/regulatory/bulk-observations-20261017.json contracts/personal/ivac/*.cue -d '#RegulatoryBulkObservations'
 python3 scripts/test_ivac_regulatory_interpretation.py
+
+python3 scripts/generate_ivac_workbench_types.py --check
+python3 scripts/test_ivac_workbench.py

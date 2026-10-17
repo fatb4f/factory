@@ -118,6 +118,23 @@ class MedicoLegalReviewTests(unittest.TestCase):
             "professionalVerification": "external-required", "adjudication": "not-determined"
         }, "#MedicoLegalLegalReviewLink")
 
+    def test_professional_links_remain_closed(self):
+        draft = self.draft()
+        clinical = {
+            "draft": draft, "issueID": "clinical-q", "reviewer": {"id": "independentExpert"},
+            "finding": {"id": "primaryFunctional"}, "linkKind": "existing-clinical-finding",
+            "professionalVerification": "external-required", "adjudication": "not-determined",
+            "credential": "self-issued",
+        }
+        legal = {
+            "draft": draft, "issueID": "legal-q", "reviewer": {"id": "counsel"},
+            "ground": {"id": "primaryReassessment"}, "linkKind": "existing-counsel-review-ground",
+            "professionalVerification": "external-required", "adjudication": "not-determined",
+            "credential": "self-issued",
+        }
+        self.invalid(clinical, "#MedicoLegalClinicalReviewLink")
+        self.invalid(legal, "#MedicoLegalLegalReviewLink")
+
     def test_candidate_cannot_claim_authority(self):
         for field, value in [
             ("professionalStatus", "professionally-endorsed"),
