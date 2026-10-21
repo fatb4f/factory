@@ -21,3 +21,10 @@ Correlate by `factory-issue-key`, never by title or GitHub issue number.
 ## Existing authority model
 
 Continue to place normative semantics at the narrowest CUE authority. Repository procedures, agents, generated projections, execution environments, external tools, GitHub state, and model conclusions remain downstream unless a contract explicitly admits them.
+
+## IVAC project dispatch
+
+For IVAC regulatory, evidence, case-snapshot or analytical work, start with
+[`personal/ivac/AGENTS.md`](personal/ivac/AGENTS.md). That dispatcher routes to the
+existing CUE authorities, verified adapters and documentation. Private case facts
+remain in source-anchored private snapshots, outside this repository.
