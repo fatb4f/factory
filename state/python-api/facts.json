@@ -1,0 +1,282 @@
+{
+  "apiVersion": "factory.python-api-facts/v1",
+  "authority": "external-api-declarations-only",
+  "behavior": "not-qualified",
+  "producer": "typeshed-ast/v1",
+  "source": {
+    "files": {
+      "builtins": {
+        "digest": "sha256:115e4ecfbbc94d11e8d602ed26efc4cb1994add4994277a2cb9634340e477703",
+        "path": "state/python-api/typeshed/stdlib/builtins.pyi"
+      },
+      "dataclasses": {
+        "digest": "sha256:7bf3761f6af1321bff9de1b5522d9d0071a45db197d0531d6f2a6c28685205c7",
+        "path": "state/python-api/typeshed/stdlib/dataclasses.pyi"
+      },
+      "typing": {
+        "digest": "sha256:edb6fcd5ba33fe423235a86f5f21a05188996fa7fbc867699622de4c8502691e",
+        "path": "state/python-api/typeshed/stdlib/typing.pyi"
+      }
+    },
+    "license": {
+      "digest": "sha256:295f8538c94ae5c3043301cf7cff1c852dab6a786a8ddee471e061b40d5ecabe",
+      "path": "state/python-api/typeshed/LICENSE"
+    },
+    "repository": "https://github.com/python/typeshed",
+    "requests": {
+      "dataclass": {
+        "module": "dataclasses",
+        "symbol": "dataclass"
+      },
+      "int": {
+        "module": "builtins",
+        "symbol": "int"
+      },
+      "literal": {
+        "module": "typing",
+        "symbol": "Literal"
+      },
+      "str": {
+        "module": "builtins",
+        "symbol": "str"
+      },
+      "tuple": {
+        "module": "builtins",
+        "symbol": "tuple"
+      }
+    },
+    "revision": "e75a39fec6f375f5002d54c5607b44bedc025a4b",
+    "targetPython": {
+      "major": 3,
+      "minor": 12
+    }
+  },
+  "symbols": {
+    "dataclass": {
+      "declarations": [
+        {
+          "guards": [
+            "sys.version_info >= (3, 11)"
+          ],
+          "lineEnd": 89,
+          "lineStart": 74,
+          "parameters": [
+            {
+              "annotation": "type[_T]",
+              "kind": "positional-only",
+              "name": "cls",
+              "required": true
+            },
+            {
+              "annotation": "bool",
+              "kind": "keyword-only",
+              "name": "init",
+              "required": false
+            },
+            {
+              "annotation": "bool",
+              "kind": "keyword-only",
+              "name": "repr",
+              "required": false
+            },
+            {
+              "annotation": "bool",
+              "kind": "keyword-only",
+              "name": "eq",
+              "required": false
+            },
+            {
+              "annotation": "bool",
+              "kind": "keyword-only",
+              "name": "order",
+              "required": false
+            },
+            {
+              "annotation": "bool",
+              "kind": "keyword-only",
+              "name": "unsafe_hash",
+              "required": false
+            },
+            {
+              "annotation": "bool",
+              "kind": "keyword-only",
+              "name": "frozen",
+              "required": false
+            },
+            {
+              "annotation": "bool",
+              "kind": "keyword-only",
+              "name": "match_args",
+              "required": false
+            },
+            {
+              "annotation": "bool",
+              "kind": "keyword-only",
+              "name": "kw_only",
+              "required": false
+            },
+            {
+              "annotation": "bool",
+              "kind": "keyword-only",
+              "name": "slots",
+              "required": false
+            },
+            {
+              "annotation": "bool",
+              "kind": "keyword-only",
+              "name": "weakref_slot",
+              "required": false
+            }
+          ],
+          "returns": "type[_T]",
+          "textDigest": "sha256:b24c0e3c9aca9af40f8df8e77da2206307b378a21c1789793400b48afd1fd6c6"
+        },
+        {
+          "guards": [
+            "sys.version_info >= (3, 11)"
+          ],
+          "lineEnd": 105,
+          "lineStart": 90,
+          "parameters": [
+            {
+              "annotation": "None",
+              "kind": "positional-only",
+              "name": "cls",
+              "required": false
+            },
+            {
+              "annotation": "bool",
+              "kind": "keyword-only",
+              "name": "init",
+              "required": false
+            },
+            {
+              "annotation": "bool",
+              "kind": "keyword-only",
+              "name": "repr",
+              "required": false
+            },
+            {
+              "annotation": "bool",
+              "kind": "keyword-only",
+              "name": "eq",
+              "required": false
+            },
+            {
+              "annotation": "bool",
+              "kind": "keyword-only",
+              "name": "order",
+              "required": false
+            },
+            {
+              "annotation": "bool",
+              "kind": "keyword-only",
+              "name": "unsafe_hash",
+              "required": false
+            },
+            {
+              "annotation": "bool",
+              "kind": "keyword-only",
+              "name": "frozen",
+              "required": false
+            },
+            {
+              "annotation": "bool",
+              "kind": "keyword-only",
+              "name": "match_args",
+              "required": false
+            },
+            {
+              "annotation": "bool",
+              "kind": "keyword-only",
+              "name": "kw_only",
+              "required": false
+            },
+            {
+              "annotation": "bool",
+              "kind": "keyword-only",
+              "name": "slots",
+              "required": false
+            },
+            {
+              "annotation": "bool",
+              "kind": "keyword-only",
+              "name": "weakref_slot",
+              "required": false
+            }
+          ],
+          "returns": "Callable[[type[_T]], type[_T]]",
+          "textDigest": "sha256:527d47ba8639d3f233792fcf63c52670e59cea160e1ed0e2db95913d51c049cd"
+        }
+      ],
+      "kind": "function",
+      "module": "dataclasses",
+      "sourceDigest": "sha256:7bf3761f6af1321bff9de1b5522d9d0071a45db197d0531d6f2a6c28685205c7",
+      "symbol": "dataclass"
+    },
+    "int": {
+      "declarations": [
+        {
+          "guards": [],
+          "lineEnd": 365,
+          "lineStart": 252,
+          "parameters": [],
+          "returns": "",
+          "textDigest": "sha256:ff587d64f5a8da22cba364aa8330890b5b4f400d4080603f1d084ea42ba37ad5"
+        }
+      ],
+      "kind": "class",
+      "module": "builtins",
+      "sourceDigest": "sha256:115e4ecfbbc94d11e8d602ed26efc4cb1994add4994277a2cb9634340e477703",
+      "symbol": "int"
+    },
+    "literal": {
+      "declarations": [
+        {
+          "guards": [],
+          "lineEnd": 250,
+          "lineStart": 250,
+          "parameters": [],
+          "returns": "",
+          "textDigest": "sha256:5808e4d83e0fee4d2f98ce00373586acede5fa3627ee1c5b9794f7db09e6ce40"
+        }
+      ],
+      "kind": "annotated-value",
+      "module": "typing",
+      "sourceDigest": "sha256:edb6fcd5ba33fe423235a86f5f21a05188996fa7fbc867699622de4c8502691e",
+      "symbol": "Literal"
+    },
+    "str": {
+      "declarations": [
+        {
+          "guards": [],
+          "lineEnd": 730,
+          "lineStart": 488,
+          "parameters": [],
+          "returns": "",
+          "textDigest": "sha256:f49691845cf7416706778b2d4a651db55f574c76d32050e1d10b63d363f404f4"
+        }
+      ],
+      "kind": "class",
+      "module": "builtins",
+      "sourceDigest": "sha256:115e4ecfbbc94d11e8d602ed26efc4cb1994add4994277a2cb9634340e477703",
+      "symbol": "str"
+    },
+    "tuple": {
+      "declarations": [
+        {
+          "guards": [],
+          "lineEnd": 1178,
+          "lineStart": 1150,
+          "parameters": [],
+          "returns": "",
+          "textDigest": "sha256:e5778e40841376e72f392a530efb9a65349384582a6ee4c461b865d65c19b5e7"
+        }
+      ],
+      "kind": "class",
+      "module": "builtins",
+      "sourceDigest": "sha256:115e4ecfbbc94d11e8d602ed26efc4cb1994add4994277a2cb9634340e477703",
+      "symbol": "tuple"
+    }
+  }
+}

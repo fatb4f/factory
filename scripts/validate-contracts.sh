@@ -209,6 +209,7 @@ section "shared state"
 cue vet -c=false ./contracts/state:state
 cue vet -c=false ./state/fixtures:statefixtures
 bash state/fixtures/negative/run.sh
+bash scripts/validate-python-native-bindings.sh
 
 section "UQAM event watch"
 cue vet -c=false ./contracts/academic/uqam/events:uqamevents
