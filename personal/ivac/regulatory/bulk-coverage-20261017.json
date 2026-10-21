@@ -1,0 +1,266 @@
+{
+  "after": {
+    "annex": {
+      "code": "sc-nb:1",
+      "end": 293562,
+      "publisherAttributes": {
+        "Code": "sc-nb:1",
+        "date-eev": "20211013",
+        "full-id": "226717"
+      },
+      "start": 130670,
+      "textDigest": "sha256:2535ecc771b6d99abfcb404a34d0b4facd4e31a7755915915861db2c9625e076",
+      "xmlByteEnd": 538767,
+      "xmlByteStart": 272675,
+      "xmlSpanDigest": "sha256:30c261374c283ab763547a33011e86874132e4cf6a1005538f703d6ac00aa70f"
+    },
+    "memberPath": "Regulations\\P-9.2.1,R.1\\FR\\P-9.2.1,R.1_FR.xml",
+    "resourceID": "c332d8b5-628e-4e84-926b-413a658e065c",
+    "snapshotDigest": "sha256:8e1f871d477d7da87e01461e05a95df764bd610cc9ee7eca98a19865dfc5d12e",
+    "xmlDigest": "sha256:5caa409068d25c04ccd06eb1fe4583cdf520118c33b2bf3a8f1240aa4e93da44",
+    "zipDigest": "sha256:c09b132626923e42699372aa687db37092501c0ec2177bef874392db7eab929b"
+  },
+  "authority": "none",
+  "before": {
+    "acquisitionID": "gazette-2021-39",
+    "end": 865729,
+    "originalDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+    "start": 598822,
+    "textDigest": "sha256:bb4b3f8a0e2a531b3e8061cf9642c8b8462327934cf64a8e16c6a58eb087b862"
+  },
+  "catalogueDigest": "sha256:945fa5363083aedad424b5fd46630efed7b19e31f0b3dc023bafa6e2835c157e",
+  "comparison": {
+    "classification": "representation-difference-only",
+    "legalAmendment": "not-determined",
+    "method": "whitespace-token-diff/v1",
+    "operations": {
+      "delete": {
+        "afterTokens": 0,
+        "beforeTokens": 890,
+        "runs": 107
+      },
+      "equal": {
+        "afterTokens": 18031,
+        "beforeTokens": 18031,
+        "runs": 860
+      },
+      "insert": {
+        "afterTokens": 32,
+        "beforeTokens": 0,
+        "runs": 6
+      },
+      "replace": {
+        "afterTokens": 1375,
+        "beforeTokens": 7066,
+        "runs": 747
+      }
+    }
+  },
+  "coverage": {
+    "independentlyReviewedUnits": 0,
+    "initialAestheticUnitLabels": 8,
+    "initialFunctionalUnitLabels": 40,
+    "normalizedOfficialClasses": 0,
+    "normalizedOfficialCriteria": 0,
+    "semanticCoverage": "incomplete"
+  },
+  "format": "ivac.regulatory-coverage-diff/v1",
+  "gaps": [
+    "Publisher date-eev attributes are retained without inferring consolidation or legal intervals.",
+    "Later XML acquired; exhaustive enactment/amendment history and 2026 proposal disposition remain unaudited.",
+    "Cross-format differences include table boundaries, headers and whitespace; no amendment conclusion follows.",
+    "All semantic class/path, conditional rate, exclusion and aesthetic table mapping remains pending.",
+    "CC-BY-NC-ND: no transformed bulk text is redistributed by this checkpoint."
+  ],
+  "legalEffect": "not-determined",
+  "relevantProvisionObservations": {
+    "P-9.2.1": {
+      "artifactDigest": "sha256:0ca52ca5d7434a5d617fa356d3235d9bb7af4a2174a968d9ecbf8de4d5c6e836",
+      "provisions": [
+        {
+          "code": "se:179",
+          "end": 104302,
+          "publisherAttributes": {
+            "Code": "se:179",
+            "date-eev": "20211013",
+            "full-id": "253970"
+          },
+          "start": 100873,
+          "textDigest": "sha256:018d94b5a8e3dc14fa41dc500c1fae04de2aef4a77adeaa3f3570c0d382abb67",
+          "xmlByteEnd": 207493,
+          "xmlByteStart": 202656,
+          "xmlSpanDigest": "sha256:a3d4adc53269268b3331a08ef81f7fbc9fa32fc0bf8dd68f45a16968fccab986"
+        },
+        {
+          "code": "se:180",
+          "end": 105907,
+          "publisherAttributes": {
+            "Code": "se:180",
+            "date-eev": "20211013",
+            "full-id": "253971"
+          },
+          "start": 104303,
+          "textDigest": "sha256:5444233d36b133168906cba0f95550b7d19923eefba85ce073e4808553fee06e",
+          "xmlByteEnd": 209881,
+          "xmlByteStart": 207493,
+          "xmlSpanDigest": "sha256:d252a122a56801f2c37f5690c1a2396ac6765e90f98af21f44c82aa30e4bf088"
+        },
+        {
+          "code": "se:181",
+          "end": 106910,
+          "publisherAttributes": {
+            "Code": "se:181",
+            "date-eev": "20211013",
+            "full-id": "253972"
+          },
+          "start": 105908,
+          "textDigest": "sha256:4e85ac3cadd8651cc086d80c6a6cf683481de52dc078b8376e91a08bfb1e9424",
+          "xmlByteEnd": 211520,
+          "xmlByteStart": 209881,
+          "xmlSpanDigest": "sha256:ee02d7fa73a4343a91fe4264b3236f5aef1fafae27bcc203e18aef2ec1dbbd47"
+        },
+        {
+          "code": "se:182",
+          "end": 107400,
+          "publisherAttributes": {
+            "Code": "se:182",
+            "date-eev": "20211013",
+            "full-id": "253973"
+          },
+          "start": 106911,
+          "textDigest": "sha256:b8c0033b0f6b10d392f02f07be2fe7479c16c7dc8f396c5026dca3944a73b8f0",
+          "xmlByteEnd": 212388,
+          "xmlByteStart": 211520,
+          "xmlSpanDigest": "sha256:dec8293648433803292d18455a4d2edf16e793d3b6ae6ba773ed8fe269e4809f"
+        },
+        {
+          "code": "se:183",
+          "end": 108971,
+          "publisherAttributes": {
+            "Code": "se:183",
+            "date-eev": "20211013",
+            "full-id": "253974"
+          },
+          "start": 107401,
+          "textDigest": "sha256:346a1e0a19ca042bd8b5213b36ed6c4ae896a4f2a1811b5ee718d6c553aae665",
+          "xmlByteEnd": 214833,
+          "xmlByteStart": 212388,
+          "xmlSpanDigest": "sha256:1bc57126a53336d147ecc681c720b3f0aef07086432c814ef5e8b53ae8db9abf"
+        },
+        {
+          "code": "se:184",
+          "end": 109514,
+          "publisherAttributes": {
+            "Code": "se:184",
+            "date-eev": "20211013",
+            "full-id": "253975"
+          },
+          "start": 108972,
+          "textDigest": "sha256:6f99a10fb65ed3a28201450c74b07b4239a242881d6bd2b43294826a7a920c60",
+          "xmlByteEnd": 215757,
+          "xmlByteStart": 214833,
+          "xmlSpanDigest": "sha256:c81d3c4c72ece524fa26dcbcddafae459dcbc7c7ea529b3939968237526419da"
+        }
+      ],
+      "rootPublisherAttributes": {
+        "DocumentType": "cs",
+        "date-eev": "20241201",
+        "in-force": "true",
+        "{http://www.w3.org/XML/1998/namespace}lang": "fr"
+      }
+    },
+    "P-9.2.1, r. 1": {
+      "artifactDigest": "sha256:5caa409068d25c04ccd06eb1fe4583cdf520118c33b2bf3a8f1240aa4e93da44",
+      "provisions": [
+        {
+          "code": "se:18",
+          "end": 17752,
+          "publisherAttributes": {
+            "Code": "se:18",
+            "date-eev": "20211013",
+            "full-id": "226745"
+          },
+          "start": 16981,
+          "textDigest": "sha256:b0cd92b072b34d19f7d2f83dd0570958044da6132a9f45c5c3759a0753bf29bb",
+          "xmlByteEnd": 37042,
+          "xmlByteStart": 35707,
+          "xmlSpanDigest": "sha256:ed03e55184c80be5b01d1fb9c6715be410b68159c79997970fca8d65034fe589"
+        },
+        {
+          "code": "se:24",
+          "end": 20729,
+          "publisherAttributes": {
+            "Code": "se:24",
+            "date-eev": "20211013",
+            "full-id": "226751"
+          },
+          "start": 19883,
+          "textDigest": "sha256:f90eec684365fa78ab4b2de866975c598c9c211524a69f200bf6e539992dc5ee",
+          "xmlByteEnd": 43486,
+          "xmlByteStart": 42261,
+          "xmlSpanDigest": "sha256:613e584c43b20aee6a87c81586f84155a48ab017ce6784081da6195e98b9d7ce"
+        },
+        {
+          "code": "se:25",
+          "end": 21527,
+          "publisherAttributes": {
+            "Code": "se:25",
+            "date-eev": "20211013",
+            "full-id": "226752"
+          },
+          "start": 20730,
+          "textDigest": "sha256:270840f04e29fb274c1bd74aaf430b92c89b699eb7b3e41eecba2b0fd22a62e1",
+          "xmlByteEnd": 44706,
+          "xmlByteStart": 43486,
+          "xmlSpanDigest": "sha256:042e71dae5937d84874d597348ce096f8f978d0e4c298a607dc075be651b6e52"
+        },
+        {
+          "code": "se:26",
+          "end": 25990,
+          "publisherAttributes": {
+            "Code": "se:26",
+            "date-eev": "20211013",
+            "full-id": "226753"
+          },
+          "start": 21528,
+          "textDigest": "sha256:a311d91f7317c894dc066953fd6cc3c22c4079f3fd36f9c7574866186cb3ca2b",
+          "xmlByteEnd": 53032,
+          "xmlByteStart": 44706,
+          "xmlSpanDigest": "sha256:fb4b1fb26c141f73e1663ed476d04b779e7c229353823bdcd143d3d9ff4dfc72"
+        },
+        {
+          "code": "sc-nb:1",
+          "end": 293562,
+          "publisherAttributes": {
+            "Code": "sc-nb:1",
+            "date-eev": "20211013",
+            "full-id": "226717"
+          },
+          "start": 130670,
+          "textDigest": "sha256:2535ecc771b6d99abfcb404a34d0b4facd4e31a7755915915861db2c9625e076",
+          "xmlByteEnd": 538767,
+          "xmlByteStart": 272675,
+          "xmlSpanDigest": "sha256:30c261374c283ab763547a33011e86874132e4cf6a1005538f703d6ac00aa70f"
+        },
+        {
+          "code": "ab",
+          "end": 346137,
+          "publisherAttributes": {
+            "Code": "ab"
+          },
+          "start": 346027,
+          "textDigest": "sha256:3c2c17d7d01f963a464240b7f01d12d04c9e36a3a68407b9e6c94b196983f84e",
+          "xmlByteEnd": 622385,
+          "xmlByteStart": 622090,
+          "xmlSpanDigest": "sha256:88fdc6eb12b51e98ce15813d08e5ee62ffb6a18b942f64e9de706d6924534ef6"
+        }
+      ],
+      "rootPublisherAttributes": {
+        "DocumentType": "cr",
+        "date-eev": "20241201",
+        "in-force": "true",
+        "{http://www.w3.org/XML/1998/namespace}lang": "fr"
+      }
+    }
+  }
+}

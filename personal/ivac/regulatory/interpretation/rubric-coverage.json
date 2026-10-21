@@ -1,0 +1,305 @@
+{
+  "format": "ivac.rubric-semantic-coverage/v1",
+  "rubrics": [
+    {
+      "classPathReview": "pending",
+      "end": 612896,
+      "number": "1",
+      "sourceSpanDigest": "sha256:a68b2f095e6b283a2cde2904a770d9e1494a8a6ea5cbb2ad25a2e424bec7710f",
+      "sourceVersion": "gazette-2021-39",
+      "start": 602151,
+      "unitNumbers": [
+        "1"
+      ]
+    },
+    {
+      "classPathReview": "pending",
+      "end": 616663,
+      "number": "2",
+      "sourceSpanDigest": "sha256:13e804950ed7dc5469267184f7c167b6b08aec79e5e4de9d75b441bc27cd8ed5",
+      "sourceVersion": "gazette-2021-39",
+      "start": 612896,
+      "unitNumbers": [
+        "2"
+      ]
+    },
+    {
+      "classPathReview": "pending",
+      "end": 619832,
+      "number": "3",
+      "sourceSpanDigest": "sha256:5468d41b3ca12a635348689a2466ed61101f9e51f575e885f1e9d9a624642330",
+      "sourceVersion": "gazette-2021-39",
+      "start": 616663,
+      "unitNumbers": [
+        "3"
+      ]
+    },
+    {
+      "classPathReview": "pending",
+      "end": 641257,
+      "number": "4",
+      "sourceSpanDigest": "sha256:c7b05a6cc21c6de97b92d012ed51db784f4308563f3dbe3012d0242cb23032d1",
+      "sourceVersion": "gazette-2021-39",
+      "start": 619832,
+      "unitNumbers": [
+        "4.1",
+        "4.2"
+      ]
+    },
+    {
+      "classPathReview": "pending",
+      "end": 651091,
+      "number": "5",
+      "sourceSpanDigest": "sha256:aa74c166a4ac9e94d1c0b911744f3bde33fe29956e4f5dfb6535779123733584",
+      "sourceVersion": "gazette-2021-39",
+      "start": 641257,
+      "unitNumbers": [
+        "5.1",
+        "5.2"
+      ]
+    },
+    {
+      "classPathReview": "pending",
+      "end": 653817,
+      "number": "6",
+      "sourceSpanDigest": "sha256:8afc92b0cac7a7f681aa00763a9fdd3ced93da7e9ac3967fedb8b44af754e4c5",
+      "sourceVersion": "gazette-2021-39",
+      "start": 651091,
+      "unitNumbers": [
+        "6"
+      ]
+    },
+    {
+      "classPathReview": "pending",
+      "end": 670174,
+      "number": "7",
+      "sourceSpanDigest": "sha256:997821c431126c361db73c2a071aa43d44c5b2924f3bb17eccbcb5e6399fc9fc",
+      "sourceVersion": "gazette-2021-39",
+      "start": 653817,
+      "unitNumbers": [
+        "7.1",
+        "7.2",
+        "7.3",
+        "7.4",
+        "7.5",
+        "7.6",
+        "7.7"
+      ]
+    },
+    {
+      "classPathReview": "pending",
+      "end": 675189,
+      "number": "8",
+      "sourceSpanDigest": "sha256:748afdf8dc4bdf730fe946c318da4e86625121b78b7394b9caa2c58c3805e0de",
+      "sourceVersion": "gazette-2021-39",
+      "start": 670174,
+      "unitNumbers": [
+        "8"
+      ]
+    },
+    {
+      "classPathReview": "pending",
+      "end": 679229,
+      "number": "9",
+      "sourceSpanDigest": "sha256:c336b5db9e11a219d0d23af2f47b3c4bcbf04441e874cc53a7a7dc4f4725a50e",
+      "sourceVersion": "gazette-2021-39",
+      "start": 675189,
+      "unitNumbers": [
+        "9"
+      ]
+    },
+    {
+      "classPathReview": "pending",
+      "end": 682433,
+      "number": "10",
+      "sourceSpanDigest": "sha256:90b5dcc18f0f413131f2247e90737345f59510117c9c871b166fd6d8b7d990c5",
+      "sourceVersion": "gazette-2021-39",
+      "start": 679229,
+      "unitNumbers": [
+        "10"
+      ]
+    },
+    {
+      "classPathReview": "pending",
+      "end": 689397,
+      "number": "11",
+      "sourceSpanDigest": "sha256:560ad68d6aceb04699087787b9e45c3d1f9f7c109030bc33fa0180cb6b46f10d",
+      "sourceVersion": "gazette-2021-39",
+      "start": 682433,
+      "unitNumbers": [
+        "11"
+      ]
+    },
+    {
+      "classPathReview": "pending",
+      "end": 697753,
+      "number": "12",
+      "sourceSpanDigest": "sha256:9692e2d9e91d539f6d52af3694a9e551a2c3407d1a14e503ec06f959effb97ae",
+      "sourceVersion": "gazette-2021-39",
+      "start": 689397,
+      "unitNumbers": [
+        "12"
+      ]
+    },
+    {
+      "classPathReview": "pending",
+      "end": 715014,
+      "number": "13",
+      "sourceSpanDigest": "sha256:8b4a2c3be877dbc3b7ba33fed4df2bf98ed347e8d80376f8fc8b7ce15cd2c214",
+      "sourceVersion": "gazette-2021-39",
+      "start": 697753,
+      "unitNumbers": [
+        "13.1",
+        "13.2"
+      ]
+    },
+    {
+      "classPathReview": "pending",
+      "end": 735370,
+      "number": "14",
+      "sourceSpanDigest": "sha256:239dbc5f55c9e42fddcf998cb9e085323577e54fd6555d7f012542166d5a0633",
+      "sourceVersion": "gazette-2021-39",
+      "start": 715014,
+      "unitNumbers": [
+        "14.1",
+        "14.2"
+      ]
+    },
+    {
+      "classPathReview": "pending",
+      "end": 749101,
+      "number": "15",
+      "sourceSpanDigest": "sha256:256777a1a6c0ce1d073c6b814de4e5fc3e6f281d6f2a317d1fc3ff4cf01b4f53",
+      "sourceVersion": "gazette-2021-39",
+      "start": 735370,
+      "unitNumbers": [
+        "15"
+      ]
+    },
+    {
+      "classPathReview": "pending",
+      "end": 750534,
+      "number": "16",
+      "sourceSpanDigest": "sha256:3153356fe5416d451db33d8cbdac042be5e7e62becc402bb7a117f7dd1ecc05b",
+      "sourceVersion": "gazette-2021-39",
+      "start": 749101,
+      "unitNumbers": [
+        "16"
+      ]
+    },
+    {
+      "classPathReview": "pending",
+      "end": 754424,
+      "number": "17",
+      "sourceSpanDigest": "sha256:a7b969311fd9e9c80eaa26299ad4576d8e6091458034003999548cefe6a15576",
+      "sourceVersion": "gazette-2021-39",
+      "start": 750534,
+      "unitNumbers": [
+        "17"
+      ]
+    },
+    {
+      "classPathReview": "pending",
+      "end": 756627,
+      "number": "18",
+      "sourceSpanDigest": "sha256:054127c1b4675dfe9dbacfcc715e189d89d1b38f34e841ac0522234b28bec644",
+      "sourceVersion": "gazette-2021-39",
+      "start": 754424,
+      "unitNumbers": [
+        "18"
+      ]
+    },
+    {
+      "classPathReview": "pending",
+      "end": 774734,
+      "number": "19",
+      "sourceSpanDigest": "sha256:6c3601df6da030cdf821c29c036c25f120af38bbc6353c82d09dad7f1365349b",
+      "sourceVersion": "gazette-2021-39",
+      "start": 756627,
+      "unitNumbers": [
+        "19.1",
+        "19.2",
+        "19.3",
+        "19.4"
+      ]
+    },
+    {
+      "classPathReview": "pending",
+      "end": 785822,
+      "number": "20",
+      "sourceSpanDigest": "sha256:fa216ffd5cc4099272f6e1f1d36c133931f592a08ace4eeeead449201a560527",
+      "sourceVersion": "gazette-2021-39",
+      "start": 774734,
+      "unitNumbers": [
+        "20"
+      ]
+    },
+    {
+      "classPathReview": "pending",
+      "end": 794436,
+      "number": "21",
+      "sourceSpanDigest": "sha256:9c1db9e251393f7f9fc96a4b1905da04e9d7b30ef771c0c21a72de1c1898ff36",
+      "sourceVersion": "gazette-2021-39",
+      "start": 785822,
+      "unitNumbers": [
+        "21.1",
+        "21.2"
+      ]
+    },
+    {
+      "classPathReview": "pending",
+      "end": 800758,
+      "number": "22",
+      "sourceSpanDigest": "sha256:4a26ddb34e243212f6ccfd768d9691aacd175eb21a398c13455a818167610f92",
+      "sourceVersion": "gazette-2021-39",
+      "start": 794436,
+      "unitNumbers": [
+        "22.1",
+        "22.2",
+        "22.3"
+      ]
+    },
+    {
+      "classPathReview": "pending",
+      "end": 805331,
+      "number": "23",
+      "sourceSpanDigest": "sha256:03c304ef568cd909d1fb8705650cbdcc38e959bb6fc83d77f254c3784d3237c8",
+      "sourceVersion": "gazette-2021-39",
+      "start": 800758,
+      "unitNumbers": [
+        "23"
+      ]
+    },
+    {
+      "classPathReview": "pending",
+      "end": 808690,
+      "number": "24",
+      "sourceSpanDigest": "sha256:e0e9d3dab823857d68f2df805972cc8344fff27ffac100574e67175304f5633b",
+      "sourceVersion": "gazette-2021-39",
+      "start": 805331,
+      "unitNumbers": [
+        "24"
+      ]
+    },
+    {
+      "classPathReview": "pending",
+      "end": 865729,
+      "number": "25",
+      "sourceSpanDigest": "sha256:7f09a3dac45314c2ae2c8ec5d1eae4a2d39a3b445c2d2f5c9ef7ecca13122b28",
+      "sourceVersion": "gazette-2021-39",
+      "start": 808690,
+      "unitNumbers": [
+        "25.1",
+        "25.2",
+        "25.3",
+        "25.4",
+        "25.5",
+        "25.6",
+        "25.7",
+        "25.8"
+      ]
+    }
+  ],
+  "sourceArtifact": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+  "status": "candidate-incomplete"
+}

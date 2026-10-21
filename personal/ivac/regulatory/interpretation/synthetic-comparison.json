@@ -1,0 +1,80 @@
+{
+  "adjudication": "not-determined",
+  "authority": "none",
+  "format": "ivac.synthetic-interpretation-comparison/v1",
+  "results": [
+    {
+      "claimantCandidate": true,
+      "comparisonKind": "genuine-scope-dispute",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "opportunityID": "ivac-interpretation-psychiatric-or-cognitive",
+      "restrictiveCandidate": false,
+      "scenarioID": "synthetic-psychiatric-or-cognitive",
+      "sourceVersion": "gazette-2021-39"
+    },
+    {
+      "claimantCandidate": true,
+      "comparisonKind": "overrestriction-regression",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "opportunityID": "ivac-interpretation-cognitive-support-necessity",
+      "restrictiveCandidate": false,
+      "scenarioID": "synthetic-cognitive-support-necessity",
+      "sourceVersion": "gazette-2021-39"
+    },
+    {
+      "claimantCandidate": true,
+      "comparisonKind": "overrestriction-regression",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "opportunityID": "ivac-interpretation-medication-independent-path",
+      "restrictiveCandidate": false,
+      "scenarioID": "synthetic-medication-independent-path",
+      "sourceVersion": "gazette-2021-39"
+    },
+    {
+      "claimantCandidate": true,
+      "comparisonKind": "overrestriction-regression",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "opportunityID": "ivac-interpretation-separate-sensory-hand",
+      "restrictiveCandidate": false,
+      "scenarioID": "synthetic-separate-sensory-hand",
+      "sourceVersion": "gazette-2021-39"
+    },
+    {
+      "claimantCandidate": true,
+      "comparisonKind": "overrestriction-regression",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "opportunityID": "ivac-interpretation-restriction-vs-motion",
+      "restrictiveCandidate": false,
+      "scenarioID": "synthetic-restriction-vs-motion",
+      "sourceVersion": "gazette-2021-39"
+    },
+    {
+      "claimantCandidate": true,
+      "comparisonKind": "overrestriction-regression",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "opportunityID": "ivac-interpretation-covered-static-scar",
+      "restrictiveCandidate": false,
+      "scenarioID": "synthetic-covered-static-scar",
+      "sourceVersion": "gazette-2021-39"
+    },
+    {
+      "claimantCandidate": true,
+      "comparisonKind": "overrestriction-regression",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "opportunityID": "ivac-interpretation-endocrine-preventive-alternative",
+      "restrictiveCandidate": false,
+      "scenarioID": "synthetic-endocrine-preventive-alternative",
+      "sourceVersion": "gazette-2021-39"
+    },
+    {
+      "claimantCandidate": true,
+      "comparisonKind": "overrestriction-regression",
+      "decisionBoundary": "unresolved-no-automatic-selection",
+      "opportunityID": "ivac-interpretation-clinical-objectivity-not-imaging",
+      "restrictiveCandidate": false,
+      "scenarioID": "synthetic-clinical-objectivity-not-imaging",
+      "sourceVersion": "gazette-2021-39"
+    }
+  ],
+  "selection": "none"
+}

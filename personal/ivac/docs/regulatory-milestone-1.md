@@ -4,7 +4,7 @@ The additive `personal.ivac.regulatory@1.0.0` surface extends IVAC v0.4.0. CUE i
 
 ## Official source and versions
 
-The relevant instrument is the **Règlement d’application de la Loi visant à aider les personnes victimes d’infractions criminelles et à favoriser leur rétablissement**, **P-9.2.1, r. 1**, **Annexe I**, “Répertoire des séquelles permanentes d’ordre fonctionnel ou esthétique”, under P-9.2.1. The annex names articles 18, 24 and 26. Read the chapter III evaluation provisions, including article 25 on permanence, alongside the schedule. Original decree: D. 1266-2021.
+The relevant instrument is the **Règlement d’application de la Loi visant à aider les personnes victimes d’infractions criminelles et à favoriser leur rétablissement**, **P-9.2.1, r. 1**, **Annexe I**, “Répertoire des séquelles permanentes d’ordre fonctionnel ou esthétique”, under P-9.2.1. The annex names articles 18, 24 and 26. Read the chapter III evaluation provisions, including article 23 on permanence, alongside the schedule. Original decree: D. 1266-2021.
 
 Official discovery references, inspected 2026-10-16 UTC:
 

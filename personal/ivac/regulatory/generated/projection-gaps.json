@@ -1,0 +1,24 @@
+{
+  "admission": "blocked-pending-qualified-projection",
+  "cueVersion": "v0.16.1",
+  "format": "ivac.canonical-projection-gaps/v1",
+  "results": [
+    {
+      "definition": "#RegulatoryCompendium",
+      "diagnostic": "bad argument to unary comparison",
+      "status": "export-failed"
+    },
+    {
+      "definition": "#RegulatoryExtraction",
+      "diagnostic": "bad argument to unary comparison",
+      "status": "export-failed"
+    },
+    {
+      "definition": "#RegulatoryQualification",
+      "schemaKeywords": [
+        "$schema"
+      ],
+      "status": "unconstrained-schema-rejected"
+    }
+  ]
+}

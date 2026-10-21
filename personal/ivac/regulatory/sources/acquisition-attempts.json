@@ -1,0 +1,30 @@
+[
+  {
+    "url": "https://www.legisquebec.gouv.qc.ca/fr/document/rc/P-9.2.1%2C%20r.%201",
+    "attemptedAt": "2026-10-17T16:55:13.149789+00:00",
+    "purpose": "source acquisition probe; no legal effect",
+    "httpStatus": 502,
+    "outcome": "http-error"
+  },
+  {
+    "url": "https://www.legisquebec.gouv.qc.ca/fr/document/rc/P-9.2.1%2C%20r.%201/20211013",
+    "attemptedAt": "2026-10-17T16:55:13.152379+00:00",
+    "purpose": "source acquisition probe; no legal effect",
+    "httpStatus": 502,
+    "outcome": "http-error"
+  },
+  {
+    "url": "https://www.legisquebec.gouv.qc.ca/fr/pdf/rc/P-9.2.1%2C%20R.%201.pdf",
+    "attemptedAt": "2026-10-17T16:55:13.153200+00:00",
+    "purpose": "source acquisition probe; no legal effect",
+    "httpStatus": 502,
+    "outcome": "http-error"
+  },
+  {
+    "url": "https://www.legisquebec.gouv.qc.ca/fr/document/lc/P-9.2.1",
+    "attemptedAt": "2026-10-17T16:55:13.154435+00:00",
+    "purpose": "source acquisition probe; no legal effect",
+    "httpStatus": 502,
+    "outcome": "http-error"
+  }
+]

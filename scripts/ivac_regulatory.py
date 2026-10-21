@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Pinned UTF-8 extraction/provenance adapter. CUE owns all domain validation."""
 import argparse
+from decimal import Decimal
 import hashlib
 import json
 from pathlib import Path
@@ -14,10 +15,23 @@ def digest(data):
     return "sha256:" + hashlib.sha256(data).hexdigest()
 
 
+def exact_json(value):
+    """Preserve exact Decimal numeric tokens across the CUE boundary."""
+    if isinstance(value, Decimal):
+        if not value.is_finite():
+            raise ValueError("nonfinite decimal")
+        return str(value)
+    if isinstance(value, dict):
+        return "{" + ",".join(json.dumps(k) + ":" + exact_json(v) for k, v in sorted(value.items())) + "}"
+    if isinstance(value, list):
+        return "[" + ",".join(map(exact_json, value)) + "]"
+    return json.dumps(value, ensure_ascii=False, allow_nan=False)
+
+
 def validate(value, definition):
     with tempfile.TemporaryDirectory() as directory:
         path = Path(directory) / "input.json"
-        path.write_text(json.dumps(value, ensure_ascii=False), encoding="utf-8")
+        path.write_text(exact_json(value), encoding="utf-8")
         subprocess.run(["cue", "vet", "-c", str(path),
                         *map(str, (ROOT / "contracts/personal/ivac").glob("*.cue")),
                         "-d", definition], cwd=ROOT, check=True)
@@ -88,7 +102,7 @@ def main():
     parser.add_argument("origin", type=Path)
     parser.add_argument("--plan", type=Path, help="exact citation spans for extraction")
     args = parser.parse_args()
-    value = json.loads(args.document.read_text(encoding="utf-8"))
+    value = json.loads(args.document.read_text(encoding="utf-8"), parse_float=Decimal)
     if args.mode == "extract":
         if args.plan is None:
             parser.error("extract requires --plan")

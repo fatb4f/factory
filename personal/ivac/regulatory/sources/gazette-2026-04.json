@@ -1,0 +1,16 @@
+{
+  "artifactBytes": 1404989,
+  "artifactDigest": "sha256:3601b19284c87a2864453b6818288f9a797320f8884cb79feafaa6731acc655f",
+  "artifactPath": "personal/ivac/regulatory/sources/gazette-2026-04.pdf",
+  "conversion": "pdftotext -layout -enc UTF-8",
+  "converterVersion": "pdftotext version 24.02.0",
+  "id": "gazette-2026-04",
+  "legalEffect": "not-established",
+  "mediaType": "application/pdf",
+  "publicationDate": "2026-01-28",
+  "publicationKind": "proposal",
+  "retrievedAt": "2026-10-17T16:50:09.590188Z",
+  "textDigest": "sha256:dff21840fc2b23e3b0b873ea5510cd52cdb8c824fc73d2becb363a75f81d56d6",
+  "textPath": "personal/ivac/regulatory/sources/gazette-2026-04.txt",
+  "url": "https://www.publicationsduquebec.gouv.qc.ca/fileadmin/gazette/pdf_encrypte/gaz_entiere/2604-F.pdf"
+}
