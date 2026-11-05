@@ -1,0 +1,745 @@
+{
+  "$defs": {
+    "#ID": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "#RegulatoryDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "#TimelineAliasRow": {
+      "additionalProperties": false,
+      "properties": {
+        "alias_id": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "basis": {
+          "enum": [
+            "original-artifact-digest",
+            "original-and-text-digests"
+          ]
+        },
+        "dataset_id": {
+          "$ref": "#/$defs/%23RegulatoryDigest"
+        },
+        "source_id": {
+          "$ref": "#/$defs/%23ID"
+        }
+      },
+      "required": [
+        "alias_id",
+        "basis",
+        "dataset_id",
+        "source_id"
+      ],
+      "type": "object"
+    },
+    "#TimelineAnchorRow": {
+      "additionalProperties": false,
+      "properties": {
+        "anchor_id": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "content_json": {
+          "type": "string"
+        },
+        "dataset_id": {
+          "$ref": "#/$defs/%23RegulatoryDigest"
+        },
+        "end": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "integer"
+            }
+          ]
+        },
+        "integrity": {
+          "enum": [
+            "exact-verified",
+            "locator-only",
+            "unresolved-source"
+          ]
+        },
+        "original_source_id": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "owner_id": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "owner_kind": {
+          "enum": [
+            "event",
+            "vector",
+            "assessment",
+            "comparison"
+          ]
+        },
+        "page": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "integer"
+            }
+          ]
+        },
+        "position": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "quote": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "review": {
+          "type": "string"
+        },
+        "source_id": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "start": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "integer"
+            }
+          ]
+        },
+        "text_path": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "text_sha256": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "required": [
+        "anchor_id",
+        "content_json",
+        "dataset_id",
+        "end",
+        "integrity",
+        "original_source_id",
+        "owner_id",
+        "owner_kind",
+        "page",
+        "position",
+        "quote",
+        "review",
+        "source_id",
+        "start",
+        "text_path",
+        "text_sha256"
+      ],
+      "type": "object"
+    },
+    "#TimelineAssessmentRow": {
+      "additionalProperties": false,
+      "properties": {
+        "assessment_date": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "assessment_id": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "assessor": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "class_label": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "content_json": {
+          "type": "string"
+        },
+        "dataset_id": {
+          "$ref": "#/$defs/%23RegulatoryDigest"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "percentage": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "number"
+            }
+          ]
+        },
+        "percentage_state": {
+          "enum": [
+            "recorded",
+            "unknown",
+            "opaque"
+          ]
+        },
+        "review_status": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "source_id": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "required": [
+        "assessment_date",
+        "assessment_id",
+        "assessor",
+        "class_label",
+        "content_json",
+        "dataset_id",
+        "kind",
+        "percentage",
+        "percentage_state",
+        "review_status",
+        "source_id"
+      ],
+      "type": "object"
+    },
+    "#TimelineComparisonRow": {
+      "additionalProperties": false,
+      "properties": {
+        "automatic_selection": {
+          "const": false
+        },
+        "comparison_id": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "dataset_id": {
+          "$ref": "#/$defs/%23RegulatoryDigest"
+        },
+        "difference": {
+          "type": "string"
+        },
+        "left_assertion": {
+          "type": "string"
+        },
+        "origin_path": {
+          "type": "string"
+        },
+        "right_assertion": {
+          "type": "string"
+        },
+        "status": {
+          "const": "candidate-unresolved"
+        },
+        "topic": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "comparison_id",
+        "dataset_id",
+        "difference",
+        "left_assertion",
+        "origin_path",
+        "right_assertion",
+        "topic"
+      ],
+      "type": "object"
+    },
+    "#TimelineDatasetRow": {
+      "additionalProperties": false,
+      "properties": {
+        "authority": {
+          "type": "string"
+        },
+        "coverage_json": {
+          "type": "string"
+        },
+        "dataset_id": {
+          "$ref": "#/$defs/%23RegulatoryDigest"
+        },
+        "exchange_sha256": {
+          "$ref": "#/$defs/%23RegulatoryDigest"
+        },
+        "format": {
+          "type": "string"
+        },
+        "gaps_json": {
+          "type": "string"
+        },
+        "semantic_admission": {
+          "const": "none"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "authority",
+        "coverage_json",
+        "dataset_id",
+        "exchange_sha256",
+        "format",
+        "gaps_json",
+        "version"
+      ],
+      "type": "object"
+    },
+    "#TimelineEventRow": {
+      "additionalProperties": false,
+      "properties": {
+        "content_json": {
+          "type": "string"
+        },
+        "dataset_id": {
+          "$ref": "#/$defs/%23RegulatoryDigest"
+        },
+        "date_label": {
+          "type": "string"
+        },
+        "event_id": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "evidence_status": {
+          "type": "string"
+        },
+        "normalized_start": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "summary": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "content_json",
+        "dataset_id",
+        "date_label",
+        "event_id",
+        "evidence_status",
+        "normalized_start",
+        "summary"
+      ],
+      "type": "object"
+    },
+    "#TimelinePageRow": {
+      "additionalProperties": false,
+      "properties": {
+        "character_count": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "dataset_id": {
+          "$ref": "#/$defs/%23RegulatoryDigest"
+        },
+        "page": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "integer"
+            }
+          ]
+        },
+        "page_id": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "source_id": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "text": {
+          "type": "string"
+        },
+        "text_path": {
+          "type": "string"
+        },
+        "text_sha256": {
+          "$ref": "#/$defs/%23RegulatoryDigest"
+        }
+      },
+      "required": [
+        "character_count",
+        "dataset_id",
+        "page",
+        "page_id",
+        "source_id",
+        "text",
+        "text_path",
+        "text_sha256"
+      ],
+      "type": "object"
+    },
+    "#TimelinePayloadRow": {
+      "additionalProperties": false,
+      "properties": {
+        "character_count": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "dataset_id": {
+          "$ref": "#/$defs/%23RegulatoryDigest"
+        },
+        "payload_id": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "source_id": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "text": {
+          "type": "string"
+        },
+        "text_path": {
+          "type": "string"
+        },
+        "text_sha256": {
+          "$ref": "#/$defs/%23RegulatoryDigest"
+        }
+      },
+      "required": [
+        "character_count",
+        "dataset_id",
+        "payload_id",
+        "source_id",
+        "text",
+        "text_path",
+        "text_sha256"
+      ],
+      "type": "object"
+    },
+    "#TimelineSourceRow": {
+      "additionalProperties": false,
+      "properties": {
+        "byte_verification": {
+          "enum": [
+            "original-verified",
+            "snapshot-only"
+          ]
+        },
+        "content_json": {
+          "type": "string"
+        },
+        "dataset_id": {
+          "$ref": "#/$defs/%23RegulatoryDigest"
+        },
+        "extraction_status": {
+          "type": "string"
+        },
+        "mime_type": {
+          "type": "string"
+        },
+        "origin": {
+          "type": "string"
+        },
+        "pages": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "integer"
+            }
+          ]
+        },
+        "raw_path": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "raw_sha256": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "role": {
+          "type": "string"
+        },
+        "source_id": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "source_url": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "title": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "byte_verification",
+        "content_json",
+        "dataset_id",
+        "extraction_status",
+        "mime_type",
+        "origin",
+        "pages",
+        "raw_path",
+        "raw_sha256",
+        "role",
+        "source_id",
+        "source_url",
+        "title"
+      ],
+      "type": "object"
+    },
+    "#TimelineVectorRow": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "causal_nexus": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "class_label": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "content_json": {
+          "type": "string"
+        },
+        "dataset_id": {
+          "$ref": "#/$defs/%23RegulatoryDigest"
+        },
+        "domain": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "kind": {
+          "type": "string"
+        },
+        "percentage": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "number"
+            }
+          ]
+        },
+        "percentage_state": {
+          "enum": [
+            "recorded",
+            "unknown",
+            "opaque"
+          ]
+        },
+        "permanence": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "regulatory_unit_id": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "status": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "vector_id": {
+          "$ref": "#/$defs/%23ID"
+        }
+      },
+      "required": [
+        "candidate",
+        "causal_nexus",
+        "class_label",
+        "content_json",
+        "dataset_id",
+        "domain",
+        "kind",
+        "percentage",
+        "percentage_state",
+        "permanence",
+        "regulatory_unit_id",
+        "status",
+        "vector_id"
+      ],
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "assessment_comparisons": {
+      "$ref": "#/$defs/%23TimelineComparisonRow"
+    },
+    "assessments": {
+      "$ref": "#/$defs/%23TimelineAssessmentRow"
+    },
+    "datasets": {
+      "$ref": "#/$defs/%23TimelineDatasetRow"
+    },
+    "document_pages": {
+      "$ref": "#/$defs/%23TimelinePageRow"
+    },
+    "events": {
+      "$ref": "#/$defs/%23TimelineEventRow"
+    },
+    "evidence_anchors": {
+      "$ref": "#/$defs/%23TimelineAnchorRow"
+    },
+    "sequela_vectors": {
+      "$ref": "#/$defs/%23TimelineVectorRow"
+    },
+    "source_aliases": {
+      "$ref": "#/$defs/%23TimelineAliasRow"
+    },
+    "source_payloads": {
+      "$ref": "#/$defs/%23TimelinePayloadRow"
+    },
+    "sources": {
+      "$ref": "#/$defs/%23TimelineSourceRow"
+    }
+  },
+  "required": [
+    "assessment_comparisons",
+    "assessments",
+    "datasets",
+    "document_pages",
+    "events",
+    "evidence_anchors",
+    "sequela_vectors",
+    "source_aliases",
+    "source_payloads",
+    "sources"
+  ],
+  "type": "object"
+}
