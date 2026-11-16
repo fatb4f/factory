@@ -25,6 +25,7 @@ Paths below are relative to the repository root.
 | Case graph and clinical evidence | `contracts/personal/ivac/graph.cue`, `contracts/personal/ivac/clinical.cue` |
 | Regulatory source, compendium and qualification | `contracts/personal/ivac/`, `contracts/personal/ivac/evaluations/regulatory.cue`, `scripts/ivac_regulatory.py`, `scripts/ivac_regulatory_sources.py` |
 | Official bulk acquisition and integrity | `scripts/ivac_regulatory_bulk.py`, `personal/ivac/docs/regulatory-milestone-2.md` |
+| Broader official legal/directive/ethics acquisition | `contracts/personal/ivac/corpus/model.cue`, `scripts/ivac_official_corpus.py`, `personal/ivac/docs/official-corpus-acquisition.md` |
 | Private documentary snapshots | `contracts/personal/ivac/workbench/model.cue`, `contracts/personal/ivac/workbench/projections.cue`, `scripts/ivac_workbench.py`, `personal/ivac/docs/regulatory-workbench.md` |
 | Interpretation and professional review | `contracts/personal/ivac/evaluations/medico_legal_review.cue`, `personal/ivac/docs/medico-legal-review.md`, `personal/ivac/docs/regulatory-semantic-specification.md` |
 | Analytical execution | `personal/ivac/docs/evaluation-and-ibis.md`, `runtime/ibis_adapter.py`, `contracts/state/` |
