@@ -97,6 +97,9 @@ The old Gazette text fixtures require Poppler 24.02.0 for exact regeneration.
 Poppler 25.03.0 changes their extracted bytes and correctly fails those checks;
 do not rewrite retained text to accommodate a converter upgrade. New acquisitions
 record their actual converter and require that converter for exact reconversion.
+The contract-validation workflow uses Ubuntu 24.04 and checks Poppler 24.02.0
+explicitly; an unpinned `ubuntu-latest` runner changed to Ubuntu 26.04 and failed
+the retained Gazette reconversion checks.
 
 Acquisition completeness is bounded by the request, not by the universe of
 relevant law. Unpublished internal procedures, exhaustive amendment history,
