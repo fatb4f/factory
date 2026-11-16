@@ -4,6 +4,7 @@ import copy
 import json
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -12,6 +13,7 @@ import ivac_official_corpus as corpus
 import ivac_regulatory as spans
 from ivac_regulatory_sources import encoded
 from generate_ivac_regulatory_types import generate
+sys.path.insert(0, str(spans.ROOT))
 from personal.ivac.corpus.generated.rows import CorpusSourceRow
 
 
