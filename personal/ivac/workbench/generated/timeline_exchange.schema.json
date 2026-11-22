@@ -1,0 +1,271 @@
+{
+  "$defs": {
+    "#ID": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "#RegulatoryDate": {
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$",
+      "type": "string"
+    },
+    "#TimelineEvent": {
+      "additionalProperties": false,
+      "properties": {
+        "content": {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        "date_label": {
+          "type": "string"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/%23TimelineEvidence"
+          },
+          "type": "array"
+        },
+        "evidence_status": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "id": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "normalized_start": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/%23RegulatoryDate"
+            }
+          ]
+        },
+        "summary": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "date_label",
+        "evidence_status",
+        "id",
+        "normalized_start",
+        "summary"
+      ],
+      "type": "object"
+    },
+    "#TimelineEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "end": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "minimum": 1,
+              "type": "integer"
+            }
+          ]
+        },
+        "page": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "minimum": 1,
+              "type": "integer"
+            }
+          ]
+        },
+        "quote": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "review": {
+          "enum": [
+            "machine_extraction",
+            "visually_reviewed",
+            "imported_prior_review",
+            "derived_timeline"
+          ]
+        },
+        "source_id": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "start": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "minimum": 0,
+              "type": "integer"
+            }
+          ]
+        },
+        "text_path": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "end",
+        "page",
+        "quote",
+        "review",
+        "source_id",
+        "start",
+        "text_path"
+      ],
+      "type": "object"
+    },
+    "#TimelineRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "content": {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        "id": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "kind": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "kind"
+      ],
+      "type": "object"
+    },
+    "#TimelineSource": {
+      "additionalProperties": false,
+      "properties": {
+        "details": {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        "extraction_status": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "id": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "mime_type": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "origin": {
+          "type": "string"
+        },
+        "pages": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "minimum": 0,
+              "type": "integer"
+            }
+          ]
+        },
+        "parent_ids": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "raw_path": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "raw_sha256": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            }
+          ]
+        },
+        "role": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "source_url": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "text_paths": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "title": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "extraction_status",
+        "id",
+        "mime_type",
+        "origin",
+        "pages",
+        "raw_path",
+        "raw_sha256",
+        "role",
+        "source_url",
+        "title"
+      ],
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "event": {
+      "$ref": "#/$defs/%23TimelineEvent"
+    },
+    "evidence": {
+      "$ref": "#/$defs/%23TimelineEvidence"
+    },
+    "record": {
+      "$ref": "#/$defs/%23TimelineRecord"
+    },
+    "source": {
+      "$ref": "#/$defs/%23TimelineSource"
+    }
+  },
+  "required": [
+    "event",
+    "evidence",
+    "record",
+    "source"
+  ],
+  "type": "object"
+}

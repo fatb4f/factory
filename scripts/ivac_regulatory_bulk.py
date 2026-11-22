@@ -39,7 +39,7 @@ def fetch(url):
     return data
 
 
-def inspect_zip(data):
+def inspect_zip(data, *, require_xml=True):
     """Accept observed backslash separators, reject ambiguity and extraction hazards."""
     result, seen, total = [], set(), 0
     with zipfile.ZipFile(io.BytesIO(data)) as archive:
@@ -64,7 +64,7 @@ def inspect_zip(data):
                 raise ValueError('excessive ZIP compression ratio')
             if not member.is_dir():
                 result.append((name, member.filename))
-        if not any(n.lower().endswith('.xml') for n, _ in result):
+        if require_xml and not any(n.lower().endswith('.xml') for n, _ in result):
             raise ValueError('ZIP contains no XML')
     return sorted(result)
 
