@@ -66,3 +66,7 @@ An antenna changes reception within the receiver’s supported frequencies. The 
 ## Validation status
 
 The guides describe upstream-documented capabilities. This survey did not measure performance on a specific Chromebook, Pixel, adapter, or receiver. Keep original captures local, with receiver settings and timestamps, and use public reference recordings for shareable examples. This directory contains documentation only.
+
+## Applied workflows
+
+- [Lucy courier observation and communications](lucy/README.md)
