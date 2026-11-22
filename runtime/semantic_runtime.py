@@ -5,6 +5,8 @@ from dataclasses import dataclass
 from typing import Any, Iterable, Mapping, Protocol, Sequence
 
 from .generated.semantic_context import SemanticRef
+from .generated.native_semantic_context import SemanticRef as NativeSemanticRef
+from .native_binding import to_wire
 
 PLANES = frozenset({"semantic", "documentary", "operational", "structural", "evidential"})
 
@@ -25,7 +27,9 @@ def _canonical(value: Any) -> str:
     return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
 
 
-def _semantic_dict(ref: SemanticRef | Mapping[str, Any]) -> dict[str, Any]:
+def _semantic_dict(ref: SemanticRef | NativeSemanticRef | Mapping[str, Any]) -> dict[str, Any]:
+    if isinstance(ref, NativeSemanticRef):
+        return to_wire(ref)
     if isinstance(ref, SemanticRef):
         result: dict[str, Any] = {"authority": dict(ref.authority), "subject": ref.subject}
         if ref.kind is not None:
@@ -34,7 +38,7 @@ def _semantic_dict(ref: SemanticRef | Mapping[str, Any]) -> dict[str, Any]:
     return dict(ref)
 
 
-def _semantic_key(ref: SemanticRef | Mapping[str, Any]) -> str:
+def _semantic_key(ref: SemanticRef | NativeSemanticRef | Mapping[str, Any]) -> str:
     return _canonical(_semantic_dict(ref))
 
 
@@ -162,7 +166,7 @@ class SemanticRuntime:
     def snapshot_digest(self) -> str:
         return str(self._snapshot["identity"]["digest"])
 
-    def semantic(self, ref: SemanticRef | Mapping[str, Any]) -> SemanticObject:
+    def semantic(self, ref: SemanticRef | NativeSemanticRef | Mapping[str, Any]) -> SemanticObject:
         mapping = _semantic_dict(ref)
         if self.adapter.subject(mapping) is None:
             raise KeyError(_semantic_key(mapping))

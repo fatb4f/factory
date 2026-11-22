@@ -1,0 +1,599 @@
+{
+  "format": "ivac.official-corpus-request/v1",
+  "entries": [
+    {
+      "id": "ivac-index",
+      "title": "IVAC — Lois, règlements et directives",
+      "category": "discovery",
+      "sourceKind": "official-index",
+      "url": "https://www.ivac.qc.ca/a-propos/Pages/lois-reglements-politiques.aspx",
+      "format": "html",
+      "instrument": null
+    },
+    {
+      "id": "directive-1-1",
+      "title": "1.1 - Définition de personne​ victime et sa qualification",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/1-1-definition-victime-et-qualification.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-1-2",
+      "title": "1.2 - Demande de qualification",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/1-2-demande-qualification.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-1-3",
+      "title": "1.3 - Faute lourde",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/1-3-faute-lourde.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-1-4",
+      "title": "1.4 - Infraction commise à l’extérieur du Québec",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/1-4-infractions-commises-exterieur-quebec.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-2-1",
+      "title": "2.1 - Droit aux aides financières selon la catégorie de victimes",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/2-1-droit-aides-financieres-categories.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-2-2",
+      "title": "2.2 - Détermination du lien entre l’atteinte et l’infraction criminelle",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/2-2-determination-lien-atteinte-infraction-criminelle.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-2-3",
+      "title": "2.3 - Aide financière immédiate",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/2-3-aide-financiere-immediate.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-2-4",
+      "title": "2.4 - Versement d’une aide financière palliant une perte de revenu",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/2-4-versement-aide-financiere.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-2-5",
+      "title": "2.5 - Versement d’une aide financière compensant certaines incapacités",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/2-5-calcul-aides-financieres.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-2-6",
+      "title": "2.6 - Somme forfaitaire décès",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/2-6-sommes-forfaitaires-deces.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-2-7",
+      "title": "2.7 - Sommes forfaitaires pour séquelles permanentes, aggravation et atteinte temporaire",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/2-7-forfaitaire-sequelles-aggravation-atteinte-integrite.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-2-8",
+      "title": "2.8 - Aide financière pour assistance médicale",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/2-8-aide-financiere-assistance-medicale.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-2-9",
+      "title": "2.9 - Dépenses diverses",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/2-9-remboursement-depenses-diverses.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-2-10",
+      "title": "2.10 - Aide financière des autres régimes",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/2-10-aide-financiere-autre-regime.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-2-11",
+      "title": "2.11 - Frais de déplacement, de séjour et de transport",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/2-11-remboursement-frais-deplacement-sejour-transport.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-2-12",
+      "title": "2.12 - Aide financière pour un enfant né d’une agression à caractère sexuel",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/2-12-demande-aide-financiere-enfant-suite-agression.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-3-1",
+      "title": "​3.1 - Réhabilitation psychothérapique ou psychosociale",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/3-1-rehabilitation-psychotherapique-psychosociale.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-3-2",
+      "title": "3.2 - Aide pour la réadaptation physique",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/3-2-aide-financiere-readaptation-physique.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-3-3",
+      "title": "3.3 - Aide financière pour la réinsertion sociale",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/3-3-aide-financiere-reinsertion-sociale.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-3-4",
+      "title": "​3.4 - Aide financière pour la réinsertion professionnelle",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/3-4-aide-financiere-reinsertion-professionnelle.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-3-5",
+      "title": "3.5 - Remboursement pour les frais de garde d’enfant",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/3-5-remboursement-frais-garde-enfant.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-3-6",
+      "title": "3.6 - Aide financière pour des mesures de réhabilitation, de réadaptation ou de réinsertion",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/3-6-aide-financiere-rehabilitation-readaptation-reinsertion.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-3-7",
+      "title": "3.7 - Aide financière pour des activités sociales, de loisirs ou sportives favorisant la réinsertion sociale",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/3-7-aide-financiere-discretion-IVAC-reinsertion-sociale.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-3-8",
+      "title": "3.8 - Remboursement des produits de cannabis à des fins médicales​",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/3-8-remboursement-produits-cannabis-fins-medicales.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-3-9",
+      "title": "3.9 - Aide financière pour l’acquisition et l’entraînement d’un chien d’assistance dans le cadre de l’aide financière pour la réinsertion sociale​​",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/3-9-chien-assistance.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-4-1",
+      "title": "​4.1 - Loi visant à favoriser le civisme",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/4-1-loi-favoriser-civisme.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-5-1",
+      "title": "5.1 – Définition et règles générales d’application de la LAPVIC",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/5-1-definitions-regles-generales-LAPVIC.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-5-2",
+      "title": "5.2 - Mesures transitoires relatives à la qualification et aux aides financières",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/5-2-mesures-transitoires-qualification-aides-financieres.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-5-3",
+      "title": "5.3 – Rectification, reconsidération, révision ou contestation d’une décision",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/5-3-rectification-reconsideration-revision-contestation-decision.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-5-4",
+      "title": "​5.4 - Règles applicables aux personnes mineures",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/5-4-regles-personnes-mineures.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-5-5",
+      "title": "5.5 - Recouvrement d’une aide financière",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/5-5-recouvrement-aide-financiere.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "directive-5-6",
+      "title": "5.6 - Exercice d’une demande en justice ou d’un recours subrogatoire",
+      "category": "directives",
+      "sourceKind": "directive",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/5-6-demande-justice-recours-subrogatoire.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "legacy-policy-manual",
+      "title": "IVAC — Manuel des politiques, ancien régime",
+      "category": "legacy",
+      "sourceKind": "legacy-policy",
+      "url": "https://www.ivac.qc.ca/a-propos/Documents/manuel-des-politiques.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "lapvic",
+      "title": "LAPVIC",
+      "category": "governing",
+      "sourceKind": "statute",
+      "url": "https://www.legisquebec.gouv.qc.ca/fr/document/lc/P-9.2.1",
+      "format": "quebec-xml",
+      "instrument": "P-9.2.1"
+    },
+    {
+      "id": "good-citizenship",
+      "title": "Loi visant à favoriser le civisme",
+      "category": "governing",
+      "sourceKind": "statute",
+      "url": "https://www.legisquebec.gouv.qc.ca/fr/document/lc/C-20",
+      "format": "quebec-xml",
+      "instrument": "C-20"
+    },
+    {
+      "id": "public-service",
+      "title": "Loi sur la fonction publique",
+      "category": "ethics-oversight",
+      "sourceKind": "statute",
+      "url": "https://www.legisquebec.gouv.qc.ca/fr/document/lc/F-3.1.1",
+      "format": "quebec-xml",
+      "instrument": "F-3.1.1"
+    },
+    {
+      "id": "access-privacy",
+      "title": "Loi sur l’accès aux documents et la protection des renseignements personnels",
+      "category": "ethics-oversight",
+      "sourceKind": "statute",
+      "url": "https://www.legisquebec.gouv.qc.ca/fr/document/lc/A-2.1",
+      "format": "quebec-xml",
+      "instrument": "A-2.1"
+    },
+    {
+      "id": "administrative-justice",
+      "title": "Loi sur la justice administrative",
+      "category": "ethics-oversight",
+      "sourceKind": "statute",
+      "url": "https://www.legisquebec.gouv.qc.ca/fr/document/lc/J-3",
+      "format": "quebec-xml",
+      "instrument": "J-3"
+    },
+    {
+      "id": "latmp",
+      "title": "Loi sur les accidents du travail et les maladies professionnelles",
+      "category": "concurrent",
+      "sourceKind": "statute",
+      "url": "https://www.legisquebec.gouv.qc.ca/fr/document/lc/A-3.001",
+      "format": "quebec-xml",
+      "instrument": "A-3.001"
+    },
+    {
+      "id": "automobile-insurance",
+      "title": "Loi sur l’assurance automobile",
+      "category": "concurrent",
+      "sourceKind": "statute",
+      "url": "https://www.legisquebec.gouv.qc.ca/fr/document/lc/A-25",
+      "format": "quebec-xml",
+      "instrument": "A-25"
+    },
+    {
+      "id": "civil-code",
+      "title": "Code civil du Québec",
+      "category": "concurrent",
+      "sourceKind": "statute",
+      "url": "https://www.legisquebec.gouv.qc.ca/fr/document/lc/CCQ-1991",
+      "format": "quebec-xml",
+      "instrument": "CCQ-1991"
+    },
+    {
+      "id": "legacy-livac",
+      "title": "Loi sur l’indemnisation des victimes d’actes criminels",
+      "category": "legacy",
+      "sourceKind": "statute",
+      "url": "https://www.legisquebec.gouv.qc.ca/fr/document/lc/I-6",
+      "format": "quebec-xml",
+      "instrument": "I-6"
+    },
+    {
+      "id": "legacy-lat",
+      "title": "Loi sur les accidents du travail",
+      "category": "legacy",
+      "sourceKind": "statute",
+      "url": "https://www.legisquebec.gouv.qc.ca/fr/document/lc/A-3",
+      "format": "quebec-xml",
+      "instrument": "A-3"
+    },
+    {
+      "id": "public-administration",
+      "title": "Loi sur l’administration publique",
+      "category": "ethics-oversight",
+      "sourceKind": "statute",
+      "url": "https://www.legisquebec.gouv.qc.ca/fr/document/lc/A-6.01",
+      "format": "quebec-xml",
+      "instrument": "A-6.01"
+    },
+    {
+      "id": "public-protector",
+      "title": "Loi sur le Protecteur du citoyen",
+      "category": "ethics-oversight",
+      "sourceKind": "statute",
+      "url": "https://www.legisquebec.gouv.qc.ca/fr/document/lc/P-32",
+      "format": "quebec-xml",
+      "instrument": "P-32"
+    },
+    {
+      "id": "lapvic-regulation",
+      "title": "Règlement d’application LAPVIC, annexes incluses",
+      "category": "governing",
+      "sourceKind": "regulation",
+      "url": "https://www.legisquebec.gouv.qc.ca/fr/document/rc/P-9.2.1%2C%20r.%201",
+      "format": "quebec-xml",
+      "instrument": "P-9.2.1, r. 1"
+    },
+    {
+      "id": "public-service-ethics",
+      "title": "Règlement sur l’éthique et la discipline dans la fonction publique",
+      "category": "ethics-oversight",
+      "sourceKind": "regulation",
+      "url": "https://www.legisquebec.gouv.qc.ca/fr/document/rc/F-3.1.1%2C%20r.%203",
+      "format": "quebec-xml",
+      "instrument": "F-3.1.1, r. 3"
+    },
+    {
+      "id": "public-administrators-ethics",
+      "title": "Règlement sur l’éthique et la déontologie des administrateurs publics",
+      "category": "ethics-oversight",
+      "sourceKind": "regulation",
+      "url": "https://www.legisquebec.gouv.qc.ca/fr/document/rc/M-30%2C%20r.%201",
+      "format": "quebec-xml",
+      "instrument": "M-30, r. 1"
+    },
+    {
+      "id": "legacy-regulation-a-3-r-2",
+      "title": "Règlement sur le barème des déficits anatomo-physiologiques",
+      "category": "legacy",
+      "sourceKind": "regulation",
+      "url": "https://www.legisquebec.gouv.qc.ca/fr/document/rc/A-3%2C%20r.%202",
+      "format": "quebec-xml",
+      "instrument": "A-3, r. 2"
+    },
+    {
+      "id": "legacy-regulation-i-6-r-2",
+      "title": "Règlement sur la réadaptation psychothérapeutique des proches des victimes d’actes criminels",
+      "category": "legacy",
+      "sourceKind": "regulation",
+      "url": "https://www.legisquebec.gouv.qc.ca/fr/document/rc/I-6%2C%20r.%202",
+      "format": "quebec-xml",
+      "instrument": "I-6, r. 2"
+    },
+    {
+      "id": "legacy-regulation-i-6-r-1",
+      "title": "Règlement sur la demande et l’avis d’option",
+      "category": "legacy",
+      "sourceKind": "regulation",
+      "url": "https://www.legisquebec.gouv.qc.ca/fr/document/rc/I-6%2C%20r.%201",
+      "format": "quebec-xml",
+      "instrument": "I-6, r. 1"
+    },
+    {
+      "id": "legacy-regulation-a-3-001-r-8",
+      "title": "Règlement sur les frais de déplacement et de séjour, RLRQ, c. A-3.001, r. 8",
+      "category": "legacy",
+      "sourceKind": "regulation",
+      "url": "https://www.legisquebec.gouv.qc.ca/fr/document/rc/A-3.001%2C%20r.%208",
+      "format": "quebec-xml",
+      "instrument": "A-3.001, r. 8"
+    },
+    {
+      "id": "legacy-regulation-a-3-001-r-1",
+      "title": "Règlement sur l'assistance médicale, RLRQ, c. A-3.001, r. 1",
+      "category": "legacy",
+      "sourceKind": "regulation",
+      "url": "https://www.legisquebec.gouv.qc.ca/fr/document/rc/A-3.001%2C%20r.%201",
+      "format": "quebec-xml",
+      "instrument": "A-3.001, r. 1"
+    },
+    {
+      "id": "legacy-regulation-a-3-001-r-9",
+      "title": "Règlement sur les normes et barèmes de l’aide personnelle à domicile, RLRQ, c. A-3.001, r. 9",
+      "category": "legacy",
+      "sourceKind": "regulation",
+      "url": "https://www.legisquebec.gouv.qc.ca/fr/document/rc/A-3.001%2C%20r.%209",
+      "format": "quebec-xml",
+      "instrument": "A-3.001, r. 9"
+    },
+    {
+      "id": "legacy-regulation-a-3-001-r-14",
+      "title": "Règlement sur les programmes de stabilisation sociale et de stabilisation économique, RLRQ, c. A-3.001, r. 14",
+      "category": "legacy",
+      "sourceKind": "regulation",
+      "url": "https://www.legisquebec.gouv.qc.ca/fr/document/rc/A-3.001%2C%20r.%2014",
+      "format": "quebec-xml",
+      "instrument": "A-3.001, r. 14"
+    },
+    {
+      "id": "legacy-regulation-a-3-r-4",
+      "title": "Règlement sur le remboursement d’un vêtement, d’une prothèse ou d’une orthèse endommagé ou brisé, RLRQ, c. A-3, r. 4",
+      "category": "legacy",
+      "sourceKind": "regulation",
+      "url": "https://www.legisquebec.gouv.qc.ca/fr/document/rc/A-3%2C%20r.%204",
+      "format": "quebec-xml",
+      "instrument": "A-3, r. 4"
+    },
+    {
+      "id": "criminal-code",
+      "title": "Code criminel — texte intégral bilingue officiel",
+      "category": "governing",
+      "sourceKind": "statute",
+      "url": "https://laws-lois.justice.gc.ca/PDF/C-46.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "criminal-code-index",
+      "title": "Code criminel — état de mise à jour",
+      "category": "discovery",
+      "sourceKind": "official-index",
+      "url": "https://laws-lois.justice.gc.ca/fra/lois/c-46/",
+      "format": "html",
+      "instrument": null
+    },
+    {
+      "id": "cnesst-ethics-index",
+      "title": "CNESST — éthique et déontologie",
+      "category": "ethics-oversight",
+      "sourceKind": "official-index",
+      "url": "https://www.cnesst.gouv.qc.ca/fr/organisation/documentation/ethique-deontologie",
+      "format": "html",
+      "instrument": null
+    },
+    {
+      "id": "cnesst-administrators-code",
+      "title": "Code d’éthique et de déontologie des administrateurs de la CNESST",
+      "category": "ethics-oversight",
+      "sourceKind": "ethics-framework",
+      "url": "https://www.cnesst.gouv.qc.ca/fr/organisation/documentation/ethique-deontologie/code-dethique-deontologie-administrateurs-publics",
+      "format": "html",
+      "instrument": null
+    },
+    {
+      "id": "cnesst-ethics-guide",
+      "title": "Guide sur l’éthique — CNESST",
+      "category": "ethics-oversight",
+      "sourceKind": "ethics-framework",
+      "url": "https://www.cnesst.gouv.qc.ca/sites/default/files/publications/guide-sur-ethique-cnesst.pdf",
+      "format": "pdf",
+      "instrument": null
+    },
+    {
+      "id": "ivac-review",
+      "title": "IVAC — contester une décision",
+      "category": "ethics-oversight",
+      "sourceKind": "official-guidance",
+      "url": "https://www.ivac.qc.ca/Pages/contester-decision.aspx",
+      "format": "html",
+      "instrument": null
+    },
+    {
+      "id": "permanent-temporary-guidance",
+      "title": "IVAC — somme forfaitaire, séquelles permanentes et atteinte temporaire",
+      "category": "calculation",
+      "sourceKind": "official-guidance",
+      "url": "https://www.ivac.qc.ca/indemnites-services/Pages/somme-forfaitaire-sequelle-permanentes-ou-atteinte-temporaire.aspx",
+      "format": "html",
+      "instrument": null
+    },
+    {
+      "id": "death-benefits-guidance",
+      "title": "IVAC — lump sum death benefit",
+      "category": "calculation",
+      "sourceKind": "official-guidance",
+      "url": "https://www.ivac.qc.ca/en/benefits-and-services/Pages/lump-sum-death-benefit.aspx",
+      "format": "html",
+      "instrument": null
+    },
+    {
+      "id": "other-regimes-guidance",
+      "title": "IVAC ou un autre régime",
+      "category": "concurrent",
+      "sourceKind": "official-guidance",
+      "url": "https://www.ivac.qc.ca/Pages/ivac-ou-autre-regime.aspx",
+      "format": "html",
+      "instrument": null
+    }
+  ]
+}

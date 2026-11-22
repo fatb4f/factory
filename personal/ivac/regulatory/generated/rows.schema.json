@@ -302,6 +302,70 @@
       ],
       "type": "object"
     },
+    "#RegulatoryScheduleOccurrenceRow": {
+      "additionalProperties": false,
+      "properties": {
+        "end": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "exactText": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "severity",
+            "percentage",
+            "alternative",
+            "evaluation-rules"
+          ]
+        },
+        "locator": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "occurrenceID": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "pieceID": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "semantics": {
+          "const": "pending-review"
+        },
+        "sourceVersion": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "start": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "unitKind": {
+          "enum": [
+            "functional",
+            "aesthetic"
+          ]
+        },
+        "unitNumber": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "end",
+        "exactText",
+        "kind",
+        "locator",
+        "occurrenceID",
+        "pieceID",
+        "sourceVersion",
+        "start",
+        "unitKind",
+        "unitNumber"
+      ],
+      "type": "object"
+    },
     "#RegulatoryUnitRow": {
       "additionalProperties": false,
       "properties": {
@@ -370,6 +434,9 @@
     "rule": {
       "$ref": "#/$defs/%23RegulatoryRuleRow"
     },
+    "scheduleOccurrence": {
+      "$ref": "#/$defs/%23RegulatoryScheduleOccurrenceRow"
+    },
     "unit": {
       "$ref": "#/$defs/%23RegulatoryUnitRow"
     }
@@ -382,6 +449,7 @@
     "interpretationComparison",
     "interpretationScenario",
     "rule",
+    "scheduleOccurrence",
     "unit"
   ],
   "type": "object"

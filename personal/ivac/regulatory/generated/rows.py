@@ -30,6 +30,18 @@ class Fact(RootModel[str]):
 
 
 class Kind(Enum):
+    severity = 'severity'
+    percentage = 'percentage'
+    alternative = 'alternative'
+    evaluation_rules = 'evaluation-rules'
+
+
+class UnitKind(Enum):
+    functional = 'functional'
+    aesthetic = 'aesthetic'
+
+
+class Kind1(Enum):
     functional = 'functional'
     aesthetic = 'aesthetic'
 
@@ -142,12 +154,41 @@ class Field23RegulatoryRuleRow(BaseModel):
     unitID: Field23ID
 
 
+class Kind2(Enum):
+    severity = 'severity'
+    percentage = 'percentage'
+    alternative = 'alternative'
+    evaluation_rules = 'evaluation-rules'
+
+
+class Field23RegulatoryScheduleOccurrenceRow(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    end: Annotated[int, Field(ge=1)]
+    exactText: Annotated[str, Field(min_length=1)]
+    kind: Kind2
+    locator: Annotated[str, Field(min_length=1)]
+    occurrenceID: Field23ID
+    pieceID: Field23ID
+    semantics: Literal['pending-review'] = 'pending-review'
+    sourceVersion: Field23ID
+    start: Annotated[int, Field(ge=0)]
+    unitKind: UnitKind
+    unitNumber: Annotated[str, Field(min_length=1)]
+
+
+class Kind3(Enum):
+    functional = 'functional'
+    aesthetic = 'aesthetic'
+
+
 class Field23RegulatoryUnitRow(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
     )
     compendiumID: Field23ID
-    kind: Kind
+    kind: Kind3
     label: Annotated[str, Field(min_length=1)]
     number: Annotated[str, Field(min_length=1)]
     reviewState: ReviewState
@@ -166,6 +207,7 @@ class Model(BaseModel):
     interpretationComparison: Field23InterpretationComparisonRow
     interpretationScenario: Field23RegulatoryInterpretationScenario
     rule: Field23RegulatoryRuleRow
+    scheduleOccurrence: Field23RegulatoryScheduleOccurrenceRow
     unit: Field23RegulatoryUnitRow
 
 
@@ -268,12 +310,29 @@ class RegulatoryRuleRow(BaseModel):
     unitID: Field23ID
 
 
+class RegulatoryScheduleOccurrenceRow(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    end: Annotated[int, Field(ge=1)]
+    exactText: Annotated[str, Field(min_length=1)]
+    kind: Kind
+    locator: Annotated[str, Field(min_length=1)]
+    occurrenceID: Field23ID
+    pieceID: Field23ID
+    semantics: Literal['pending-review'] = 'pending-review'
+    sourceVersion: Field23ID
+    start: Annotated[int, Field(ge=0)]
+    unitKind: UnitKind
+    unitNumber: Annotated[str, Field(min_length=1)]
+
+
 class RegulatoryUnitRow(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
     )
     compendiumID: Field23ID
-    kind: Kind
+    kind: Kind1
     label: Annotated[str, Field(min_length=1)]
     number: Annotated[str, Field(min_length=1)]
     reviewState: ReviewState

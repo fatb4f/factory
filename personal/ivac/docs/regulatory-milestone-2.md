@@ -306,3 +306,46 @@ snapshots and attributed statement comparisons, and generates disposable native
 Python rows with a scoped analytics IR/Ibis diagnostic. This is a partial base,
 not corpus completion or a change to #222 acceptance. See
 [regulatory-workbench.md](regulatory-workbench.md) for boundaries and commands.
+
+## Per-unit schedule serialization checkpoint
+
+`annex-i-2021.schedule-index.json` is a deterministic, CUE-validated source
+navigation projection of the retained 2021 Gazette candidate. It covers all 40
+functional and 8 aesthetic units and partitions each of the 25 sections without
+removing or rewriting a character. Chapter III remains attached as global rules.
+Every one of the 1,076 lexical occurrences has exactly one source-piece owner.
+
+Unit 13 uses a shared bilateral schedule. All eight aesthetic units reference the
+complete aesthetic section because its final percentage matrix is shared; this
+intentionally includes other aesthetic unit bodies as context. References are
+navigation context, not a claim that every cited rule applies to every unit.
+The source pieces preserve page headers and the PDF converter's reading order,
+including duplicated/overlapping text visible in section 13. No automatic
+correction of that text is admitted.
+
+```sh
+python3 scripts/ivac_regulatory_schedule_index.py verify
+python3 scripts/ivac_regulatory_schedule_index.py rows > /tmp/ivac-schedule-occurrences.jsonl
+python3 scripts/test_ivac_regulatory_schedule_index.py
+```
+
+The JSONL export can be loaded with Ibis:
+
+```python
+import ibis
+con = ibis.duckdb.connect()
+t = con.read_json('/tmp/ivac-schedule-occurrences.jsonl')
+psychique = t.filter((t.unitNumber == '1') & (t.kind == 'severity'))
+print(psychique.select('exactText', 'start', 'end').execute())
+```
+
+Rows repeat shared-context occurrences for each referencing unit. Count distinct
+`occurrenceID` for source totals; do not sum rows as if they were distinct classes.
+These are lexical occurrences, including cross-references in prose. They are not
+normalized severity classes, awarded percentages or parsed OR alternatives.
+`semantics=pending-review` is explicit in the index and every exported row.
+
+This checkpoint does **not** complete milestone 2. Full class-row transcription,
+percentage conditions, alternative scope, weighted tables, amendment history and
+case applicability remain unresolved. No medical timeline or case data is read,
+changed or connected by this projection. Existing issue #222 remains open.

@@ -43,6 +43,7 @@ assert first["trackerMetadata"][0]["issueNumber"] == 145
 PY
 
 section "Semantic runtime code generation"
+bash scripts/validate-python-native-bindings.sh
 cue export ./contracts/state:state -e semanticRuntimeProjection --out json >"$tmpdir/runtime-projection.json"
 python3 scripts/generate_semantic_runtime_types.py "$tmpdir/runtime-projection.json" --output "$tmpdir/semantic_context.py"
 cmp -s "$tmpdir/semantic_context.py" runtime/generated/semantic_context.py
