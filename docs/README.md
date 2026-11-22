@@ -2,6 +2,8 @@
 
 Factory documentation is organized by the repository subject it explains rather than by a global document type.
 
+For Wi-Fi, Bluetooth, SDR and Android measurement workflows, see [RF signal processing and wireless assessment](signal-processing/README.md).
+
 ## Layout
 
 Use project/domain-relative top-level directories under `docs/`:
