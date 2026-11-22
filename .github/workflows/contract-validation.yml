@@ -11,7 +11,8 @@ permissions:
 
 jobs:
   validate-contracts:
-    runs-on: ubuntu-latest
+    # Retained Gazette extraction fixtures require Poppler 24.02.0.
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,5 +24,22 @@ jobs:
         with:
           version: v0.16.1
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install source conversion dependency
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+          converter_version=$(pdftotext -v 2>&1 | head -n 1)
+          test "$converter_version" = "pdftotext version 24.02.0"
+
+      - name: Install IVAC validation dependencies
+        run: python3 -m pip install -r scripts/requirements-ivac-regulatory.txt
+
       - name: Validate contracts, fixtures, and admitted artifacts
         run: bash scripts/validate-contracts.sh
+
+      - name: Validate IVAC acquisition and analytical projections
+        run: bash scripts/validate-ivac-regulatory-integration.sh

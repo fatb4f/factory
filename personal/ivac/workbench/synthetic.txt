@@ -1,0 +1,2 @@
+Invented clinical report: class X, 2.5 percent.
+Invented internal opinion: class Y, 0 percent.

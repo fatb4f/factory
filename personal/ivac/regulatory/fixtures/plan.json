@@ -1,0 +1,23 @@
+[
+  {
+    "sourceVersion": "synthetic-2021",
+    "locator": "synthetic alpha",
+    "start": 166,
+    "end": 191,
+    "exactText": "synthetic criterion alpha"
+  },
+  {
+    "sourceVersion": "synthetic-2021",
+    "locator": "synthetic beta",
+    "start": 196,
+    "end": 220,
+    "exactText": "synthetic criterion beta"
+  },
+  {
+    "sourceVersion": "synthetic-2021",
+    "locator": "synthetic gamma",
+    "start": 233,
+    "end": 258,
+    "exactText": "synthetic criterion gamma"
+  }
+]

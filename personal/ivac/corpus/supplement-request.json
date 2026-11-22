@@ -1,0 +1,41 @@
+{
+  "entries": [
+    {
+      "category": "ethics-oversight",
+      "format": "pdf",
+      "id": "cnesst-admin-code-pdf",
+      "instrument": null,
+      "sourceKind": "ethics-framework",
+      "title": "CNESST — Code d’éthique et de déontologie des administrateurs publics et administratrices publiques",
+      "url": "https://www.cnesst.gouv.qc.ca/sites/default/files/documents/code-ethique-deontologie-administrateurs-publics-cnesst_0.pdf"
+    },
+    {
+      "category": "ethics-oversight",
+      "format": "pdf",
+      "id": "cnesst-ethics-access-2026",
+      "instrument": null,
+      "sourceKind": "ethics-framework",
+      "title": "CNESST — guide sur l’éthique, diffusion accès 17 février 2026",
+      "url": "https://www.cnesst.gouv.qc.ca/sites/default/files/documents/2687472sst.pdf"
+    },
+    {
+      "category": "calculation",
+      "format": "pdf",
+      "id": "lapvic-regulation-pdf",
+      "instrument": null,
+      "sourceKind": "regulation",
+      "title": "Règlement LAPVIC — présentation officielle PDF",
+      "url": "https://www.legisquebec.gouv.qc.ca/fr/pdf/cr/P-9.2.1,%20R.%201.pdf"
+    },
+    {
+      "category": "governing",
+      "format": "pdf",
+      "id": "lapvic-act-pdf",
+      "instrument": null,
+      "sourceKind": "statute",
+      "title": "LAPVIC — présentation officielle PDF",
+      "url": "https://www.legisquebec.gouv.qc.ca/fr/pdf/cs/P-9.2.1.pdf"
+    }
+  ],
+  "format": "ivac.official-corpus-request/v1"
+}

@@ -1,0 +1,181 @@
+{
+  "artifacts": {
+    "act-2021-13": {
+      "artifactBytes": 559979,
+      "artifactDigest": "sha256:ac71907c87f38b45f85ca0912e4e8d98bfe17c328a89a4c080133b387fb6fdee",
+      "artifactPath": "personal/ivac/regulatory/sources/act-2021-13.pdf",
+      "conversion": "pdftotext -layout -enc UTF-8",
+      "converterVersion": "pdftotext version 24.02.0",
+      "id": "act-2021-13",
+      "legalEffect": "initial-enactment",
+      "mediaType": "application/pdf",
+      "publicationDate": "2021-05-13",
+      "publicationKind": "enacted-act",
+      "retrievedAt": "2026-10-17T16:50:02.810926Z",
+      "textDigest": "sha256:fc4efa7f080285f226c4455d6eb656d6bac863741506fc8914e9b3426176ad01",
+      "textPath": "personal/ivac/regulatory/sources/act-2021-13.txt",
+      "url": "https://www.publicationsduquebec.gouv.qc.ca/fileadmin/Fichiers_client/lois_et_reglements/LoisAnnuelles/fr/2021/2021C13F.PDF"
+    },
+    "gazette-2021-39": {
+      "artifactBytes": 5773260,
+      "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+      "artifactPath": "personal/ivac/regulatory/sources/gazette-2021-39.pdf",
+      "conversion": "pdftotext -layout -enc UTF-8",
+      "converterVersion": "pdftotext version 24.02.0",
+      "id": "gazette-2021-39",
+      "legalEffect": "initial-enactment",
+      "mediaType": "application/pdf",
+      "publicationDate": "2021-09-29",
+      "publicationKind": "enacted-regulation",
+      "retrievedAt": "2026-10-17T16:49:55.078616Z",
+      "textDigest": "sha256:bb4b3f8a0e2a531b3e8061cf9642c8b8462327934cf64a8e16c6a58eb087b862",
+      "textPath": "personal/ivac/regulatory/sources/gazette-2021-39.txt",
+      "url": "https://www.publicationsduquebec.gouv.qc.ca/fileadmin/gazette/pdf_encrypte/gaz_entiere/2139-F.pdf"
+    },
+    "gazette-2026-04": {
+      "artifactBytes": 1404989,
+      "artifactDigest": "sha256:3601b19284c87a2864453b6818288f9a797320f8884cb79feafaa6731acc655f",
+      "artifactPath": "personal/ivac/regulatory/sources/gazette-2026-04.pdf",
+      "conversion": "pdftotext -layout -enc UTF-8",
+      "converterVersion": "pdftotext version 24.02.0",
+      "id": "gazette-2026-04",
+      "legalEffect": "not-established",
+      "mediaType": "application/pdf",
+      "publicationDate": "2026-01-28",
+      "publicationKind": "proposal",
+      "retrievedAt": "2026-10-17T16:50:09.590188Z",
+      "textDigest": "sha256:dff21840fc2b23e3b0b873ea5510cd52cdb8c824fc73d2becb363a75f81d56d6",
+      "textPath": "personal/ivac/regulatory/sources/gazette-2026-04.txt",
+      "url": "https://www.publicationsduquebec.gouv.qc.ca/fileadmin/gazette/pdf_encrypte/gaz_entiere/2604-F.pdf"
+    }
+  },
+  "asOf": "2026-10-17",
+  "caseApplicability": "unresolved",
+  "findings": [
+    {
+      "citation": {
+        "end": 149198,
+        "exactText": "\n179.      Toute décision définitive qui, avant la date de l’entrée en vigueur de la\nprésente loi, statue sur l’admissibilité et accorde le bénéfice d’un avantage en\nvertu de la Loi sur l’indemnisation des victimes d’actes criminels, telle qu’elle\nse lisait à la date qui précède celle de l’entrée en vigueur de la présente loi, est\nmaintenue et toute rente, toute indemnité ou tout autre bénéfice est versé ou\ncontinue d’être versé conformément aux dispositions de cette loi, et ce, tant\nque son versement ne cesse pas du fait de l’application des dispositions de\ncette loi.\n\n\n\n\n                               63\n\f   Malgré le premier alinéa, si une indemnité ou un autre bénéfice cesse d’être\nversé du fait de l’application de la Loi sur l’indemnisation des victimes d’actes\ncriminels, telle qu’elle se lisait à la date qui précède celle de l’entrée en vigueur\nde la présente loi, et que le besoin ayant entraîné le versement de cette indemnité\nou de ce bénéfice revient après la date de l’entrée en vigueur de la présente loi,\nle régime des dispositions de la présente loi s’applique alors et les aides\nfinancières applicables, le cas échéant, sont celles de la présente loi.\n\n   De même, lorsque le besoin d’une personne déclarée admissible en vertu de\nla Loi sur l’indemnisation des victimes d’actes criminels, telle qu’elle se lisait\nà la date qui précède celle de l’entrée en vigueur de la présente loi, pour une\nrente, une indemnité ou un autre bénéfice prévu par cette loi survient après la\ndate de l’entrée en vigueur de la présente loi, le régime des dispositions de la\nprésente loi s’applique alors et les aides financières applicables, le cas échéant,\nsont celles de la présente loi.\n\n  Aux fins du présent article :\n\n   1° une personne déclarée admissible au sens du paragraphe a du premier\nalinéa de l’article 3 de la Loi sur l’indemnisation des victimes d’actes criminels,\ntelle qu’elle se lisait à la date qui précède celle de l’entrée en vigueur de la\nprésente loi, est qualifiée au sens du paragraphe 1° du premier alinéa de\nl’article 15 de la présente loi;\n\n   2° une personne à charge déclarée admissible au sens du sous-paragraphe l\ndu paragraphe 1 de l’article 2 de la Loi sur les accidents du travail (chapitre A-3)\nest qualifiée au sens de l’un des paragraphes 3° à 5° du premier alinéa de\nl’article 15 de la présente loi, selon le cas;\n\n  3° un père ou une mère déclaré admissible au sens de l’article 7 de la Loi\nsur l’indemnisation des victimes d’actes criminels, telle qu’elle se lisait à la\ndate qui précède celle de l’entrée en vigueur de la présente loi, ou déclaré\nadmissible à titre de proche en vertu de l’article 5.1 de cette loi est qualifié au\nsens du paragraphe 2° du premier alinéa de l’article 15 de la présente loi;\n\n  4° un proche autre qu’un enfant, qu’un parent ou qu’un conjoint déclaré\nadmissible au sens du deuxième alinéa de l’article 5.1 de la Loi sur l’indemnisation\ndes victimes d’actes criminels, telle qu’elle se lisait à la date qui précède celle\nde l’entrée en vigueur de la présente loi, est qualifié au sens du paragraphe 6°\ndu premier alinéa de l’article 15 de la présente loi;\n\n   5° une personne déclarée admissible au sens du paragraphe b ou c du premier\nalinéa de l’article 3 de la Loi sur l’indemnisation des victimes d’actes criminels,\ntelle qu’elle se lisait à la date qui précède celle de l’entrée en vigueur de la\nprésente loi, est qualifiée au sens du paragraphe 1° ou 2° du premier alinéa de\nl’article 16 de la présente loi.\n\n\n\n\n                               64\n",
+        "locator": "2021, c.13, article 179 (texte original)",
+        "sourceVersion": "act-2021-13",
+        "start": 145665
+      },
+      "id": "act-179",
+      "interpretation": "Prior final decisions and stated exceptions. Original text only; current applicability requires legal review.",
+      "kind": "transitional-provision",
+      "legalEffect": "initial-text-only"
+    },
+    {
+      "citation": {
+        "end": 150803,
+        "exactText": "\f180.    Toute demande présentée à la Commission des normes, de l’équité, de\nla santé et de la sécurité du travail avant la date de l’entrée en vigueur de la\nprésente loi et qui n’a fait l’objet d’aucune décision sur l’admissibilité de même\nque toute demande présentée après cette date dont l’infraction criminelle\nconcernée a été perpétrée avant cette date sont recevables si elles remplissent\nl’une des conditions suivantes :\n\n   1° à la date de la perpétration de l’infraction criminelle concernée, elle\naurait été recevable en vertu de la Loi sur l’indemnisation des victimes d’actes\ncriminels, telle qu’elle se lisait à la date qui précède celle de l’entrée en vigueur\nde la présente loi;\n\n   2° elle a été présentée par une personne qui aurait été admissible en vertu\ndu paragraphe a du premier alinéa de l’article 3 de la Loi sur l’indemnisation\ndes victimes d’actes criminels, telle qu’elle se lisait à la date qui précède celle\nde l’entrée en vigueur de la présente loi, et, à la date de la perpétration de\nl’infraction criminelle concernée, elle aurait été refusée en vertu de cette loi\npour l’unique motif qu’elle n’a pas été présentée dans le délai prescrit et que\nl’infraction criminelle concernée en est une qui implique de la violence subie\npendant l’enfance, de la violence sexuelle ou de la violence conjugale.\n\n  La personne victime dont la demande est recevable en vertu du présent article\na droit aux aides financières prévues par la présente loi, si elle remplit les\nconditions prescrites pour obtenir celles-ci.\n\n  Le quatrième alinéa de l’article 179 s’applique au présent article.\n",
+        "locator": "2021, c.13, article 180 (texte original)",
+        "sourceVersion": "act-2021-13",
+        "start": 149198
+      },
+      "id": "act-180",
+      "interpretation": "Pending and later applications for pre-commencement offences, subject to stated conditions. Original text only; current applicability requires legal review.",
+      "kind": "transitional-provision",
+      "legalEffect": "initial-text-only"
+    },
+    {
+      "citation": {
+        "end": 151839,
+        "exactText": "\n181.   Les dispositions de la Loi sur l’indemnisation des victimes d’actes\ncriminels, telles qu’elles se lisaient à la date qui précède celle de l’entrée en\nvigueur de la présente loi, s’appliquent aux demandes suivantes qui ont été\nprésentées avant la date de l’entrée en vigueur de la présente loi, dont le\nréclamant a été déclaré admissible avant cette date et qui n’ont fait l’objet\nd’aucune décision définitive avant cette date :\n\n  1° une demande qui concerne le possible versement d’une indemnité pour\nune incapacité totale et permanente ou partielle et permanente, pourvu que\ncette incapacité ait existé à cette date;\n\n   2° une demande qui concerne un avantage autre que le possible versement\nd’une indemnité pour une incapacité totale et permanente ou partielle et\npermanente, pourvu que le besoin qui a donné lieu à cette demande ait existé\nà cette date.\n\n   Les dispositions des deuxième, troisième et quatrième alinéas de l’article 179\ns’appliquent, avec les adaptations nécessaires.\n\n\n\n\n                               65\n",
+        "locator": "2021, c.13, article 181 (texte original)",
+        "sourceVersion": "act-2021-13",
+        "start": 150803
+      },
+      "id": "act-181",
+      "interpretation": "Old-law treatment for specified pending permanent-incapacity and other requests. Original text only; current applicability requires legal review.",
+      "kind": "transitional-provision",
+      "legalEffect": "initial-text-only"
+    },
+    {
+      "citation": {
+        "end": 152307,
+        "exactText": "\f182.     Malgré le premier alinéa de l’article 179 et le premier alinéa de\nl’article 181, toute indemnité versée pour une incapacité totale et temporaire\nou pour une incapacité partielle et temporaire en vertu de la Loi sur\nl’indemnisation des victimes d’actes criminels, telle qu’elle se lisait à la date\nqui précède celle de l’entrée en vigueur de la présente loi, cesse au plus tard à\nla date qui suit de trois ans celle de l’entrée en vigueur de la présente loi.\n",
+        "locator": "2021, c.13, article 182 (texte original)",
+        "sourceVersion": "act-2021-13",
+        "start": 151839
+      },
+      "id": "act-182",
+      "interpretation": "Temporary-benefit end rule in original text; subsequent amendments remain unaudited. Original text only; current applicability requires legal review.",
+      "kind": "transitional-provision",
+      "legalEffect": "initial-text-only"
+    },
+    {
+      "citation": {
+        "end": 153891,
+        "exactText": "\n183.      Toute personne visée par une décision définitive qui, avant la date de\nl’entrée en vigueur de la présente loi, lui refuse l’admissibilité au régime prévu\npar la Loi sur l’indemnisation des victimes d’actes criminels, telle qu’elle se\nlisait à la date qui précède celle de l’entrée en vigueur de la présente loi, peut\nfaire une demande de qualification en vertu de la présente loi si :\n\n   1° l’infraction criminelle concernée implique de la violence subie pendant\nl’enfance, de la violence sexuelle ou de la violence conjugale;\n\n   2° le refus est pour l’unique motif que la demande n’a pas été présentée\ndans le délai prescrit en vertu de la Loi sur l’indemnisation des victimes d’actes\ncriminels, telle qu’elle se lisait à la date qui précède celle de l’entrée en vigueur\nde la présente loi;\n\n  3° la nouvelle demande est présentée avant la date qui suit de trois ans celle\nde l’entrée en vigueur de la présente loi.\n\n  Les conditions d’admissibilité de la Loi sur l’indemnisation des victimes\nd’actes criminels, telle qu’elle se lisait à la date qui précède celle de l’entrée\nen vigueur de la présente loi, sauf celle mentionnée au paragraphe 2° de l’alinéa\nprécédent, s’appliquent également à une demande de qualification présentée\nen vertu du présent article.\n\n   La personne victime dont la demande de qualification est recevable en vertu\ndu présent article a droit aux aides financières prévues par la présente loi, si\nelle remplit les conditions prescrites pour obtenir celles-ci.\n\n  L’article 180 ne s’applique pas à une demande faite en vertu du présent article.\n",
+        "locator": "2021, c.13, article 183 (texte original)",
+        "sourceVersion": "act-2021-13",
+        "start": 152307
+      },
+      "id": "act-183",
+      "interpretation": "Conditional requalification following certain time-limit refusals; original deadlines are not treated as current law. Original text only; current applicability requires legal review.",
+      "kind": "transitional-provision",
+      "legalEffect": "initial-text-only"
+    },
+    {
+      "citation": {
+        "end": 154553,
+        "exactText": "\n184.      Aux fins des dispositions du premier alinéa de l’article 179 et du premier\nalinéa de l’article 181 et afin de s’appliquer à toute demande présentée en vertu\nde la Loi sur l’indemnisation des victimes d’actes criminels, telle qu’elle se\nlisait à la date qui précède celle de l’entrée en vigueur de la présente loi, est\nmaintenue en vigueur toute disposition contenue dans une autre loi ou dans un\nrèglement qui prévoit des modalités d’application ou qui prévoit des modalités\naccessoires au régime de cette loi.\n\n\n\n\n                               66\n\fCHAPITRE III\nDISPOSITIONS TRANSITOIRES APPLICABLES EN REGARD DE LA\nLOI VISANT À FAVORISER LE CIVISME\n",
+        "locator": "2021, c.13, article 184 (texte original)",
+        "sourceVersion": "act-2021-13",
+        "start": 153891
+      },
+      "id": "act-184",
+      "interpretation": "Retention of ancillary old-law provisions for the identified requests. Original text only; current applicability requires legal review.",
+      "kind": "transitional-provision",
+      "legalEffect": "initial-text-only"
+    },
+    {
+      "citation": {
+        "end": 164074,
+        "exactText": "\n198.    Les dispositions de la présente loi entrent en vigueur le 13 octobre 2021\nou à la date antérieure fixée par le gouvernement.\n\n\n\n\n                               70\n\f\f\f",
+        "locator": "2021, c.13, article 198 (texte original)",
+        "sourceVersion": "act-2021-13",
+        "start": 163899
+      },
+      "id": "act-198",
+      "interpretation": "Act commencement: 13 October 2021, subject to stated exceptions. Original text only; current applicability requires legal review.",
+      "kind": "commencement",
+      "legalEffect": "initial-text-only"
+    },
+    {
+      "citation": {
+        "end": 597971,
+        "exactText": "219.      Le présent règlement entre en vigueur le\n1er novembre de l’année qui précède celle pour laquelle          13 octobre 2021.",
+        "locator": "D.1266-2021, article 219",
+        "sourceVersion": "gazette-2021-39",
+        "start": 597839
+      },
+      "id": "regulation-219",
+      "interpretation": "Original regulation commencement is 13 October 2021. No repeal or later effective end is inferred.",
+      "kind": "commencement",
+      "legalEffect": "initial-text-only"
+    },
+    {
+      "citation": {
+        "end": 88930,
+        "exactText": "Partie 2               GAZETTE OFFICIELLE DU QUÉBEC, 28 janvier 2026, 158e année, no 4                                      328\n                                                                                                     PROJETS DE RÈGLEMENT\n\n\n\n\nProjet de règlement                                                Règlement modifiant le Règlement\nLoi visant à aider les personnes victimes d’infractions            d’application de la Loi visant à aider\ncriminelles et à favoriser leur rétablissement                     les personnes victimes d’infractions\n(chapitre P-9.2.1)                                                 criminelles et à favoriser leur\n                                                                   rétablissement\nApplication de la Loi visant à aider les personnes\nvictimes d’infractions criminelles et à favoriser                  Loi visant à aider les personnes victimes d’infractions\nleur rétablissement                                                criminelles et à favoriser leur rétablissement\n— Modification                                                     (chapitre P-9.2.1, a. 19, 24, 64).\n\n   Avis est donné par les présentes, conformément aux              1.     L’article 9 du Règlement d’application de la\narticles 10 et 11 de la Loi sur les règlements (chapitre           Loi visant à aider les personnes victimes d’infractions cri-\nR-18.1), que le projet de règlement modifiant le Règlement         minelles et à favoriser leur rétablissement (chapitre P-9.2.1,\nd’application de la Loi visant à aider les personnes vic-          r. 1) est modifié par l’insertion, dans le paragraphe 13° et\ntimes d’infractions criminelles et à favoriser leur réta-          après « paragraphes 1 à 4 », de « ou par une infirmière\nblissement, dont le texte apparaît ci-dessous, pourra être         praticienne spécialisée visée au paragraphe 5° ».\nédicté par le gouvernement à l’expiration d’un délai de\n45 jours à compter de la présente publication.                     2.    Les articles 39, 41 et 46 de ce règlement sont\n                                                                   modifiés par l’insertion, après « paragraphes 1 à 4 », de\n   Ce projet de règlement modifie le Règlement d’appli-            « ou par une infirmière praticienne spécialisée visée au\ncation de la Loi visant à aider les personnes victimes             paragraphe 5° ».\nd’infractions criminelles et à favoriser leur rétablissement\n(chapitre P-9.2.1, r. 1) afin d’ajouter les infirmières prati-     3. L’article 76 de ce règlement est modifié par l’inser-\nciennes spécialisées à titre de professionnelles de la santé       tion, après « paragraphes 1 à 4 », de « ou une infirmière\nhabilitées à faire une évaluation de santé au soutien d’une        praticienne spécialisée visée au paragraphe 5° ».\ndemande d’aide financière faite en vertu de la Loi visant\nà aider les personnes victimes d’infractions criminelles           4.    L’article 88 de ce règlement est modifié par l’inser-\net à favoriser leur rétablissement (chapitre P-9.2.1) et de        tion, dans le premier alinéa et après « paragraphes 1 à 4 »,\nprévoir le remboursement du coût réel des frais enga-              de « ou d’une infirmière praticienne spécialisée visée au\ngés pour l’achat de médicaments génériques et, de façon            paragraphe 5° ».\nexceptionnelle, de médicaments innovateurs, en harmonie\navec les autres régimes publics d’indemnisation.                   5. L’article 90 de ce règlement est modifié, par l’inser-\n                                                                   tion, dans le paragraphe 2° du premier alinéa et après\n  Des renseignements additionnels concernant ce projet             « paragraphes 1 à 4 », de « ou par une infirmière prati-\nde règlement peuvent être obtenus en s’adressant à                 cienne spécialisée visée au paragraphe 5° ».\nMe Anik Ouimet, Direction du soutien aux partenariats et\naux programmes, ministère de la Justice, édifice Louis-            6. L’article 133 de ce règlement est modifié :\nPhilippe-Pigeon, 1200, route de l’Église, Québec (Québec)\nG1V 4M1, courriel : anik.ouimet@justice.gouv.qc.ca.                   1° par l’insertion, dans le premier alinéa et après\n                                                                   « paragraphes 1 à 4 », de « ou par une infirmière prati-\n   Toute personne intéressée ayant des commentaires à              cienne spécialisée visée au paragraphe 5° »;\nformuler au sujet de ce projet de règlement est priée de\nles faire parvenir par écrit, avant l’expiration du délai de          2° dans le deuxième alinéa :\n45 jours mentionné ci-dessus, à la Secrétaire générale du\nministère de la Justice, édifice Louis-Philippe-Pigeon,                a) par le remplacement de « la prescription » par\n1200, route de l’Église, Québec (Québec) G1V 4M1, cour-            « l’ordonnance », partout où cela se trouve;\nriel : commentaires.prepublication@justice.gouv.qc.ca.\n                                                                      b) par l’insertion, après « paragraphes 1 à 4 », de\nLe ministre de la Justice,                                         « ou de l’infirmière praticienne spécialisée visée au para-\nSIMON JOLIN-BARRETTE                                               graphe 5° ».\n\n\n\n\n                                                © Éditeur officiel du Québec, 2026\n\fPartie 2               GAZETTE OFFICIELLE DU QUÉBEC, 28 janvier 2026, 158e année, no 4                                    329\n                                                                                                    PROJETS DE RÈGLEMENT\n\n\n\n\n7.   L’article 137 de ce règlement est remplacé par le             12.   L’article 160 de ce règlement est modifié, dans le\nsuivant :                                                          deuxième alinéa :\n\n   « 137. Le ministre rembourse le coût réel des frais                1° par l’insertion, dans le paragraphe 1° et après\nengagés pour l’achat de médicaments lorsqu’ils sont                « paragraphes 1 à 4 », de « ou d’une infirmière praticienne\nprescrits par un professionnel de la santé visé aux                spécialisée visée au paragraphe 5° »;\nparagraphes 1° à 4° ou par une infirmière praticienne\nspécialisée visée au paragraphe 5° du premier alinéa de               2° par l’insertion, dans le paragraphe 2° et après\nl’article 17. Les médicaments auxquels a droit la personne         « paragraphes 1 à 4 », de « ou une infirmière praticienne\nvictime sont les médicaments génériques ou biosimilaires.          spécialisée visée au paragraphe 5° ».\n\n   Malgré le premier alinéa, le ministre rembourse le              13. L’article 162 de ce règlement est modifié :\ncoût réel des frais engagés pour l’achat de médicaments\ninnovateurs ou biologiques de référence dans l’une des                1° par l’insertion, dans le deuxième alinéa et après\nsituations suivantes :                                             « paragraphes 1 à 4 », de « ou d’une infirmière praticienne\n                                                                   spécialisée visée au paragraphe 5° »;\n   1° aucun médicament générique ou biosimilaire n’est\ndisponible sur le marché;                                             2° par l’insertion, dans le troisième alinéa et après\n                                                                   « paragraphes 1 à 4 », de « ou d’une infirmière praticienne\n   2° le professionnel de la santé visé au premier alinéa          spécialisée visée au paragraphe 5° ».\ndemande, sur l’ordonnance, de ne pas substituer le\nmédicament prescrit par un médicament générique ou                 14.    L’article 189 de ce règlement est modifié par le\nbiosimilaire.                                                      remplacement du paragraphe 10° par le suivant :\n\n   Les médicaments dont le coût engagé pour leur achat                « 10° séjourne hors du Québec pour recevoir les soins\nest remboursable sont les substances homologuées par               requis par son état physique ou mental, sur recommanda-\nSanté Canada auxquelles un numéro d’identification d’un            tion écrite d’un médecin visé au paragraphe 1° ou d’une\nmédicament a été attribué. ».                                      infirmière praticienne spécialisée visée au paragraphe 5°\n                                                                   du premier alinéa de l’article 17 et pour la durée que ces\n8.   L’article 139 de ce règlement est modifié, dans le            derniers indiquent. ».\npremier alinéa :\n                                                                   15.    L’article 205 de ce règlement est modifié par le\n   1° par l’insertion après « paragraphes 1 à 4 », de              remplacement du paragraphe 2° par le suivant :\n« ou l’infirmière praticienne spécialisée visée au para-\ngraphe 5° »;                                                          « 2° une ordonnance du médecin visé au paragraphe 1°\n                                                                   ou d’une infirmière praticienne spécialisée visée au para-\n   2° par le remplacement de « celle-ci » par « la personne        graphe 5° du premier alinéa de l’article 17 atteste que\nvictime ».                                                         la personne victime doit être transportée par ambulance\n                                                                   entre 2 établissements visés par ces lois ou entre la rési-\n9. L’article 148 de ce règlement est modifié par l’inser-          dence de celle-ci et un tel établissement. ».\ntion, dans le paragraphe b et après « paragraphes 1 à 4 »,\nde « ou une infirmière praticienne spécialisée visée au            DISPOSITIONS TRANSITOIRE ET FINALE\nparagraphe 5° ».\n                                                                   16. Lorsqu’une ordonnance est exigée comme condi-\n10.      L’article 153 de ce règlement est modifié par             tion en vertu du Règlement d’application de la Loi visant\nl’insertion, dans le paragraphe 1° et après « paragraphes 1        à aider les personnes victimes d’infractions criminelles\nà 4 », de « ou d’une infirmière praticienne spécialisée visée      et à favoriser leur rétablissement (chapitre P-9.2.1, r. 1),\nau paragraphe 5° ».                                                le ministre accepte toute ordonnance faite par un pro-\n                                                                   fessionnel de la santé visé aux paragraphes 1° à 4° du\n11.      L’article 156 de ce règlement est modifié par             premier alinéa de l’article 17 de ce règlement avant le\nl’insertion, dans le troisième alinéa et après « paragraphes 1     1er juillet 2026.\nà 4 », de « ou d’une infirmière praticienne spécialisée visée\nau paragraphe 5° ».\n\n\n\n                                                © Éditeur officiel du Québec, 2026\n\fPartie 2              GAZETTE OFFICIELLE DU QUÉBEC, 28 janvier 2026, 158e année, no 4                330\n                                                                                    PROJETS DE RÈGLEMENT\n\n\n\n\n   Lorsqu’une telle ordonnance concerne un médica-\nment, la personne victime a droit, malgré l’article 137\ndu Règlement d’application de la Loi visant à aider les\npersonnes victimes d’infractions criminelles et à favoriser\nleur rétablissement, tel que remplacé par l’article 7 du pré-\nsent règlement, au remboursement du coût réel des frais\nengagés pour l’achat de tout médicament prescrit par un\nprofessionnel de la santé visé aux paragraphes 1° à 4° du\npremier alinéa de l’article 17 du Règlement d’application\nde la Loi visant à aider les personnes victimes d’infrac-\ntions criminelles et à favoriser leur rétablissement jusqu’à\nl’arrivée à échéance des renouvellements de médicament\nsur cette ordonnance ou, au plus tard, jusqu’au 8 décembre\n2026.\n\n17. Le présent règlement entre en vigueur le 1er juillet\n2026.\n\n87136",
+        "locator": "Gazette 28 janvier 2026, pages 328–330, projet 87136",
+        "sourceVersion": "gazette-2026-04",
+        "start": 77013
+      },
+      "id": "proposal-2026-01-28",
+      "interpretation": "Proposal concerning health professionals and medication reimbursements. Its proposed commencement does not establish adoption. It does not serialize a later enacted Annex I version.",
+      "kind": "proposal",
+      "legalEffect": "not-established"
+    }
+  ],
+  "format": "ivac.regulatory-history-audit/v1",
+  "status": "incomplete",
+  "unresolved": [
+    "Acquire official later consolidations and provision histories; repeated direct Légis Québec requests return HTTP 502.",
+    "Audit all amendments and notices from 2021 through the research date; these artifacts do not prove Annex I unchanged.",
+    "Find any final enactment following proposal 87136; do not infer enactment from a draft commencement clause.",
+    "Review subsequent amendments to transitional provisions and select case applicability explicitly."
+  ]
+}

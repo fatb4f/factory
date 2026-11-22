@@ -1,0 +1,16 @@
+{
+  "artifactBytes": 5773260,
+  "artifactDigest": "sha256:2594c7d9295a164143e4d0ca05f47fa92f988788911381b161565a619eb71f9d",
+  "artifactPath": "personal/ivac/regulatory/sources/gazette-2021-39.pdf",
+  "conversion": "pdftotext -layout -enc UTF-8",
+  "converterVersion": "pdftotext version 24.02.0",
+  "id": "gazette-2021-39",
+  "legalEffect": "initial-enactment",
+  "mediaType": "application/pdf",
+  "publicationDate": "2021-09-29",
+  "publicationKind": "enacted-regulation",
+  "retrievedAt": "2026-10-17T16:49:55.078616Z",
+  "textDigest": "sha256:bb4b3f8a0e2a531b3e8061cf9642c8b8462327934cf64a8e16c6a58eb087b862",
+  "textPath": "personal/ivac/regulatory/sources/gazette-2021-39.txt",
+  "url": "https://www.publicationsduquebec.gouv.qc.ca/fileadmin/gazette/pdf_encrypte/gaz_entiere/2139-F.pdf"
+}

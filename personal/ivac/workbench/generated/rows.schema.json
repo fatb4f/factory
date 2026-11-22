@@ -1,0 +1,217 @@
+{
+  "$defs": {
+    "#ID": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "#RecordKind": {
+      "enum": [
+        "filing",
+        "clinical-evaluation",
+        "internal-opinion",
+        "formal-decision",
+        "supplement",
+        "review"
+      ]
+    },
+    "#RegulatoryDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "#WorkbenchAnchorRow": {
+      "additionalProperties": false,
+      "properties": {
+        "anchorID": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "artifactDigest": {
+          "$ref": "#/$defs/%23RegulatoryDigest"
+        },
+        "end": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "evidenceID": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "exactText": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "page": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "start": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "textDigest": {
+          "$ref": "#/$defs/%23RegulatoryDigest"
+        },
+        "transcription": {
+          "enum": [
+            "machine-unreviewed",
+            "image-checked"
+          ]
+        },
+        "workbenchID": {
+          "$ref": "#/$defs/%23ID"
+        }
+      },
+      "required": [
+        "anchorID",
+        "artifactDigest",
+        "end",
+        "evidenceID",
+        "exactText",
+        "page",
+        "start",
+        "textDigest",
+        "transcription",
+        "workbenchID"
+      ],
+      "type": "object"
+    },
+    "#WorkbenchStatementAnchorRow": {
+      "additionalProperties": false,
+      "properties": {
+        "anchorID": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "statementID": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "workbenchID": {
+          "$ref": "#/$defs/%23ID"
+        }
+      },
+      "required": [
+        "anchorID",
+        "statementID",
+        "workbenchID"
+      ],
+      "type": "object"
+    },
+    "#WorkbenchStatementRow": {
+      "additionalProperties": false,
+      "properties": {
+        "assertion": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "caseID": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "classLabel": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "classState": {
+          "enum": [
+            "recorded",
+            "unknown"
+          ]
+        },
+        "legalBasisState": {
+          "enum": [
+            "cited",
+            "unknown"
+          ]
+        },
+        "maximum": {
+          "maximum": 100,
+          "minimum": 0,
+          "type": "number"
+        },
+        "minimum": {
+          "maximum": 100,
+          "minimum": 0,
+          "type": "number"
+        },
+        "percentageKind": {
+          "enum": [
+            "fixed",
+            "range",
+            "not-specified"
+          ]
+        },
+        "percentageState": {
+          "enum": [
+            "recorded",
+            "unknown"
+          ]
+        },
+        "reason": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "recordID": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "recordKind": {
+          "$ref": "#/$defs/%23RecordKind"
+        },
+        "snapshotID": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "sourceVersion": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "statementID": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "status": {
+          "const": "attributed-source-statement"
+        },
+        "topic": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "unitID": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "value": {
+          "maximum": 100,
+          "minimum": 0,
+          "type": "number"
+        },
+        "workbenchID": {
+          "$ref": "#/$defs/%23ID"
+        }
+      },
+      "required": [
+        "assertion",
+        "caseID",
+        "classState",
+        "legalBasisState",
+        "percentageState",
+        "recordID",
+        "recordKind",
+        "snapshotID",
+        "statementID",
+        "topic",
+        "workbenchID"
+      ],
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "anchor": {
+      "$ref": "#/$defs/%23WorkbenchAnchorRow"
+    },
+    "statement": {
+      "$ref": "#/$defs/%23WorkbenchStatementRow"
+    },
+    "statementAnchor": {
+      "$ref": "#/$defs/%23WorkbenchStatementAnchorRow"
+    }
+  },
+  "required": [
+    "anchor",
+    "statement",
+    "statementAnchor"
+  ],
+  "type": "object"
+}

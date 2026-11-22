@@ -1,0 +1,407 @@
+{
+  "apiVersion": "ivac.regulatory-workbench/v1",
+  "kind": "RegulatoryWorkbench",
+  "id": "synthetic-workbench",
+  "usage": "synthetic-test",
+  "caseID": "synthetic-case",
+  "subject": {
+    "id": "subject"
+  },
+  "axes": {
+    "axis": {
+      "id": "axis",
+      "label": "Synthetic assessment axis"
+    }
+  },
+  "corpusTargets": {
+    "target": {
+      "id": "target",
+      "instrument": "SYNTHETIC-NOT-LAW",
+      "scope": [
+        "synthetic schedule only"
+      ],
+      "sourceVersionIDs": [
+        "synthetic-2021"
+      ],
+      "coverage": "partial",
+      "gaps": [
+        "Entire official corpus absent; invented fixture only."
+      ]
+    }
+  },
+  "corpusVersions": {
+    "synthetic-2021": {
+      "source": {
+        "id": "synthetic-2021",
+        "instrument": "SYNTHETIC-NOT-LAW",
+        "jurisdiction": "CA-QC",
+        "language": "fr",
+        "publisher": "synthetic test publisher",
+        "url": "https://example.invalid/synthetic",
+        "consolidatedAsOf": "2021-10-13",
+        "retrievedAt": "2026-10-16T00:00:00Z",
+        "contentKind": "synthetic",
+        "mediaType": "text/plain; charset=utf-8",
+        "snapshotDigest": "sha256:9f085d031090ad585a35148ac93fe236a663eb65dcb3aa781d301a1413847048",
+        "snapshotPath": "personal/ivac/regulatory/fixtures/synthetic.txt",
+        "origin": {
+          "digest": "sha256:9f085d031090ad585a35148ac93fe236a663eb65dcb3aa781d301a1413847048",
+          "path": "personal/ivac/regulatory/fixtures/synthetic.txt",
+          "mediaType": "text/plain; charset=utf-8",
+          "conversion": "identity/v1"
+        },
+        "provision": "synthetic schedule",
+        "effective": {
+          "end": "bounded",
+          "until": "2027-01-01",
+          "from": "2021-10-13"
+        }
+      },
+      "publicationKind": "enacted-regulation",
+      "publicationDate": {
+        "state": "unknown",
+        "reason": "not recorded in synthetic source"
+      },
+      "provisionVersion": {
+        "state": "unknown",
+        "reason": "not recorded in synthetic source"
+      },
+      "compendium": {
+        "id": "synthetic-compendium",
+        "source": {
+          "id": "synthetic-2021",
+          "instrument": "SYNTHETIC-NOT-LAW",
+          "jurisdiction": "CA-QC",
+          "language": "fr",
+          "publisher": "synthetic test publisher",
+          "url": "https://example.invalid/synthetic",
+          "consolidatedAsOf": "2021-10-13",
+          "retrievedAt": "2026-10-16T00:00:00Z",
+          "contentKind": "synthetic",
+          "mediaType": "text/plain; charset=utf-8",
+          "snapshotDigest": "sha256:9f085d031090ad585a35148ac93fe236a663eb65dcb3aa781d301a1413847048",
+          "snapshotPath": "personal/ivac/regulatory/fixtures/synthetic.txt",
+          "origin": {
+            "digest": "sha256:9f085d031090ad585a35148ac93fe236a663eb65dcb3aa781d301a1413847048",
+            "path": "personal/ivac/regulatory/fixtures/synthetic.txt",
+            "mediaType": "text/plain; charset=utf-8",
+            "conversion": "identity/v1"
+          },
+          "provision": "synthetic schedule",
+          "effective": {
+            "end": "bounded",
+            "until": "2027-01-01",
+            "from": "2021-10-13"
+          }
+        },
+        "coverage": "partial",
+        "coverageNote": "Invented data tests structure only.",
+        "units": {
+          "unitA": {
+            "id": "unitA",
+            "number": "A",
+            "label": "Synthetic unit",
+            "kind": "functional",
+            "citation": {
+              "sourceVersion": "synthetic-2021",
+              "locator": "synthetic unit A",
+              "start": 32,
+              "end": 59,
+              "exactText": "Unit A: synthetic function."
+            },
+            "evaluationRules": [
+              {
+                "sourceVersion": "synthetic-2021",
+                "locator": "synthetic rule",
+                "start": 60,
+                "end": 116,
+                "exactText": "Rule: retain separate clinical and statutory assessment."
+              }
+            ],
+            "classes": {
+              "classA": {
+                "id": "classA",
+                "label": "Synthetic class",
+                "citation": {
+                  "sourceVersion": "synthetic-2021",
+                  "locator": "synthetic class",
+                  "start": 117,
+                  "end": 157,
+                  "exactText": "Class A: synthetic schedule value 12.5%."
+                },
+                "percentage": {
+                  "kind": "fixed",
+                  "value": 12.5
+                },
+                "qualification": {
+                  "operator": "any-of",
+                  "alternatives": [
+                    {
+                      "id": "pathA",
+                      "operator": "all-of",
+                      "criteria": [
+                        {
+                          "id": "alpha",
+                          "citation": {
+                            "sourceVersion": "synthetic-2021",
+                            "locator": "synthetic alpha",
+                            "start": 166,
+                            "end": 191,
+                            "exactText": "synthetic criterion alpha"
+                          }
+                        },
+                        {
+                          "id": "beta",
+                          "citation": {
+                            "sourceVersion": "synthetic-2021",
+                            "locator": "synthetic beta",
+                            "start": 196,
+                            "end": 220,
+                            "exactText": "synthetic criterion beta"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "pathB",
+                      "operator": "all-of",
+                      "criteria": [
+                        {
+                          "id": "gamma",
+                          "citation": {
+                            "sourceVersion": "synthetic-2021",
+                            "locator": "synthetic gamma",
+                            "start": 233,
+                            "end": 258,
+                            "exactText": "synthetic criterion gamma"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "review": {
+          "state": "reviewed",
+          "reviewer": "synthetic fixture author",
+          "rationale": "Invented structural fixture only."
+        }
+      }
+    }
+  },
+  "actors": {
+    "subject": {
+      "id": "subject",
+      "kind": "claimant",
+      "capabilities": [
+        "observe"
+      ]
+    },
+    "clinician": {
+      "id": "clinician",
+      "kind": "treating-clinician",
+      "capabilities": [
+        "opine"
+      ]
+    }
+  },
+  "evidence": {
+    "clinical": {
+      "id": "clinical",
+      "class": "clinical-report",
+      "producer": {
+        "id": "clinician"
+      },
+      "axes": [
+        {
+          "id": "axis"
+        }
+      ],
+      "source": "synthetic.txt"
+    },
+    "internal": {
+      "id": "internal",
+      "class": "clinical-report",
+      "producer": {
+        "id": "clinician"
+      },
+      "axes": [
+        {
+          "id": "axis"
+        }
+      ],
+      "source": "synthetic.txt"
+    }
+  },
+  "anchors": {
+    "clinical": {
+      "id": "clinical",
+      "evidence": {
+        "id": "clinical"
+      },
+      "artifactDigest": "sha256:8290f22f43f446af91708891dd6042782a488b352ce31f1bc9c9c8ad5387ec38",
+      "textDigest": "sha256:8290f22f43f446af91708891dd6042782a488b352ce31f1bc9c9c8ad5387ec38",
+      "page": 1,
+      "start": 0,
+      "end": 48,
+      "exactText": "Invented clinical report: class X, 2.5 percent.\n",
+      "transcription": "machine-unreviewed"
+    },
+    "internal": {
+      "id": "internal",
+      "evidence": {
+        "id": "internal"
+      },
+      "artifactDigest": "sha256:8290f22f43f446af91708891dd6042782a488b352ce31f1bc9c9c8ad5387ec38",
+      "textDigest": "sha256:8290f22f43f446af91708891dd6042782a488b352ce31f1bc9c9c8ad5387ec38",
+      "page": 1,
+      "start": 48,
+      "end": 95,
+      "exactText": "Invented internal opinion: class Y, 0 percent.\n",
+      "transcription": "machine-unreviewed"
+    }
+  },
+  "snapshots": {
+    "initial": {
+      "id": "initial",
+      "caseID": "synthetic-case",
+      "stage": "initial",
+      "recordedAt": "2026-01-01T00:00:00Z",
+      "ordinal": 0
+    }
+  },
+  "records": {
+    "clinical": {
+      "id": "clinical",
+      "snapshotID": "initial",
+      "kind": "clinical-evaluation",
+      "evidence": {
+        "id": "clinical"
+      },
+      "anchorIDs": [
+        "clinical"
+      ],
+      "authored": {
+        "status": "unknown"
+      },
+      "submitted": {
+        "status": "unknown"
+      },
+      "received": {
+        "status": "unknown"
+      },
+      "communicated": {
+        "status": "unknown"
+      },
+      "refersToRecordIDs": []
+    },
+    "internal": {
+      "id": "internal",
+      "snapshotID": "initial",
+      "kind": "internal-opinion",
+      "evidence": {
+        "id": "internal"
+      },
+      "anchorIDs": [
+        "internal"
+      ],
+      "authored": {
+        "status": "unknown"
+      },
+      "submitted": {
+        "status": "unknown"
+      },
+      "received": {
+        "status": "unknown"
+      },
+      "communicated": {
+        "status": "unknown"
+      },
+      "refersToRecordIDs": [
+        "clinical"
+      ]
+    }
+  },
+  "statements": {
+    "clinical-statement": {
+      "id": "clinical-statement",
+      "recordID": "clinical",
+      "anchorIDs": [
+        "clinical"
+      ],
+      "subject": {
+        "id": "subject"
+      },
+      "topic": "classification",
+      "assertion": "Invented clinical report: class X, 2.5 percent.",
+      "reportedClass": {
+        "state": "recorded",
+        "label": "X"
+      },
+      "reportedPercentage": {
+        "state": "recorded",
+        "percentage": {
+          "kind": "fixed",
+          "value": 2.5
+        }
+      },
+      "legalBasis": {
+        "state": "cited",
+        "sourceVersion": "synthetic-2021",
+        "unitID": "unitA"
+      },
+      "status": "attributed-source-statement"
+    },
+    "internal-statement": {
+      "id": "internal-statement",
+      "recordID": "internal",
+      "anchorIDs": [
+        "internal"
+      ],
+      "subject": {
+        "id": "subject"
+      },
+      "topic": "classification",
+      "assertion": "Invented internal opinion: class Y, 0 percent.",
+      "reportedClass": {
+        "state": "recorded",
+        "label": "Y"
+      },
+      "reportedPercentage": {
+        "state": "recorded",
+        "percentage": {
+          "kind": "fixed",
+          "value": 0
+        }
+      },
+      "legalBasis": {
+        "state": "cited",
+        "sourceVersion": "synthetic-2021",
+        "unitID": "unitA"
+      },
+      "status": "attributed-source-statement"
+    }
+  },
+  "comparisons": {
+    "compare": {
+      "id": "compare",
+      "leftStatementID": "clinical-statement",
+      "rightStatementID": "internal-statement",
+      "question": "How do the attributed classifications differ?",
+      "status": "candidate-unresolved",
+      "automaticSelection": false
+    }
+  },
+  "ruleDependencies": {},
+  "qualifications": {},
+  "reviewDrafts": {},
+  "coverage": "partial",
+  "coverageGaps": [
+    "Synthetic statements are not clinical or legal qualifications."
+  ],
+  "disclosure": "not-authorized",
+  "adjudication": "not-determined"
+}

@@ -8,6 +8,7 @@ evaluationContracts: close({
 	"speech-language-assessment":          speechLanguageAssessmentContract
 	"psychological-dissociation-assessment": psychologicalDissociationAssessmentContract
 	"legal-review":                        legalReviewContract
+	"downstream-reuse":                     downstreamReuseContract
 })
 
 public: close({

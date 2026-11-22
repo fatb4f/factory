@@ -35,9 +35,20 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("projection", type=Path)
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--api-facts", type=Path, help="pinned declaration evidence for native bindings")
     args = parser.parse_args()
     projection = json.loads(args.projection.read_text(encoding="utf-8"))
-    content = render(projection)
+    if projection.get("apiVersion") == "factory.native-python-projection/v1":
+        if args.api_facts is None:
+            parser.error("native projection requires --api-facts")
+        from native_python_projection import render_native
+        content = render_native(projection, json.loads(args.api_facts.read_text(encoding="utf-8")))
+    elif projection.get("apiVersion") == "factory.semantic-runtime.projection/v1":
+        if args.api_facts is not None:
+            parser.error("legacy projection does not consume native API facts")
+        content = render(projection)
+    else:
+        parser.error("unsupported semantic runtime projection version")
     if args.output:
         args.output.write_text(content, encoding="utf-8")
     else:

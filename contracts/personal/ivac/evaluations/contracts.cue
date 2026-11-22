@@ -12,7 +12,8 @@ import ivac "github.com/fatb4f/factory/contracts/personal/ivac:ivac"
 	"neuropsychological-reassessment" |
 	"speech-language-assessment" |
 	"psychological-dissociation-assessment" |
-	"legal-review"
+	"legal-review" |
+	"downstream-reuse"
 
 #AssessmentDisposition: "supported" | "contradicted" | "insufficient-evidence" | "not-applicable"
 
@@ -20,6 +21,8 @@ import ivac "github.com/fatb4f/factory/contracts/personal/ivac:ivac"
 	"clinical-assessment" |
 	"finding-candidate" |
 	"legal-ground-candidate" |
+	"reuse-candidate" |
+	"disclosure-risk" |
 	"coverage-gap"
 
 #DependencyKind: "edge-transform" | "index-transform"

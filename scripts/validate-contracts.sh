@@ -209,6 +209,7 @@ section "shared state"
 cue vet -c=false ./contracts/state:state
 cue vet -c=false ./state/fixtures:statefixtures
 bash state/fixtures/negative/run.sh
+bash scripts/validate-python-native-bindings.sh
 
 section "UQAM event watch"
 cue vet -c=false ./contracts/academic/uqam/events:uqamevents
@@ -245,8 +246,14 @@ cue vet -c=false ./contracts/personal/ivac:ivac
 cue export ./contracts/personal/ivac:ivac -e public --out json >/dev/null
 cue export ./contracts/personal/ivac:ivac -e edgeTransforms --out json >/dev/null
 cue export ./contracts/personal/ivac:ivac -e indexTransforms --out json >/dev/null
+cue export ./contracts/personal/ivac:ivac -e reuseProfiles --out json >/dev/null
+cue export ./contracts/personal/ivac:ivac -e reuseSeeds --out json >/dev/null
+cue export ./contracts/personal/ivac:ivac -e portabilitySeed --out json >/dev/null
 cue vet -c=false ./contracts/personal/ivac/evaluations:ivaceval
 cue export ./contracts/personal/ivac/evaluations:ivaceval -e public --out json >/dev/null
+
+section "IVAC regulatory milestone"
+bash scripts/validate-ivac-regulatory.sh
 
 section "worker-procedure uniqueness"
 grep -Fq 'This path is non-normative compatibility only.' .agents/workers/upstream-monitor/AGENTS.md

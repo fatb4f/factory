@@ -7,6 +7,7 @@ import state "github.com/fatb4f/factory/contracts/state"
 
 #ProjectionRelationID:
 	"evidenceArtifacts" |
+	"evidenceAxes" |
 	"findings" |
 	"findingEvidence" |
 	"observations" |
@@ -28,7 +29,19 @@ import state "github.com/fatb4f/factory/contracts/state"
 	"profileInterventions" |
 	"profileRelations" |
 	"graphEdges" |
-	"graphIndices"
+	"graphIndices" |
+	"artifactEnvelopes" |
+	"artifactEnvelopeGates" |
+	"artifactProtections" |
+	"reuseConsumerProfiles" |
+	"reuseProfilePurposes" |
+	"reuseProfileRules" |
+	"reuseProfileRuleGates" |
+	"derivativePackages" |
+	"derivativeArtifacts" |
+	"derivativeFindings" |
+	"derivativeRelations" |
+	"reuseSeeds"
 
 #GraphEdgeBinding: close({
 	sourceRelation: #ProjectionRelationID
