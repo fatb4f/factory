@@ -48,6 +48,7 @@ package ivac
 #ActorKind:
 	"claimant" |
 	"legal-representative" |
+	"clinical-expert" |
 	"medical-expert" |
 	"treating-clinician" |
 	"adjudicator"

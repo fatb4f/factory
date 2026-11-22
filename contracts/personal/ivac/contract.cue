@@ -30,6 +30,7 @@ ivacContract: close({
 		"logical indices are derived relations and never backend physical-index authority",
 		"edge and index transforms are projections and do not upgrade assertion or admission state",
 		"evaluation outputs do not mutate the evidence world; findings require the authority declared by the review plant",
+		"professional assessment contracts bind root actor, authority, mandate, transition, evidence, and finding semantics before specialty-specific evaluation logic",
 		"causal clinical predicates require explicit qualified clinical attribution rather than temporal sequence alone",
 		"evaluation-specific temporal cutoffs and lexical/report rules remain outside the canonical evidence world",
 		"IVAC review is one consumer of the normalized legal-medical evidence layer and does not bound its downstream reuse",
