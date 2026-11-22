@@ -22,6 +22,20 @@ Correlate by `factory-issue-key`, never by title or GitHub issue number.
 
 Continue to place normative semantics at the narrowest CUE authority. Repository procedures, agents, generated projections, execution environments, external tools, GitHub state, and model conclusions remain downstream unless a contract explicitly admits them.
 
+## Git task isolation
+
+Keep the primary `main` checkout clean and synchronized with `origin/main`. Do not
+implement durable work directly on `main`. Correlate the work to its stable
+`factory-issue-key`, then create one task branch and one worktree with
+`scripts/create-task-worktree.sh` or the Codex app's Worktree action.
+
+Branch names use `<type>/<issue-number>-<slug>`, where `type` is `feat`, `fix`,
+`docs`, `chore`, `contracts`, or `test`. Integrate through a pull request after
+the relevant CUE and implementation validations pass. Never reset or delete an
+unmerged task to resolve worktree contention; use Codex Handoff or switch the
+other worktree away from the branch. See
+[`docs/development/codex-github-workflow.md`](docs/development/codex-github-workflow.md).
+
 ## IVAC project dispatch
 
 For IVAC regulatory, evidence, case-snapshot or analytical work, start with

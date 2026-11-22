@@ -1,0 +1,343 @@
+{
+  "$defs": {
+    "#CorpusAnchorRow": {
+      "additionalProperties": false,
+      "properties": {
+        "corpusID": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "end": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "exactText": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "locator": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "sourceVersion": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "start": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "corpusID",
+        "end",
+        "exactText",
+        "locator",
+        "sourceVersion",
+        "start"
+      ],
+      "type": "object"
+    },
+    "#CorpusSourceRow": {
+      "additionalProperties": false,
+      "properties": {
+        "applicability": {
+          "const": "unresolved"
+        },
+        "artifactBytes": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "artifactDigest": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/%23RegulatoryDigest"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "artifactPath": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "category": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "consolidatedAsOf": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/%23RegulatoryDate"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "containerDigest": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/%23RegulatoryDigest"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "containerPath": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "conversion": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "converterVersion": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "corpusID": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "dateStatus": {
+          "const": "unreviewed"
+        },
+        "effectiveFrom": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/%23RegulatoryDate"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "finalURL": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/%23OfficialURL"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "mediaType": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "memberPath": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "publicationDate": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/%23RegulatoryDate"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "requestedURL": {
+          "$ref": "#/$defs/%23OfficialURL"
+        },
+        "retrievedAt": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "semanticStatus": {
+          "const": "not-normalized"
+        },
+        "sourceID": {
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "type": "string"
+        },
+        "sourceKind": {
+          "$ref": "#/$defs/%23SourceKind"
+        },
+        "status": {
+          "enum": [
+            "acquired",
+            "failed"
+          ]
+        },
+        "textDigest": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/%23RegulatoryDigest"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "textPath": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "title": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "artifactBytes",
+        "artifactDigest",
+        "artifactPath",
+        "category",
+        "consolidatedAsOf",
+        "containerDigest",
+        "containerPath",
+        "conversion",
+        "converterVersion",
+        "corpusID",
+        "effectiveFrom",
+        "error",
+        "finalURL",
+        "mediaType",
+        "memberPath",
+        "publicationDate",
+        "requestedURL",
+        "retrievedAt",
+        "sourceID",
+        "sourceKind",
+        "status",
+        "textDigest",
+        "textPath",
+        "title"
+      ],
+      "type": "object"
+    },
+    "#CorpusTextRow": {
+      "additionalProperties": false,
+      "properties": {
+        "corpusID": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "sourceID": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "textDigest": {
+          "$ref": "#/$defs/%23RegulatoryDigest"
+        }
+      },
+      "required": [
+        "corpusID",
+        "sourceID",
+        "text",
+        "textDigest"
+      ],
+      "type": "object"
+    },
+    "#OfficialURL": {
+      "pattern": "^https://(www\\.)?(ivac\\.qc\\.ca|cnesst\\.gouv\\.qc\\.ca|legisquebec\\.gouv\\.qc\\.ca|publicationsduquebec\\.gouv\\.qc\\.ca|donneesquebec\\.ca|laws-lois\\.justice\\.gc\\.ca|quebec\\.ca)/",
+      "type": "string"
+    },
+    "#RegulatoryDate": {
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$",
+      "type": "string"
+    },
+    "#RegulatoryDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "#SourceKind": {
+      "enum": [
+        "statute",
+        "regulation",
+        "directive",
+        "ethics-framework",
+        "legacy-policy",
+        "official-guidance",
+        "official-index"
+      ]
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "anchor": {
+      "$ref": "#/$defs/%23CorpusAnchorRow"
+    },
+    "source": {
+      "$ref": "#/$defs/%23CorpusSourceRow"
+    },
+    "text": {
+      "$ref": "#/$defs/%23CorpusTextRow"
+    }
+  },
+  "required": [
+    "anchor",
+    "source",
+    "text"
+  ],
+  "type": "object"
+}
