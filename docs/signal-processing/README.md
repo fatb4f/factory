@@ -69,4 +69,5 @@ The guides describe upstream-documented capabilities. This survey did not measur
 
 ## Applied workflows
 
+- [RF model training](model-training/README.md)
 - [Lucy courier observation and communications](lucy/README.md)
