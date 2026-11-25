@@ -54,10 +54,21 @@ class Schedule:
         return LegalUnit(self, ScheduleLeaf.model_validate(record))
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, init=False)
 class LegalUnit:
     schedule: Schedule
-    leaf: ScheduleLeaf
+    _serialized_leaf: str
+
+    def __init__(self, schedule: Schedule, leaf: ScheduleLeaf):
+        if schedule._units.get(leaf.number) != leaf.model_dump(mode="json"):
+            raise ValueError("leaf does not match the verified schedule")
+        object.__setattr__(self, "schedule", schedule)
+        object.__setattr__(self, "_serialized_leaf", leaf.model_dump_json())
+
+    @property
+    def leaf(self):
+        """Return a detached view of the verified leaf."""
+        return ScheduleLeaf.model_validate_json(self._serialized_leaf)
 
     @property
     def parent(self):
@@ -216,10 +227,18 @@ class BoundUnit:
             target = self.unit.schedule.unit(rule["target"])
             if target.leaf.section == self.unit.leaf.section:
                 raise ValueError("rule target must belong to another section")
-            matches = [
+            relevant = [
                 link for link in links if link["object"]["concept"] == rule["concept"]
             ]
+            matches = [
+                link for link in relevant if link["object"]["value"] == rule["expectedValue"]
+            ]
             if matches:
+                unresolved = list(rule["unresolvedConditions"])
+                if len(matches) != len(relevant):
+                    unresolved.append(
+                        "Other authorized observations of this concept have different values; review is required."
+                    )
                 results.append(
                     {
                         "ruleID": rule["id"],
@@ -228,7 +247,7 @@ class BoundUnit:
                         "basis": deepcopy(rule["basis"]),
                         "target": target.leaf.model_dump(mode="json"),
                         "matches": matches,
-                        "unresolvedConditions": list(rule["unresolvedConditions"]),
+                        "unresolvedConditions": unresolved,
                     }
                 )
         return results

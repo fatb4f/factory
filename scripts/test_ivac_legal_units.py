@@ -3,7 +3,7 @@ from dataclasses import replace
 import subprocess
 import unittest
 
-from ivac_legal_units import Schedule, Scope, Snapshot, sources
+from ivac_legal_units import LegalUnit, Schedule, Scope, Snapshot, sources
 
 
 class LegalUnitTests(unittest.TestCase):
@@ -59,6 +59,7 @@ class LegalUnitTests(unittest.TestCase):
             "from": "4.1",
             "target": "1",
             "concept": "invented-marker",
+            "expectedValue": {"kind": "boolean", "value": True},
             "status": "test-only",
             "basis": {"kind": "synthetic", "citation": "Invented fixture only"},
             "unresolvedConditions": ["Independent review pending"],
@@ -101,6 +102,34 @@ class LegalUnitTests(unittest.TestCase):
         for self.scope in (None, replace(full, snapshot_id="another")):
             with self.assertRaises(PermissionError):
                 bound.evaluate_cross_unit_rules()
+
+    def test_leaf_view_is_detached(self):
+        original = self.unit.to_record()
+        leaf = self.unit.leaf
+        leaf.number = "1"
+        leaf.label.exactText = "altered"
+        leaf.pieceIDs.clear()
+        self.assertEqual(self.unit.to_record(), original)
+        self.assertEqual(self.unit.parent["number"], "4")
+        with self.assertRaisesRegex(ValueError, "verified schedule"):
+            LegalUnit(self.schedule, leaf)
+
+    def test_values_and_conflicts(self):
+        self.data["observations"]["obs"]["value"]["value"] = False
+        self.assertEqual(self.bound().evaluate_cross_unit_rules(), [])
+        self.data["observations"]["obs"]["value"] = {"kind": "categorical", "value": "true"}
+        self.assertEqual(self.bound().evaluate_cross_unit_rules(), [])
+        self.data["observations"]["other"] = copy.deepcopy(self.data["observations"]["obs"])
+        self.data["observations"]["other"]["id"] = "other"
+        self.data["observations"]["other"]["value"] = {"kind": "boolean", "value": True}
+        self.data["relationships"]["other-rel"] = dict(self.data["relationships"]["rel"], id="other-rel", observationID="other")
+        self.scope = replace(self.scope, relationships=frozenset({"rel", "other-rel"}), observations=frozenset({"obs", "other"}))
+        (flag,) = self.bound().evaluate_cross_unit_rules()
+        self.assertEqual([m["object"]["id"] for m in flag["matches"]], ["other"])
+        self.assertIn("different values", flag["unresolvedConditions"][-1])
+        self.scope = replace(self.scope, observations=frozenset({"other"}))
+        (flag,) = self.bound().evaluate_cross_unit_rules()
+        self.assertEqual(flag["unresolvedConditions"], self.rule["unresolvedConditions"])
 
     def test_invalid_inputs(self):
         with self.assertRaises(ValueError):

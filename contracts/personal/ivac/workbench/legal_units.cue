@@ -24,6 +24,8 @@ import ivac "github.com/fatb4f/factory/contracts/personal/ivac:ivac"
 	from:          ivac.#ID
 	target:        ivac.#ID & !=from
 	concept:       string & !=""
+	// A concept alone does not imply the observation is present or positive.
+	expectedValue: ivac.#ClinicalValue
 	unresolvedConditions: [...(string & !="")]
 	status: "test-only" | "candidate"
 	basis: close({kind: "synthetic" | "published" | "DSM", citation: string & !=""})
