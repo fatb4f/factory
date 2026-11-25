@@ -4,14 +4,20 @@ on:
   pull_request:
     paths:
       - "projects/cyber-incidents/shadow-rail/**"
+      # Shared CUE module metadata and repository-wide validation entrypoints.
       - "cue.mod/**"
+      - "scripts/validate-contracts.sh"
+      - ".github/workflows/contract-validation.yml"
       - ".github/workflows/shadow-rail.yml"
   push:
     branches:
       - main
     paths:
       - "projects/cyber-incidents/shadow-rail/**"
+      # Shared CUE module metadata and repository-wide validation entrypoints.
       - "cue.mod/**"
+      - "scripts/validate-contracts.sh"
+      - ".github/workflows/contract-validation.yml"
       - ".github/workflows/shadow-rail.yml"
 
 permissions:
