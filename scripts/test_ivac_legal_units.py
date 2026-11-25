@@ -146,9 +146,63 @@ class LegalUnitTests(unittest.TestCase):
         )
         with self.assertRaisesRegex(ValueError, "unverified clinical basis"):
             Snapshot(self.data, None, rules=[candidate])
+        with self.assertRaisesRegex(ValueError, "candidate rules require a synthetic snapshot"):
+            Snapshot(self.data, None, rules=[candidate], verify_basis=lambda _: True)
         self.data["sourceVersion"] = "other-enactment"
         with self.assertRaisesRegex(ValueError, "incompatible schedule version"):
             self.unit.in_snapshot(Snapshot(self.data, None))
+
+    def test_reviewed_rule_requires_verified_basis_and_both_reviews(self):
+        reviewed = dict(
+            self.rule,
+            status="reviewed",
+            basis={"kind": "published", "citation": "invented source",
+                   "url": "https://example.invalid/study", "digest": "sha256:" + "a" * 64},
+            reviews={"clinical": {"id": "clinical-review", "digest": "sha256:" + "b" * 64},
+                     "legal": {"id": "legal-review", "digest": "sha256:" + "c" * 64}},
+        )
+        with self.assertRaisesRegex(ValueError, "unverified clinical basis"):
+            Snapshot(self.data, lambda *_: self.scope, rules=[reviewed])
+        with self.assertRaisesRegex(ValueError, "unverified professional reviews"):
+            Snapshot(self.data, lambda *_: self.scope, rules=[reviewed], verify_basis=lambda _: True)
+        with self.assertRaisesRegex(ValueError, "unverified professional reviews"):
+            Snapshot(self.data, lambda *_: self.scope, rules=[reviewed], verify_basis=lambda _: True,
+                     verify_reviews=lambda _: False)
+        with self.assertRaises(subprocess.CalledProcessError):
+            missing_legal = copy.deepcopy(reviewed)
+            del missing_legal["reviews"]["legal"]
+            Snapshot(self.data, lambda *_: self.scope, rules=[missing_legal],
+                     verify_basis=lambda _: True, verify_reviews=lambda _: True)
+        with self.assertRaises(subprocess.CalledProcessError):
+            same_receipt = copy.deepcopy(reviewed)
+            same_receipt["reviews"]["legal"]["id"] = same_receipt["reviews"]["clinical"]["id"]
+            Snapshot(self.data, lambda *_: self.scope, rules=[same_receipt],
+                     verify_basis=lambda _: True, verify_reviews=lambda _: True)
+        snapshot = Snapshot(self.data, lambda *_: self.scope, rules=[reviewed],
+                            verify_basis=lambda _: True, verify_reviews=lambda _: True)
+        (flag,) = self.unit.in_snapshot(snapshot).evaluate_cross_unit_rules()
+        self.assertEqual(flag["basis"], reviewed["basis"])
+        self.assertEqual(flag["status"], "reviewed")
+        self.scope = replace(self.scope, evidence=frozenset())
+        self.assertEqual(self.unit.in_snapshot(snapshot).evaluate_cross_unit_rules(), [])
+
+    def test_all_conditions_and_rule_version_identity(self):
+        self.data["observations"]["second"] = copy.deepcopy(self.data["observations"]["obs"])
+        self.data["observations"]["second"].update(id="second", concept="second-marker")
+        self.data["relationships"]["rel2"] = dict(self.data["relationships"]["rel"],
+                                                  id="rel2", observationID="second")
+        self.scope = replace(self.scope, relationships=frozenset({"rel", "rel2"}),
+                             observations=frozenset({"obs", "second"}))
+        self.rule["conditions"] = [{"concept": "second-marker", "expectedValue": {"kind": "boolean", "value": True}}]
+        other = dict(self.rule, version="2.0.0")
+        snapshot = Snapshot(self.data, lambda *_: self.scope, rules=[self.rule, other], synthetic=True)
+        flags = self.unit.in_snapshot(snapshot).evaluate_cross_unit_rules()
+        self.assertEqual([flag["version"] for flag in flags], ["1.0.0", "2.0.0"])
+        self.assertEqual({m["object"]["id"] for m in flags[0]["matches"]}, {"obs", "second"})
+        self.scope = replace(self.scope, observations=frozenset({"obs"}))
+        self.assertEqual(self.unit.in_snapshot(snapshot).evaluate_cross_unit_rules(), [])
+        with self.assertRaisesRegex(ValueError, "duplicate rule"):
+            Snapshot(self.data, lambda *_: self.scope, rules=[self.rule, self.rule], synthetic=True)
 
     def test_invalid_source_and_parent(self):
         index = sources.read_json(sources.DATA / "annex-i-2021.schedule-index.json")
