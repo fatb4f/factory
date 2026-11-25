@@ -1,4 +1,4 @@
-"""Exercise the starter contract with a synthetic fixture and narrow mutations."""
+"""Validate both synthetic stream examples and reject invalid bundle mutations."""
 import copy
 import json
 import os
@@ -6,9 +6,9 @@ from pathlib import Path
 import subprocess
 import tempfile
 
-HERE = Path(__file__).resolve().parent
-SCHEMA = HERE.parent
-FIXTURE = json.loads((HERE / "replay.json").read_text())
+SCHEMA = Path(__file__).resolve().parents[1]
+ROOT = SCHEMA.parents[2]
+EXAMPLES = ROOT / "projects" / "cyber-incidents"
 
 
 def update(value, path, replacement):
@@ -23,16 +23,23 @@ def vet(instance):
         test.write_text(json.dumps(instance))
         return subprocess.run(
             [os.environ.get("CUE", "cue"), "vet", "-c", "-d", "#IncidentBundle",
-             "./" + str(SCHEMA.relative_to(SCHEMA.parents[2])), str(test)],
-            cwd=SCHEMA.parents[2], capture_output=True, text=True, check=False,
+             "./" + str(SCHEMA.relative_to(ROOT)), str(test)],
+            cwd=ROOT, capture_output=True, text=True, check=False,
         )
 
 
 def main():
-    good = vet(FIXTURE)
-    if good.returncode:
-        raise SystemExit(good.stderr)
+    replay = json.loads((EXAMPLES / "global-major-cyber" / "replay.json").read_text())
+    review = json.loads((EXAMPLES / "canadian-surveillance" / "review.json").read_text())
+    examples = {"global-major-cyber": replay, "canadian-surveillance": review}
+    for stream, example in examples.items():
+        if example["incident"]["stream"] != stream:
+            raise SystemExit(f"The {stream} example has the wrong stream.")
+        good = vet(example)
+        if good.returncode:
+            raise SystemExit(f"{stream}: {good.stderr}")
     cases = [
+        ("unknown stream", ("incident", "stream"), "unknown-stream", "stream"),
         ("cutoff", ("view", "asOf"), "2026-01-02T12:00:00Z", "_replayCutoff"),
         ("missing source", ("acquisition", "captures", "dispatch", "sourceID"),
          "missing", "_capturesResolve"),
@@ -50,12 +57,12 @@ def main():
          "confirmed", "state"),
     ]
     for name, path, replacement, diagnostic in cases:
-        fixture = copy.deepcopy(FIXTURE)
+        fixture = copy.deepcopy(replay)
         update(fixture, path, replacement)
         result = vet(fixture)
         if not result.returncode or diagnostic not in result.stderr + result.stdout:
             raise SystemExit(f"{name}: unexpected validation result\n{result.stderr}")
-    print(f"Passed one accepted fixture and {len(cases)} rejection cases.")
+    print(f"Passed {len(examples)} accepted fixtures and {len(cases)} rejection cases.")
 
 
 if __name__ == "__main__":

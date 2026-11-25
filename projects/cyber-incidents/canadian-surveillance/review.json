@@ -1,0 +1,47 @@
+{
+  "schema": "factory.cyber-incidents.bundle/v0.1",
+  "acquisition": {
+    "schema": "factory.cyber-incidents.acquisition/v0.1",
+    "runID": "synthetic-canadian-oversight-001",
+    "sources": {
+      "committee": {
+        "publisher": "Example Canadian Oversight Committee",
+        "channel": "public notices",
+        "kind": "official",
+        "format": "document",
+        "transport": "https",
+        "locator": "https://example.org/oversight/notices"
+      }
+    },
+    "captures": {
+      "notice": {
+        "sourceID": "committee",
+        "revision": "1",
+        "locator": "https://example.org/oversight/notices/001",
+        "contentSHA256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "retrievedAt": "2026-02-02T13:00:00Z",
+        "availability": {"state": "documented", "at": "2026-02-02T12:00:00Z", "basis": "Synthetic dated public notice"},
+        "lineageKey": "synthetic-oversight-notice"
+      }
+    },
+    "gaps": []
+  },
+  "incident": {
+    "id": "synthetic-canadian-oversight-review",
+    "stream": "canadian-surveillance",
+    "title": "Synthetic Canadian committee review of surveillance-data retention",
+    "publicClaims": {
+      "review-announcement": {
+        "rail": "public",
+        "claimKind": "official-statement",
+        "summary": "The committee announced a review of retention periods for surveillance records.",
+        "knownAt": "2026-02-02T12:00:00Z",
+        "citations": [{"captureID": "notice", "selector": "paragraph 1"}]
+      }
+    },
+    "technicalObservations": {},
+    "hypotheses": {},
+    "openQuestions": {}
+  },
+  "view": {"mode": "review"}
+}

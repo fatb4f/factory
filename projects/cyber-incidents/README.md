@@ -1,6 +1,17 @@
 # Cyber Incidents
 
-Starter project for defensive incident analysis. The primary stream covers major global cyber incidents. A separate Canadian surveillance stream covers developments such as legislation and oversight. A Canadian surveillance record does not imply that a breach occurred. Nothing here activates either stream or modifies the existing watch.
+The project has two monitoring streams. Both use the same CUE contracts for acquiring sources and analyzing what those sources establish.
+
+| Role | Stream | Example |
+| --- | --- | --- |
+| Primary | Major cyber incidents worldwide | [Replay a synthetic utility outage](global-major-cyber/replay.json) |
+| Secondary | Canadian surveillance developments, including legislation and oversight | [Review a synthetic Canadian oversight bulletin](canadian-surveillance/review.json) |
+
+The Canadian example records the committee's announcement as a public claim and leaves technical observations empty.
+
+## Original request
+
+> Anyway, perfect. So um, basically, okay, so we have two big pieces. Like, we have the Uh. the Uh. first the the the the sources and the the acquisition and then we have the the bigger model. Uh. Can you generate two two contracts, one for each linking the two um, add them to, excuse me. Um, basically Uh. switch to work mode, and Uh. in the factory repo Uh. create a cyber incidence Uh. structure and add our our main Uh. global major major cyber incidents and a secondary Uh. Canadian focused surveillance. And basically just Um. create the Uh. the basic, the basic Q contracts, and we'll start with that
 
 ## What we agreed
 
@@ -20,6 +31,8 @@ Historical benchmark candidates include Stuxnet, WannaCry and NotPetya, Olympic 
 
 - [Acquisition](../../contracts/projects/cyber-incidents/acquisition.cue) describes the source, channel, acquisition method, captured revision, digest, availability evidence, lineage, and coverage gaps.
 - [Incident bundle](../../contracts/projects/cyber-incidents/incident.cue) links public claims and technical observations to source captures, and strategic assessments to those assertions. Historical replay checks the cutoff for all included claims and their cited revisions. It rejects citations with undocumented availability. Retrospective capture is allowed when the earlier availability of the exact cited revision is documented.
+
+The handoff is `#IncidentBundle.acquisition`, which takes a complete `#Acquisition` record. For example, in the global replay, the public claim `outage-report` cites paragraph 1 of capture `dispatch`. That capture names source `news` and records the digest of the cited revision. Removing either the capture or its source makes the bundle fail validation.
 
 | Interface | Intended role |
 | --- | --- |
@@ -44,7 +57,8 @@ No adapters, live feeds, generated types, graph admission, or registry entries a
 From the repository root with CUE v0.16 and Python 3 available:
 
 ```sh
+cue export ./contracts/projects/cyber-incidents -e watchStreams
 python3 contracts/projects/cyber-incidents/testdata/check.py
 ```
 
-The only bundled incident is synthetic.
+Both example bundles use synthetic sources and events.

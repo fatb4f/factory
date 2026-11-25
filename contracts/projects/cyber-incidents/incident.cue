@@ -2,6 +2,13 @@ package cyberincidents
 
 import "list"
 
+// Both streams use #Acquisition as input to #IncidentBundle. Their original
+// project brief is in projects/cyber-incidents/README.md.
+watchStreams: {
+	primary:   "global-major-cyber"
+	secondary: "canadian-surveillance"
+}
+
 #EvidenceCitation: {
 	captureID: #ID
 	selector:  #Text // Page, paragraph, JSON pointer, or stable object locator.
@@ -54,7 +61,7 @@ import "list"
 
 #Incident: {
 	id:     #ID
-	stream: "global-major-cyber" | "canadian-surveillance"
+	stream: watchStreams.primary | watchStreams.secondary
 	title:  #Text
 	publicClaims: [#ID]:          #PublicClaim
 	technicalObservations: [#ID]: #TechnicalObservation

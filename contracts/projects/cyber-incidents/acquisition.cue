@@ -50,6 +50,8 @@ import (
 	reason:   #Text
 }
 
+// Output of one acquisition run. #IncidentBundle accepts this record directly,
+// and its assertions cite entries in captures by their map keys.
 #Acquisition: {
 	schema: "factory.cyber-incidents.acquisition/v0.1"
 	runID:  #ID
