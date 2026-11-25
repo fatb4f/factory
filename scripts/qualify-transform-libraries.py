@@ -2,7 +2,7 @@
 from importlib.metadata import version
 import unittest
 
-PINS = {"pydantic": "2.14.0", "ibis-framework": "11.0.0", "duckdb": "1.5.6"}
+PINS = {"pydantic": "2.14.0", "ibis-framework": "11.0.0", "duckdb": "1.5.6", "pyarrow": "26.0.0"}
 
 
 class Qualification(unittest.TestCase):
@@ -24,7 +24,7 @@ class Qualification(unittest.TestCase):
     def test_ibis_duckdb_deterministic_null_preserving_execution(self):
         import ibis
 
-        for package in ("ibis-framework", "duckdb"):
+        for package in ("ibis-framework", "duckdb", "pyarrow"):
             self.assertEqual(version(package), PINS[package])
         backend = ibis.duckdb.connect()
         try:
