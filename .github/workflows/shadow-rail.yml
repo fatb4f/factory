@@ -1,0 +1,34 @@
+name: Shadow Rail validation
+
+on:
+  pull_request:
+    paths:
+      - "projects/cyber-incidents/shadow-rail/**"
+      - "cue.mod/**"
+      - ".github/workflows/shadow-rail.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "projects/cyber-incidents/shadow-rail/**"
+      - "cue.mod/**"
+      - ".github/workflows/shadow-rail.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate-shadow-rail:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cue-lang/setup-cue@v1.0.0
+        with:
+          version: v0.16.1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate upstream registry
+        run: bash projects/cyber-incidents/shadow-rail/upstream/validate.sh
+      - name: Validate world vocabulary
+        run: bash projects/cyber-incidents/shadow-rail/world/validate.sh
