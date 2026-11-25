@@ -19,9 +19,10 @@ formats and transform runtimes do not own graph semantics.
 - Provenance points to a capture digest, source revision and locator. The
   contract checks the shape, not the existence or admission of the capture.
 
-Still to qualify across revisions: reference resolution, gaps and overlaps,
-the replacement protocol, replay snapshots, and tests demonstrating that
-later knowledge cannot leak into an earlier replay.
+`#ReplayProbe` computes visibility of a single revision. Fixtures cover a
+correction at the knowledge boundary and a replay before it became available.
+Snapshot-level reference resolution, overlaps, and the replacement protocol
+remain outside this first slice.
 
 Run `python3 projects/cyber-incidents/shadow-rail/graph/validate.py` from the
 repository root with CUE v0.16.1 on PATH. The cases are synthetic and no runtime
