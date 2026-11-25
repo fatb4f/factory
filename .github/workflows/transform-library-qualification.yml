@@ -1,0 +1,27 @@
+name: Shared transform library qualification
+
+on:
+  pull_request:
+    paths:
+      - "scripts/qualify-transform-libraries.py"
+      - ".github/workflows/transform-library-qualification.yml"
+      - "scripts/requirements-ivac-regulatory.txt"
+
+permissions:
+  contents: read
+
+jobs:
+  qualify-library-behavior:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install candidate stack
+        run: python3 -m pip install 'pydantic==2.14.0' 'ibis-framework[duckdb]==11.0.0' 'duckdb==1.5.6' 'pyarrow==26.0.0'
+      - name: Record dependency versions and run the probes
+        run: |
+          python3 --version
+          python3 -m pip freeze
+          python3 scripts/qualify-transform-libraries.py
