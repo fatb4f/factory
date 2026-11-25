@@ -1,0 +1,238 @@
+{
+  "schema": "factory.cyber-incidents.upstream-watch/v1",
+  "profile_id": "cyber-incidents",
+  "run_id": "20261125T113151Z",
+  "checkedAt": "2026-11-25T11:31:51Z",
+  "authority_revision": "58dd2c4c476619329dcadf04bec51cc0226282bd",
+  "previous_run": "20261125T105956Z",
+  "additionalSources": {
+    "norway-nsm": {
+      "advisory": {
+        "role": "primary",
+        "url": "https://nsm.no/aktuelt/"
+      }
+    },
+    "equinor": {
+      "news": {
+        "role": "primary",
+        "url": "https://www.equinor.com/news"
+      }
+    },
+    "help-net-security": {
+      "news": {
+        "role": "reporting",
+        "url": "https://www.helpnetsecurity.com/"
+      }
+    },
+    "gl-inet": {
+      "advisory": {
+        "role": "primary",
+        "url": "https://www.gl-inet.com/blogs/blog"
+      }
+    },
+    "independent": {
+      "news": {
+        "role": "reporting",
+        "url": "https://www.independent.co.uk/"
+      }
+    }
+  },
+  "items": {
+    "azure-apim-norway-2026-11": {
+      "stream": "global-major-cyber",
+      "title": "Azure API Management exploitation affects energy operators",
+      "disposition": "baseline",
+      "status": "High significance; access path reportedly closed; credential rotation required",
+      "jurisdiction": "Norway and additional unspecified countries",
+      "delta": "First source-qualified coverage in sealed stream history, not a newly occurring attack. NSM identifies a shared cloud dependency spanning multiple sectors.",
+      "next": "Check Microsoft public advisory revisions, customer impact and downstream credential misuse.",
+      "unknowns": [
+        "Total affected customers, exfiltration volume, CVE, actor and Factory deployment exposure unknown. No established OT or production interruption."
+      ],
+      "facts": [
+        {
+          "statement": "NSM reported active targeting of APIM tokens and secrets and named Equinor and Skagerak Energi among affected organizations. Its November 23 update reports the vulnerability closed, without evidence of interruption to Norwegian deliveries.",
+          "basis": "primary",
+          "citations": [
+            {
+              "source": "norway-nsm",
+              "channel": "advisory",
+              "url": "https://nsm.no/aktuelt/nsm-deler-tiltak-mot-sarbarhet-i-azure-api-management",
+              "record": "NSM Azure API Management notice",
+              "revision": "Updated November 23, 2026",
+              "selector": "Tiltak and Høyt risikonivå",
+              "sourceDate": "2026-11-23"
+            }
+          ],
+          "eventDate": "2026-11-23"
+        },
+        {
+          "statement": "Equinor disclosed an IT attack November 17; on November 20 it reported containment, normal production and no indication of data theft or alteration.",
+          "basis": "primary",
+          "citations": [
+            {
+              "source": "equinor",
+              "channel": "news",
+              "url": "https://www.equinor.com/news/20261711-equinor-detected-cyber-attack",
+              "record": "Equinor Cyber-attack stopped",
+              "revision": "November 20 08:55 CET update",
+              "selector": "Original item and November 20 update",
+              "sourceDate": "2026-11-20"
+            }
+          ],
+          "eventDate": "2026-11-20"
+        },
+        {
+          "statement": "Help Net Security attributed to Microsoft's customer advisory a November 19 access-path fix affecting Classic tiers, and residual exposure of customer credentials requiring rotation. The underlying customer-only notice was not directly acquired.",
+          "basis": "attributed",
+          "citations": [
+            {
+              "source": "help-net-security",
+              "channel": "news",
+              "url": "https://www.helpnetsecurity.com/2026/11/24/azure-apim-vulnerability-credential-theft/",
+              "record": "Azure API Management vulnerability exploited to steal customers’ secrets",
+              "revision": "November 24 publication",
+              "selector": "APIM Classic tiers affected and What to do",
+              "sourceDate": "2026-11-24"
+            }
+          ],
+          "eventDate": "2026-11-19"
+        }
+      ]
+    },
+    "gl-inet-goodcloud-2026-11": {
+      "stream": "global-major-cyber",
+      "title": "GoodCloud compromise installs malware on routers and remote KVM devices",
+      "disposition": "baseline",
+      "status": "High significance; cloud route blocked; device cleanup remains necessary",
+      "jurisdiction": "Global vendor disclosure; affected locations unspecified",
+      "delta": "First coverage of the vendor-confirmed incident in the sealed stream, not a new attack on November 25.",
+      "next": "Track CVE assignment, vendor device notification and investigation of connected hosts.",
+      "unknowns": [
+        "Compromised device count, geographic distribution, actor, and whether attached computers were affected are unknown. No Factory device inventory evidence."
+      ],
+      "facts": [
+        {
+          "statement": "GL.iNet reports discovery of unauthorized access and malware installation on some GoodCloud-connected routers and KVM devices November 20. The vendor reports blocking the path that day and issuing cleanup firmware.",
+          "basis": "primary",
+          "citations": [
+            {
+              "source": "gl-inet",
+              "channel": "advisory",
+              "url": "https://www.gl-inet.com/blogs/blog/glinet-security-notice-2026-11-20",
+              "record": "GoodCloud Remote Management Incident",
+              "revision": "November 23 UTC revision",
+              "selector": "What happened, who is affected, recovery guidance, technical details",
+              "sourceDate": "2026-11-23"
+            }
+          ],
+          "eventDate": "2026-11-20"
+        },
+        {
+          "statement": "The November 23 revision distinguishes cloud exposure from confirmed device compromise and says that some KVM cloud services can connect before account linking; attached-host compromise remains unestablished. CVE identifiers are pending.",
+          "basis": "primary",
+          "citations": [
+            {
+              "source": "gl-inet",
+              "channel": "advisory",
+              "url": "https://www.gl-inet.com/blogs/blog/glinet-security-notice-2026-11-20",
+              "record": "GoodCloud Remote Management Incident",
+              "revision": "November 23 UTC revision",
+              "selector": "What happened, who is affected, recovery guidance, technical details",
+              "sourceDate": "2026-11-23"
+            }
+          ],
+          "eventDate": "2026-11-23"
+        }
+      ]
+    },
+    "us-cia-odni-osint-2026-11": {
+      "stream": "global-major-cyber",
+      "title": "Reported US intelligence analysis system intrusion",
+      "disposition": "lead",
+      "status": "Unverified extent; attributed official denial of classified-system disruption",
+      "jurisdiction": "United States",
+      "delta": "November 24–25 reports identify an unclassified analysis system; original agency record not acquired.",
+      "next": "Obtain public CIA, ODNI or NGA statements and separately establish affected system, chronology and impact.",
+      "unknowns": [
+        "Incident date, access vector, data scope, actor, NGA involvement and relationship to other federal incidents are unresolved; no basis for attribution."
+      ],
+      "facts": [
+        {
+          "statement": "The Independent attributed to an AP source an unclassified CIA breach that was resolved and to ODNI a statement denying critical or classified system disruption. The reports do not establish the material accessed.",
+          "basis": "attributed",
+          "citations": [
+            {
+              "source": "independent",
+              "channel": "news",
+              "url": "https://www.independent.co.uk/news/world/americas/cia-cyber-attack-dni-breach-fbi-b3090993.html",
+              "record": "CIA system breached in latest cyberattack targeting US intelligence agencies",
+              "revision": "November 24 21:57 GMT publication",
+              "selector": "Opening report and attributed ODNI response",
+              "sourceDate": "2026-11-24"
+            }
+          ]
+        },
+        {
+          "statement": "BleepingComputer repeats New York Times reporting of an OSINT system compromise and alleged additional agency involvement. Treat these as related reporting rather than independent technical confirmation.",
+          "basis": "attributed",
+          "citations": [
+            {
+              "source": "bleepingcomputer",
+              "channel": "news",
+              "url": "https://www.bleepingcomputer.com/news/security/hackers-reportedly-breached-cia-intelligence-analysis-system/",
+              "record": "Hackers reportedly breached CIA intelligence analysis system",
+              "revision": "November 25 02:45 AM publication",
+              "selector": "Opening incident reporting",
+              "sourceDate": "2026-11-25"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "coverageGaps": [
+    {
+      "source": "senate",
+      "channel": "committees",
+      "reason": "Meeting 34 notice, committee reports listing and LEGISinfo checked; adopted C-22 amendment text not acquired.",
+      "next": "Check signed committee report, minutes and Senate Journals."
+    },
+    {
+      "source": "cyber-centre",
+      "channel": "advisories",
+      "reason": "Dated advisory search did not establish complete new-index coverage.",
+      "next": "Page by update date and serial number."
+    },
+    {
+      "source": "qc-assembly",
+      "channel": "bills",
+      "reason": "Targeted French-language searches did not establish complete bill, clause and Gazette coverage.",
+      "next": "Review bilingual listings and Gazette instruments directly."
+    },
+    {
+      "source": "nsira",
+      "channel": "reviews",
+      "reason": "NSIRA homepage showed latest listed October review and November 6 administrative publications; full NSICOP and Intelligence Commissioner coverage remains incomplete.",
+      "next": "Check the individual review and other oversight indexes."
+    },
+    {
+      "source": "montreal",
+      "channel": "contracts",
+      "reason": "November 24 budget announcement acquired; camera procurement awards and deployment records not established.",
+      "next": "Check council minutes, SEAO awards and SPVM deployment records."
+    },
+    {
+      "source": "northsec",
+      "channel": "talks",
+      "reason": "Community channel rotation remains incomplete.",
+      "next": "Check dated public talks and network operator reports."
+    },
+    {
+      "source": "bleepingcomputer",
+      "channel": "news",
+      "reason": "Underlying CIA/ODNI agency record and original reporting not independently acquired.",
+      "next": "Obtain a directly attributable agency record."
+    }
+  ]
+}
