@@ -7,6 +7,7 @@ The separate [cyber-incidents starter contracts](https://github.com/fatb4f/facto
 - [Architecture](architecture.md)
 - Research: [ecosystem](research/ecosystem-review.md), [ontologies](research/intelligence-ontologies.md), [attribution](research/attribution-frameworks.md)
 - Upstream: [source registry](upstream/registry.cue), [BigQuery resources and policy](upstream/bigquery.cue), [licensing](upstream/licensing.md)
-- Reserved surfaces: `world`, `galaxy`, `graph`, `flows`, `playbooks`, `projections`, `evaluation`. Their READMEs describe intended boundaries, not implemented capabilities.
+- Canonical vocabulary and CCO crosswalk: [Shadow Rail World](world/README.md)
+- Reserved surfaces: `galaxy`, `graph`, `flows`, `playbooks`, `projections`, `evaluation`. Their READMEs describe intended boundaries, not implemented capabilities.
 
-Validate the registry with `cue vet -c ./projects/cyber-incidents/shadow-rail/upstream`. Live BigQuery permissions, table schemas, adapters and query enforcement have not been tested.
+Validate the registry with `cue vet -c ./projects/cyber-incidents/shadow-rail/upstream` and the ontology with `bash projects/cyber-incidents/shadow-rail/world/validate.sh`. Live BigQuery permissions, table schemas, adapters and query enforcement have not been tested.
