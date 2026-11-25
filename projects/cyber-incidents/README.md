@@ -55,6 +55,19 @@ Public reports and hypotheses stay native to the CUE model. Adapters can project
 
 The first runtime slice is one fixture-backed, read-only adapter. It retains the original source and revision, parses the input in Python, checks the assembled bundle in CUE, and emits a separate as-of replay projection. This PR documents the stack without installing runtime dependencies, generating models, or enabling live feeds.
 
+## OASIS standards to evaluate
+
+This is a research backlog for both monitoring streams, not an additional stream or an execution interface.
+
+| Standard | Role in Cyber Incidents |
+| --- | --- |
+| [CACAO Security Playbooks 2.0](https://docs.oasis-open.org/cacao/security-playbooks/v2.0/security-playbooks-v2.0.html) | Represent published defensive response procedures and compare them with documented actions. A proposed procedure is neither a record of execution nor evidence of attribution. |
+| [STIX 2.1](https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html) and [TAXII 2.1](https://docs.oasis-open.org/cti/taxii/v2.1/os/taxii-v2.1-os.html) | Keep STIX as the threat-intelligence representation and TAXII as the collection transport. Evaluate explicit references between playbook revisions and STIX objects without changing the existing interchange boundary or the STIX 2.0 and MISP compatibility plan. |
+| [CSAF 2.0 and VEX](https://www.oasis-open.org/standards/) | Evaluate structured publisher advisories and product-specific vulnerability status. An affected-product assertion is not evidence of exploitation in a particular incident. Track [CSAF 2.1 Committee Specification 01](https://www.oasis-open.org/tc-csaf/) separately from the 2.0 baseline. |
+| [OpenC2](https://docs.oasis-open.org/openc2/oc2ls/v2.0/oc2ls-v2.0.html) | Study defensive command intent as static reference material only. The monitor does not issue commands or connect to actuators. |
+
+Start with one synthetic CACAO playbook for the existing utility-outage replay. Before adding an adapter, specify a CUE admission shape that distinguishes a playbook reference, a proposed defensive action, and a separately sourced observation of what happened. Preserve the original bytes, digest, publisher, exact revision, and availability evidence. Test that the replay rejects references unavailable at the cutoff and never promotes a playbook step into an observed fact.
+
 ## Implementation order
 
 1. Qualify representative source revisions and adapter fixtures. Capture inputs and their digests before normalization. Record access, parsing, or coverage failures separately.
