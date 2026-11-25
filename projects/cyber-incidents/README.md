@@ -30,7 +30,7 @@ Historical benchmark candidates include Stuxnet, WannaCry and NotPetya, Olympic 
 ## Contracts
 
 - [Acquisition](../../contracts/projects/cyber-incidents/acquisition.cue) describes the source, channel, acquisition method, captured revision, digest, availability evidence, lineage, and coverage gaps.
-- [Incident bundle](../../contracts/projects/cyber-incidents/incident.cue) links public claims and technical observations to source captures, and strategic assessments to those assertions. Historical replay checks the cutoff for all included claims and their cited revisions. It rejects citations with undocumented availability. Retrospective capture is allowed when the earlier availability of the exact cited revision is documented.
+- [Incident bundle](../../contracts/projects/cyber-incidents/incident.cue) links public claims and technical observations to source captures, and strategic assessments to those assertions. Historical replay checks the cutoff for all included assertions, their cited revisions, and each hypothesis assessment. Review mode can retain later assessments without representing them as available at the replay cutoff. It rejects citations with undocumented availability. Retrospective capture is allowed when the earlier availability of the exact cited revision is documented.
 
 The handoff is `#IncidentBundle.acquisition`, which takes a complete `#Acquisition` record. For example, in the global replay, the public claim `outage-report` cites paragraph 1 of capture `dispatch`. That capture names source `news` and records the digest of the cited revision. Removing either the capture or its source makes the bundle fail validation.
 
@@ -42,6 +42,18 @@ The handoff is `#IncidentBundle.acquisition`, which takes a complete `#Acquisiti
 | [MITRE ATT&CK](https://attack.mitre.org/resources/attack-data-and-tools/) and [DISARM](https://github.com/DISARMFoundation/DISARMframeworks) | Versioned enrichment references. A catalog mapping is not evidence that a technique was used in an incident. |
 
 Public reports and hypotheses stay native to the CUE model. Adapters can project sourced narrative as STIX Reports or Notes when appropriate. Preserve claim-level provenance and hypothesis status through the native record or an explicit extension. Never export a candidate actor relationship as an established one.
+
+## Starter data stack
+
+| Layer | Role |
+| --- | --- |
+| CUE | Canonical schema and cross-record admission checks, including source references and replay cutoffs. |
+| JSON Schema and Pydantic v2 | Derive transport shapes and Python types from CUE. Validate and parse data at the adapter boundary without maintaining a second hand-written domain schema. Revalidate assembled bundles in CUE. |
+| Python and uv | Keep acquisition, normalization, and replay projection in testable Python modules. Use uv to manage the runtime and lock dependencies when the first adapter lands. |
+| xonsh | Operator shell for composing capture, normalization, validation, and replay commands. Keep the checks usable from ordinary shells and CI without xonsh. |
+| Arrow and DuckDB | Proposed downstream analytical projections for querying source lineage and comparing incident histories. They do not own schema semantics or admit evidence. |
+
+The first runtime slice is one fixture-backed, read-only adapter. It retains the original source and revision, parses the input in Python, checks the assembled bundle in CUE, and emits a separate as-of replay projection. This PR documents the stack without installing runtime dependencies, generating models, or enabling live feeds.
 
 ## Implementation order
 
@@ -61,4 +73,4 @@ cue export ./contracts/projects/cyber-incidents -e watchStreams
 python3 contracts/projects/cyber-incidents/testdata/check.py
 ```
 
-Both example bundles use synthetic sources and events.
+The repository-wide `bash scripts/validate-contracts.sh` also vets this package and runs the fixture checks in CI. Both example bundles use synthetic sources and events.

@@ -102,6 +102,9 @@ watchStreams: {
 		}
 	}
 	for _, h in incident.hypotheses {
+		if view.mode == "historical-replay" {
+			_replayAssessmentCutoff: true & (h.assessedAt <= view.asOf)
+		}
 		for link in h.evidence {
 			if link.rail == "public" {
 				_hypothesisPublicRef: true & list.Contains(publicIDs, link.assertionID)

@@ -38,7 +38,15 @@ def main():
         good = vet(example)
         if good.returncode:
             raise SystemExit(f"{stream}: {good.stderr}")
+    later_review = copy.deepcopy(replay)
+    later_review["view"] = {"mode": "review"}
+    later_review["incident"]["hypotheses"]["objective"]["assessedAt"] = "2027-01-04T12:00:00Z"
+    good = vet(later_review)
+    if good.returncode:
+        raise SystemExit(f"later assessment in review mode: {good.stderr}")
     cases = [
+        ("post-cutoff assessment", ("incident", "hypotheses", "objective", "assessedAt"),
+         "2027-01-04T12:00:00Z", "_replayAssessmentCutoff"),
         ("unknown stream", ("incident", "stream"), "unknown-stream", "stream"),
         ("cutoff", ("view", "asOf"), "2026-01-02T12:00:00Z", "_replayCutoff"),
         ("missing source", ("acquisition", "captures", "dispatch", "sourceID"),
@@ -62,7 +70,7 @@ def main():
         result = vet(fixture)
         if not result.returncode or diagnostic not in result.stderr + result.stdout:
             raise SystemExit(f"{name}: unexpected validation result\n{result.stderr}")
-    print(f"Passed {len(examples)} accepted fixtures and {len(cases)} rejection cases.")
+    print(f"Passed {len(examples) + 1} acceptance cases and {len(cases)} rejection cases.")
 
 
 if __name__ == "__main__":
