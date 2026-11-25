@@ -2,12 +2,22 @@
 
 The project has two monitoring streams. Both use the same CUE contracts for acquiring sources and analyzing what those sources establish.
 
+**[Browse major cyber incidents by date](global-major-cyber/incidents/README.md).** The newest entries appear first. Each row links to the incident record and to the source for the displayed date.
+
 | Role | Stream | Example |
 | --- | --- | --- |
 | Primary | Major cyber incidents worldwide | [Replay a synthetic utility outage](global-major-cyber/replay.json) |
 | Secondary | Canadian surveillance developments, including legislation and oversight | [Review a synthetic Canadian oversight bulletin](canadian-surveillance/review.json) |
 
 The Canadian example records the committee's announcement as a public claim and leaves technical observations empty.
+
+## Maintaining the incident directory
+
+Store one review bundle per real incident in `global-major-cyber/incidents/<incident-id>/bundle.json`. Keep the ID and path when new reporting arrives. Use a documented day of impact, detection or public disclosure and label what that day represents. If the day of impact is unknown, a sourced public disclosure can still anchor the entry. Keep an incident without any documented day out of the dated index until a source establishes one.
+
+The [directory contract](../../contracts/projects/cyber-incidents/directory.cue) links each date to a public claim and its cited captures. `knownAt` and capture availability describe when evidence was available. A 2017 incident can have a source revision first verified in 2026. For a correction, retain the earlier source revision and add the correction with its own citation. Regenerate the index from the repository root with `python3 projects/cyber-incidents/directory.py`. CI checks it with `--check`.
+
+The [Factory dispatcher](../../docs/architecture/factory-daily-dispatcher.md) selects registered monitors. CTRL and Epistemic Plant Bootstrap use the [shared upstream-monitor publication procedure](../../contracts/workers/upstream-monitor/AGENTS.md). Their profiles publish each run's report, summary and evidence, seal them in a manifest, then advance the latest pointer. World event watches publish according to their own task contracts. Cyber Incidents has no registered monitoring task yet. When a cyber profile is admitted, its run evidence should reference the stable incident IDs, so readers can follow several reports about one event. The dated directory can already be maintained independently of a run.
 
 ## Original request
 

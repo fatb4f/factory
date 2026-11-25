@@ -60,9 +60,10 @@ watchStreams: {
 }
 
 #Incident: {
-	id:     #ID
-	stream: watchStreams.primary | watchStreams.secondary
-	title:  #Text
+	id:           #ID
+	stream:       watchStreams.primary | watchStreams.secondary
+	title:        #Text
+	catalogDate?: #CatalogDate
 	publicClaims: [#ID]:          #PublicClaim
 	technicalObservations: [#ID]: #TechnicalObservation
 	hypotheses: [#ID]:            #Hypothesis
@@ -85,6 +86,9 @@ watchStreams: {
 	])
 	let captureIDs = [for id, _ in acquisition.captures {id}]
 	let publicIDs = [for id, _ in incident.publicClaims {id}]
+	if incident.catalogDate != _|_ {
+		_catalogClaimResolves: true & list.Contains(publicIDs, incident.catalogDate.publicClaimID)
+	}
 	let technicalIDs = [for id, _ in incident.technicalObservations {id}]
 	for a in assertions {
 		for ref in a.citations {

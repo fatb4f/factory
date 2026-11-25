@@ -17,12 +17,12 @@ def update(value, path, replacement):
     value[path[-1]] = replacement
 
 
-def vet(instance):
+def vet(instance, definition="#IncidentBundle"):
     with tempfile.TemporaryDirectory() as temp:
         test = Path(temp) / "fixture.json"
         test.write_text(json.dumps(instance))
         return subprocess.run(
-            [os.environ.get("CUE", "cue"), "vet", "-c", "-d", "#IncidentBundle",
+            [os.environ.get("CUE", "cue"), "vet", "-c", "-d", definition,
              "./" + str(SCHEMA.relative_to(ROOT)), str(test)],
             cwd=ROOT, capture_output=True, text=True, check=False,
         )
@@ -71,6 +71,22 @@ def main():
         if not result.returncode or diagnostic not in result.stderr + result.stdout:
             raise SystemExit(f"{name}: unexpected validation result\n{result.stderr}")
     print(f"Passed {len(examples) + 1} acceptance cases and {len(cases)} rejection cases.")
+
+    directory = EXAMPLES / "global-major-cyber" / "incidents"
+    entry = json.loads((directory / "wannacry" / "bundle.json").read_text())
+    for path, replacement, diagnostic in [
+        (("incident", "catalogDate", "day"), "2017-02-30", "_validDay"),
+        (("incident", "catalogDate", "publicClaimID"), "missing", "_catalogClaimResolves"),
+        (("incident", "stream"), "canadian-surveillance", "stream"),
+        (("view", "mode"), "historical-replay", "mode"),
+        (("acquisition", "captures", "report", "locator"), "file:report", "locator"),
+    ]:
+        fixture = copy.deepcopy(entry)
+        update(fixture, path, replacement)
+        result = vet(fixture, "#CatalogBundle")
+        if not result.returncode or diagnostic not in result.stderr:
+            raise SystemExit(f"catalog {path}: unexpected validation result\n{result.stderr}")
+    print("Passed five directory rejection cases.")
 
 
 if __name__ == "__main__":

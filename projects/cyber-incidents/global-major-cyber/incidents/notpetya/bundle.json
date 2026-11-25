@@ -1,0 +1,63 @@
+{
+  "schema": "factory.cyber-incidents.bundle/v0.1",
+  "acquisition": {
+    "schema": "factory.cyber-incidents.acquisition/v0.1",
+    "runID": "catalog-20261125-notpetya",
+    "sources": {
+      "publisher": {
+        "publisher": "Microsoft Defender Security Research Team",
+        "channel": "public reports",
+        "kind": "technical",
+        "format": "document",
+        "transport": "https",
+        "locator": "https://www.microsoft.com/en-us/security/blog/2017/06/27/new-ransomware-old-techniques-petya-adds-worm-capabilities/"
+      }
+    },
+    "captures": {
+      "report": {
+        "sourceID": "publisher",
+        "revision": "HTML response retrieved 2026-11-25T09:55:16Z",
+        "locator": "https://www.microsoft.com/en-us/security/blog/2017/06/27/new-ransomware-old-techniques-petya-adds-worm-capabilities/",
+        "contentSHA256": "2d9dffc974de438641287fbd8b8804ecc758c71630fac50076b542390b29ff1b",
+        "retrievedAt": "2026-11-25T09:55:16Z",
+        "availability": {
+          "state": "documented",
+          "at": "2026-11-25T09:55:16Z",
+          "basis": "The exact response bytes were retrieved and hashed at this time."
+        },
+        "lineageKey": "notpetya-report"
+      }
+    },
+    "gaps": []
+  },
+  "incident": {
+    "id": "notpetya",
+    "title": "NotPetya",
+    "stream": "global-major-cyber",
+    "catalogDate": {
+      "day": "2017-06-27",
+      "basis": "observed-impact",
+      "publicClaimID": "outbreak"
+    },
+    "publicClaims": {
+      "outbreak": {
+        "rail": "public",
+        "claimKind": "reporting",
+        "summary": "Microsoft reported infections in Ukraine on June 27 and subsequently observed infections in 64 additional countries.",
+        "knownAt": "2026-11-25T09:55:16Z",
+        "citations": [
+          {
+            "captureID": "report",
+            "selector": "Opening paragraph beginning “On June 27, 2017”."
+          }
+        ]
+      }
+    },
+    "technicalObservations": {},
+    "hypotheses": {},
+    "openQuestions": {}
+  },
+  "view": {
+    "mode": "review"
+  }
+}
