@@ -53,7 +53,30 @@ def main():
             )
             if (result.returncode == 0) != expected:
                 raise SystemExit(f"{name}: unexpected result\n{result.stderr}")
-    print(f"Validated {len(cases)} graph relationship fixtures")
+        before = {**valid, "knowledge": {"start": 30, "end": 40}}
+        corrected = {**valid, "revision": "v2", "knowledge": {"start": 40}}
+        replay = [
+            (before, 10, 39, True),
+            (before, 10, 40, False),
+            (corrected, 10, 39, False),
+            (corrected, 10, 40, True),
+            (corrected, 20, 40, False),
+            (corrected, 9, 40, False),
+            (corrected, 10, 40, False),  # Deliberately assert the wrong visibility.
+        ]
+        for index, (relationship, valid_at, known_at, visible) in enumerate(replay):
+            path.write_text(json.dumps({
+                "relationship": relationship, "validAt": valid_at,
+                "knownAt": known_at, "visible": visible,
+            }), encoding="utf-8")
+            result = subprocess.run(
+                ["cue", "vet", "-c", str(path), str(HERE / "graph.cue"), "-d", "#ReplayProbe"],
+                capture_output=True, text=True,
+            )
+            expected = index < len(replay) - 1
+            if (result.returncode == 0) != expected:
+                raise SystemExit(f"replay fixture {index}: unexpected result\n{result.stderr}")
+    print(f"Validated {len(cases)} relationship and {len(replay)} replay fixtures")
 
 
 if __name__ == "__main__":
