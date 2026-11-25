@@ -55,3 +55,23 @@ import world "github.com/fatb4f/factory/projects/cyber-incidents/shadow-rail/wor
 		to: {concept: "claim" | "hypothesis" | "attribution"}
 	}
 }
+
+// A replay probe tests visibility of a single revision, not graph consistency.
+#ReplayProbe: {
+	relationship: #RelationshipRevision
+	validAt:      #Second
+	knownAt:      #Second
+
+	let valid = relationship.valid
+	let knowledge = relationship.knowledge
+	_validEnd:     int | *-1
+	_knowledgeEnd: int | *-1
+	if valid.end != _|_ {
+		_validEnd: valid.end
+	}
+	if knowledge.end != _|_ {
+		_knowledgeEnd: knowledge.end
+	}
+	visible: validAt >= valid.start && (_validEnd == -1 || validAt < _validEnd) &&
+		knownAt >= knowledge.start && (_knowledgeEnd == -1 || knownAt < _knowledgeEnd)
+}
