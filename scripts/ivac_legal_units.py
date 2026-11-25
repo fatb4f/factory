@@ -101,6 +101,7 @@ class Snapshot:
         *,
         rules=(),
         verify_basis=None,
+        verify_reviews=None,
         synthetic=False,
     ):
         self._data = deepcopy(data)
@@ -112,8 +113,13 @@ class Snapshot:
             raise ValueError("incompatible observation reference")
         self._provider = scope_provider
         self._rules = deepcopy(tuple(rules))
+        seen = set()
         for rule in self._rules:
             workbench.cue_validate(rule, "#CrossUnitRule")
+            identity = (rule["id"], rule["version"])
+            if identity in seen:
+                raise ValueError("duplicate rule identity and version")
+            seen.add(identity)
             if rule["sourceVersion"] != data["sourceVersion"]:
                 raise ValueError("incompatible rule version binding")
             if rule["status"] == "test-only":
@@ -121,6 +127,12 @@ class Snapshot:
                     raise ValueError("test rule requires a synthetic snapshot")
             elif verify_basis is None or verify_basis(deepcopy(rule)) is not True:
                 raise ValueError("unverified clinical basis")
+            if rule["status"] == "candidate" and not synthetic:
+                raise ValueError("candidate rules require a synthetic snapshot")
+            if rule["status"] == "reviewed" and (
+                verify_reviews is None or verify_reviews(deepcopy(rule)) is not True
+            ):
+                raise ValueError("unverified professional reviews")
 
     def _scope(self):
         spec = self._data["snapshot"]
@@ -227,15 +239,24 @@ class BoundUnit:
             target = self.unit.schedule.unit(rule["target"])
             if target.leaf.section == self.unit.leaf.section:
                 raise ValueError("rule target must belong to another section")
-            relevant = [
-                link for link in links if link["object"]["concept"] == rule["concept"]
-            ]
-            matches = [
-                link for link in relevant if link["object"]["value"] == rule["expectedValue"]
-            ]
-            if matches:
+            conditions = [{"concept": rule["concept"], "expectedValue": rule["expectedValue"]}]
+            conditions.extend(rule.get("conditions", []))
+            matched_by_id = {}
+            conflicts = False
+            for condition in conditions:
+                relevant = [
+                    link for link in links if link["object"]["concept"] == condition["concept"]
+                ]
+                matches = [
+                    link for link in relevant if link["object"]["value"] == condition["expectedValue"]
+                ]
+                if not matches:
+                    break
+                conflicts |= len(matches) != len(relevant)
+                matched_by_id.update({link["relationship"]["id"]: link for link in matches})
+            else:
                 unresolved = list(rule["unresolvedConditions"])
-                if len(matches) != len(relevant):
+                if conflicts:
                     unresolved.append(
                         "Other authorized observations of this concept have different values; review is required."
                     )
@@ -246,7 +267,7 @@ class BoundUnit:
                         "status": rule["status"],
                         "basis": deepcopy(rule["basis"]),
                         "target": target.leaf.model_dump(mode="json"),
-                        "matches": matches,
+                        "matches": [matched_by_id[key] for key in sorted(matched_by_id)],
                         "unresolvedConditions": unresolved,
                     }
                 )
