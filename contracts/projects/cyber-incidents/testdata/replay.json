@@ -1,0 +1,84 @@
+{
+  "schema": "factory.cyber-incidents.bundle/v0.1",
+  "acquisition": {
+    "schema": "factory.cyber-incidents.acquisition/v0.1",
+    "runID": "synthetic-001",
+    "sources": {
+      "news": {
+        "publisher": "Example News",
+        "channel": "public articles",
+        "kind": "mainstream-media",
+        "format": "document",
+        "transport": "https",
+        "locator": "https://example.org/news"
+      },
+      "operator": {
+        "publisher": "Example Utility",
+        "channel": "incident bulletins",
+        "kind": "official",
+        "format": "document",
+        "transport": "https",
+        "locator": "https://example.org/bulletins"
+      }
+    },
+    "captures": {
+      "dispatch": {
+        "sourceID": "news",
+        "revision": "original",
+        "locator": "https://example.org/news/outage",
+        "contentSHA256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "retrievedAt": "2026-01-05T12:00:00Z",
+        "availability": {"state": "documented", "at": "2026-01-02T12:00:00Z", "basis": "Synthetic archived edition"},
+        "lineageKey": "outage-dispatch"
+      },
+      "bulletin": {
+        "sourceID": "operator",
+        "revision": "1",
+        "locator": "https://example.org/bulletins/001",
+        "contentSHA256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "retrievedAt": "2026-01-05T12:00:00Z",
+        "availability": {"state": "documented", "at": "2026-01-03T12:00:00Z", "basis": "Synthetic dated bulletin"},
+        "lineageKey": "operator-bulletin"
+      }
+    },
+    "gaps": []
+  },
+  "incident": {
+    "id": "synthetic-outage",
+    "stream": "global-major-cyber",
+    "title": "Synthetic utility outage",
+    "publicClaims": {
+      "outage-report": {
+        "rail": "public",
+        "claimKind": "reporting",
+        "summary": "A media outlet reported service interruptions.",
+        "knownAt": "2026-01-02T12:00:00Z",
+        "citations": [{"captureID": "dispatch", "selector": "paragraph 1"}]
+      }
+    },
+    "technicalObservations": {
+      "isolation": {
+        "rail": "technical",
+        "findingKind": "containment",
+        "summary": "The utility bulletin records that it isolated a system.",
+        "knownAt": "2026-01-03T12:00:00Z",
+        "citations": [{"captureID": "bulletin", "selector": "section 2"}]
+      }
+    },
+    "hypotheses": {
+      "objective": {
+        "rail": "strategic",
+        "proposition": "Disruption may have been an objective.",
+        "category": "objective",
+        "assessedAt": "2026-01-04T12:00:00Z",
+        "state": "insufficient-evidence",
+        "evidence": [{"rail": "technical", "assertionID": "isolation", "relation": "context"}],
+        "nextEvidence": ["A sourced chronology distinguishing attacker effects from containment."]
+      }
+    },
+    "openQuestions": {
+      "detection": {"state": "not-publicly-disclosed", "reason": "The bulletin does not describe the first alert."}
+    }
+  },
+  "view": {"mode": "historical-replay", "asOf": "2026-01-04T12:00:00Z"}
+}

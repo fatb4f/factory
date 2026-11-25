@@ -1,0 +1,50 @@
+# Cyber Incidents
+
+Starter project for defensive incident analysis. The primary stream covers major global cyber incidents. A separate Canadian surveillance stream covers developments such as legislation and oversight. A Canadian surveillance record does not imply that a breach occurred. Nothing here activates either stream or modifies the existing watch.
+
+## What we agreed
+
+Keep three linked rails so a public account can be compared with the evidence without becoming evidence of an actor or motive on its own.
+
+| Rail | What it records | Starter boundary |
+| --- | --- | --- |
+| Public reporting | Mainstream coverage, official statements, and corrections | Keep the original assertion, citation, revision, and lineage. Repetition of one dispatch is not independent corroboration. |
+| Technical evidence | Sourced detection, indicators, documented impact, containment, and forensic findings | Keep the first alert, initial access, affected assets, and disclosure dates distinct. A shutdown does not identify the detection trigger or the attacker’s effect. |
+| Strategic assessment (shadow rail) | Candidate explanations for objective, actor, sponsorship, and historical playbook resemblance | Link supporting and contradictory observations. Keep profit, strategic leverage, mixed motives, and insufficient evidence open when supported. Similarity is not attribution, and public silence is not proof. |
+
+The Wyoming discussion illustrated the distinction between **not publicly disclosed**, **under investigation**, and **unknown**. Store the status and the reason, not a fabricated indicator, zero-day, or attribution. Use dated source revisions to replay what was knowable at the time. Compare changing tactics as overlapping patterns rather than as a single linear progression. A shared technique or tool is not an actor fingerprint.
+
+Historical benchmark candidates include Stuxnet, WannaCry and NotPetya, Olympic Destroyer, Triton, and Pegasus. EternalBlue belongs in the benchmark as a reused tool or capability reference, not as a separate attributed incident. Use these as curation leads, not ground truth. Confirm dates, observations, and attribution independently before adding them to a fixture.
+
+## Contracts
+
+- [Acquisition](../../contracts/projects/cyber-incidents/acquisition.cue) describes the source, channel, acquisition method, captured revision, digest, availability evidence, lineage, and coverage gaps.
+- [Incident bundle](../../contracts/projects/cyber-incidents/incident.cue) links public claims and technical observations to source captures, and strategic assessments to those assertions. Historical replay checks the cutoff for all included claims and their cited revisions. It rejects citations with undocumented availability. Retrospective capture is allowed when the earlier availability of the exact cited revision is documented.
+
+| Interface | Intended role |
+| --- | --- |
+| [OASIS STIX 2.1](https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html) | Preferred interchange. Preserve original object IDs, versions, markings, and extensions during conversion. |
+| [OASIS STIX 2.0](https://docs.oasis-open.org/cti/stix/v2.0/stix-v2.0.html) and [MISP JSON](https://www.misp-standard.org/) | Inbound compatibility through explicit, tested adapters. Keep raw originals and report conversion loss rather than flattening provenance. |
+| [OASIS TAXII 2.1](https://docs.oasis-open.org/cti/taxii/v2.1/os/taxii-v2.1-os.html) | Transport for supported STIX collections, not the incident schema. |
+| [MITRE ATT&CK](https://attack.mitre.org/resources/attack-data-and-tools/) and [DISARM](https://github.com/DISARMFoundation/DISARMframeworks) | Versioned enrichment references. A catalog mapping is not evidence that a technique was used in an incident. |
+
+Public reports and hypotheses stay native to the CUE model. Adapters can project sourced narrative as STIX Reports or Notes when appropriate. Preserve claim-level provenance and hypothesis status through the native record or an explicit extension. Never export a candidate actor relationship as an established one.
+
+## Implementation order
+
+1. Qualify representative source revisions and adapter fixtures. Capture inputs and their digests before normalization. Record access, parsing, or coverage failures separately.
+2. Generate JSON Schema and Python types from the CUE shapes, then build read-only adapters. Run CUE at the admission boundary. Generated types are not a substitute for cross-record validation, and validation does not verify the source assertions.
+3. Add a deterministic replay projection. Provide only eligible assertions and their cited material to the model. Exclude retrospective assessments, untimed open questions, unselected captures, and later labels from model inputs.
+4. Benchmark against a rules-only baseline. Keep related campaigns together across splits. Use separate validation for tuning and reserve the test set for final evaluation. Measure late-evidence leakage, false attribution, abstention, and calibration before considering any integration.
+
+No adapters, live feeds, generated types, graph admission, or registry entries are implemented in this scaffold.
+
+## Local check
+
+From the repository root with CUE v0.16 and Python 3 available:
+
+```sh
+python3 contracts/projects/cyber-incidents/testdata/check.py
+```
+
+The only bundled incident is synthetic.
