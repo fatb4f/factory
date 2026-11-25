@@ -205,6 +205,9 @@ cue vet -c=false ./contracts/world/financial-opportunities:financialopportunitie
 section "Shadow Rail upstream registry"
 bash projects/cyber-incidents/shadow-rail/upstream/validate.sh
 
+section "Shadow Rail canonical ontology"
+bash projects/cyber-incidents/shadow-rail/world/validate.sh
+
 section "engineering POCs"
 cue vet -c=false ./contracts/projects/engineering-pocs:engineeringpocs
 
