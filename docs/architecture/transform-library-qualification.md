@@ -13,7 +13,7 @@ this interface.
 
 In a Python 3.12 environment with the candidate stack installed, run
 `python3 scripts/qualify-transform-libraries.py` from the repository root.
-The probe fails on a missing or different version. No backend fallback is
+The probe also checks the existing Arrow pin (26.0.0) and fails on any missing or different version. No backend fallback is
 allowed. Save the resolved dependency versions, Python and platform details,
 and exact upstream artifact digests with a successful qualification receipt.
 
