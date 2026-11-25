@@ -31,7 +31,7 @@ The dispatcher does not create a second semantic control plane and does not infe
 
 ## Registry boundary
 
-Root `registry.cue` records unit/task identity, optional semantic-authority path, task-local agent path, enabled state, and explicit weekly weekday cadence. CUE is structured repository configuration here; there is no dispatcher semantic admission package.
+Root `registry.cue` records unit/task identity, optional semantic-authority path, task-local agent path, enabled state, and cadence. The weekly dispatcher selects only weekly entries. The existing hourly Cyber Incident Watch invokes its registered entry directly. CUE is structured repository configuration here; there is no dispatcher semantic admission package.
 
 ### Enabled Monday tasks
 
