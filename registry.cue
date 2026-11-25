@@ -3,6 +3,11 @@ package factory
 import unit "github.com/fatb4f/factory/contracts:unit"
 
 units: close({
+	"projects.cyber-incidents": unit.#Unit & {
+		id:     "projects.cyber-incidents"
+		kind:   "project"
+		agents: "projects/cyber-incidents/.agents"
+	}
 	"projects.ctrl": unit.#Unit & {
 		id:     "projects.ctrl"
 		kind:   "project"
@@ -76,6 +81,15 @@ units: close({
 })
 
 tasks: close({
+	"projects.cyber-incidents.upstream-monitor": unit.#Task & {
+		id:        "projects.cyber-incidents.upstream-monitor"
+		name:      "upstream-monitor"
+		unit:      "projects.cyber-incidents"
+		authority: "contracts/workers/upstream-monitor/profiles_cyber_incidents/contract.cue"
+		agent:     "projects/cyber-incidents/.agents/AGENTS.md"
+		enabled:   true
+		cadence: frequency: "hourly"
+	}
 	"projects.ctrl.upstream-monitor": unit.#Task & {
 		id:        "projects.ctrl.upstream-monitor"
 		name:      "upstream-monitor"

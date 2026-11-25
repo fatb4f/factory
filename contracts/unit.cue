@@ -17,7 +17,7 @@ package unit
 	agents: #AgentRootPath
 })
 
-#Cadence: close({
+#Cadence: close({frequency: "hourly"}) | close({
 	frequency: "weekly"
 	weekday:   #Weekday
 })
