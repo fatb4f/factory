@@ -1,0 +1,63 @@
+name: Shared transform qualification
+
+on:
+  pull_request:
+    paths: &transform_paths
+      - 'pyproject.toml'
+      - 'runtime/**'
+      - 'contracts/state/**'
+      - 'contracts/unit.cue'
+      - 'cue.mod/**'
+      - 'state/transform-core/**'
+      - 'extensions/review-desk-navigation/**'
+      - 'contracts/personal/ivac/**'
+      - 'personal/ivac/**'
+      - 'scripts/ivac*'
+      - 'scripts/test_ivac*'
+      - 'scripts/qualify-*transform*'
+      - 'scripts/requirements-transform-wheels.txt'
+      - 'scripts/requirements-ivac-regulatory.txt'
+      - '.github/workflows/transform-library-qualification.yml'
+  push:
+    branches: [main]
+    paths: *transform_paths
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: cue-lang/setup-cue@v1.0.0
+        with:
+          version: v0.16.1
+      - name: Build and verify the M1 Core candidate
+        env:
+          SOURCE_DATE_EPOCH: "1580601600"
+        run: |
+          python -m pip wheel --no-deps --wheel-dir "$RUNNER_TEMP/core" .
+          (cd "$RUNNER_TEMP/core" && sha256sum --check "$GITHUB_WORKSPACE/state/transform-core/m1-candidate.sha256")
+      - name: Install the candidate, independent extension and qualified direct wheels
+        run: |
+          python -m pip install "$RUNNER_TEMP"/core/*.whl ./extensions/review-desk-navigation -r scripts/requirements-ivac-regulatory.txt 'mypy==2.4.1'
+          python -m pip install --force-reinstall --no-deps --only-binary=:all: --require-hashes -r scripts/requirements-transform-wheels.txt
+          python -m pip check
+      - name: Check declarations, behavior and the installed extension hook
+        run: |
+          python scripts/qualify-transform-libraries.py -v
+          cd "$RUNNER_TEMP"
+          # The pilot extension is a single module. Check the actual installed source.
+          cp "$(python -I -c 'from importlib.util import find_spec; print(find_spec("factory_review_desk_navigation").origin)')" .
+          python -I -m mypy --strict --follow-imports=silent -m runtime.typed_transform -m factory_review_desk_navigation
+          python -I -m mypy.stubtest runtime.typed_transform
+      - name: Run the Desk adapter and its HTTP boundary using the installed Core
+        run: python -I scripts/qualify-installed-transform-core.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: m1-domain-core-candidate
+          path: ${{ runner.temp }}/core/*.whl

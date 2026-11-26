@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling==1.33.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "factory-domain-core"
+version = "0.1.0rc1"
+description = "Factory's typed transform port, trusted executor and Ibis lowering adapter"
+requires-python = ">=3.12"
+
+[tool.hatch.build]
+only-include = [
+  "runtime/__init__.py", "runtime/py.typed", "runtime/typed_transform.py",
+  "runtime/transform_discovery.py", "runtime/transform_execution.py", "runtime/ibis_adapter.py",
+]
+
+# Preserve the module layout of the authoritative CUE files for offline validation.
+[tool.hatch.build.targets.wheel.force-include]
+"cue.mod/module.cue" = "runtime/_cue/cue.mod/module.cue"
+"contracts/unit.cue" = "runtime/_cue/contracts/unit.cue"
+"contracts/state/comparison.cue" = "runtime/_cue/contracts/state/comparison.cue"
+"contracts/state/transform-invocation.cue" = "runtime/_cue/contracts/state/transform-invocation.cue"
+
+[tool.hatch.build.targets.sdist]
+only-include = [
+  "pyproject.toml", "cue.mod/module.cue", "contracts/unit.cue", "contracts/state/comparison.cue",
+  "contracts/state/transform-invocation.cue", "runtime/__init__.py", "runtime/py.typed", "runtime/typed_transform.py",
+  "runtime/transform_discovery.py", "runtime/transform_execution.py", "runtime/ibis_adapter.py",
+]

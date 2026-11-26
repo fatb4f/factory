@@ -38,6 +38,7 @@ class Schedule:
         self._sections = {s["number"]: s for s in index["sections"]}
         self._units = {u["number"]: u for u in index["units"]}
         self.version = index["acquisition"]["id"]
+        self.revision_digest = sources.spans.digest(sources.encoded(index))
         self.applicability = index["caseApplicability"]
 
     @classmethod
@@ -64,6 +65,11 @@ class LegalUnit:
             raise ValueError("leaf does not match the verified schedule")
         object.__setattr__(self, "schedule", schedule)
         object.__setattr__(self, "_serialized_leaf", leaf.model_dump_json())
+
+    @classmethod
+    def from_json(cls, schedule: Schedule, payload: str | bytes):
+        """Rehydrate a leaf only if it matches the verified schedule."""
+        return cls(schedule, ScheduleLeaf.model_validate_json(payload, strict=True))
 
     @property
     def leaf(self):
@@ -189,7 +195,10 @@ class BoundUnit:
     snapshot: Snapshot
 
     def linked_objects(self):
-        scope = self.snapshot._scope()
+        return self._linked_objects(self.snapshot._scope())
+
+    def _linked_objects(self, scope):
+        """Use a scope already checked by the caller-facing boundary."""
         data = self.snapshot._data
         allowed = {}
         for key in scope.relationships.intersection(data["relationships"]):

@@ -216,6 +216,7 @@ section "shared state"
 cue vet -c=false ./contracts/state:state
 cue vet -c=false ./state/fixtures:statefixtures
 bash state/fixtures/negative/run.sh
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/test_transform_invocation.py
 bash scripts/validate-python-native-bindings.sh
 
 section "UQAM event watch"

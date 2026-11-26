@@ -1,0 +1,5 @@
+# T1 direct artifacts for CPython 3.12, Linux x86_64. Version agreement with IVAC is checked by the probes.
+pydantic==2.14.0 --hash=sha256:15fab1bea6f1dc5003b54fc2ecab230c1fd1dbade2acd4addc52d81e32416d4b
+ibis-framework==11.0.0 --hash=sha256:92ff82a96f4eac7f86fa9b6a315e04b5a8f9ed3d186539d88f48e628363f2e72
+duckdb==1.5.6 --hash=sha256:bc9619ed7d4ffa117b5155d84b44794366bb6635178d78ed5e13a6024845c757
+pyarrow==26.0.0 --hash=sha256:6a628922ba20705fa964ca73e4ef959c2fb2f14b9bbec5589a6a1e68e6257c85
