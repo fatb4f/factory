@@ -44,14 +44,11 @@ class TransformInvocationTests(unittest.TestCase):
 
     def check(self, receipt, accepted):
         with tempfile.TemporaryDirectory() as tmp:
-            fixture = Path(tmp) / "invocation.cue"
-            fixture.write_text(
-                'import "github.com/fatb4f/factory/contracts/state"\n'
-                "receipt: state.#TransformInvocation & " + json.dumps(receipt),
-                encoding="utf-8",
-            )
+            fixture = Path(tmp) / "invocation.json"
+            fixture.write_text(json.dumps(receipt), encoding="utf-8")
             result = subprocess.run(
-                ["cue", "vet", "-c", str(fixture)],
+                ["cue", "vet", "-c", "-d", "#TransformInvocation",
+                 "./contracts/state:state", str(fixture)],
                 cwd=ROOT, capture_output=True, text=True, check=False,
             )
         self.assertEqual(result.returncode == 0, accepted, result.stderr)
