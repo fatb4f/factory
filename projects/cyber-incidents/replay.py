@@ -63,6 +63,7 @@ def project(bundle, cutoff, public_ids=(), technical_ids=()):
     replay = copy.deepcopy(review)
     replay["view"] = {"mode": "historical-replay", "asOf": cutoff}
     incident = replay["incident"]
+    incident.pop("catalogDate", None)  # Its supporting claim may be outside the selection.
     for field, _, ids in selections:
         incident[field] = {key: incident[field][key] for key in sorted(ids)}
     incident["hypotheses"] = {}

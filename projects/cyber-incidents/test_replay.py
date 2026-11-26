@@ -54,6 +54,14 @@ class ReplayTests(unittest.TestCase):
         second = project(self.bundle, CUTOFF, ["another-report", "outage-report"])
         self.assertEqual(first, second)
 
+    def test_unselected_catalog_date_does_not_constrain_replay(self):
+        self.bundle["incident"]["catalogDate"] = {
+            "day": "2026-01-02", "basis": "public-disclosure", "publicClaimID": "outage-report"
+        }
+        result = project(self.bundle, CUTOFF, technical_ids=["isolation"])
+        self.assertEqual([item["id"] for item in result["assertions"]], ["isolation"])
+        self.assertNotIn("catalogDate", json.dumps(result))
+
     def test_invalid_selections(self):
         for ids in (["missing"], ["outage-report", "outage-report"]):
             with self.subTest(ids=ids), self.assertRaises(ProjectionError):

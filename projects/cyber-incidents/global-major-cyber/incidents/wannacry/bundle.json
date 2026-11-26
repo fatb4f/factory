@@ -1,0 +1,63 @@
+{
+  "schema": "factory.cyber-incidents.bundle/v0.1",
+  "acquisition": {
+    "schema": "factory.cyber-incidents.acquisition/v0.1",
+    "runID": "catalog-20261125-wannacry",
+    "sources": {
+      "publisher": {
+        "publisher": "UK National Audit Office",
+        "channel": "public reports",
+        "kind": "official",
+        "format": "document",
+        "transport": "https",
+        "locator": "https://www.nao.org.uk/reports/investigation-wannacry-cyber-attack-and-the-nhs/"
+      }
+    },
+    "captures": {
+      "report": {
+        "sourceID": "publisher",
+        "revision": "HTML response retrieved 2026-11-25T09:55:16Z",
+        "locator": "https://www.nao.org.uk/reports/investigation-wannacry-cyber-attack-and-the-nhs/",
+        "contentSHA256": "40f73ba093ad8e0ecfcb45df639e0949c522bb4641b7f0d85261aa01ab4072e7",
+        "retrievedAt": "2026-11-25T09:55:16Z",
+        "availability": {
+          "state": "documented",
+          "at": "2026-11-25T09:55:16Z",
+          "basis": "The exact response bytes were retrieved and hashed at this time."
+        },
+        "lineageKey": "wannacry-report"
+      }
+    },
+    "gaps": []
+  },
+  "incident": {
+    "id": "wannacry",
+    "title": "WannaCry",
+    "stream": "global-major-cyber",
+    "catalogDate": {
+      "day": "2017-05-12",
+      "basis": "observed-impact",
+      "publicClaimID": "outbreak"
+    },
+    "publicClaims": {
+      "outbreak": {
+        "rail": "public",
+        "claimKind": "reporting",
+        "summary": "The National Audit Office dates the worldwide WannaCry outbreak to May 12 and documents disruption to NHS services in England.",
+        "knownAt": "2026-11-25T09:55:16Z",
+        "citations": [
+          {
+            "captureID": "report",
+            "selector": "Report overview, opening paragraph and key findings on disruption in England."
+          }
+        ]
+      }
+    },
+    "technicalObservations": {},
+    "hypotheses": {},
+    "openQuestions": {}
+  },
+  "view": {
+    "mode": "review"
+  }
+}
