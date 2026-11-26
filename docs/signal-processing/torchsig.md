@@ -8,7 +8,7 @@ A Python environment for offline experiments and labeled examples for scoring. A
 
 ## Measurement workflow
 
-Begin with the same detection task and test split as a simple [GNU Radio](gnu-radio.md) threshold baseline. Vary SNR and include noise-only intervals. Report detection recall and false alarms per minute, with the event-matching rule and test duration.
+Use the same detection task and [grouped split manifest](model-training/datasets/README.md) for TorchSig and a simple [GNU Radio](gnu-radio.md) threshold baseline. Vary SNR and include noise-only intervals. Choose the model and tune both detectors' thresholds on validation. Freeze the detectors and event-matching rule before scoring the same reserved test captures. Report detection recall and false alarms per minute, with the event-matching rule and test duration.
 
 ## Limits and interpretation
 

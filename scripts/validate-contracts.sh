@@ -177,6 +177,9 @@ validate_gym_public() {
 # contract regressions visible rather than masking them behind unrelated state.
 validate_registry
 
+section "RF model-training split manifest"
+bash scripts/validate-rf-splits.sh
+
 section "engineering signals"
 cue vet -c=false ./contracts/world/engineering-signals:engineeringsignals
 

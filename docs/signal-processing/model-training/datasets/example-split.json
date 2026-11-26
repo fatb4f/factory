@@ -1,0 +1,19 @@
+{
+  "dataset": "illustrative-rf-captures",
+  "datasetVersion": "1",
+  "generalizationClaim": "Detect events at a previously unseen receiver site.",
+  "groupingUnit": "receiver site",
+  "splits": {
+    "train": [
+      { "id": "rec-01", "session": "visit-01", "group": "site-a" },
+      { "id": "rec-02", "session": "visit-01", "group": "site-a" },
+      { "id": "rec-03", "session": "visit-02", "group": "site-a" }
+    ],
+    "validation": [
+      { "id": "rec-04", "session": "visit-03", "group": "site-b" }
+    ],
+    "test": [
+      { "id": "rec-05", "session": "visit-04", "group": "site-c" }
+    ]
+  }
+}
