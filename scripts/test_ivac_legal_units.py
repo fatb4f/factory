@@ -124,6 +124,93 @@ class LegalUnitTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "verified schedule"):
             LegalUnit.from_json(self.schedule, json.dumps(altered))
 
+    def test_installed_review_extension_and_historical_replay(self):
+        import sys
+
+        from ivac_review_transform import (
+            CONTRACT_VERSION, PACKAGE, TRANSFORM, ReviewDeskTransforms, validate_links,
+        )
+        from runtime.transform_discovery import discover, installed_entry_digest
+        from runtime.transform_execution import TransformSpec
+        from runtime.typed_transform import TransformRejected, TransformResult
+
+        extra = copy.deepcopy(self.data["relationships"]["rel"])
+        extra["id"] = "rel-extra"
+        self.data["relationships"]["rel-extra"] = extra
+        snapshot = self.bound().snapshot
+        with self.assertRaisesRegex(TransformRejected, "snapshot"):
+            ReviewDeskTransforms(self.schedule, None, policy_version="pilot-v1")
+        desk = ReviewDeskTransforms(self.schedule, snapshot, policy_version="pilot-v1")
+        (entry,) = discover(PACKAGE)
+        self.assertEqual(entry.name, TRANSFORM)
+        self.assertNotIn(entry.module, sys.modules)
+        version, identity, _, _ = installed_entry_digest(PACKAGE, TRANSFORM)
+        with self.assertRaises(TransformRejected):
+            desk.run(self.unit, version=version)
+        with self.assertRaises(TransformRejected):
+            desk.enable_installed(version=version, approved_digest="not-approved")
+        self.assertNotIn(entry.module, sys.modules)
+        desk.enable_installed(version=version, approved_digest=identity)
+        self.assertIn(entry.module, sys.modules)
+
+        # Synthetic defect: an older approved implementation dropped visible links.
+        def omitted_links(view, *, context):
+            return TransformResult([], (), context.input_digests)
+
+        desk._executor.enable(TransformSpec(
+            TRANSFORM, "0.0.1", "sha256:" + "b" * 64, CONTRACT_VERSION,
+            omitted_links, validate_links,
+        ))
+        historical = desk.run(self.unit, version="0.0.1")
+        invocation = historical.receipt["invocationID"]
+        self.assertEqual(historical.receipt["outcome"], "empty")
+        self.assertEqual(desk.replay(invocation).semantic_output, historical.semantic_output)
+
+        def fabricated_link(view, *, context):
+            links = view.links
+            links[0]["relationship"]["id"] = "fabricated"
+            return TransformResult(links, (), context.input_digests)
+
+        desk._executor.enable(TransformSpec(
+            TRANSFORM, "0.0.2", "sha256:" + "d" * 64, CONTRACT_VERSION,
+            fabricated_link, validate_links,
+        ))
+        with self.assertRaisesRegex(TransformRejected, "source-backed"):
+            desk.run(self.unit, version="0.0.2")
+
+        native = desk.run(self.unit, version=version)
+        wire = desk.run_json(json.dumps(self.unit.to_record()), version=version)
+        self.assertEqual(wire.semantic_output, native.semantic_output)
+        self.assertNotEqual(wire.receipt["invocationID"], native.receipt["invocationID"])
+        self.assertEqual(native.receipt["outputDigest"], wire.receipt["outputDigest"])
+        self.assertIn("evidence:source", native.receipt["provenanceRefs"])
+        self.assertEqual(json.loads(native.semantic_output)[0]["relationship"]["id"], "rel")
+
+        original = self.scope
+        self.scope = replace(original, relationships=frozenset({"rel", "rel-extra"}))
+        corrected = desk.replay(invocation, candidate_version=version)
+        self.assertEqual(corrected.semantic_output, native.semantic_output)
+        self.assertNotEqual(corrected.semantic_output, historical.semantic_output)
+        self.assertEqual(corrected.receipt["snapshotRef"], historical.receipt["snapshotRef"])
+        self.assertEqual(len(json.loads(desk.run(self.unit, version=version).semantic_output)), 2)
+
+        self.scope = replace(original, evidence=frozenset())
+        with self.assertRaises(PermissionError):
+            desk.replay(invocation, candidate_version=version)
+        desk.disable(version=version)
+        with self.assertRaises(TransformRejected):
+            desk.run(self.unit, version=version)
+        with self.assertRaisesRegex(TransformRejected, "already bound"):
+            desk._executor.enable(TransformSpec(
+                TRANSFORM, version, "sha256:" + "c" * 64, CONTRACT_VERSION,
+                omitted_links, validate_links,
+            ))
+        with self.assertRaisesRegex(TransformRejected, "incompatible"):
+            desk._executor.enable(TransformSpec(
+                TRANSFORM, "next", identity, "future-contract",
+                omitted_links, validate_links,
+            ))
+
     def test_leaf_view_is_detached(self):
         original = self.unit.to_record()
         leaf = self.unit.leaf

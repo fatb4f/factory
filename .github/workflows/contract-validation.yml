@@ -36,7 +36,7 @@ jobs:
           test "$converter_version" = "pdftotext version 24.02.0"
 
       - name: Install IVAC validation dependencies
-        run: python3 -m pip install -r scripts/requirements-ivac-regulatory.txt
+        run: python3 -m pip install -r scripts/requirements-ivac-regulatory.txt ./extensions/review-desk-navigation
 
       - name: Validate contracts, fixtures, and admitted artifacts
         run: bash scripts/validate-contracts.sh

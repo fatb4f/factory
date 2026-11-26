@@ -21,9 +21,43 @@ Native and rehydrated units then use the same `in_snapshot` and
 provider, never from the JSON.
 
 Run the focused checks from the repository root with CUE and the pinned
-IVAC regulatory Python dependencies installed:
+IVAC regulatory Python dependencies and the pilot extension installed:
 
 ```sh
 python3 scripts/test_transform_invocation.py
 PYTHONPATH=. python3 scripts/test_ivac_legal_units.py
+```
+
+## Review Desk pilot
+
+Install the independently packaged extension next to Factory's runtime and
+IVAC scripts. The server-side `ReviewDeskTransforms` adapter binds an already
+validated `Snapshot` and the trusted caller-scope provider. For this pilot,
+the snapshot's recorded timestamp is the cutoff. Native and JSON calls share
+the executor and use the existing Analytics IR and Ibis path.
+
+Discovery reads installed entry-point metadata without importing the module.
+An operator enables the exact distribution version and installed-entry digest
+from their trusted deployment record. This pilot digest covers distribution
+identity, entry-point identity, and installed module bytes, not the Core
+package or the full wheel. The installed module and process are trusted.
+The extension sees only the already scoped, detached legal relationship
+view. There is no untrusted-code isolation in M1.
+
+Use the receipt's invocation ID to reference synthetic pilot feedback without
+copying result contents into an issue. In the same caller-bound session,
+`replay(id)` reruns the recorded transform against the historical inputs and
+checks current authorization first. `replay(id, candidate_version=...)`
+allows a new enabled version to be tested against that exact context. Compare
+`Execution.semantic_output` or its digest, not the full receipt. This session
+keeps successful and empty execution records in memory. Cross-process replay,
+a persisted operational attempt log, and a graphical Desk action are not
+implemented by this adapter.
+
+The synthetic review case rehearses a reported omission, exact replay,
+candidate correction, and permission withdrawal:
+
+```sh
+python3 -m pip install -r scripts/requirements-ivac-regulatory.txt ./extensions/review-desk-navigation
+PYTHONPATH=. python3 scripts/test_ivac_legal_units.py LegalUnitTests.test_installed_review_extension_and_historical_replay
 ```

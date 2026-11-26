@@ -38,6 +38,7 @@ class Schedule:
         self._sections = {s["number"]: s for s in index["sections"]}
         self._units = {u["number"]: u for u in index["units"]}
         self.version = index["acquisition"]["id"]
+        self.revision_digest = sources.spans.digest(sources.encoded(index))
         self.applicability = index["caseApplicability"]
 
     @classmethod
@@ -194,7 +195,10 @@ class BoundUnit:
     snapshot: Snapshot
 
     def linked_objects(self):
-        scope = self.snapshot._scope()
+        return self._linked_objects(self.snapshot._scope())
+
+    def _linked_objects(self, scope):
+        """Use a scope already checked by the caller-facing boundary."""
         data = self.snapshot._data
         allowed = {}
         for key in scope.relationships.intersection(data["relationships"]):
