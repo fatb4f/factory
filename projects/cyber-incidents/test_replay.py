@@ -81,5 +81,45 @@ class ReplayTests(unittest.TestCase):
         self.assertEqual(result.stdout, "")
 
 
+
+class CanadianSurveillanceReplayTests(unittest.TestCase):
+    fixture = HERE / "canadian-surveillance/review.json"
+    cutoff = "2026-02-02T12:00:00Z"
+    claim_id = "review-announcement"
+
+    def setUp(self):
+        self.bundle = json.loads(self.fixture.read_text())
+
+    def test_notice_evidence_matches_cli_at_publication(self):
+        result = project(self.bundle, self.cutoff, [self.claim_id])
+        expected = {
+            "id": self.claim_id,
+            "rail": "public",
+            "summary": "The committee announced a review of retention periods for surveillance records.",
+            "knownAt": self.cutoff,
+            "citations": [{
+                "captureID": "notice",
+                "selector": "paragraph 1",
+                "revision": "1",
+                "contentSHA256": "c" * 64,
+            }],
+        }
+        self.assertEqual(result["assertions"], [expected])
+        cli = subprocess.run(
+            [sys.executable, str(HERE / "replay.py"), str(self.fixture),
+             "--as-of", self.cutoff, "--public", self.claim_id],
+            capture_output=True, text=True, check=True,
+        )
+        self.assertEqual(json.loads(cli.stdout), result)
+
+    def test_notice_is_ineligible_before_publication(self):
+        with self.assertRaises(ProjectionError):
+            project(self.bundle, "2026-02-02T11:59:59Z", [self.claim_id])
+
+    def test_public_notice_cannot_be_selected_as_technical_evidence(self):
+        with self.assertRaises(ProjectionError):
+            project(self.bundle, self.cutoff, technical_ids=[self.claim_id])
+
+
 if __name__ == "__main__":
     unittest.main()
