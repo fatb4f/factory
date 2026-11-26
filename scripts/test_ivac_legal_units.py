@@ -1,5 +1,6 @@
 import copy
 from dataclasses import replace
+import json
 import subprocess
 import unittest
 
@@ -102,6 +103,26 @@ class LegalUnitTests(unittest.TestCase):
         for self.scope in (None, replace(full, snapshot_id="another")):
             with self.assertRaises(PermissionError):
                 bound.evaluate_cross_unit_rules()
+
+    def test_serialized_leaf_uses_same_authorized_navigation(self):
+        native = self.bound()
+        payload = json.dumps(self.unit.to_record())
+        restored = LegalUnit.from_json(self.schedule, payload)
+        serialized = restored.in_snapshot(native.snapshot)
+        self.assertEqual(restored.to_record(), self.unit.to_record())
+        self.assertEqual(serialized.linked_objects(), native.linked_objects())
+        self.assertEqual(serialized.evaluate_cross_unit_rules(), native.evaluate_cross_unit_rules())
+        self.assertTrue(serialized.linked_objects())
+
+        self.scope = None
+        for bound in (native, serialized):
+            with self.assertRaises(PermissionError):
+                bound.linked_objects()
+
+        altered = self.unit.to_record()
+        altered["label"]["exactText"] = "not in the verified schedule"
+        with self.assertRaisesRegex(ValueError, "verified schedule"):
+            LegalUnit.from_json(self.schedule, json.dumps(altered))
 
     def test_leaf_view_is_detached(self):
         original = self.unit.to_record()

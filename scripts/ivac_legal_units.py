@@ -65,6 +65,11 @@ class LegalUnit:
         object.__setattr__(self, "schedule", schedule)
         object.__setattr__(self, "_serialized_leaf", leaf.model_dump_json())
 
+    @classmethod
+    def from_json(cls, schedule: Schedule, payload: str | bytes):
+        """Rehydrate a leaf only if it matches the verified schedule."""
+        return cls(schedule, ScheduleLeaf.model_validate_json(payload, strict=True))
+
     @property
     def leaf(self):
         """Return a detached view of the verified leaf."""
