@@ -1,6 +1,9 @@
 import copy
 from dataclasses import replace
 import json
+import os
+from pathlib import Path
+import tempfile
 import subprocess
 import unittest
 
@@ -210,6 +213,120 @@ class LegalUnitTests(unittest.TestCase):
                 TRANSFORM, "next", identity, "future-contract",
                 omitted_links, validate_links,
             ))
+
+    def test_persisted_feedback_reauthorizes_after_restart(self):
+        from ivac_review_transform import CONTRACT_VERSION, TRANSFORM, ReviewDeskTransforms, validate_links
+        from runtime.transform_execution import TransformSpec
+        from runtime.typed_transform import TransformResult
+
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        db = Path(temporary.name) / "history.sqlite"
+        original_scope = self.scope
+        snapshot = self.bound().snapshot
+
+        def open_desk(caller, bound_snapshot=snapshot):
+            desk = ReviewDeskTransforms(self.schedule, bound_snapshot, policy_version="review-policy",
+                                        history_path=db, caller_id=caller)
+            self.addCleanup(desk.close)
+            return desk
+
+        def omit(view, *, context):
+            return TransformResult([], (), context.input_digests)
+
+        def include(view, *, context):
+            return TransformResult(view.links, (), context.input_digests)
+
+        old = TransformSpec(TRANSFORM, "old", "sha256:" + "1" * 64, CONTRACT_VERSION, omit, validate_links)
+        new = TransformSpec(TRANSFORM, "new", "sha256:" + "2" * 64, CONTRACT_VERSION, include, validate_links)
+        with self.assertRaisesRegex(ValueError, "caller ID"):
+            open_desk(None)
+        if os.name == "posix":
+            db.touch()
+            db.chmod(0o644)
+            with self.assertRaisesRegex(PermissionError, "owner"):
+                open_desk("invented-reviewer")
+            db.unlink()
+        first = open_desk("invented-reviewer")
+        first._executor.enable(old)
+        original = first.run(self.unit, version="old").receipt
+        invocation = original["invocationID"]
+        feedback = first.report_feedback(invocation, "Invented relationship missing.")
+        first.close()
+        if os.name == "posix":
+            self.assertEqual(db.stat().st_mode & 0o077, 0)
+
+        restored = open_desk("invented-reviewer")
+        restored._executor.enable(old)
+        restored._executor.enable(new)
+        self.assertEqual(restored.get_receipt(invocation), original)
+        self.assertEqual(restored.list_feedback(), [feedback])
+        checked = restored.verify_feedback(feedback["feedbackID"], candidate_version="new")
+        comparison = checked["verification"]
+        self.assertTrue(comparison["changed"])
+        replay = restored.get_receipt(comparison["replayInvocationID"])
+        candidate = restored.get_receipt(comparison["candidateInvocationID"])
+        self.assertEqual(replay["outputDigest"], original["outputDigest"])
+        self.assertEqual(candidate["outputDigest"], comparison["candidateOutputDigest"])
+        self.assertEqual(replay["authorizationReceipt"], candidate["authorizationReceipt"])
+        self.assertEqual(candidate["snapshotRef"], original["snapshotRef"])
+        self.assertEqual(restored.list_receipts(), [candidate, replay, original])
+        self.assertEqual(open_desk("invented-reviewer").get_feedback(feedback["feedbackID"]), checked)
+
+        def assert_unavailable(desk):
+            self.assertEqual(desk.list_receipts(), [])
+            self.assertEqual(desk.list_feedback(), [])
+            with self.assertRaises(PermissionError):
+                desk.get_receipt(invocation)
+            with self.assertRaises(PermissionError):
+                desk.replay(invocation, candidate_version="new")
+            with self.assertRaises(PermissionError):
+                desk.report_feedback(invocation, "Unauthorized")
+            with self.assertRaises(PermissionError):
+                desk.get_feedback(feedback["feedbackID"])
+            with self.assertRaises(PermissionError):
+                desk.verify_feedback(feedback["feedbackID"], candidate_version="new")
+
+        assert_unavailable(open_desk("another-reviewer"))
+        self.scope = replace(original_scope, evidence=frozenset())
+        assert_unavailable(restored)
+        self.scope = original_scope
+        self.data["observations"]["obs"]["value"]["value"] = False
+        assert_unavailable(open_desk("invented-reviewer", self.bound().snapshot))
+        self.data["snapshot"]["id"] = "other-snapshot"
+        self.data["relationships"]["rel"]["snapshotID"] = "other-snapshot"
+        self.scope = replace(original_scope, snapshot_id="other-snapshot")
+        assert_unavailable(open_desk("invented-reviewer", self.bound().snapshot))
+
+    def test_unreproducible_output_cannot_verify_feedback(self):
+        from ivac_review_transform import CONTRACT_VERSION, TRANSFORM, ReviewDeskTransforms, validate_links
+        from runtime.transform_execution import TransformSpec
+        from runtime.typed_transform import TransformRejected, TransformResult
+
+        desk = ReviewDeskTransforms(self.schedule, self.bound().snapshot, policy_version="review-policy")
+        self.addCleanup(desk.close)
+        omit = True
+
+        def unstable(view, *, context):
+            return TransformResult([] if omit else view.links, (), context.input_digests)
+
+        desk._executor.enable(TransformSpec(TRANSFORM, "test", "sha256:" + "1" * 64,
+                                           CONTRACT_VERSION, unstable, validate_links))
+        original = desk.run(self.unit, version="test").receipt
+        feedback = desk.report_feedback(original["invocationID"], "Recheck the missing link")
+        omit = False
+        with self.assertRaisesRegex(TransformRejected, "semantic output"):
+            desk.verify_feedback(feedback["feedbackID"], candidate_version="test")
+        self.assertEqual(desk.get_feedback(feedback["feedbackID"]), feedback)
+        failed, previous = desk.list_receipts()
+        self.assertEqual(previous, original)
+        self.assertEqual(failed["outcome"], "failed")
+        self.assertNotIn("outputDigest", failed)
+        self.assertNotIn("provenanceRefs", failed)
+        with self.assertRaisesRegex(TransformRejected, "no semantic output"):
+            desk.replay(failed["invocationID"])
+        with self.assertRaisesRegex(TransformRejected, "no semantic output"):
+            desk.report_feedback(failed["invocationID"], "Compare this failed output")
 
     def test_leaf_view_is_detached(self):
         original = self.unit.to_record()

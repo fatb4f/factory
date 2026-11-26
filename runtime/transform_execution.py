@@ -13,7 +13,9 @@ from uuid import uuid4
 from runtime.typed_transform import TransformContext, TransformRejected, TypedTransform
 
 I = TypeVar("I")
-ROOT = Path(__file__).resolve().parents[1]
+PACKAGE_DIR = Path(__file__).resolve().parent
+# A wheel ships the CUE module closure beside its executor.
+CUE_ROOT = PACKAGE_DIR / "_cue" if (PACKAGE_DIR / "_cue").is_dir() else PACKAGE_DIR.parent
 
 
 def digest(value: bytes) -> str:
@@ -31,7 +33,7 @@ def validate_receipt(receipt):
         path.write_bytes(semantic_json(receipt))
         subprocess.run(
             ["cue", "vet", "-c", "./contracts/state:state", str(path),
-             "-d", "#TransformInvocation"], cwd=ROOT, check=True, capture_output=True,
+             "-d", "#TransformInvocation"], cwd=CUE_ROOT, check=True, capture_output=True,
         )
 
 
@@ -89,7 +91,8 @@ class Executor(Generic[I]):
         self._enabled.discard((transform_id, version))
 
     def run(self, transform_id, version, prepare: Callable[[], Prepared[I]],
-            *, expected_extension_digest=None):
+            *, expected_extension_digest=None, expected_output_digest=None,
+            record_receipt: Callable[[dict], None] | None = None):
         key = (transform_id, version)
         if key not in self._enabled:
             raise TransformRejected("transform version is not enabled")
@@ -98,12 +101,7 @@ class Executor(Generic[I]):
             raise TransformRejected("historical extension digest mismatch")
         started = monotonic_ns()
         prepared = prepare()  # Caller authorization and snapshot binding precede dispatch.
-        result = spec.transform(prepared.value, context=prepared.context)
-        if result.input_digests != prepared.context.input_digests:
-            raise TransformRejected("transform input provenance differs from bound inputs")
-        provenance = spec.validate_output(prepared.value, result.value)
-        output = semantic_json(result.value)
-        receipt = {
+        context = {
             "apiVersion": "factory.transforms/invocation-v1",
             "invocationID": str(uuid4()),
             "transformID": transform_id,
@@ -124,11 +122,29 @@ class Executor(Generic[I]):
                 "decision": "allowed",
             },
             "inputRefs": list(prepared.input_refs),
-            "outputDigest": digest(output),
-            "provenanceRefs": list(provenance),
             "executionBackend": "in-process",
-            "durationNS": monotonic_ns() - started,
-            "outcome": "success" if result.value else "empty",
         }
-        validate_receipt(receipt)
+        try:
+            result = spec.transform(prepared.value, context=prepared.context)
+            if result.input_digests != prepared.context.input_digests:
+                raise TransformRejected("transform input provenance differs from bound inputs")
+            if result.losses:
+                raise TransformRejected("pilot receipt cannot represent transform losses")
+            provenance = spec.validate_output(prepared.value, result.value)
+            output = semantic_json(result.value)
+            output_digest = digest(output)
+            if expected_output_digest is not None and output_digest != expected_output_digest:
+                raise TransformRejected("historical semantic output differs from the recorded digest")
+            receipt = dict(context, durationNS=monotonic_ns() - started,
+                           outcome="success" if result.value else "empty",
+                           outputDigest=output_digest, provenanceRefs=list(provenance))
+            validate_receipt(receipt)
+        except Exception:
+            if record_receipt is not None:
+                failed = dict(context, durationNS=monotonic_ns() - started, outcome="failed")
+                validate_receipt(failed)
+                record_receipt(failed)
+            raise
+        if record_receipt is not None:
+            record_receipt(receipt)
         return Execution(output, semantic_json(receipt))
