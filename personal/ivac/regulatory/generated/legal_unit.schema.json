@@ -1,0 +1,92 @@
+{
+  "$defs": {
+    "#CitationTransport": {
+      "additionalProperties": false,
+      "properties": {
+        "end": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "exactText": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "locator": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "sourceVersion": {
+          "$ref": "#/$defs/%23ID"
+        },
+        "start": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "end",
+        "exactText",
+        "locator",
+        "sourceVersion",
+        "start"
+      ],
+      "type": "object"
+    },
+    "#ID": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "#ScheduleLeaf": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "functional",
+            "aesthetic"
+          ]
+        },
+        "label": {
+          "$ref": "#/$defs/%23CitationTransport"
+        },
+        "number": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "pieceIDs": {
+          "items": {
+            "$ref": "#/$defs/%23ID"
+          },
+          "minLength": 1,
+          "prefixItems": [
+            {
+              "$ref": "#/$defs/%23ID"
+            }
+          ],
+          "type": "array"
+        },
+        "section": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "label",
+        "number",
+        "pieceIDs",
+        "section"
+      ],
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "scheduleLeaf": {
+      "$ref": "#/$defs/%23ScheduleLeaf"
+    }
+  },
+  "required": [
+    "scheduleLeaf"
+  ],
+  "type": "object"
+}

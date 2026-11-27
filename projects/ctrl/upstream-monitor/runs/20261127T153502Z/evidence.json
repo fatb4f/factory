@@ -1,0 +1,667 @@
+{
+  "apiVersion": "factory.upstream-monitor.ctrl.evidence/v3",
+  "kind": "CtrlUpstreamEvidence",
+  "profile_id": "ctrl",
+  "terminal_state": "terminal_success",
+  "monitor_state": "terminal_success",
+  "qualification_state": "observation_only",
+  "validation": {
+    "authorityRead": true,
+    "ctrlContextRead": true,
+    "projectTopologyRead": true,
+    "semanticKernelRead": true,
+    "sourceChannelsDistinct": true,
+    "graphModelRead": true,
+    "correlationCarrierPolicyRead": true,
+    "interfaceBoundaryRead": true,
+    "publicationPlanRead": true,
+    "forbiddenAttractorsChecked": true,
+    "cueExecution": "executed_elsewhere",
+    "executableCpythonProbes": "not_executed",
+    "executableRegrtest": "not_executed",
+    "executableAstralCorrelation": "not_executed",
+    "executableScipCorrelation": "not_executed",
+    "executableOtelPipeline": "not_executed",
+    "executableOtlpOtapRoundtrip": "not_executed",
+    "executableRelationalProjection": "not_executed",
+    "executableSemanticKernel": "not_executed",
+    "executableWeaverProjection": "not_executed",
+    "reportProjectionOnly": true,
+    "summaryProjectionOnly": true
+  },
+  "run_id": "20261127T153502Z",
+  "authority_revision": "b5aef69c512e17d111a496ded80b1a8a32ce7e39",
+  "bootstrap_baseline": false,
+  "sources": [
+    {
+      "source": "codex",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "6bf1e3e68765e1c91e031f692e2b918dcd10365c",
+      "evidence": [
+        "https://github.com/openai/codex/commit/6bf1e3e68765e1c91e031f692e2b918dcd10365c | ref main | active-baseline | 2026-11-27T15:31:18Z | Persist command completions when approval is declined or fails (#64341)",
+        "3629 commits ahead",
+        "https://github.com/openai/codex/compare/99cda7a9a5997c36aff413d42a222bdb5f95c434...6bf1e3e68765e1c91e031f692e2b918dcd10365c"
+      ]
+    },
+    {
+      "source": "codex",
+      "channel": "latest-alpha-cli",
+      "status": "resolved",
+      "head_commit": "1088aa76e2b5839defc2a26ca365ea0f766b1b64",
+      "evidence": [
+        "https://github.com/openai/codex/commit/1088aa76e2b5839defc2a26ca365ea0f766b1b64 | ref latest-alpha-cli | forecast | 2026-11-26T20:53:07Z | Release 0.174.0-alpha.8",
+        "diverged, 3697 commits on head side",
+        "https://github.com/openai/codex/compare/f5e8906cd6ccfdd6e6f61c8ce44ea6b1ef1912c0...1088aa76e2b5839defc2a26ca365ea0f766b1b64"
+      ]
+    },
+    {
+      "source": "cpython",
+      "channel": "3.14",
+      "status": "resolved",
+      "head_commit": "449a73151ae35c84632318a9804e800cb9928a03",
+      "evidence": [
+        "https://github.com/python/cpython/commit/449a73151ae35c84632318a9804e800cb9928a03 | ref 3.14 | active-baseline | 2026-11-27T14:20:18Z | [3.14] gh-162525: Fix json C encoder for str subclass separators (#162526) (#162746)",
+        "683 commits ahead",
+        "https://github.com/python/cpython/compare/38b79e8bbd1456351ffeacf48b51cba69063bdca...449a73151ae35c84632318a9804e800cb9928a03"
+      ]
+    },
+    {
+      "source": "cpython",
+      "channel": "3.15",
+      "status": "resolved",
+      "head_commit": "cf74f82e402c9155e75684cc33d3895e7e8244dd",
+      "evidence": [
+        "https://github.com/python/cpython/commit/cf74f82e402c9155e75684cc33d3895e7e8244dd | ref 3.15 | forecast | 2026-11-27T14:23:04Z | [3.15] gh-162525: Fix json C encoder for str subclass separators (GH-162526) (#162744)",
+        "First comparable baseline"
+      ]
+    },
+    {
+      "source": "cpython",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "551df9d7d6054dac9ce78a2f04d46113b1ef9650",
+      "evidence": [
+        "https://github.com/python/cpython/commit/551df9d7d6054dac9ce78a2f04d46113b1ef9650 | ref main | forecast | 2026-11-27T13:40:26Z | gh-162525: Fix json C encoder for str subclass separators (#162526)",
+        "1392 commits ahead",
+        "https://github.com/python/cpython/compare/e66bec09b722b8955d34f51f2c4b63793d59f9cf...551df9d7d6054dac9ce78a2f04d46113b1ef9650"
+      ]
+    },
+    {
+      "source": "astral-python",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "4012bf4348c5cf3c0e02b1e300ee294428e3c88e",
+      "evidence": [
+        "https://github.com/astral-sh/ruff/commit/4012bf4348c5cf3c0e02b1e300ee294428e3c88e | ref main | forecast | 2026-11-27T15:06:49Z | [ty] Skip fallthrough checks for generators that can return None (#30992)",
+        "1330 commits ahead",
+        "https://github.com/astral-sh/ruff/compare/a65f3d6a54dbe2abb575680cc1241ef5d18c4494...4012bf4348c5cf3c0e02b1e300ee294428e3c88e"
+      ]
+    },
+    {
+      "source": "scip",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "8fe503757e133d98312b059b89e0ad5f72852d53",
+      "evidence": [
+        "https://github.com/scip-code/scip/commit/8fe503757e133d98312b059b89e0ad5f72852d53 | ref main | forecast | 2026-11-21T09:18:19Z | Update dependency dotnet-sdk to v11 (#531)",
+        "19 commits ahead",
+        "https://github.com/scip-code/scip/compare/482f6f79d32584c70a49cd3f04fd9faaa4f9a27c...8fe503757e133d98312b059b89e0ad5f72852d53"
+      ]
+    },
+    {
+      "source": "otel-python-core",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "817f6d212d43d7a775f986b8ddc0251df23ca0d8",
+      "evidence": [
+        "https://github.com/open-telemetry/opentelemetry-python/commit/817f6d212d43d7a775f986b8ddc0251df23ca0d8 | ref main | forecast | 2026-11-25T18:14:51Z | Fix ReadableSpan.attributes type hint: it never returns None (#5956)",
+        "127 commits ahead",
+        "https://github.com/open-telemetry/opentelemetry-python/compare/ab2267483ae402a7de09f89d999af11fa42f613b...817f6d212d43d7a775f986b8ddc0251df23ca0d8"
+      ]
+    },
+    {
+      "source": "otel-python-contrib",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "c6bf8f1a85af26e5a07c90862d9976bd0e6ef9c7",
+      "evidence": [
+        "https://github.com/open-telemetry/opentelemetry-python-contrib/commit/c6bf8f1a85af26e5a07c90862d9976bd0e6ef9c7 | ref main | forecast | 2026-11-26T14:00:44Z | instrumentation-exceptions: use reset_logging_globals to reset logging configuration (#5382)",
+        "132 commits ahead",
+        "https://github.com/open-telemetry/opentelemetry-python-contrib/compare/b4ba6ca49a1893d11b19743c539789498545ffdd...c6bf8f1a85af26e5a07c90862d9976bd0e6ef9c7"
+      ]
+    },
+    {
+      "source": "otel-genai-semconv",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "81b5d438519f868a186bff088d9de24aefdb2f6b",
+      "evidence": [
+        "https://github.com/open-telemetry/semantic-conventions-genai/commit/81b5d438519f868a186bff088d9de24aefdb2f6b | ref main | forecast | 2026-11-25T21:53:05Z | Keep service-tier labels consistent on streaming timing metrics (#761)",
+        "118 commits ahead",
+        "https://github.com/open-telemetry/semantic-conventions-genai/compare/0c87594975195608dc91b3f702e250a7b240c151...81b5d438519f868a186bff088d9de24aefdb2f6b"
+      ]
+    },
+    {
+      "source": "otel-python-genai",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "768c437f800fe5a4d79ac017e676f81bdf04fe23",
+      "evidence": [
+        "https://github.com/open-telemetry/opentelemetry-python-genai/commit/768c437f800fe5a4d79ac017e676f81bdf04fe23 | ref main | forecast | 2026-11-25T23:10:18Z | openai-agents: stop setting gen_ai.workflow.name on workflow invocations (#1102)",
+        "274 commits ahead",
+        "https://github.com/open-telemetry/opentelemetry-python-genai/compare/17830f47a6f35ae8622a7583fcf3a9630826df09...768c437f800fe5a4d79ac017e676f81bdf04fe23"
+      ]
+    },
+    {
+      "source": "otel-arrow",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "04c87cad179a51c4d3228576aed0165265851d9f",
+      "evidence": [
+        "https://github.com/open-telemetry/otel-arrow/commit/04c87cad179a51c4d3228576aed0165265851d9f | ref main | forecast | 2026-11-27T04:26:05Z | chore(deps): update rust patches and stable minors (#4842)",
+        "500 commits ahead",
+        "https://github.com/open-telemetry/otel-arrow/compare/3281b2eebe891fa9410a477b7a26631410f6cdf2...04c87cad179a51c4d3228576aed0165265851d9f"
+      ]
+    },
+    {
+      "source": "weaver",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "1dbad382c2769201ef914559edf4e2139576e922",
+      "evidence": [
+        "https://github.com/open-telemetry/weaver/commit/1dbad382c2769201ef914559edf4e2139576e922 | ref main | forecast | 2026-11-27T01:26:18Z | Optimize registry update-markdown --v2 by caching the registry (#1940)",
+        "118 commits ahead",
+        "https://github.com/open-telemetry/weaver/compare/7b9ac7fb79d0f59e1df969737ae718432338f144...1dbad382c2769201ef914559edf4e2139576e922"
+      ]
+    },
+    {
+      "source": "otel-spec",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "4e01937ed7d734e5f4feb8ffba89f1b6b960ab59",
+      "evidence": [
+        "https://github.com/open-telemetry/opentelemetry-specification/commit/4e01937ed7d734e5f4feb8ffba89f1b6b960ab59 | ref main | forecast | 2026-11-25T17:33:16Z | OTEP: Add zstd as a specified OTLP compression codec (#5321)",
+        "First comparable baseline"
+      ]
+    },
+    {
+      "source": "otel-semconv",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "ec8e79ae7d7058b2eeb211c98b63ccba03274516",
+      "evidence": [
+        "https://github.com/open-telemetry/semantic-conventions/commit/ec8e79ae7d7058b2eeb211c98b63ccba03274516 | ref main | forecast | 2026-11-27T15:21:58Z | Mark RPC semantic conventions SIG inactive (#4384)",
+        "First comparable baseline"
+      ]
+    },
+    {
+      "source": "otel-semconv-conformance",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "2a00b5844e3ec718580ad1505923789cf3f7c5b6",
+      "evidence": [
+        "https://github.com/open-telemetry/semantic-conventions-conformance/commit/2a00b5844e3ec718580ad1505923789cf3f7c5b6 | ref main | forecast | 2026-11-24T20:26:46Z | Update docker-minor (#512)",
+        "First comparable baseline"
+      ]
+    },
+    {
+      "source": "otel-collector-contrib",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "6afad272b6803440b0d72c8d16f1172adb4cbed0",
+      "evidence": [
+        "https://github.com/open-telemetry/opentelemetry-collector-contrib/commit/6afad272b6803440b0d72c8d16f1172adb4cbed0 | ref main | release-watch | 2026-11-27T14:51:08Z | [exporter/googlemanagedprometheus] Enable exporter-level batching by default (#53629)",
+        "First comparable baseline"
+      ]
+    },
+    {
+      "source": "otel-obi",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "a117f99a735b60670c39a5215f63245a4c7ae92c",
+      "evidence": [
+        "https://github.com/open-telemetry/opentelemetry-ebpf-instrumentation/commit/a117f99a735b60670c39a5215f63245a4c7ae92c | ref main | release-watch | 2026-11-27T14:48:59Z | renovate: group Ruby gem updates (#4395)",
+        "First comparable baseline"
+      ]
+    },
+    {
+      "source": "opamp",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "61372c6916c4be08eb0409f7e1001e25cedb891f",
+      "evidence": [
+        "https://github.com/open-telemetry/opamp-spec/commit/61372c6916c4be08eb0409f7e1001e25cedb891f | ref main | release-watch | 2026-09-29T15:59:20Z | ci: add shared security scanning workflow (#392)",
+        "First comparable baseline"
+      ]
+    },
+    {
+      "source": "dlt",
+      "channel": "devel",
+      "status": "resolved",
+      "head_commit": "f85861ba658189dbb43a3a7c72f022ad2d84333a",
+      "evidence": [
+        "https://github.com/dlt-hub/dlt/commit/f85861ba658189dbb43a3a7c72f022ad2d84333a | ref devel | release-watch | 2026-11-26T13:46:46Z | docs(hub): add a security and compliance page (#4659)",
+        "First comparable baseline"
+      ]
+    },
+    {
+      "source": "fsspec",
+      "channel": "master",
+      "status": "resolved",
+      "head_commit": "df7208decfbc8edae2a33ed017c9a337d58c9eb3",
+      "evidence": [
+        "https://github.com/fsspec/filesystem_spec/commit/df7208decfbc8edae2a33ed017c9a337d58c9eb3 | ref master | release-watch | 2026-11-27T15:17:48Z | Honor pipe_file mode='create' in simplecache (#2482)",
+        "First comparable baseline"
+      ]
+    },
+    {
+      "source": "arrow",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "1140d8e35c1a5dc7eb32515255f12816ba4a0dec",
+      "evidence": [
+        "https://github.com/apache/arrow/commit/1140d8e35c1a5dc7eb32515255f12816ba4a0dec | ref main | release-watch | 2026-11-27T14:59:28Z | GH-55615: [C++][Gandiva] Validate the input expression of IN (#55609)",
+        "First comparable baseline"
+      ]
+    },
+    {
+      "source": "duckdb",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "4f90047a3811958536086dcafaed7a48107c09b6",
+      "evidence": [
+        "https://github.com/duckdb/duckdb/commit/4f90047a3811958536086dcafaed7a48107c09b6 | ref main | release-watch | 2026-11-27T15:18:35Z | Count independent equality connections in join estimates (#29498)",
+        "First comparable baseline"
+      ]
+    },
+    {
+      "source": "ibis",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "6d40f963fee940063e09956c7e60d073f4302259",
+      "evidence": [
+        "https://github.com/ibis-project/ibis/commit/6d40f963fee940063e09956c7e60d073f4302259 | ref main | release-watch | 2026-11-05T21:53:09Z | chore(deps): bump sqlglot to 30.25.0 (#12205)",
+        "First comparable baseline"
+      ]
+    },
+    {
+      "source": "polars",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "b54171bd31c3bfbdbf9f61fd7d86108a7f3d466c",
+      "evidence": [
+        "https://github.com/pola-rs/polars/commit/b54171bd31c3bfbdbf9f61fd7d86108a7f3d466c | ref main | release-watch | 2026-11-27T14:26:20Z | fix: Check the input dtype of rolling functions at planning, and return Float16 for Float16 (#31047)",
+        "First comparable baseline"
+      ]
+    },
+    {
+      "source": "marimo",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "906e4c2f4aa22c8630f0081a3e4ca6f56c311b8f",
+      "evidence": [
+        "https://github.com/marimo-team/marimo/commit/906e4c2f4aa22c8630f0081a3e4ca6f56c311b8f | ref main | release-watch | 2026-11-26T17:19:47Z | fix: show invalid email and url input with the default debounce (#12030)",
+        "First comparable baseline"
+      ]
+    },
+    {
+      "source": "pydantic-graph",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "3031367fbba053b2ca871bbdcab7900dc22fc3ae",
+      "evidence": [
+        "https://github.com/pydantic/pydantic-ai/commit/3031367fbba053b2ca871bbdcab7900dc22fc3ae | ref main | release-watch | 2026-11-27T15:03:36Z | Fix flaky `logging_toolset.py` docs example by finding the mocked `print` caller without `inspect.stack()` (#14923)",
+        "First comparable baseline"
+      ]
+    },
+    {
+      "source": "ascent",
+      "channel": "master",
+      "status": "resolved",
+      "head_commit": "7c94e79874b9564b691b3f1d0f2af8b1f1233d5f",
+      "evidence": [
+        "https://github.com/s-arash/ascent/commit/7c94e79874b9564b691b3f1d0f2af8b1f1233d5f | ref master | release-watch | 2026-11-26T23:13:15Z | Avoid panicking on unbound aggregation variables (fixes #90) (#94)",
+        "First comparable baseline"
+      ]
+    },
+    {
+      "source": "hydro",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "a2dba3a49e4ed2c90655634286a5109455684e3e",
+      "evidence": [
+        "https://github.com/hydro-project/hydro/commit/a2dba3a49e4ed2c90655634286a5109455684e3e | ref main | release-watch | 2026-11-25T23:20:41Z | ci(nextest): allow 30 minutes for the `sim_fuzzer` tests (#3393)",
+        "First comparable baseline"
+      ]
+    },
+    {
+      "source": "egglog",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "d89bc58adc9b9a87a8f571c5b9ad75d686d226e6",
+      "evidence": [
+        "https://github.com/egraphs-good/egglog/commit/d89bc58adc9b9a87a8f571c5b9ad75d686d226e6 | ref main | release-watch | 2026-11-12T00:43:04Z | Fix documentation publishing with cached staging output (#1081)",
+        "First comparable baseline"
+      ]
+    },
+    {
+      "source": "salsa",
+      "channel": "master",
+      "status": "resolved",
+      "head_commit": "131dae637822ad6281c7f81e53ab7901812af6ea",
+      "evidence": [
+        "https://github.com/salsa-rs/salsa/commit/131dae637822ad6281c7f81e53ab7901812af6ea | ref master | release-watch | 2026-11-27T13:38:38Z | chore: benchmark cached queries keyed by a Salsa supertype (#1446)",
+        "First comparable baseline"
+      ]
+    },
+    {
+      "source": "flix",
+      "channel": "master",
+      "status": "resolved",
+      "head_commit": "3f42e7e897e50d89df590a40d04760f2da6fe6d8",
+      "evidence": [
+        "https://github.com/flix/flix/commit/3f42e7e897e50d89df590a40d04760f2da6fe6d8 | ref master | release-watch | 2026-11-25T09:25:23Z | refactor: remove DelayList and DelayMap from the standard library (#13803)",
+        "First comparable baseline"
+      ]
+    },
+    {
+      "source": "timoni",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "58f38054cc5276178b1426fabaf0b5e066c7c271",
+      "evidence": [
+        "https://github.com/stefanprodan/timoni/commit/58f38054cc5276178b1426fabaf0b5e066c7c271 | ref main | release-watch | 2026-11-25T10:04:35Z | Merge pull request #682 from stefanprodan/cue-v0.18.0",
+        "First comparable baseline"
+      ]
+    },
+    {
+      "source": "cue",
+      "channel": "pinned",
+      "status": "resolved",
+      "head_commit": "806821e40fae070318600a264d311517e596353b",
+      "evidence": [
+        "https://github.com/cue-lang/cue/commit/806821e40fae070318600a264d311517e596353b | ref 806821e40fae070318600a264d311517e596353b | pinned-authority | 2026-07-13T23:03:17Z | cue/testdata/references: add test for let-self across inline unification",
+        "Unchanged"
+      ]
+    },
+    {
+      "source": "cue",
+      "channel": "master",
+      "status": "resolved",
+      "head_commit": "407453d39d80c630c0a5dbe55d58db2d64b3a863",
+      "evidence": [
+        "https://github.com/cue-lang/cue/commit/407453d39d80c630c0a5dbe55d58db2d64b3a863 | ref master | forecast | 2026-11-26T13:33:39Z | internal/core/subsume: reject a required field absent from the subsumed value",
+        "1468 commits ahead",
+        "https://github.com/cue-lang/cue/compare/e83d953917a564d12cf9a1cfcac5ecca9e8a711a...407453d39d80c630c0a5dbe55d58db2d64b3a863"
+      ]
+    },
+    {
+      "source": "uv",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "9bf01bef71c76643290ca17635970076fab1bd0d",
+      "evidence": [
+        "https://github.com/astral-sh/uv/commit/9bf01bef71c76643290ca17635970076fab1bd0d | ref main | release-watch | 2026-11-26T09:13:32Z | Add the Python 3.15 hardened Docker image (#23407)",
+        "First comparable baseline"
+      ]
+    },
+    {
+      "source": "jj",
+      "channel": "main",
+      "status": "resolved",
+      "head_commit": "5680d67b3fec0669ff4b3bcea39fbc74dba382e1",
+      "evidence": [
+        "https://github.com/jj-vcs/jj/commit/5680d67b3fec0669ff4b3bcea39fbc74dba382e1 | ref main | release-watch | 2026-11-27T10:57:16Z | cli: run: adding --keep-changes flag",
+        "First comparable baseline"
+      ]
+    }
+  ],
+  "graph": {
+    "nodesObserved": [
+      "codex-live-runtime",
+      "codex-rollout-store",
+      "codex-rollout-reconstruction",
+      "codex-rust-protocol",
+      "codex-json-schema",
+      "codex-python-sdk",
+      "astral-ty-semantic",
+      "astral-cpython-correlation",
+      "cue-evaluator-upstream",
+      "ctrl-cue-qualification-gate",
+      "weaver-registry-interface",
+      "ctrl-diagnostic-packet"
+    ],
+    "edgesEvaluated": [
+      "codex-schema-sdk",
+      "codex-protocol-runtime",
+      "codex-runtime-rollout",
+      "codex-rollout-replay",
+      "astral-ty-correlation"
+    ],
+    "kernelRelationsEvaluated": [
+      "cue-gate-fixpoint",
+      "weaver-codex"
+    ],
+    "upstreamBindingsEvaluated": [
+      "cue-qualification-binding",
+      "weaver-feedback-binding"
+    ],
+    "testBindingsEvaluated": [],
+    "probeBindingsEvaluated": [
+      "probe-astral-binding-correlation"
+    ]
+  },
+  "items": [
+    {
+      "id": "codex-approval-20261127",
+      "title": "Codex now persists completion when approval fails or is declined",
+      "decision": "blocking-gate",
+      "severity": "critical",
+      "sources": [
+        "codex"
+      ],
+      "nodes": [
+        "codex-live-runtime",
+        "codex-rollout-store",
+        "codex-rollout-reconstruction"
+      ],
+      "summary": "The head change routes command completion into core history so that live and reloaded turns agree. The September comparison spans 3,629 commits.",
+      "localContractImpact": "Keep the declared runtime and replay compatibility gate open until the local policy and history consumer can reproduce both paths.",
+      "observations": [
+        {
+          "id": "obs-codex-approval-20261127",
+          "reportItemID": "codex-approval-20261127",
+          "source": "codex",
+          "channel": "main",
+          "kind": "runtime",
+          "path": "codex-rs/core/src/session/command_approval.rs, codex-rs/app-server/tests/suite/v2/turn_start.rs",
+          "nodeMatches": [
+            "codex-live-runtime",
+            "codex-rollout-store",
+            "codex-rollout-reconstruction"
+          ],
+          "observation": "The head change routes command completion into core history so that live and reloaded turns agree. The September comparison spans 3,629 commits.",
+          "decision": "blocking-gate",
+          "severity": "critical"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-codex-approval-20261127",
+          "text": "Keep the declared runtime and replay compatibility gate open until the local policy and history consumer can reproduce both paths.",
+          "observationRefs": [
+            "obs-codex-approval-20261127"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "codex-schema-20261127",
+      "title": "The Codex app server approval and hook schemas changed",
+      "decision": "contract-update",
+      "severity": "high",
+      "sources": [
+        "codex"
+      ],
+      "nodes": [
+        "codex-rust-protocol",
+        "codex-json-schema",
+        "codex-python-sdk"
+      ],
+      "summary": "The range changes the approval request, hook completion notification and aggregate v2 JSON schema.",
+      "localContractImpact": "Recheck the generated Python transport against the runtime export before adopting the new protocol.",
+      "observations": [
+        {
+          "id": "obs-codex-schema-20261127",
+          "reportItemID": "codex-schema-20261127",
+          "source": "codex",
+          "channel": "main",
+          "kind": "schema",
+          "path": "codex-rs/app-server-protocol/schema/json/CommandExecutionRequestApprovalParams.json, codex-rs/app-server-protocol/schema/json/v2/HookCompletedNotification.json",
+          "nodeMatches": [
+            "codex-rust-protocol",
+            "codex-json-schema",
+            "codex-python-sdk"
+          ],
+          "observation": "The range changes the approval request, hook completion notification and aggregate v2 JSON schema.",
+          "decision": "contract-update",
+          "severity": "high"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-codex-schema-20261127",
+          "text": "Recheck the generated Python transport against the runtime export before adopting the new protocol.",
+          "observationRefs": [
+            "obs-codex-schema-20261127"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ty-generator-20261127",
+      "title": "ty changes fallthrough checks on generators",
+      "decision": "note",
+      "severity": "note",
+      "sources": [
+        "astral-python"
+      ],
+      "nodes": [
+        "astral-ty-semantic",
+        "astral-cpython-correlation"
+      ],
+      "summary": "The head change skips a fallthrough check on generators that can return None.",
+      "localContractImpact": "Recompare this diagnostic against the locked analyzer and a CPython witness before changing an expected local result.",
+      "observations": [
+        {
+          "id": "obs-ty-generator-20261127",
+          "reportItemID": "ty-generator-20261127",
+          "source": "astral-python",
+          "channel": "main",
+          "kind": "analyzer",
+          "path": "crates/ty_python_semantic/src/types/infer/builder/function.rs",
+          "nodeMatches": [
+            "astral-ty-semantic",
+            "astral-cpython-correlation"
+          ],
+          "observation": "The head change skips a fallthrough check on generators that can return None.",
+          "decision": "note",
+          "severity": "note"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-ty-generator-20261127",
+          "text": "Recompare this diagnostic against the locked analyzer and a CPython witness before changing an expected local result.",
+          "observationRefs": [
+            "obs-ty-generator-20261127"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cue-subsume-20261127",
+      "title": "CUE forecast changes required-field subsumption",
+      "decision": "contract-update",
+      "severity": "high",
+      "sources": [
+        "cue"
+      ],
+      "nodes": [
+        "cue-evaluator-upstream",
+        "ctrl-cue-qualification-gate"
+      ],
+      "summary": "The evaluator now rejects a required field that is absent from the subsumed value. The pinned evaluator is unchanged.",
+      "localContractImpact": "Check missing-required-field and closed-data fixtures before considering an evaluator pin change.",
+      "observations": [
+        {
+          "id": "obs-cue-subsume-20261127",
+          "reportItemID": "cue-subsume-20261127",
+          "source": "cue",
+          "channel": "master",
+          "kind": "runtime",
+          "path": "internal/core/subsume/vertex.go, internal/core/subsume/value_test.go",
+          "nodeMatches": [
+            "cue-evaluator-upstream",
+            "ctrl-cue-qualification-gate"
+          ],
+          "observation": "The evaluator now rejects a required field that is absent from the subsumed value. The pinned evaluator is unchanged.",
+          "decision": "contract-update",
+          "severity": "high"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-cue-subsume-20261127",
+          "text": "Check missing-required-field and closed-data fixtures before considering an evaluator pin change.",
+          "observationRefs": [
+            "obs-cue-subsume-20261127"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "weaver-live-20261127",
+      "title": "Weaver changed live checking and matcher configuration",
+      "decision": "note",
+      "severity": "note",
+      "sources": [
+        "weaver"
+      ],
+      "nodes": [
+        "weaver-registry-interface",
+        "ctrl-diagnostic-packet"
+      ],
+      "summary": "The September comparison changes both live-check configuration and matcher implementation.",
+      "localContractImpact": "The DiagnosticPacket consumer is projected. Retain the compatibility observation for future fixture replay.",
+      "observations": [
+        {
+          "id": "obs-weaver-live-20261127",
+          "reportItemID": "weaver-live-20261127",
+          "source": "weaver",
+          "channel": "main",
+          "kind": "projection",
+          "path": "crates/weaver_live_check/src/live_checker.rs, crates/weaver_config/src/live_check.rs",
+          "nodeMatches": [
+            "weaver-registry-interface",
+            "ctrl-diagnostic-packet"
+          ],
+          "observation": "The September comparison changes both live-check configuration and matcher implementation.",
+          "decision": "note",
+          "severity": "note"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-weaver-live-20261127",
+          "text": "The DiagnosticPacket consumer is projected. Retain the compatibility observation for future fixture replay.",
+          "observationRefs": [
+            "obs-weaver-live-20261127"
+          ]
+        }
+      ]
+    }
+  ],
+  "ctrl_revision": "b5f82c3a5e33d08d1f5d07cb2c9724c7679c7538"
+}

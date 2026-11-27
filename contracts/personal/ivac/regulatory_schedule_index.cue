@@ -19,13 +19,7 @@ package ivac
 			citation: #RegulatorySourceSpan
 		}), ...]
 	}), ...]
-	units: [close({
-		number:  string & !=""
-		kind:    "functional" | "aesthetic"
-		label:   #RegulatorySourceSpan
-		section: string & !=""
-		pieceIDs: [#ID, ...#ID]
-	}), ...]
+	units: [#ScheduleLeaf & {label: #RegulatorySourceSpan}, ...]
 	occurrences: [...close({
 		id:       #ID
 		pieceID:  #ID
@@ -65,3 +59,12 @@ package ivac
 })
 
 regulatoryRowSchemas: scheduleOccurrence: #RegulatoryScheduleOccurrenceRow
+
+#ScheduleLeaf: close({
+	number:  string & !=""
+	kind:    "functional" | "aesthetic"
+	label:   #CitationTransport
+	section: string & !=""
+	pieceIDs: [#ID, ...#ID]
+})
+legalUnitTransport: scheduleLeaf: #ScheduleLeaf

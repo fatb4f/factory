@@ -1,0 +1,5 @@
+# Ecosystem review
+
+The registry groups complementary research leads: news discovery (GDELT), incident datasets (EuRepoC and others), structured threat and information-operation vocabularies, analytical research (OpenAlex), and Canadian official oversight records. Coverage, coding practices, update cadence and access terms differ; absence from a source is not evidence of absence.
+
+[EuRepoC's release](https://zenodo.org/records/14965395) describes 3,416 incidents starting in 2000–2024; its [database page](https://eurepoc.eu/database/) offers versioned CSV, JSON and XLSX downloads. Preserve the specific release, codebook, and capture. [GDELT](https://blog.gdeltproject.org/announcing-partitioned-gdelt-bigquery-tables/) offers public partitioned news-derived tables, while [MultiOBS](https://www.multiobs.org/infrastructure/updates/openalex-2026-09) publishes a third-party OpenAlex snapshot. These catalogs are discovery and research sources, not independent confirmation of an underlying claim.

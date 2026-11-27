@@ -1,0 +1,9 @@
+{
+  "apiVersion": "factory.upstream-monitor.latest-run/v2",
+  "kind": "LatestUpstreamMonitorRun",
+  "profile_id": "cyber-incidents",
+  "run_id": "20261127T153805Z",
+  "authority_revision": "b5aef69c512e17d111a496ded80b1a8a32ce7e39",
+  "bundle_path": "projects/cyber-incidents/upstream-monitor/runs/20261127T153805Z",
+  "manifest_path": "projects/cyber-incidents/upstream-monitor/runs/20261127T153805Z/manifest.json"
+}

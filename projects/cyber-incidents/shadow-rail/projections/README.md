@@ -1,0 +1,7 @@
+# MISP Galaxy projection
+
+`python3 misp.py catalog.json` validates a Shadow Galaxy catalog with CUE and writes one JSON envelope containing MISP Galaxy and cluster documents plus a mandatory loss report. It does not perform admission, infer affiliations, or publish to MISP. Save the envelope and extract its `galaxy`, `clusters`, and `loss_report` members as separate JSON documents when needed.
+
+The catalog and collection UUIDs are UUIDv5 with fixed namespace `c9eaf543-91f0-5e32-a144-305d817658f7`, over compact ASCII JSON arrays `[kind, catalog_id]`; term UUIDs use `["term", catalog_id, term_id]`. They are independent of labels, source revisions and input order. IDs must never be reassigned to different concepts. Output is sorted by term ID and JSON keys. MISP integer version 1 identifies this projection format; the source version is retained in the loss report rather than presented as a MISP revision. The report retains values and reasons for semantics not fully represented. It must accompany each projection.
+
+Tests require `jsonschema` and network access to the upstream MISP Galaxy schemas pinned to commit `e04830400cfeea238124ad4e1e42267aa0f672b7`. Run `python3 projects/cyber-incidents/shadow-rail/projections/test_misp.py` with CUE available on PATH. The tests validate the two extracted documents against those schemas; this is not a claim of compatibility with every MISP server version.

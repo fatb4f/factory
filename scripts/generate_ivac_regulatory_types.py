@@ -55,8 +55,12 @@ if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--check', action='store_true')
     a = p.parse_args()
-    schema, code = generate()
-    for name, data in [('rows.schema.json', schema), ('rows.py', code)]:
+    outputs = []
+    for stem, expression in [('rows', 'regulatoryRowSchemas'), ('legal_unit', 'legalUnitTransport')]:
+        schema, code = generate(expression)
+        code = code.replace(b'(CUE regulatoryRowSchemas)', f'(CUE {expression})'.encode())
+        outputs.extend([(stem + '.schema.json', schema), (stem + '.py', code)])
+    for name, data in outputs:
         path = TARGET/name
         if a.check:
             if path.read_bytes() != data: raise SystemExit(f'generated drift: {path}')

@@ -1,0 +1,344 @@
+{
+  "schema": "factory.cyber-incidents.upstream-watch/v1",
+  "profile_id": "cyber-incidents",
+  "run_id": "20261125T105956Z",
+  "checkedAt": "2026-11-25T10:59:56Z",
+  "authority_revision": "41fd876dcfc5f99b9807dea3bbcc3726fe81b8db",
+  "previous_run": null,
+  "additionalSources": {},
+  "items": {
+    "drupal-cve-2026-132165": {
+      "stream": "global-major-cyber",
+      "title": "Drupal core exploitation reported on live sites",
+      "status": "Maintainer-reported exploitation • Drupal risk 20/25",
+      "disposition": "material",
+      "jurisdiction": "Global advisory; affected sites unidentified",
+      "delta": "Drupal dated the earliest exploitation reported to its security team. Its advisory, the KEV entry and Cyber Centre update refer to the same CVE.",
+      "next": "Watch for advisory revisions, dated victim disclosures, confirmed exposure or a change to the remediation guidance.",
+      "unknowns": [
+        "Victim count, locations, operators and any data exposure remain unknown. Factory deployment exposure has no supporting inventory evidence."
+      ],
+      "facts": [
+        {
+          "statement": "Drupal published its advisory on November 18. Its updated account dates the earliest reported live-site exploitation to November 19 at 19:00 UTC.",
+          "basis": "primary",
+          "citations": [
+            {
+              "source": "drupal",
+              "channel": "advisory",
+              "url": "https://www.drupal.org/sa-core-2026-017",
+              "record": "SA-CORE-2026-017",
+              "revision": "Updated advisory as retrieved on November 25",
+              "selector": "Date and first paragraph of Description",
+              "sourceDate": "2026-11-18"
+            }
+          ],
+          "eventAt": "2026-11-19T19:00:00Z"
+        },
+        {
+          "statement": "Drupal rates the issue 20/25. Under vulnerable conditions a site takeover or code execution is possible. The fixed releases for 10.6, 11.3 and 11.4 are 10.6.22, 11.3.22 and 11.4.13 respectively.",
+          "basis": "primary",
+          "citations": [
+            {
+              "source": "drupal",
+              "channel": "advisory",
+              "url": "https://www.drupal.org/sa-core-2026-017",
+              "record": "SA-CORE-2026-017",
+              "revision": "Updated advisory as retrieved on November 25",
+              "selector": "Security risk, Description and Solution",
+              "sourceDate": "2026-11-18"
+            }
+          ]
+        },
+        {
+          "statement": "CISA added the CVE on November 24. Catalog revision 2026.11.24 contains 1,795 entries. The Canadian Cyber Centre names the same CVE in Update 1.",
+          "basis": "primary",
+          "citations": [
+            {
+              "source": "cisa",
+              "channel": "kev",
+              "url": "https://github.com/cisagov/kev-data/blob/02cf8df0c1e2a06cc12842214d3c5e9b0ece97d9/known_exploited_vulnerabilities.json",
+              "record": "CVE-2026-132165",
+              "revision": "2026.11.24 at 02cf8df0c1e2a06cc12842214d3c5e9b0ece97d9",
+              "selector": "catalogVersion, count and entry with matching cveID",
+              "sourceDate": "2026-11-24"
+            },
+            {
+              "source": "cyber-centre",
+              "channel": "advisories",
+              "url": "https://www.cyber.gc.ca/en/alerts-advisories/drupal-security-advisory-av26-1186",
+              "record": "AV26-1186",
+              "revision": "Update 1",
+              "selector": "Update 1 and affected versions",
+              "sourceDate": "2026-11-24"
+            }
+          ],
+          "eventDate": "2026-11-24"
+        }
+      ]
+    },
+    "ca-45-1-c-297": {
+      "stream": "canadian-surveillance",
+      "title": "C-297 would make certain personalized prices reviewable",
+      "status": "First reading • November 23",
+      "disposition": "material",
+      "jurisdiction": "Canada, federal",
+      "delta": "The official first-reading text resolves the earlier clause-access gap. The proposal turns on a profit purpose, a material price difference and inadequate disclosure.",
+      "next": "Compare each subsequent bill version with clauses 1–7 and check for committee amendments, assent and commencement.",
+      "unknowns": [
+        "Application of materiality and fair disclosure to a particular Montréal transaction would depend on the facts and any enacted wording."
+      ],
+      "facts": [
+        {
+          "statement": "Clause 2 would add section 74.051 to the Competition Act. It covers consumers charged materially different prices for comparable goods or services for profit maximization without fair and adequate disclosure. Paragraphs (2)–(3) cover personal data and exclude adjustments based solely on generally applicable market factors.",
+          "basis": "primary",
+          "citations": [
+            {
+              "source": "parliament",
+              "channel": "text",
+              "url": "https://www.parl.ca/documentviewer/en/45-1/bill/C-297/first-reading",
+              "record": "C-297 (45-1)",
+              "revision": "First reading",
+              "selector": "Clause 2, proposed subsections 74.051(1)–(3)",
+              "sourceDate": "2026-11-23"
+            }
+          ],
+          "eventDate": "2026-11-23"
+        },
+        {
+          "statement": "Clause 1 would let the Competition Commissioner assist qualifying foreign investigations into this category. Existing section 74.012 requires written purpose and confidentiality commitments before disclosure, excludes foreign contraventions with penal consequences under Canadian law, and requires consideration of reciprocal assistance.",
+          "basis": "primary",
+          "citations": [
+            {
+              "source": "parliament",
+              "channel": "text",
+              "url": "https://www.parl.ca/documentviewer/en/45-1/bill/C-297/first-reading",
+              "record": "C-297 (45-1)",
+              "revision": "First reading",
+              "selector": "Clause 1",
+              "sourceDate": "2026-11-23"
+            },
+            {
+              "source": "justice",
+              "channel": "statutes",
+              "url": "https://laws-lois.justice.gc.ca/eng/acts/C-34/section-74.012.html",
+              "record": "Competition Act, s. 74.012",
+              "revision": "Consolidated statute",
+              "selector": "Subsections (1)–(3)"
+            }
+          ]
+        },
+        {
+          "statement": "Clause 3 adds the conduct to the subsequent-order provision. Clauses 4–7 add it to electronic-commerce enforcement, disclosure and use provisions, including information flows involving the CRTC, Competition Commissioner and Privacy Commissioner. Existing section 60 requires a written agreement or arrangement and limits use and redisclosure.",
+          "basis": "primary",
+          "citations": [
+            {
+              "source": "parliament",
+              "channel": "text",
+              "url": "https://www.parl.ca/documentviewer/en/45-1/bill/C-297/first-reading",
+              "record": "C-297 (45-1)",
+              "revision": "First reading",
+              "selector": "Clauses 3–7",
+              "sourceDate": "2026-11-23"
+            },
+            {
+              "source": "justice",
+              "channel": "statutes",
+              "url": "https://laws-lois.justice.gc.ca/eng/acts/E-1.6/section-60.html",
+              "record": "S.C. 2010, c. 23, s. 60",
+              "revision": "Consolidated statute",
+              "selector": "Subsections (1)–(5)"
+            }
+          ]
+        }
+      ]
+    },
+    "ca-opc-personalized-pricing": {
+      "stream": "canadian-surveillance",
+      "title": "OPC plans consultation on personalized algorithmic pricing",
+      "status": "Consultation announced",
+      "disposition": "material",
+      "jurisdiction": "Canada, federal",
+      "delta": "The commissioner told ETHI that consultation would open in the coming weeks and guidance was targeted for the following months. The statement leaves the opening and publication dates unspecified.",
+      "next": "Acquire the opening notice, submission deadline and final guidance as separate events.",
+      "unknowns": [
+        "A launch date and a firm 2027 publication date remain unverified."
+      ],
+      "facts": [
+        {
+          "statement": "The OPC described PIPEDA expectations around appropriate purposes, meaningful consent and accessible notice. It identified browsing, purchases, location and financial inferences as examples relevant to pricing. It separately announced plans to seek input and issue guidance.",
+          "basis": "primary",
+          "citations": [
+            {
+              "source": "opc",
+              "channel": "parliament",
+              "url": "https://www.priv.gc.ca/en/opc-actions-and-decisions/advice-to-parliament/2026/parl_261123/",
+              "record": "OPC statement to ETHI",
+              "revision": "November 23 statement",
+              "selector": "PIPEDA requirements, profiling examples and final substantive paragraph",
+              "sourceDate": "2026-11-23"
+            }
+          ],
+          "eventDate": "2026-11-23"
+        }
+      ]
+    },
+    "ca-45-1-c-22": {
+      "stream": "canadian-surveillance",
+      "title": "C-22 reaches Senate clause-by-clause review",
+      "status": "Senate committee",
+      "disposition": "baseline",
+      "jurisdiction": "Canada, federal",
+      "delta": "The Senate notice places clause-by-clause consideration on the November 24 agenda. The available LEGISinfo record places C-22 in Senate committee.",
+      "next": "Acquire the minutes and the committee’s report with adopted text, then compare it with the Commons-passed version.",
+      "unknowns": [
+        "The meeting agenda alone cannot establish the vote, any adopted amendment or its wording."
+      ],
+      "facts": [
+        {
+          "statement": "The Standing Senate Committee on National Security, Defence and Veterans Affairs scheduled clause-by-clause consideration for meeting 34.",
+          "basis": "primary",
+          "citations": [
+            {
+              "source": "senate",
+              "channel": "committees",
+              "url": "https://sencanada.ca/en/Committees/SECD/NoticeOfMeeting/711774/45-1",
+              "record": "SECD meeting 34",
+              "revision": "Notice of meeting",
+              "selector": "Agenda, Bill C-22",
+              "sourceDate": "2026-11-24"
+            },
+            {
+              "source": "parliament",
+              "channel": "bills",
+              "url": "https://www.parl.ca/legisinfo/en/bill/45-1/C-22",
+              "record": "C-22 (45-1)",
+              "revision": "LEGISinfo status at acquisition",
+              "selector": "Current status and Senate progress"
+            }
+          ],
+          "eventDate": "2026-11-24"
+        }
+      ]
+    },
+    "ca-45-1-c-8": {
+      "stream": "canadian-surveillance",
+      "title": "C-8 received royal assent",
+      "status": "Royal assent • June 15",
+      "disposition": "baseline",
+      "jurisdiction": "Canada, federal",
+      "delta": "Parliament identifies the enacted statute as S.C. 2026, c. 9. Commencement is a separate watch item for each relevant provision.",
+      "next": "Check the commencement provisions and Gazette orders before assigning an effective date to a power or obligation.",
+      "unknowns": [
+        "Commencement and documented use of individual provisions were outside this dated status check."
+      ],
+      "facts": [
+        {
+          "statement": "The legislation respecting cyber security and amending the Telecommunications Act received royal assent on June 15, 2026.",
+          "basis": "primary",
+          "citations": [
+            {
+              "source": "parliament",
+              "channel": "bills",
+              "url": "https://www.parl.ca/legisinfo/en/bill/45-1/c-8",
+              "record": "c-8 (45-1)",
+              "revision": "LEGISinfo status at acquisition",
+              "selector": "Royal assent and statute chapter"
+            }
+          ],
+          "eventDate": "2026-06-15"
+        }
+      ]
+    },
+    "ca-45-1-c-36": {
+      "stream": "canadian-surveillance",
+      "title": "C-36 and the independence of proposed privacy oversight",
+      "status": "At second reading • independence concern attributed",
+      "disposition": "baseline",
+      "jurisdiction": "Canada, federal",
+      "delta": "LEGISinfo places the bill at Commons second reading. The reported November independence concern is an oversight lead.",
+      "next": "Check ETHI evidence or an OPC submission for the November remarks and track changes in the actual bill.",
+      "unknowns": [
+        "A November amendment or a change in the regulator’s legal status has not been established."
+      ],
+      "facts": [
+        {
+          "statement": "The bill was introduced on June 15. The OPC described a proposed transfer of its private-sector responsibilities to a commission with order-making and penalty powers.",
+          "basis": "primary",
+          "citations": [
+            {
+              "source": "parliament",
+              "channel": "bills",
+              "url": "https://www.parl.ca/legisinfo/en/bill/45-1/c-36",
+              "record": "c-36 (45-1)",
+              "revision": "LEGISinfo status at acquisition",
+              "selector": "Summary and House progress"
+            },
+            {
+              "source": "opc",
+              "channel": "statements",
+              "url": "https://www.priv.gc.ca/en/opc-news/speeches-and-statements/2026/s-d_260615/",
+              "record": "OPC statement on C-36",
+              "revision": "June 15 statement",
+              "selector": "Private-sector responsibilities and proposed powers",
+              "sourceDate": "2026-06-15"
+            }
+          ]
+        },
+        {
+          "statement": "Parliament Today attributed to the commissioner a concern about the proposed commission’s ties to the executive.",
+          "basis": "attributed",
+          "citations": [
+            {
+              "source": "parliament-today",
+              "channel": "reporting",
+              "url": "https://www.parliamenttoday.ca/insider-features/parliament-today/parliament-today-dufresne-raises-the-flag-13051405",
+              "record": "Dufresne raises the flag",
+              "revision": "November 24 report",
+              "selector": "C-36 independence discussion",
+              "sourceDate": "2026-11-24"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "coverageGaps": [
+    {
+      "source": "senate",
+      "channel": "committees",
+      "reason": "The meeting notice was retrieved; adopted C-22 amendment text was unavailable in the records reviewed.",
+      "next": "Check the signed committee report, minutes and the Senate Journals."
+    },
+    {
+      "source": "cyber-centre",
+      "channel": "advisories",
+      "reason": "The dated AV26-1186 update was verified. Exhaustive advisory-index coverage was not established.",
+      "next": "Page by update date and serial number, then fetch changed records individually."
+    },
+    {
+      "source": "qc-assembly",
+      "channel": "bills",
+      "reason": "Québec bills, committee amendments and Gazette instruments were not exhaustively reviewed in the baseline.",
+      "next": "Check the bilingual bill listings, Québec Gazette and CAI decisions."
+    },
+    {
+      "source": "nsira",
+      "channel": "reviews",
+      "reason": "Federal intelligence oversight publications were outside the targeted baseline.",
+      "next": "Review NSIRA, NSICOP and Intelligence Commissioner publications by release date."
+    },
+    {
+      "source": "montreal",
+      "channel": "contracts",
+      "reason": "Montréal tenders, awards and police deployment records were not compared in this run.",
+      "next": "Reconcile council minutes, SÉAO awards and dated SPVM statements."
+    },
+    {
+      "source": "northsec",
+      "channel": "talks",
+      "reason": "Public community channels were not systematically reviewed.",
+      "next": "Rotate talks, forums and network-operator reports, then trace relevant leads to primary records."
+    }
+  ]
+}

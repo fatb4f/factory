@@ -1,0 +1,32 @@
+{
+  "runID": "20261127T153805Z",
+  "generatedAt": "2026-11-27T15:38:05Z",
+  "outcome": "events_observed",
+  "events": [
+    {
+      "kind": "engineering-event",
+      "id": "event.schmid.quantumline-p-plus.2026-11-23",
+      "signalKind": "product-release",
+      "surface": "advanced-packaging",
+      "headline": "SCHMID announced QuantumLine P+ for panel-level copper filling of through-glass vias.",
+      "mechanism": "Bottom-up electrodeposition fills through-glass vias in glass-core substrates.",
+      "claimedChange": "The manufacturer reports void-free filling at aspect ratios up to 50:1. Independent qualification and volume yield were outside this source.",
+      "maturity": "commercial",
+      "provenance": {
+        "source": "SCHMID Group",
+        "channel": "issuer-news-release",
+        "recordID": "https://schmidgroup.gcs-web.com/news-releases/news-release-details/schmid-launches-quantumline-p-void-free-bottom-copper-filling",
+        "revision": "2026-11-23",
+        "publishedAt": "2026-11-23",
+        "acquiredAt": "2026-11-27T15:38:05Z"
+      },
+      "disposition": "track"
+    }
+  ],
+  "coverageGaps": [
+    {
+      "id": "gap.qualification",
+      "description": "This bounded review covered the manufacturer’s launch. Customer qualification, comparative test conditions and production yield remain open."
+    }
+  ]
+}
