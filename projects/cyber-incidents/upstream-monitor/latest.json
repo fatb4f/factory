@@ -2,8 +2,8 @@
   "apiVersion": "factory.upstream-monitor.latest-run/v2",
   "kind": "LatestUpstreamMonitorRun",
   "profile_id": "cyber-incidents",
-  "run_id": "20261125T113151Z",
-  "authority_revision": "58dd2c4c476619329dcadf04bec51cc0226282bd",
-  "bundle_path": "projects/cyber-incidents/upstream-monitor/runs/20261125T113151Z",
-  "manifest_path": "projects/cyber-incidents/upstream-monitor/runs/20261125T113151Z/manifest.json"
+  "run_id": "20261127T153805Z",
+  "authority_revision": "b5aef69c512e17d111a496ded80b1a8a32ce7e39",
+  "bundle_path": "projects/cyber-incidents/upstream-monitor/runs/20261127T153805Z",
+  "manifest_path": "projects/cyber-incidents/upstream-monitor/runs/20261127T153805Z/manifest.json"
 }

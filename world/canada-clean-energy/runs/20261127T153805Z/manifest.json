@@ -1,0 +1,57 @@
+{
+  "runID": "20261127T153805Z",
+  "generatedAt": "2026-11-27T15:38:05Z",
+  "outcome": "events_observed",
+  "events": [
+    {
+      "kind": "clean-energy-event",
+      "id": "event.ontario.local-flexibility.2026-11-24",
+      "eventKind": "project-announced",
+      "headline": "DIGITAL and partners announced a C$29.2 million Ontario distribution flexibility market project involving four utilities.",
+      "geographies": [
+        "canada"
+      ],
+      "surfaces": [
+        "grid-modernization",
+        "distribution"
+      ],
+      "provenance": {
+        "source": "DIGITAL",
+        "channel": "project-announcement",
+        "recordID": "https://digitalsupercluster.ca/digital-and-partners-launch-39-6m-in-projects-to-modernize-ontarios-energy-system/",
+        "revision": "2026-11-24",
+        "publishedAt": "2026-11-24",
+        "acquiredAt": "2026-11-27T15:38:05Z"
+      },
+      "disposition": "track"
+    },
+    {
+      "kind": "clean-energy-event",
+      "id": "event.ontario.electrified-grid.2026-11-24",
+      "eventKind": "project-announced",
+      "headline": "DIGITAL announced a C$10.4 million grid-planning digital twin project led by Deloitte with Awesense and Milton Hydro.",
+      "geographies": [
+        "canada"
+      ],
+      "surfaces": [
+        "grid-modernization",
+        "distribution"
+      ],
+      "provenance": {
+        "source": "DIGITAL",
+        "channel": "project-announcement",
+        "recordID": "https://digitalsupercluster.ca/digital-and-partners-launch-39-6m-in-projects-to-modernize-ontarios-energy-system/",
+        "revision": "2026-11-24",
+        "publishedAt": "2026-11-24",
+        "acquiredAt": "2026-11-27T15:38:05Z"
+      },
+      "disposition": "track"
+    }
+  ],
+  "coverageGaps": [
+    {
+      "id": "gap.commissioning",
+      "description": "Project values and intended use come from the announcing partner. Commissioning, savings and actual capacity changes were outside the release."
+    }
+  ]
+}

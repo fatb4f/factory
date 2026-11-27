@@ -1,0 +1,66 @@
+[
+  {
+    "kind": "document",
+    "id": "doc.nrcan.cdcl-nwt.2026-11-23",
+    "documentKind": "government-announcement",
+    "provenance": {
+      "source": "institutional-web",
+      "channel": "official-publication",
+      "publisher": "Natural Resources Canada",
+      "recordID": "https://www.canada.ca/en/natural-resources-canada/news/2026/11/canada-invests-in-new-mineral-exploration-capabilities-through-the-canadian-digital-core-library.html",
+      "revision": "2026-11-23",
+      "observedAt": "2026-11-23",
+      "acquiredAt": "2026-11-27T15:38:05Z",
+      "observedSurface": "critical-minerals"
+    },
+    "uri": "https://www.canada.ca/en/natural-resources-canada/news/2026/11/canada-invests-in-new-mineral-exploration-capabilities-through-the-canadian-digital-core-library.html",
+    "contentType": "text/html"
+  },
+  {
+    "kind": "event-observation",
+    "id": "event.nrcan.cdcl-nwt.2026-11-23",
+    "eventKind": "other-material-event",
+    "headline": "Natural Resources Canada announced nearly C$3 million for the Northwest Territories to digitize drill core for the Canadian Digital Core Library.",
+    "actors": [
+      {
+        "label": "Natural Resources Canada",
+        "entityKind": "organization"
+      },
+      {
+        "label": "Northwest Territories"
+      }
+    ],
+    "subjects": [
+      {
+        "label": "Canadian Digital Core Library",
+        "entityKind": "project"
+      }
+    ],
+    "announcedAt": "2026-11-23",
+    "relevance": {
+      "geographies": [
+        "canada"
+      ],
+      "industrialSurfaces": [
+        "critical-minerals"
+      ],
+      "disposition": "track"
+    },
+    "provenance": {
+      "source": "institutional-web",
+      "channel": "official-publication",
+      "publisher": "Natural Resources Canada",
+      "recordID": "https://www.canada.ca/en/natural-resources-canada/news/2026/11/canada-invests-in-new-mineral-exploration-capabilities-through-the-canadian-digital-core-library.html",
+      "revision": "2026-11-23",
+      "observedAt": "2026-11-23",
+      "acquiredAt": "2026-11-27T15:38:05Z",
+      "observedSurface": "critical-minerals"
+    },
+    "evidence": [
+      {
+        "kind": "document",
+        "id": "doc.nrcan.cdcl-nwt.2026-11-23"
+      }
+    ]
+  }
+]
