@@ -1,0 +1,62 @@
+{
+  "runID": "20261127T153805Z",
+  "generatedAt": "2026-11-27T15:38:05Z",
+  "outcome": "events_observed",
+  "events": [
+    {
+      "kind": "industrial-watch-event",
+      "id": "event.cdcl.nwt-core-funding.2026-11-23",
+      "headline": "Natural Resources Canada announced nearly C$3 million for the Northwest Territories to digitize drill core for the Canadian Digital Core Library.",
+      "surface": "critical-minerals",
+      "actors": [
+        {
+          "label": "Natural Resources Canada",
+          "partyRole": "funder"
+        },
+        {
+          "label": "Northwest Territories",
+          "partyRole": "recipient"
+        }
+      ],
+      "detail": {
+        "kind": "funding-award",
+        "instrument": "other-public-support",
+        "program": "Canadian Digital Core Library"
+      },
+      "announcedAt": "2026-11-23",
+      "disposition": "track",
+      "provenance": {
+        "source": "institutional-web",
+        "channel": "nrcan",
+        "publisher": "Natural Resources Canada",
+        "recordID": "https://www.canada.ca/en/natural-resources-canada/news/2026/11/canada-invests-in-new-mineral-exploration-capabilities-through-the-canadian-digital-core-library.html",
+        "revision": "2026-11-23",
+        "observedAt": "2026-11-23",
+        "acquiredAt": "2026-11-27T15:38:05Z",
+        "observedSurface": "critical-minerals"
+      }
+    }
+  ],
+  "coverageGaps": [
+    {
+      "id": "gap.cdcl-expenditure",
+      "description": "The release announces funding. The territorial recipient reports that scanning had already begun on September 14. Neither establishes an expenditure against the new announcement.",
+      "source": "institutional-web",
+      "channel": "nrcan",
+      "gapKind": "follow-through-missing",
+      "followThroughStage": "expenditure"
+    }
+  ],
+  "acquisition": [
+    {
+      "source": "institutional-web",
+      "channel": "nrcan",
+      "mode": "browser",
+      "outcome": "record-acquired",
+      "acquiredAt": "2026-11-27T15:38:05Z",
+      "recordID": "https://www.canada.ca/en/natural-resources-canada/news/2026/11/canada-invests-in-new-mineral-exploration-capabilities-through-the-canadian-digital-core-library.html",
+      "revision": "2026-11-23",
+      "observedSurface": "critical-minerals"
+    }
+  ]
+}
