@@ -72,11 +72,28 @@ profile: {
 
 // Distinguish explicit limits and unknowns. A file of calculated values can be
 // accessible while the device's raw signal and wire protocol remain unknown.
-#Capability: "unknown" | {
+#AccessEvidence: {
 	status: "documented" | "tested" | "explicitly-unavailable" | "restricted"
 	detail: #Text
 	ref:    #ID
 }
+#Capability: "unknown" | #AccessEvidence
+
+#CadenceEvidence: "unknown" | {
+	#AccessEvidence
+	status: _
+	if status == "documented" || status == "tested" {
+		// Neutral channel identifiers also allow a file row or a device-wide clock.
+		channels: struct.MinFields(1) & {[#ID]: {
+			mode: "periodic" | "variable" | "event-driven" | "undisclosed"
+			if mode == "periodic" {
+				minSeconds: number & >0
+				maxSeconds: number & >=minSeconds
+			}
+		}}
+	}
+}
+
 #Telemetry: {
 	rawSamples:      #Capability
 	bleProtocolDocs: #Capability
@@ -86,9 +103,9 @@ profile: {
 	android:         #Capability
 	liveStream:      #Capability
 	// Identify the channel, units and interval or variable-rate conditions for each known cadence.
-	nativeSampling: #Capability
-	displayRefresh: #Capability
-	exportInterval: #Capability
+	nativeSampling: #CadenceEvidence
+	displayRefresh: #CadenceEvidence
+	exportInterval: #CadenceEvidence
 }
 
 #Offer: {

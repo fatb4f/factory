@@ -66,7 +66,8 @@
         "csvExport": {"status": "documented", "detail": "Processed sodium series", "ref": "manual"},
         "otherFileExport": {"status": "documented", "detail": "Receiver firmware v2 exports FIT with derived sodium loss", "ref": "receiver"}, "api": "unknown", "android": "unknown", "liveStream": "unknown",
         "nativeSampling": "unknown", "displayRefresh": "unknown",
-        "exportInterval": {"status": "documented", "detail": "60 s per exported sodium value", "ref": "manual"}
+        "exportInterval": {"status": "documented", "detail": "60 s per exported sodium value", "ref": "manual",
+          "channels": {"sodium": {"mode": "periodic", "minSeconds": 60, "maxSeconds": 60}}}
       }
     },
     "pilot": {
