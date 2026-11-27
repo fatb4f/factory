@@ -177,6 +177,10 @@ validate_gym_public() {
 # contract regressions visible rather than masking them behind unrelated state.
 validate_registry
 
+section "biochemical wearables"
+cue vet -c=false ./contracts/workers/upstream-monitor/profiles_biochemical_wearables:biowear
+python3 contracts/workers/upstream-monitor/profiles_biochemical_wearables/testdata/check.py
+
 section "cyber incidents"
 cue vet -c=false ./contracts/projects/cyber-incidents:cyberincidents
 python3 contracts/projects/cyber-incidents/testdata/check.py

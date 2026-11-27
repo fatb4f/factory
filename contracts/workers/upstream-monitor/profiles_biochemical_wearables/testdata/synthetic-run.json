@@ -1,0 +1,92 @@
+{
+  "schema": "factory.biochemical-wearables.upstream-watch/v1",
+  "profile_id": "biochemical-wearables",
+  "run_id": "20261127T140000Z",
+  "checkedAt": "2026-11-27T14:00:00Z",
+  "authority_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "previous_run": null,
+  "additionalSources": {
+    "example-supplier": {
+      "shop": {"role": "vendor", "url": "https://vendor.example/"},
+      "manual": {"role": "vendor", "url": "https://vendor.example/manual"}
+    },
+    "example-platform": {"export": {"role": "platform", "url": "https://reader.example/"}},
+    "example-journal": {"papers": {"role": "study", "url": "https://journal.example/"}},
+    "example-index": {"search": {"role": "discovery", "url": "https://index.example/"}}
+  },
+  "records": {
+    "offer": {
+      "source": "example-supplier", "channel": "shop", "origin": "example-supplier",
+      "url": "https://vendor.example/us/s1", "record": "S1-US", "revision": "v1",
+      "offerScope": {"models": ["Synthetic S1"], "regions": ["US"]},
+      "selector": "US price, order button and US delivery policy", "sourceDate": "2026-09-01"
+    },
+    "manual": {
+      "source": "example-supplier", "channel": "manual", "origin": "example-supplier",
+      "url": "https://vendor.example/manual/s1", "record": "S1 manual", "revision": "v2",
+      "selector": "Reader outputs", "sourceDate": "2026-09-15"
+    },
+    "receiver": {
+      "source": "example-platform", "channel": "export", "origin": "example-platform",
+      "url": "https://reader.example/fit", "record": "S1 receiver", "revision": "v2",
+      "selector": "Export format, supported hardware"
+    },
+    "first-study": {
+      "source": "example-journal", "channel": "papers", "origin": "example-lab-one",
+      "url": "https://journal.example/a", "record": "A", "revision": "v1",
+      "selector": "Methods", "sourceDate": "2026-08-01"
+    },
+    "second-study": {
+      "source": "example-journal", "channel": "papers", "origin": "example-lab-two",
+      "url": "https://journal.example/b", "record": "B", "revision": "v1",
+      "selector": "Table 2", "sourceDate": "2026-10-01"
+    }
+  },
+  "items": {
+    "retail": {
+      "stream": "market", "disposition": "baseline", "title": "Synthetic S1 US offer",
+      "delta": "First observation of the US listing and export manual.",
+      "device": {
+        "model": "Synthetic S1", "collection": "exercise-sweat", "microfluidics": "documented",
+        "operatingLimits": ["Exercise-induced sweating required."], "ref": "manual",
+        "measurements": [
+          {"quantity": "sodium", "basis": "measured", "target": "local-sweat", "unit": "mmol/L", "ref": "manual"},
+          {"quantity": "fatigue", "basis": "inferred", "target": "whole-body", "unit": "score",
+            "inputs": ["sweat sodium", "skin temperature"], "ref": "manual"}
+        ]
+      },
+      "offers": {
+        "CA": {"region": "CA", "status": "unknown", "shipping": "unknown"},
+        "US": {"region": "US", "status": "orderable", "ref": "offer",
+          "shipping": {"status": "documented", "detail": "US delivery explicitly offered in regional terms", "ref": "offer"},
+          "price": {"amount": 100, "currency": "USD", "basis": "Device before tax", "ref": "offer"}}
+      },
+      "telemetry": {
+        "rawSamples": "unknown", "bleProtocolDocs": "unknown",
+        "csvExport": {"status": "documented", "detail": "Processed sodium series", "ref": "manual"},
+        "otherFileExport": {"status": "documented", "detail": "Receiver firmware v2 exports FIT with derived sodium loss", "ref": "receiver"}, "api": "unknown", "android": "unknown", "liveStream": "unknown",
+        "nativeSampling": "unknown", "displayRefresh": "unknown",
+        "exportInterval": {"status": "documented", "detail": "60 s per exported sodium value", "ref": "manual",
+          "channels": {"sodium": {"mode": "periodic", "minSeconds": 60, "maxSeconds": 60}}}
+      }
+    },
+    "pilot": {
+      "stream": "emerging", "disposition": "baseline", "stage": "validation-study",
+      "title": "Synthetic lab pilot", "delta": "First comparison under passive collection.",
+      "device": {
+        "model": "Synthetic P2", "collection": "passive-sweat", "microfluidics": "documented",
+        "operatingLimits": ["Bench reader required."], "ref": "second-study",
+        "measurements": [{"quantity": "cortisol", "basis": "measured", "target": "local-sweat", "unit": "nmol/L", "ref": "second-study"}],
+        "comparisons": [{"ref": "second-study", "comparator": "Sweat immunoassay", "population": "Eight adults",
+          "conditions": "Rest", "result": "Bias 2 nmol/L; agreement intervals unreported."}]
+      }
+    },
+    "replication": {
+      "stream": "trending", "disposition": "changed", "title": "Passive collection replication",
+      "delta": "A second group reported on-body measurements.",
+      "trend": {"indicator": "Independent demonstrations", "earlier": "first-study", "later": "second-study",
+        "change": "One lab demonstrated a chamber; a second group reproduced passive collection on body."}
+    }
+  },
+  "coverageGaps": [{"source": "example-index", "channel": "search", "reason": "Index unavailable", "next": "Retry the search window"}]
+}

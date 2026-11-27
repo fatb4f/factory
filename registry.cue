@@ -3,6 +3,11 @@ package factory
 import unit "github.com/fatb4f/factory/contracts:unit"
 
 units: close({
+	"projects.biochemical-wearables": unit.#Unit & {
+		id:     "projects.biochemical-wearables"
+		kind:   "project"
+		agents: "projects/biochemical-wearables/.agents"
+	}
 	"projects.cyber-incidents": unit.#Unit & {
 		id:     "projects.cyber-incidents"
 		kind:   "project"
@@ -81,6 +86,15 @@ units: close({
 })
 
 tasks: close({
+	"projects.biochemical-wearables.upstream-monitor": unit.#Task & {
+		id:        "projects.biochemical-wearables.upstream-monitor"
+		name:      "upstream-monitor"
+		unit:      "projects.biochemical-wearables"
+		authority: "contracts/workers/upstream-monitor/profiles_biochemical_wearables/contract.cue"
+		agent:     "projects/biochemical-wearables/.agents/AGENTS.md"
+		enabled:   true
+		cadence: {frequency: "weekly", weekday: "monday"}
+	}
 	"projects.cyber-incidents.upstream-monitor": unit.#Task & {
 		id:        "projects.cyber-incidents.upstream-monitor"
 		name:      "upstream-monitor"
