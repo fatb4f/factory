@@ -1,0 +1,1 @@
+Natural Resources Canada announced nearly C$3 million for the Northwest Territories to digitize drill core for the Canadian Digital Core Library. This event records an announced investment in geoscience data. The release supplies no quantified change in mine output or industrial capacity.

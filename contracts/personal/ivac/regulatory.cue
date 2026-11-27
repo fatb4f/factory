@@ -49,12 +49,15 @@ import "time"
 	}
 }
 
-#RegulatoryCitation: close({
+#RegulatoryCitation: #CitationTransport & {start: int, end: >start}
+
+// JSON Schema cannot express the cross-field offset constraint.
+#CitationTransport: close({
 	sourceVersion: #ID
 	locator:       string & !=""
 	// Half-open Unicode code-point offsets in the pinned UTF-8 snapshot.
 	start:     int & >=0
-	end:       int & >start
+	end:       int & >=1
 	exactText: string & !=""
 })
 

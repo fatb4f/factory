@@ -1,0 +1,31 @@
+{
+  "apiVersion": "factory.upstream-monitor.run-bundle/v3",
+  "kind": "UpstreamMonitorRunBundle",
+  "profile_id": "cyber-incidents",
+  "run_id": "20261125T105956Z",
+  "authority_revision": "41fd876dcfc5f99b9807dea3bbcc3726fe81b8db",
+  "subject_revision": "41fd876dcfc5f99b9807dea3bbcc3726fe81b8db",
+  "export_unit": "directory",
+  "terminal_state": "coverage_gap",
+  "qualification_state": "observation_only",
+  "artifacts": [
+    {
+      "kind": "report",
+      "filename": "report.md",
+      "gitBlobSHA": "e12b96dc82022aa3b56c3174705668c5ee036895",
+      "mediaType": "text/markdown"
+    },
+    {
+      "kind": "summary",
+      "filename": "summary.md",
+      "gitBlobSHA": "91a1c6f5ab27b54a454ed4744468f0f8ec8b4e92",
+      "mediaType": "text/markdown"
+    },
+    {
+      "kind": "evidence",
+      "filename": "evidence.json",
+      "gitBlobSHA": "0c5bfac192e6915b40f01b36e0a12f9517a691cf",
+      "mediaType": "application/json"
+    }
+  ]
+}

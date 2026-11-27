@@ -1,0 +1,43 @@
+name: Cyber Incident Watch publication
+
+on:
+  pull_request:
+    paths:
+      - "projects/cyber-incidents/**"
+      - "contracts/workers/upstream-monitor/**"
+      - ".github/workflows/cyber-incident-watch.yml"
+      - "registry.cue"
+      - "contracts/unit.cue"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cue-lang/setup-cue@v1.0.0
+        with:
+          version: v0.16.1
+      - name: Check registration
+        run: cue export ./registry.cue -e 'tasks["projects.cyber-incidents.upstream-monitor"]'
+      - name: Render a submitted evidence file
+        id: render
+        if: hashFiles('projects/cyber-incidents/upstream-monitor/pending.json') != ''
+        run: |
+          python3 projects/cyber-incidents/upstream-monitor/publish.py projects/cyber-incidents/upstream-monitor/pending.json
+          git add projects/cyber-incidents/
+          git diff --cached --binary -- projects/cyber-incidents/ > "$RUNNER_TEMP/publication.patch"
+      - name: Verify the sealed bundle and both stream views
+        run: python3 projects/cyber-incidents/upstream-monitor/publish.py --check
+      - uses: actions/upload-artifact@v4
+        if: steps.render.outcome == 'success'
+        with:
+          name: cyber-watch-publication
+          path: ${{ runner.temp }}/publication.patch
+      - name: Require the rendered files before integration
+        if: steps.render.outcome == 'success'
+        run: |
+          echo "::error::Apply the publication artifact to the PR and remove pending.json, then rerun checks."
+          exit 1
