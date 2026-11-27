@@ -1,0 +1,35 @@
+{
+  "runID": "20261127T153805Z",
+  "phase": "event-watch",
+  "generatedAt": "2026-11-27T15:38:05Z",
+  "contractPath": "contracts/world/industrial-constraints/contract.cue",
+  "contractRevision": "b5aef69c512e17d111a496ded80b1a8a32ce7e39",
+  "immutable": true,
+  "artifacts": {
+    "report": "report.md",
+    "summary": "summary.md",
+    "evidence": "evidence.json"
+  },
+  "publication": {
+    "phase": "event-watch",
+    "decision": "admit",
+    "events": [
+      {
+        "kind": "event-observation",
+        "id": "event.nrcan.cdcl-nwt.2026-11-23"
+      }
+    ],
+    "coverageGaps": [
+      {
+        "id": "gap.bounded-acquisition",
+        "description": "The two government records cover a geoscience-data project. The remainder of the Canadian industrial source catalog was outside this bounded acquisition.",
+        "affects": []
+      }
+    ]
+  },
+  "digests": {
+    "report": "sha256:5c7c90b3eb9b9310d7e6ce15f168e07804f057467a389a9b9c70e4de0aa820be",
+    "summary": "sha256:d9efbac9298ec949426c48db480563828094d35c7ad3da5396f2fa3a3b7b517b",
+    "evidence": "sha256:73c8e687e849874ccf109d794ce0ce4dd8f2888e06bb14cf4e9ef38d11286fae"
+  }
+}
