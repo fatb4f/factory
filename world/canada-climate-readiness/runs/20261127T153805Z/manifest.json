@@ -1,0 +1,34 @@
+{
+  "runID": "20261127T153805Z",
+  "generatedAt": "2026-11-27T15:38:05Z",
+  "outcome": "events_observed",
+  "events": [
+    {
+      "kind": "climate-readiness-event",
+      "id": "event.bruce-county.adaptation-planning.2026-11-26",
+      "eventKind": "resilience-funding-awarded",
+      "headline": "Bruce County reported C$105,000 to prepare a county-wide Climate Adaptation Plan through FCM’s Green Municipal Fund.",
+      "geographies": [
+        "canada"
+      ],
+      "surfaces": [
+        "adaptation-finance"
+      ],
+      "provenance": {
+        "source": "Bruce County",
+        "channel": "municipal-news",
+        "recordID": "https://www.brucecounty.on.ca/news/2026-nov-26/building-resilience-developing-climate-adaptation-plan-bruce-county-0",
+        "revision": "2026-11-26",
+        "publishedAt": "2026-11-26",
+        "acquiredAt": "2026-11-27T15:38:05Z"
+      },
+      "disposition": "track"
+    }
+  ],
+  "coverageGaps": [
+    {
+      "id": "gap.implementation",
+      "description": "The announcement funds planning and risk assessment. Implemented asset upgrades and measured risk reduction require subsequent records."
+    }
+  ]
+}
