@@ -180,6 +180,7 @@ validate_registry
 section "cyber incidents"
 cue vet -c=false ./contracts/projects/cyber-incidents:cyberincidents
 python3 contracts/projects/cyber-incidents/testdata/check.py
+python3 projects/cyber-incidents/test_replay.py
 
 section "engineering signals"
 cue vet -c=false ./contracts/world/engineering-signals:engineeringsignals

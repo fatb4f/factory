@@ -53,16 +53,27 @@ Public reports and hypotheses stay native to the CUE model. Adapters can project
 | xonsh | Operator shell for composing capture, normalization, validation, and replay commands. Keep the checks usable from ordinary shells and CI without xonsh. |
 | Arrow and DuckDB | Proposed downstream analytical projections for querying source lineage and comparing incident histories. They do not own schema semantics or admit evidence. |
 
-The first runtime slice is one fixture-backed, read-only adapter. It retains the original source and revision, parses the input in Python, checks the assembled bundle in CUE, and emits a separate as-of replay projection. This PR documents the stack without installing runtime dependencies, generating models, or enabling live feeds.
+The planned first adapter is fixture-backed and read-only. It will retain the original source and revision, parse the input in Python, and check the assembled bundle in CUE. The replay projection currently operates on supplied bundles without installing runtime dependencies, generating models, or enabling live feeds.
 
 ## Implementation order
 
 1. Qualify representative source revisions and adapter fixtures. Capture inputs and their digests before normalization. Record access, parsing, or coverage failures separately.
 2. Generate JSON Schema and Python types from the CUE shapes, then build read-only adapters. Run CUE at the admission boundary. Generated types are not a substitute for cross-record validation, and validation does not verify the source assertions.
-3. Add a deterministic replay projection. Provide only eligible assertions and their cited material to the model. Exclude retrospective assessments, untimed open questions, unselected captures, and later labels from model inputs.
+3. Use the deterministic replay projection to provide only eligible assertions and citation metadata to the model. A later adapter must retrieve and verify cited material. Exclude retrospective assessments, untimed open questions, unselected captures, and later labels from model inputs.
 4. Benchmark against a rules-only baseline. Keep related campaigns together across splits. Use separate validation for tuning and reserve the test set for final evaluation. Measure late-evidence leakage, false attribution, abstention, and calibration before considering any integration.
 
 No adapters, live feeds, generated types, graph admission, or registry entries are implemented in this scaffold.
+
+## Evidence-only replay projection
+
+Select assertions by ID within each rail and provide a UTC cutoff:
+
+```sh
+python3 projects/cyber-incidents/replay.py projects/cyber-incidents/global-major-cyber/replay.json \
+  --as-of 2026-01-04T12:00:00Z --public outage-report --technical isolation
+```
+
+Repeat `--public` or `--technical` for additional IDs. The command validates the full input in review mode, then validates a selection-only bundle in historical-replay mode. Invalid selections or ineligible citations fail without producing output. Output contains only the selected assertions and citation selectors, revision labels, and digests; it omits hypotheses, questions, other captures and incident metadata. It is deterministic JSON and contains no verified source passage text. Source retrieval, digest verification, and passage extraction require a later adapter. CUE validation does not establish that a cited source supports a claim.
 
 ## Local check
 
