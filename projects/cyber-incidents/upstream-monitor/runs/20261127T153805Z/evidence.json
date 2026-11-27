@@ -1,0 +1,240 @@
+{
+  "schema": "factory.cyber-incidents.upstream-watch/v1",
+  "profile_id": "cyber-incidents",
+  "run_id": "20261127T153805Z",
+  "checkedAt": "2026-11-27T15:38:05Z",
+  "authority_revision": "b5aef69c512e17d111a496ded80b1a8a32ce7e39",
+  "previous_run": "20261125T113151Z",
+  "additionalSources": {
+    "gl-inet": {
+      "advisory": {
+        "url": "https://www.gl-inet.com/blogs/blog/glinet-security-notice-2026-11-20",
+        "role": "primary"
+      }
+    },
+    "donnees-quebec": {
+      "seao": {
+        "url": "https://www.donneesquebec.ca/recherche/dataset/d23b2e02-085d-43e5-9e6e-e1d558ebfdd5/resource/b3e87428-4678-440b-bf96-87ed8ca46bfc/download/hebdo_20261026_20261101.json",
+        "role": "primary"
+      }
+    }
+  },
+  "items": {
+    "ca-45-1-c-22": {
+      "stream": "canadian-surveillance",
+      "title": "Senate committee reports Bill C-22 with amendments",
+      "delta": "The November 26 Ninth Report provides the amendment text sought in the previous run. LEGISinfo now records Senate report stage.",
+      "disposition": "material",
+      "status": "Committee report presented with amendments",
+      "jurisdiction": "Canada, federal",
+      "next": "Watch Senate concurrence, further amendments, third reading and any Commons response. Check the final enacted text and commencement separately.",
+      "unknowns": [
+        "The report alone establishes neither enactment nor a legal obligation on a particular provider in Montréal."
+      ],
+      "facts": [
+        {
+          "statement": "The Senate committee presented its Ninth Report on November 26. Parliament records completion of committee consideration and the start of Senate report stage.",
+          "eventDate": "2026-11-26",
+          "basis": "primary",
+          "citations": [
+            {
+              "source": "parliament",
+              "channel": "bills",
+              "url": "https://www.parl.ca/legisinfo/en/bill/45-1/c-22",
+              "record": "C-22 (45-1)",
+              "revision": "November 26 status",
+              "selector": "Summary and Senate consideration in committee",
+              "sourceDate": "2026-11-26"
+            },
+            {
+              "source": "senate",
+              "channel": "committees",
+              "url": "https://sencanada.ca/en/content/sen/chamber/451/journals/107jr_2026-11-26-e",
+              "record": "Senate Journals 107",
+              "revision": "Ninth Report, November 26",
+              "selector": "Reports from committees",
+              "sourceDate": "2026-11-26"
+            }
+          ]
+        },
+        {
+          "statement": "For clause 41 the committee proposed a necessity and proportionality test for each obligation imposed by regulation or ministerial order. It also proposed clarifying the systemic-vulnerability definition to cover risks of unauthorized alteration and specified weakening of electronic protections. The Commons-passed version required consideration of listed factors.",
+          "eventDate": "2026-11-26",
+          "basis": "primary",
+          "citations": [
+            {
+              "source": "senate",
+              "channel": "committees",
+              "url": "https://sencanada.ca/en/content/sen/chamber/451/journals/107jr_2026-11-26-e",
+              "record": "Senate Journals 107",
+              "revision": "Ninth Report, November 26",
+              "selector": "Amendment 4, clause 41, pp. 37, 39 and 42",
+              "sourceDate": "2026-11-26"
+            },
+            {
+              "source": "parliament",
+              "channel": "text",
+              "url": "https://www.parl.ca/documentviewer/en/45-1/bill/C-22/third-reading",
+              "record": "C-22 Commons third-reading text",
+              "revision": "June 18 Commons version",
+              "selector": "Clause 41, systemic vulnerability and proposed subsections 5(3) and 7(3)",
+              "sourceDate": "2026-06-18"
+            }
+          ]
+        }
+      ]
+    },
+    "gl-inet-goodcloud-2026-11": {
+      "stream": "global-major-cyber",
+      "title": "GL.iNet investigates older malware reports",
+      "disposition": "material",
+      "delta": "The November 26 vendor revision adds a second timeline for investigation. The connection to the November 20 GoodCloud incident is unresolved.",
+      "status": "Vendor investigation in progress",
+      "jurisdiction": "Global vendor notice",
+      "next": "Check later vendor revisions for the origin of the earlier files and any change in customer recovery guidance.",
+      "unknowns": [
+        "The dates on older files do not establish an intrusion date, shared attacker, or compromise of a connected computer."
+      ],
+      "facts": [
+        {
+          "statement": "GL.iNet says it is investigating older router malware. It attributes file dates as early as September 2025 to an outside researcher and is still determining how the files arrived and whether they relate to the November incident.",
+          "eventDate": "2026-11-26",
+          "basis": "primary",
+          "citations": [
+            {
+              "source": "gl-inet",
+              "channel": "advisory",
+              "url": "https://www.gl-inet.com/blogs/blog/glinet-security-notice-2026-11-20",
+              "record": "GoodCloud Remote Management Incident",
+              "revision": "November 26, 2026 UTC revision",
+              "selector": "Section on older malware reports",
+              "sourceDate": "2026-11-26"
+            }
+          ]
+        }
+      ]
+    },
+    "cisa-kev-2026-11-25": {
+      "stream": "global-major-cyber",
+      "title": "CISA adds ten entries to its known exploited vulnerabilities catalog",
+      "disposition": "material",
+      "delta": "Catalog 2026.11.25 adds ten CVEs since the November 24 baseline. No prior CVE record was removed or modified in this revision.",
+      "status": "CISA catalog update",
+      "jurisdiction": "United States federal catalog, multiple vendors",
+      "next": "Compare the next KEV revision by CVE and check for public disclosures of downstream impact.",
+      "unknowns": [
+        "The catalog entries do not identify affected organizations or a Factory deployment."
+      ],
+      "facts": [
+        {
+          "statement": "A CVE-keyed comparison of the two immutable JSON revisions gives 1,805 entries, up from 1,795. The additions cover Mitel MiCollab (five), Danfoss AK-SM 800A (three), Juniper Session Smart (one) and Vates Xen Orchestra (one).",
+          "eventDate": "2026-11-25",
+          "basis": "primary",
+          "citations": [
+            {
+              "source": "cisa",
+              "channel": "kev",
+              "url": "https://github.com/cisagov/kev-data/blob/51e0a777743fa06957afbaeb280f8735d292c1be/known_exploited_vulnerabilities.json",
+              "record": "KEV catalog 2026.11.25",
+              "revision": "51e0a777743fa06957afbaeb280f8735d292c1be",
+              "selector": "catalogVersion, count, vulnerabilities by cveID and dateAdded",
+              "sourceDate": "2026-11-25"
+            },
+            {
+              "source": "cisa",
+              "channel": "kev",
+              "url": "https://github.com/cisagov/kev-data/blob/02cf8df0c1e2a06cc12842214d3c5e9b0ece97d9/known_exploited_vulnerabilities.json",
+              "record": "KEV catalog 2026.11.24",
+              "revision": "02cf8df0c1e2a06cc12842214d3c5e9b0ece97d9",
+              "selector": "Baseline vulnerabilities keyed by cveID",
+              "sourceDate": "2026-11-24"
+            }
+          ]
+        }
+      ]
+    },
+    "montreal-urban-cameras-26-21620": {
+      "stream": "canadian-surveillance",
+      "title": "Montréal seeks bids for urban security cameras",
+      "disposition": "baseline",
+      "delta": "First coverage of the October 28 solicitation fills the prior watch’s procurement gap at the tender stage.",
+      "status": "Solicitation identified",
+      "jurisdiction": "Ville de Montréal, Québec",
+      "next": "Check the December 1 opening, subsequent addenda, council award and deployment records independently.",
+      "unknowns": [
+        "The tender record establishes no award, supplier, deployment, use, retention policy or camera location."
+      ],
+      "facts": [
+        {
+          "statement": "The city advertised acquisition and installation of urban security cameras under notice 26-21620. The initial open-contracting release lists a December 1, 2026 deadline at 13:30 Montréal time.",
+          "eventDate": "2026-10-28",
+          "basis": "primary",
+          "citations": [
+            {
+              "source": "donnees-quebec",
+              "channel": "seao",
+              "url": "https://www.donneesquebec.ca/recherche/dataset/d23b2e02-085d-43e5-9e6e-e1d558ebfdd5/resource/b3e87428-4678-440b-bf96-87ed8ca46bfc/download/hebdo_20261026_20261101.json",
+              "record": "OCDS ocds-ec9k95-20178816",
+              "revision": "release 20261028140617",
+              "selector": "tender.title, status and tenderPeriod",
+              "sourceDate": "2026-10-28"
+            },
+            {
+              "source": "seao",
+              "channel": "procurement",
+              "url": "https://seao.gouv.qc.ca/avis-resultat-recherche/consulter?ItemId=6d43822b-9fc2-4af6-87e2-8070c6eaa277",
+              "record": "SEAO 20178816",
+              "revision": "Initial notice 26-21620",
+              "selector": "Organization, title, bid deadline",
+              "sourceDate": "2026-10-28"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "coverageGaps": [
+    {
+      "source": "cyber-centre",
+      "channel": "advisories",
+      "reason": "The current index exceeded the retrieval limit. The bounded dated search did not establish all revisions.",
+      "next": "Retrieve dated advisory records and serial ranges individually."
+    },
+    {
+      "source": "bleepingcomputer",
+      "channel": "news",
+      "reason": "The earlier US intelligence-system lead lacks a direct CIA or ODNI incident statement in the public results reviewed.",
+      "next": "Check agency disclosures before revising scope or attribution."
+    },
+    {
+      "source": "canada-gazette",
+      "channel": "publications",
+      "reason": "The bounded Gazette search did not establish commencement dates for individual C-8 provisions.",
+      "next": "Trace statutory commencement clauses and instruments by identifier."
+    },
+    {
+      "source": "qc-assembly",
+      "channel": "bills",
+      "reason": "The provincial and municipal scan prioritized the procurement register. Bill amendments, Gazette instruments and CAI decisions were not reconciled exhaustively.",
+      "next": "Revisit the legislative and CAI indexes with dated instruments."
+    },
+    {
+      "source": "nsira",
+      "channel": "reviews",
+      "reason": "The oversight landing pages were checked without a complete comparison of published decisions or reports across agencies.",
+      "next": "Compare publication indexes by issue date and report identifier."
+    },
+    {
+      "source": "montreal",
+      "channel": "contracts",
+      "reason": "The tender was identified from the official release. An award, deployment and documented use were not established.",
+      "next": "Check awards and council records against 26-21620."
+    },
+    {
+      "source": "northsec",
+      "channel": "talks",
+      "reason": "The NorthSec landing page was checked without full community-channel rotation.",
+      "next": "Check dated public talks, network-operator and research publications for material leads."
+    }
+  ]
+}
